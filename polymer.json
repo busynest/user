@@ -1,0 +1,23 @@
+{
+  "entrypoint": "index.html",
+  "shell": "index.js",
+  "moduleResolution": "node",
+  "npm": true,
+  "license": "MIT",
+  "extraDependencies": [
+    "manifest.json",
+    "node_modules/@webcomponents/webcomponentsjs/**",
+    "node_modules/@webcomponents/webcomponentsjs/bundles/**",
+  ],
+  "builds":
+  [
+    {
+      "name":                 "es5-bundled",
+      "js":                   { "minify": true, "compile": true, "transformModulesToAmd": true },
+      "css":                  { "minify": true },
+      "html":                 { "minify": true },
+      "bundle":               { "inlineScripts": false },
+      "addServiceWorker":     true
+    }
+  ]
+}
