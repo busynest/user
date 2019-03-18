@@ -1,11 +1,13 @@
 {
-  "name": "user-account",
-  "version": "1.0.0",
+  "name": "@solutionbox/user-account",
+  "author": "Jack Markiewicz <jack.solutionbox@gmail.com>(https://www.contractorscentre.com)",
+  "version": "1.0.6",
   "description": "Framework: Lit-HTML + Redux + Firebase. A user management web component. A drawer and settings page with firebase function.",
-  "main": "index.html",
+  "main": "user-account.js",
+  "module": "user-account.js",
   "repository": {
     "type": "git",
-    "url": "later_add"
+    "url": "https://github.com/busynest/user"
   },
   "keywords": [
     "lit-html",
@@ -16,64 +18,27 @@
     "drawer",
     "settings"
   ],
-  "author": "Jacek Markiewicz",
-  "license": "ISC",
+  "license": "BSD-3-Clause",
   "flat": true,
-  "private": true,
   "scripts": {
     "start": "polymer serve",
-    "build": "npm run build:prpl-server && npm run build:static",
-    "build:prpl-server": "polymer build --auto-base-path && rm -rf server/build && mv build server/ && renamer --find node_modules --replace node_assets 'server/build/**' && replace node_modules node_assets server/build -r -s",
+    "build": "polymer build --auto-base-path && gulp prpl-server",
     "build:static": "polymer build",
-    "serve:prpl-server": "prpl-server --root server/build",
-    "serve:static": "polymer serve --port 5000 build/es5-bundled",
-    "test": "npm run test:unit && npm run test:integration",
-    "test:integration": "mocha test/integration --timeout=10000",
-    "test:unit": "polymer test --module-resolution=node --npm -l chrome -l firefox",
-    "test:regenerate_screenshots": "mocha test/integration/screenshots-baseline/regenerate.js --timeout=15000"
+    "serve": "prpl-server --root server/build",
+    "serve:static": "polymer serve --port 5000 build/es5-bundled"
   },
   "dependencies": {
     "@polymer/polymer": "^3.1.0",
-    "@webcomponents/webcomponentsjs": "^2.2.7",
-    "acorn": "^6.1.0",
+    "@webcomponents/webcomponentsjs": "^2.2.4",
     "lit-element": "^2.0.1",
-    "lit-html": "^1.0.0",
-    "polymer-analyzer": "^3.2.2",
-    "pwa-helpers": "github:Polymer/pwa-helpers",
-    "redux": "^4.0.1",
+    "pwa-helpers": "^0.9.1",
+    "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
-    "reselect": "^4.0.0",
-    "rollup": "^1.1.2"
+    "reselect": "^4.0.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.3.1",
-    "ajv": "^6.10.0",
-    "ajv-keywords": "^3.4.0",
-    "axe-core": "^3.2.1",
-    "babel-loader": "^8.0.5",
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-es2015": "^6.24.1",
-    "chai": "^4.2.0",
-    "del": "^3.0.0",
-    "gulp": "^4.0.0",
-    "gulp-rename": "^1.2.3",
-    "gulp-replace": "^1.0.0",
-    "html-webpack-plugin": "^3.2.0",
-    "mocha": "^5.2.0",
-    "pixelmatch": "^4.0.2",
-    "polyserve": "^0.27.15",
-    "prpl-server": "^1.4.0",
-    "puppeteer": "^1.12.2",
-    "renamer": "^1.1.1",
-    "replace": "^1.1.0",
-    "rollup-plugin-node-resolve": "^4.0.0",
-    "wct-browser-legacy": "^1.0.2",
-    "webpack": "^4.29.3",
-    "webpack-bundle-analyzer": "^3.0.3",
-    "webpack-cli": "^3.2.3",
-    "webpack-dev-server": "^3.1.14",
-    "webpack-visualizer-plugin": "^0.1.11"
+    "polymer-cli": "^1.9.3",
+    "polyserve": "^0.27.0",
+    "prpl-server": "^1.4.0"
   }
 }

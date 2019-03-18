@@ -1,0 +1,103 @@
+<!--
+@license
+Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <!-- VIEWPORT -->
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1" /> <!-- user-scalable=no" -->
+    <!-- BASE -->
+    <base href="/">
+    <style> body { margin: 0; } </style>
+    <script>
+      // Redux assumes `process.env.NODE_ENV` exists in the ES module build.
+      // https://github.com/reactjs/redux/issues/2907
+      window.process = { env: { NODE_ENV: 'production' } };
+    </script>
+  </head>
+  <body>
+
+    <!-- Redux output to properties -->
+
+    <user-icon></user-icon>
+
+    <user-drawer
+      _subscribe="0"
+      _user="Jack"
+      _photoURL="0">
+    </user-drawer>
+    
+    <user-settings
+      person="0"
+      business="0"
+      profile="0"
+      profileTopic="0"
+      phone="0"
+      stakeholder="0"
+      userMail="0">
+    </user-settings>
+
+    <a href="https://www.npmjs.com/package/@solutionbox/user-account">NPM</a>
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-73943527-19"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-73943527-19');
+    </script>
+
+    <!-- FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase-app.js"            ></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase-auth.js"           ></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase-firestore.js"      ></script>
+  
+    <script>
+      document.addEventListener("DOMContentLoaded", (event) => {    
+        // Initialize Firebase
+        var admin = {
+          apiKey: "AIzaSyAJfm5MahdHr4HzwRLWN7IBhVYXMjP65lQ",
+          authDomain: "inmostfire.firebaseapp.com",
+          databaseURL: "https://inmostfire.firebaseio.com",
+          projectId: "inmostfire",
+          storageBucket: "inmostfire.appspot.com",
+          messagingSenderId: "937289126032"
+        };
+
+        // REFERENCE TO SERVICES
+        var application           = firebase.initializeApp(admin);
+        var firestore             = application.firestore();
+      });
+    </script>
+
+    <!-- LOAD ANY POLYFILLS YOUR BROWSER NEEDS -->
+    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js" async ></script>
+
+    <!-- APPLICATION SHELL -->
+    <script type="module" src="../index.js" async></script>
+    <script type="module" src="../src/user-icon.js" async></script>
+    <script type="module" src="../src/user-drawer.js" async></script>
+    <script type="module" src="../src/user-settings.js" async></script>
+
+  </body>
+</html>
+
+    <!-- NON-USED FIREBASE
+    <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-storage.js"        ></script> 
+    <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-database.js"       ></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-messaging.js"      ></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-functions.js"      ></script> 
+
+    /* font-family:              Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"; /* font-stack - system-default */
+    /* -webkit-font-smoothing:   antialiased;
+    box-sizing:           border-box; */
+  -->

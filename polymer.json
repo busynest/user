@@ -1,13 +1,12 @@
 {
-  "entrypoint": "index.html",
+  "entrypoint": "demo/index.html",
   "shell": "index.js",
   "moduleResolution": "node",
   "npm": true,
   "license": "MIT",
   "extraDependencies": [
-    "manifest.json",
     "node_modules/@webcomponents/webcomponentsjs/**",
-    "node_modules/@webcomponents/webcomponentsjs/bundles/**",
+    "node_modules/@webcomponents/webcomponentsjs/bundles/**"
   ],
   "builds":
   [

@@ -1,10 +1,10 @@
 
 'use strict';
-
+/*
 const HtmlWebpackPlugin       = require('html-webpack-plugin');
 const { htmlTransform }       = require('polymer-build/lib/html-transform');
 const { addCustomElementsEs5Adapter } = require('polymer-build/lib/custom-elements-es5-adapter');
-
+*/
 
 const es2015 = true;
 
