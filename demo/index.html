@@ -16,7 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1" /> <!-- user-scalable=no" -->
     <!-- BASE -->
     <base href="/">
-    <style> body { margin: 0; } </style>
+    <style> body { margin: 0; } .head { height: 64px; } </style>
     <script>
       // Redux assumes `process.env.NODE_ENV` exists in the ES module build.
       // https://github.com/reactjs/redux/issues/2907
@@ -26,9 +26,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
 
     <!-- Redux output to properties -->
-
+<div class="head">
     <user-icon></user-icon>
-
+</div>
     <user-drawer
       _subscribe="0"
       _user="Jack"
@@ -44,8 +44,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       stakeholder="0"
       userMail="0">
     </user-settings>
-
-    <a href="https://www.npmjs.com/package/@solutionbox/user-account">NPM</a>
     
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-73943527-19"></script>
@@ -60,11 +58,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase-app.js"            ></script>
     <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase-auth.js"           ></script>
     <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase-firestore.js"      ></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase-storage.js"        ></script> 
   
     <script>
-      document.addEventListener("DOMContentLoaded", (event) => {    
+      document.addEventListener("DOMContentLoaded", (event) => {  });  
         // Initialize Firebase
-        var admin = {
+        const admin = {
           apiKey: "AIzaSyAJfm5MahdHr4HzwRLWN7IBhVYXMjP65lQ",
           authDomain: "inmostfire.firebaseapp.com",
           databaseURL: "https://inmostfire.firebaseio.com",
@@ -74,9 +73,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         };
 
         // REFERENCE TO SERVICES
-        var application           = firebase.initializeApp(admin);
-        var firestore             = application.firestore();
-      });
+        const application           = firebase.initializeApp(admin);
+        const firestore             = application.firestore();
+        const storage               = firebase.storage();
+        const storageRef            = storage.ref();
+
     </script>
 
     <!-- LOAD ANY POLYFILLS YOUR BROWSER NEEDS -->
@@ -90,14 +91,3 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   </body>
 </html>
-
-    <!-- NON-USED FIREBASE
-    <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-storage.js"        ></script> 
-    <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-database.js"       ></script>
-    <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-messaging.js"      ></script>
-    <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-functions.js"      ></script> 
-
-    /* font-family:              Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"; /* font-stack - system-default */
-    /* -webkit-font-smoothing:   antialiased;
-    box-sizing:           border-box; */
-  -->

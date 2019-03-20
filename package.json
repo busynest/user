@@ -1,10 +1,10 @@
 {
-  "name": "@solutionbox/user-account",
+  "name": "pwa-auth",
   "author": "Jack Markiewicz <jack.solutionbox@gmail.com>(https://www.contractorscentre.com)",
-  "version": "1.0.6",
-  "description": "Framework: Lit-HTML + Redux + Firebase. A user management web component. A drawer and settings page with firebase function.",
-  "main": "user-account.js",
-  "module": "user-account.js",
+  "version": "0.0.2",
+  "description": " PWA Web Components with Firebase Authentication, lit-Element + Redux. An Icon Button. A drop-down Drawer and Settings page. supplied with common Firebase Authentication Functions.",
+  "main": "index.js",
+  "module": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/busynest/user"
@@ -33,12 +33,10 @@
     "lit-element": "^2.0.1",
     "pwa-helpers": "^0.9.1",
     "redux": "^4.0.0",
-    "redux-thunk": "^2.3.0",
-    "reselect": "^4.0.0"
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "polymer-cli": "^1.9.3",
-    "polyserve": "^0.27.0",
-    "prpl-server": "^1.4.0"
+    "firebase-tools": "^6.5.0"
   }
 }

@@ -1,17 +1,42 @@
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/owner/my-element)
 
-# user-account
-* Combined Account Functions with Firebase, Redux and Lit-html.
+## PWA Web Components with Firebase Authentication
+* lit-Element + Redux
+* An Icon Button
+* A drop-down Drawer
+* A Settings page
+* Common Firebase Authentication Functions
 
-# user-icon
+# TO DO: 
+* If need be, Manually Replace Path to Redux store: import { store } from '../../../../src/store';
+* Add Google Analytics to Website
+* Initialize Firebase Project
+* Firebase Authentication
+* Cloud Firestore Database
+* .visibility { top: 64px; }
+
+# Sign up Providers
+* email
+* anonymous
+* google
+
+# Usage
+* Profile
+    * Upload Photo
+    * 
+* Change Profile Information
+* Delete user Account
+* Change Password
+* Change Email
+
+# <user-icon>
 * _user
 * _photoURL
 
-# user-drawer
+# <user-drawer>
 * _subscribe
 * _log
 
-# user-settings
+# <user-settings>
 * profileTopic
 * person
 
@@ -28,13 +53,8 @@
 * userEmail
 * deleteUser
 * deleteDoc
-* saveMessage
-* loadMessages
 * saveImage
 * deviceToken
-* signUp
-* anon
-* google
 
 # Redux Actions
 * navigate
@@ -45,11 +65,8 @@
 * closeSign
 * profile
 
-# Account Usage
-* Change Profile Information
-* Delete user Account
-* Change Password
-* Change Email
+# Redux Reducers
+* SET_IMAGE
 
 # Redux State
 * snackState
@@ -58,6 +75,4 @@
 * profileChoice
 * settings
 
-# History
-* 1.0.5
-* 1.0.6
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/owner/my-element)

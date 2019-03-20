@@ -1,14 +1,25 @@
 
-//@ts-check
+/**
+@license
+Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+*/
+
+// @ts-check
+
 import { html, LitElement }             from 'lit-element';
 import { setPassiveTouchGestures } from '@polymer/polymer/lib/utils/settings.js';
 import { connect }                      from 'pwa-helpers/connect-mixin.js';
-import { store }                        from '../store';
-// import { store }                        from '../../../../src/store';
-import { navigate }                     from './user-action.js';
+import { store }                        from '../demo/store';
+// import { store }                        from '../../../src/store';
+import { navigate, setName }            from './user-action.js';
 import { userStyles }                   from './styles';
 import { Settings }                     from './styles-settings';
-import { firebaseUser, deleteUser, runFirebase }     from './user-functions'; // runFirebase
+import { firebaseUser, deleteUser, runFirebase, userName }     from './user-functions'; // runFirebase
 import  user                            from './user-reducer';
 store.addReducers({
   user
@@ -17,7 +28,7 @@ export class UserSettings extends connect(store)(LitElement) {
     static get properties() {
       return {
         profileTopic:     { type: String },
-        person:           { type: String }
+        _person:           { type: String }
 
         // business:         { type: String },
         // profile:          { type: String },
@@ -39,18 +50,24 @@ export class UserSettings extends connect(store)(LitElement) {
       this.shadowRoot.getElementById('password')  .addEventListener('click',    () => { store.dispatch(navigate('password')); } );
       this.shadowRoot.getElementById('account')   .addEventListener('click',    () => { store.dispatch(navigate('delete')); } );
 
-      this.shadowRoot.getElementById('save')      .addEventListener('click',    () => { this.updateProfile(); } );
+      this.shadowRoot.getElementById('save')      .addEventListener('click',    () => { this.alertProfile(); } );
       this.shadowRoot.getElementById('update')    .addEventListener('click',    () => { this.updateEmail(); } );
       this.shadowRoot.getElementById('pass')      .addEventListener('click',    () => { this.updatePassword(); } );
       this.shadowRoot.getElementById('deleteUser').addEventListener('click',    () => { this._deleteUser(); } );
       
       runFirebase();
 
+      firebase.auth().onAuthStateChanged( (firebaseUser) => {
+        if (firebaseUser) { /* INCLUDE */ this._person = userName(); }
+        else              { /* EXCLUDE */ }
+        store.dispatch( setName( this._person ) );
+      });
+
     }
   
     stateChanged(state) {
       this.profileTopic     = state.user.settings;
-      this.person           = state.user.customer;
+      this._person           = state.user.customer;
       // this.phone            = state.user.customer;
       // this.profile          = state.user.profileChoice;
       // this.userMail         = state.user.profileChoice;
@@ -67,32 +84,38 @@ export class UserSettings extends connect(store)(LitElement) {
       const document        = firebaseUser.uid;*/
     }
 
+    alertProfile() { alert( this.updateProfile() ) }
+
     updateProfile() {
-      const user            = firebaseUser();
+      const person          = firebaseUser();
+      const contractor      = this.shadowRoot.getElementById('contractor').value;
       const phone           = this.shadowRoot.getElementById('phoneNumber').value;
+      const list            = this.shadowRoot.getElementById('list').checked;
+      // const photo         = this.shadowRoot.getElementById('');
       // const company         = this.shadowRoot.getElementById('company').value;
       // const enroll          = this.shadowRoot.getElementById('who').value;
-      // const photo         = this.shadowRoot.getElementById('');
-      // const document      = this.shadowRoot.getElementById('');
-      // const contractor    = this.shadowRoot.getElementById('contractor').value;
+      console.log(contractor);
       console.log(phone);
+      console.log(list);
+      console.log(user);
       if (firebaseUser) {
-        user.updateProfile({
+        person.updateProfile({
+          displayName: contractor,
           phoneNumber: phone
-          // displayName: company,
           // photoURL: ""
         })
           .then( () => { console.log("User update successful!"); })
           .catch( (error) =>{ console.error('Error writing new message to Firebase Database', error); });
 /*
         firestore.collection("users").doc(user.id).set({
-          // company:             company,
-          // enrollment:          enroll
+          company:             user.id,
+          enrollment:          list
           // location:         this.location,
         })
           .then( () => { console.log("Document successfully written!"); })
-          .catch( (error) => { console.error('Error writing new message to Firebase Database', error); }); */
+          .catch( (error) => { console.error('Error writing new message to Firebase Database', error); });    */
       }
+      location.reload();
     }
 
     /* Update email */
@@ -122,6 +145,21 @@ export class UserSettings extends connect(store)(LitElement) {
       if    ( d == true ) { deleteUser(); console.log("user gone"); }
       else  { console.log("user here"); }
     }
+
+    _handleFiles() {
+      const uploader  = this.shadowRoot.getElementById('uploader');
+      const file      = this.shadowRoot.getElementById('fileupload').files[0];
+      const now       = storageRef.child('/images/' + file.name );
+      const task      = now.put(file);
+      task.on('state_changed',
+        function progress(snapshot) { const percentage = ( snapshot.bytesTransferred / snapshot.totalBytes ) * 100; uploader.value = percentage },
+        function error(error) { },
+        function complete() { }
+      )
+      this._imagePath = file.name;
+      console.log(this._imagePath);
+    }
+
 /*
     // Handle email address change revocations
     _handleRecoverEmail(auth, actionCode, lang) {
@@ -195,10 +233,11 @@ export class UserSettings extends connect(store)(LitElement) {
         <!-- Page Body -->
         <form id="settings">
           <fieldset  class="spec" ?on="${ this.profileTopic === 'profile' }">
+          <progress value="0" max="100" id="uploader">0%</progress>
           <ul>
-            <li><h3 class="pageTitle">User's Profile</h3></li>
-            <li><p><label for="fileupload">Select a photo to upload:</label><input type="file" name="fileupload" value="fileupload" id="fileupload"></p></li>
-            <li><p><input id="contractor"       type=text        placeholder="${this.person}"></p></li>
+            <li><h3 class="pageTitle">User's Profile${this._person}</h3></li>
+            <li><p><label for="fileupload">Select a photo to upload:</label><input type="file" name="fileupload" id="fileupload" accept="image/*" multiple></p></li>
+            <li><p><input id="contractor"       type=text        placeholder=""></p></li>
             <li><p><input id="phoneNumber"      type="text"      placeholder=""></p></li>
             <li><p><label>List my business in Phonebook</label><input type="checkbox" id="list" placeholder="true"></p></li>
             <li><button id="save" class="action-button" >save</button></li>

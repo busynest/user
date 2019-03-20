@@ -1,9 +1,21 @@
 
-//@ts-check
+
+/**
+@license
+Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+*/
+
+// @ts-check
+
 import { html, LitElement }             from 'lit-element';
 import { connect }                      from 'pwa-helpers/connect-mixin.js';
-import { store }                        from '../store';
-// import { store }                        from '../../../../src/store';
+import { store }                        from '../demo/store';
+// import { store }                        from '../../../src/store';
 import { userStyles, close }            from './styles';
 import { User }                         from './styles-drawer';
 import { closeSign }                    from './user-action'; 
@@ -16,8 +28,7 @@ export class UserDrawer extends connect(store)(LitElement) {
     static get properties() {
       return {
         _log:             { type: Boolean },
-        _subscribe:       { type: Boolean },
-        _user:            { type: String }
+        _subscribe:       { type: Boolean }
       };
     }
     
@@ -36,7 +47,6 @@ export class UserDrawer extends connect(store)(LitElement) {
     stateChanged(state) {
       this._subscribe   = state.user.snackState;
       this._log         = state.user.currentUser;
-      this._user        = state.user.setUser;
     }
 
     _close() { closeSign(false) }
@@ -133,21 +143,3 @@ export class UserDrawer extends connect(store)(LitElement) {
     }
   }
   window.customElements.define('user-drawer', UserDrawer);
-
-  /*
-  constructor() {
-    super();
-      // Stamp the template.
-      let shadowRoot = this.attachShadow({mode: 'open'});
-      this.shadowRoot.appendChild(document.importNode(template.content, true));
-      // Cache some elements so that you don't qsa all the time.
-      this._counter = shadowRoot.querySelector('counter-element');
-  }
-
-  _stateChanged(state) {
-    // Update the UI.
-    this._clicksSpan.textContent = this._counter.clicks = state.counter.clicks;
-    this._valueSpan.textContent = this._counter.value = state.counter.value;
-    this._didLoadSpan.textContent = state.lazy ? state.lazy.didLoad : 'undefined';
-  }
-  */

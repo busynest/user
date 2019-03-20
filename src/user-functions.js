@@ -1,7 +1,18 @@
-//@ts-check
 
-import { store }                        from '../store';
-// import { store }                        from '../../../../src/store';
+/**
+@license
+Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+*/
+
+// @ts-check
+
+import { store }                        from '../demo/store';
+// import { store }                        from '../../../src/store';
 import { setUser, updateLogin, setAuth } from './user-action';
 
 
@@ -19,7 +30,7 @@ export const firebaseUser = () => { return firebase.auth().currentUser || "demo"
 export const firebaseID   = () => { return firebase.auth().currentUser.uid  || "demo" ; };
 export const logOut       = () => { return firebase.auth().signOut(); }; /* .then( () => { } ).catch( () => { } ) */
 export const isUser       = () => { return !!firebase.auth().currentUser; };
-export const profileURL   = () => { return firebase.auth().currentUser.photoURL || '/src/icon-48x48.png'; }; 
+export const profileURL   = () => { return firebase.auth().currentUser.photoURL || '/images/manifest/icon-48x48.png'; }; 
 export const userName     = () => { return firebase.auth().currentUser.displayName; };
 export const userEmail    = () => { return firebase.auth().currentUser.email; };
 export const deleteUser   = () => { return firebase.auth().currentUser.delete() }; /* .then( () => { }).catch( () => { }) */

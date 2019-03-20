@@ -1,5 +1,15 @@
-    
-//@ts-check
+
+/**
+@license
+Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+*/
+
+// @ts-check
 
 import { css } from 'lit-element';
 
@@ -20,8 +30,8 @@ export const User = css`
 }
 
 .visibility {
-  position:             absolute;
-  top:                  0;
+  position:             fixed;
+  top:                  64px;
   right:                0;
   visibility:           hidden;
   will-change:          transform;
@@ -34,7 +44,7 @@ export const User = css`
 .userDrawer {
   max-width:            600px;
   margin:               auto;
-  background-image:     url("src/background.svg");
+  background-image:     url("images/backgroundsvg.svg");
   background-size:      cover;
   color:                #303030;
   padding:              8px 18px;
