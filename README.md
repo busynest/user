@@ -1,6 +1,15 @@
-Website Authentication
+
+A User Management Component is designed with 3 HTML Tags, and 1 Boilerplate Function to help subsriber's flow to sign up, sign in, log out, change account details, delete account.
+
+pwa-auth includes Firebase's Cloud Firestore, Cloud Storage, and User Management that require Firebase setup to use this component.
+
+Application Authentication
 ======================
-* Web components for Application Authentication.
+[![Published on npm](https://https://www.jackspublishing.com/npm007.svg)](https://www.npmjs.com/package/pwa-auth)
+* Sign in users:
+  - One click Google Login
+  - Email Addresses and Passwords
+
 * An Icon Button dipalying user's photo, provided by social login or upload.
 * A drop-down Drawer to display login box, once logged in, the drawer displays a links to the settings page, a log out button, while any personal ancor list could be added by nesting the HTML ELement.
 * A User Settings page with 4 account settings:
@@ -11,7 +20,6 @@ Website Authentication
   - Account
 * We use lit-Element + Redux + Firebase to eliminate boilerplate code and promote best practices.
 * with Common Firebase boilerplate functions.
-* Signing in users with email addresses and passwords, or 1 click Social Login.
 
 ## Please send Feedback
 All feedback, comments, bugs, and requests are welcome.
@@ -29,15 +37,25 @@ All feedback, comments, bugs, and requests are welcome.
 * Run Firebase Boilerplates
     - `import { runFirebase } from 'pwa-auth/src/user-functions';`
     - `constructor() { runFirebase(); }`
+* `<script type="module" src="../pwa-auth.js" async></script>`
 * `import 'pwa-auth';`
-* `<user-icon></user-icon>` icon / button
-* `<user-drawer></user-drawer>` drawer
-* `<user-settings></user-settings>` page
+*  `<header>`
+*    `<!-- ADD ICON -->`
+*    `<user-icon></user-icon>`
+*  `</header>`
+
+* `<main>`
+*   `<!-- ADD DRAWER -->`
+*   `<user-drawer></user-drawer>`
+*   `<!-- ADD SETTINGS PAGE -->`
+*   `<user-settings></user-settings>`
+* `</main>`
 
 ## Load any Pollyfills your browser needs
 * `<script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js" async ></script>`
 
 ## Usage
+
 * Icon Photo
     - Get Social Login Photo
     - 1 photo
@@ -62,20 +80,6 @@ All feedback, comments, bugs, and requests are welcome.
 `<user-settings>`
 * profileTopic: Topic String --> URL coming in future update URL# style
 * person: logged in user name
-
-`<!DOCTYPE html>`
-`<html>`
-  `<head>`
-    `<meta charset="UTF-8">`
-    `<script type="text/javascript">`
-      `</script>`
-  `</head>`
-  `<body>`
-    `<user-icon></user-icon>`
-    `<user-drawer></user-drawer>`
-    `<user-settings></user-settings>`
-  `</body>`
-`</html>`
 
 ## Firebase Authentication Functions
 * runFirebase
@@ -116,3 +120,4 @@ All feedback, comments, bugs, and requests are welcome.
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/owner/my-element)
 
 [Jack's Publishing](https://www.jackspublishing.com)
+pwa-auth use case example: [contractor's centre](https://www.contractorscentre.com)

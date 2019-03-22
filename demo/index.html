@@ -26,27 +26,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
 
     <!-- Redux output to properties -->
-<div class="head">
-    <user-icon>SLOT TEXT</user-icon>
-</div>
-    <user-drawer
-      welcome="SUBSCRIBE"
-      inside="ACCOUNT"
-      _subscribe="0"
-      _user="Jack"
-      _photoURL="0"><a>LINK EXAMPLE</a>
-    </user-drawer>
+    <div class="head">
+        <user-icon></user-icon>
+    </div>
+    <main>
+      <user-drawer></user-drawer>
+      <user-settings> </user-settings>
+    </main>
     
-    <user-settings
-      person="0"
-      business="0"
-      profile="0"
-      profileTopic="0"
-      phone="0"
-      stakeholder="0"
-      userMail="0">
-    </user-settings>
-    
+    <!-- LOAD ANY POLYFILLS YOUR BROWSER NEEDS -->
+    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js" async ></script>
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-73943527-19"></script>
     <script>
@@ -82,14 +72,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </script>
 
-    <!-- LOAD ANY POLYFILLS YOUR BROWSER NEEDS -->
-    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js" async ></script>
-
     <!-- APPLICATION SHELL -->
-    <script type="module" src="../index.js" async></script>
-    <script type="module" src="../src/user-icon.js" async></script>
-    <script type="module" src="../src/user-drawer.js" async></script>
-    <script type="module" src="../src/user-settings.js" async></script>
-
+    <script type="module" src="../pwa-auth.js" async></script>
+    
   </body>
 </html>

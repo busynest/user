@@ -31,7 +31,7 @@ export const User = css`
 
 .visibility {
   position:             fixed;
-  top:                  64px;
+  top:                  0;
   right:                0;
   visibility:           hidden;
   will-change:          transform;

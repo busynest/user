@@ -53,7 +53,7 @@ export class UserIcon extends connect(store)(LitElement) {
     return [
       userStyles,
       css`
-        :host { }
+        :host { z-index: 1; }
 
         #subscribe:hover { background-color: lightgrey; }
         #subscribe {
@@ -69,11 +69,10 @@ export class UserIcon extends connect(store)(LitElement) {
         userImage {object-fit: cover;}
         .iconArea {
           border-radius:  50%;
-          border:         grey solid 2px;
-          z-index:        1;
           overflow:       hidden;
-          width:          28px;
-          height:         28px;
+          width:          32px;
+          height:         32px;
+          margin: auto;
         }
         svg{ margin:auto;}
         `
@@ -91,8 +90,8 @@ export class UserIcon extends connect(store)(LitElement) {
             class="userImage"
             id="image"
             alt="Login"
-            height="28px"
-            width="28px"
+            height="32px"
+            width="32px"
             src="${this._photoURL}">
         </div>
           `

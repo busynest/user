@@ -1,10 +1,10 @@
 {
   "name": "pwa-auth",
-  "author": "Jack Markiewicz <jack.solutionbox@gmail.com>(https://www.jackspublishing.com)",
-  "version": "0.0.6",
-  "description": " A Web components for Application Authentication, lit-Element + Redux + Firebase Authentication. An Icon Button. A drop-down Drawer and Settings page.",
-  "homepage": "https://www.jackspublishing.com",
-  "main": "index.js",
+  "author": "Modern Projects <jack.solutionbox@gmail.com>(https://www.contractorscentre.com)",
+  "version": "0.0.8",
+  "description": "A User Management Component with 3 HTML Tags, and 1 Boilerplate Function to help manage the subsriber's settings.",
+  "homepage": "https://www.contractorscentre.com",
+  "main": "pwa-auth.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/busynest/user"
@@ -16,7 +16,8 @@
     "user",
     "management",
     "drawer",
-    "settings"
+    "settings",
+    "icon"
   ],
   "license": "BSD-3-Clause",
   "flat": true,
@@ -30,10 +31,7 @@
   "dependencies": {
     "@webcomponents/webcomponentsjs": "^2.2.4",
     "lit-element": "^2.1.0",
-    "pwa-helpers": "^0.9.1"
-  },
-  "devDependencies": {
-    "typescript": "^3.1.1",
+    "pwa-helpers": "^0.9.1",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0"
   }

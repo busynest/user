@@ -26,7 +26,7 @@ export class UserSettings extends connect(store)(LitElement) {
         _person:        { type: String },
         _phone:         { type: Number },
         _userMail:      { type: String },
-        _photo:         { type: String },
+        _photoURL:      { type: String },
         _name:          { type: String },
       }
     }
@@ -49,22 +49,21 @@ export class UserSettings extends connect(store)(LitElement) {
       this.shadowRoot.getElementById('pass')      .addEventListener('click',    () => { this.updatePassword(); } );
       this.shadowRoot.getElementById('deleteUser').addEventListener('click',    () => { this._deleteUser(); } );
       
+      this.shadowRoot.getElementById("fileupload").addEventListener('change',   () => { this._handleFiles(); }, false);
+
       runFirebase();
 
       firebase.auth().onAuthStateChanged( (firebaseUser) => {
-        if (firebaseUser) { /* INCLUDE */ this._person = userName(); }
+        if (firebaseUser) { /* INCLUDE */ this._person = userName(); store.dispatch( setName( this._person ) ); }
         else              { /* EXCLUDE */ }
         store.dispatch( setName( this._person ) );
       });
 
-      this._getProfile();
-
-      this._person    = firebaseUser();
+      // this._person    = firebaseUser();
       this._userMail  = userEmail();
       this._name      = userName();
-      this._photo     = profileURL();
-
-
+      this._photoURL  = profileURL();
+      this._getProfile();
     }
   
     stateChanged(state) {
@@ -79,7 +78,7 @@ export class UserSettings extends connect(store)(LitElement) {
     _getProfile() {
       console.log(this._name);
       console.log(this._userMail);
-      console.log(this._photo);
+      console.log(this._photoURL);
       console.log(this._phone);
       // this._userMail         = userEmail();
       //this.emailVerified    = firebaseUser.emailVerified;
@@ -95,6 +94,7 @@ export class UserSettings extends connect(store)(LitElement) {
       const contractor      = this.shadowRoot.getElementById('contractor').value;
       const phone           = this.shadowRoot.getElementById('phoneNumber').value;
       const list            = this.shadowRoot.getElementById('list').checked;
+      if( contractor === null ) { contractor === this._person }
       // const photo         = this.shadowRoot.getElementById('');
       // const company         = this.shadowRoot.getElementById('company').value;
       // const enroll          = this.shadowRoot.getElementById('who').value;
@@ -220,9 +220,53 @@ export class UserSettings extends connect(store)(LitElement) {
         Settings,
         userStyles,
         css`
-        #uploader { width: 100%; }
-        button:focus { outline: none; }
-        .profile { max-width: 150px; margin: auto;}
+
+        button:focus  { outline: none; }
+
+        #uploader {
+          width: 100%;
+          height: 4px;
+          position: absolute;
+          top: 0; left: 0;
+        }
+
+        .profile {
+          width: 175px;
+          margin: auto;
+        }
+
+        .userImage {
+          border-radius:  50%;
+          overflow:       hidden;
+          margin: auto;
+        }
+
+        .file-container {
+          position: relative;
+          width: 175px;
+        } 
+
+        .trigger {
+          display: block;
+          padding: 14px 14px;
+          background: #39D2B4;
+          color: #fff;
+          font-size: 1em;
+          transition: all .4s;
+          cursor: pointer;
+          text-align: center;
+        }
+
+        #fileupload {
+          width: 175px;
+          background: #39D2B4;
+          position: absolute;
+          top: 0; left: 0;
+          opacity: 0;
+          padding: 14px 0;
+          cursor: pointer;
+        }
+
         `
       ];
     }
@@ -242,18 +286,22 @@ export class UserSettings extends connect(store)(LitElement) {
         <!-- Page Body -->
         <div  class="spec" ?on="${ this.profileTopic === 'profile' }">
           <div class="profile">
+
+            <input
+              type="image"
+              class="userImage"
+              id="image"
+              alt="user"
+              height="175px"
+              width="175px"
+              src="${this._photoURL}">
             <p>${this._person}</p>
             <p>${this._phone}</p>
-            <input
-            type="image"
-            class="userImage"
-            id="image"
-            alt="user"
-            height="150px"
-            width="150px"
-            src="${this._photoURL}">
-            <progress value="0" max="100" id="uploader">0%</progress>
-            <p><label for="fileupload">upload a photo</label><input type="file" name="fileupload" id="fileupload" accept="image/*"></p>
+
+            <div class="file-container">
+              <progress value="0" max="100" id="uploader">0%</progress>
+              <label for="fileupload" class="trigger">upload a photo</label><input type="file" name="fileupload" id="fileupload" accept="image/*">
+            </div>
           </div>
           
           <form id="settings">

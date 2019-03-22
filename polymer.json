@@ -1,5 +1,5 @@
 {
-  "entrypoint": "demo/index.ts",
+  "entrypoint": "demo/index.html",
   "moduleResolution": "node",
   "npm": true,
   "license": "MIT",

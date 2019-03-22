@@ -11,6 +11,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Play Games Login
 - Twitter Login
 - Github Login
+- display nested content after webcomponent loads
+
+## [0.0.8] - 2019-03-22
+
+### Changed
+- `<user-drawer>`: drawer's top starts at 0px.
+- `<user-icon>`: removed border to 0px.
+- `<user-settings>` > Profile: display circular photo, upload photo design
 
 ## [0.0.6] - 2019-03-21
 
