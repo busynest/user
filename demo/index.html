@@ -27,12 +27,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <!-- Redux output to properties -->
 <div class="head">
-    <user-icon></user-icon>
+    <user-icon>SLOT TEXT</user-icon>
 </div>
     <user-drawer
+      welcome="SUBSCRIBE"
+      inside="ACCOUNT"
       _subscribe="0"
       _user="Jack"
-      _photoURL="0">
+      _photoURL="0"><a>LINK EXAMPLE</a>
     </user-drawer>
     
     <user-settings
@@ -81,7 +83,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </script>
 
     <!-- LOAD ANY POLYFILLS YOUR BROWSER NEEDS -->
-    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js" async ></script>
+    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js" async ></script>
 
     <!-- APPLICATION SHELL -->
     <script type="module" src="../index.js" async></script>

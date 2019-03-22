@@ -11,8 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 // @ts-check
 
-import { store }                        from '../demo/store';
-// import { store }                        from '../../../src/store';
+import { store }                        from './store';
 import { setUser, updateLogin, setAuth } from './user-action';
 
 
@@ -24,15 +23,15 @@ export const runFirebase  = () => { firebase.auth().onAuthStateChanged( (firebas
                                   }); };
 export const authChange   = () => { return firebase.auth().onAuthStateChanged( (firebaseUser) => { if(firebaseUser) {store.dispatch( setAuth(true) )} else{store.dispatch( setAuth(false) )} });}
 
-
-
 export const firebaseUser = () => { return firebase.auth().currentUser || "demo"; };
 export const firebaseID   = () => { return firebase.auth().currentUser.uid  || "demo" ; };
 export const logOut       = () => { return firebase.auth().signOut(); }; /* .then( () => { } ).catch( () => { } ) */
 export const isUser       = () => { return !!firebase.auth().currentUser; };
+
 export const profileURL   = () => { return firebase.auth().currentUser.photoURL || '/images/manifest/icon-48x48.png'; }; 
 export const userName     = () => { return firebase.auth().currentUser.displayName; };
 export const userEmail    = () => { return firebase.auth().currentUser.email; };
+
 export const deleteUser   = () => { return firebase.auth().currentUser.delete() }; /* .then( () => { }).catch( () => { }) */
 export const deleteDoc    = (collect, item) => { return firestore.collection(collect).doc(item).delete() };
 

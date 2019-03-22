@@ -11,34 +11,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 // @ts-check
 
-import { html, LitElement }             from 'lit-element';
-import { setPassiveTouchGestures } from '@polymer/polymer/lib/utils/settings.js';
+import { html, LitElement, css }             from 'lit-element';
 import { connect }                      from 'pwa-helpers/connect-mixin.js';
-import { store }                        from '../demo/store';
-// import { store }                        from '../../../src/store';
+import { store }                        from './store';
 import { navigate, setName }            from './user-action.js';
 import { userStyles }                   from './styles';
 import { Settings }                     from './styles-settings';
-import { firebaseUser, deleteUser, runFirebase, userName }     from './user-functions'; // runFirebase
-import  user                            from './user-reducer';
-store.addReducers({
-  user
-});
+import { firebaseUser, deleteUser, runFirebase, userName, profileURL, userEmail }     from './user-functions'; // runFirebase
+
 export class UserSettings extends connect(store)(LitElement) {
     static get properties() {
       return {
-        profileTopic:     { type: String },
-        _person:           { type: String }
-
-        // business:         { type: String },
-        // profile:          { type: String },
-        // phone:            { type: Number },
-        // userMail:         { type: String }
+        profileTopic:   { type: String },
+        _person:        { type: String },
+        _phone:         { type: Number },
+        _userMail:      { type: String },
+        _photo:         { type: String },
+        _name:          { type: String },
       }
     }
+
     constructor() {
       super();
-      setPassiveTouchGestures(true);
     }
 
     firstUpdated() {
@@ -63,25 +57,35 @@ export class UserSettings extends connect(store)(LitElement) {
         store.dispatch( setName( this._person ) );
       });
 
+      this._getProfile();
+
+      this._person    = firebaseUser();
+      this._userMail  = userEmail();
+      this._name      = userName();
+      this._photo     = profileURL();
+
+
     }
   
     stateChanged(state) {
-      this.profileTopic     = state.user.settings;
+      this.profileTopic      = state.user.settings;
       this._person           = state.user.customer;
-      // this.phone            = state.user.customer;
-      // this.profile          = state.user.profileChoice;
-      // this.userMail         = state.user.profileChoice;
-      // this._photoUR         = state.user.profilePhoto;
+      this._name             = state.user.name;
+      this._phone            = state.user.phone;
+      this._userMail         = state.user.email;
+      this._photoURL         = state.user.photoURL;
     }
 
-    _getProfile() {/*
-      this.userMail         = firebaseUser.email;
-      this.emailVerified    = firebaseUser.emailVerified;
-      const name            = firebaseUser.displayName;
-      const email           = firebaseUser.email;
-      const phone           = firebaseUser.phoneNumber;
-      const photo           = firebaseUser.photoURL;
-      const document        = firebaseUser.uid;*/
+    _getProfile() {
+      console.log(this._name);
+      console.log(this._userMail);
+      console.log(this._photo);
+      console.log(this._phone);
+      // this._userMail         = userEmail();
+      //this.emailVerified    = firebaseUser.emailVerified;
+      //const phone           = firebaseUser.phoneNumber;
+      //console.log(this.emailVerified);
+      //console.log(phone);
     }
 
     alertProfile() { alert( this.updateProfile() ) }
@@ -97,7 +101,7 @@ export class UserSettings extends connect(store)(LitElement) {
       console.log(contractor);
       console.log(phone);
       console.log(list);
-      console.log(user);
+      console.log(person);
       if (firebaseUser) {
         person.updateProfile({
           displayName: contractor,
@@ -115,7 +119,7 @@ export class UserSettings extends connect(store)(LitElement) {
           .then( () => { console.log("Document successfully written!"); })
           .catch( (error) => { console.error('Error writing new message to Firebase Database', error); });    */
       }
-      location.reload();
+      // location.reload();
     }
 
     /* Update email */
@@ -214,7 +218,12 @@ export class UserSettings extends connect(store)(LitElement) {
     static get styles() {
       return [
         Settings,
-        userStyles
+        userStyles,
+        css`
+        #uploader { width: 100%; }
+        button:focus { outline: none; }
+        .profile { max-width: 150px; margin: auto;}
+        `
       ];
     }
   
@@ -231,46 +240,62 @@ export class UserSettings extends connect(store)(LitElement) {
         </div>
   
         <!-- Page Body -->
-        <form id="settings">
-          <fieldset  class="spec" ?on="${ this.profileTopic === 'profile' }">
-          <progress value="0" max="100" id="uploader">0%</progress>
-          <ul>
-            <li><h3 class="pageTitle">User's Profile${this._person}</h3></li>
-            <li><p><label for="fileupload">Select a photo to upload:</label><input type="file" name="fileupload" id="fileupload" accept="image/*" multiple></p></li>
-            <li><p><input id="contractor"       type=text        placeholder=""></p></li>
-            <li><p><input id="phoneNumber"      type="text"      placeholder=""></p></li>
-            <li><p><label>List my business in Phonebook</label><input type="checkbox" id="list" placeholder="true"></p></li>
-            <li><button id="save" class="action-button" >save</button></li>
-          </ul>
-        </fieldset>
+        <div  class="spec" ?on="${ this.profileTopic === 'profile' }">
+          <div class="profile">
+            <p>${this._person}</p>
+            <p>${this._phone}</p>
+            <input
+            type="image"
+            class="userImage"
+            id="image"
+            alt="user"
+            height="150px"
+            width="150px"
+            src="${this._photoURL}">
+            <progress value="0" max="100" id="uploader">0%</progress>
+            <p><label for="fileupload">upload a photo</label><input type="file" name="fileupload" id="fileupload" accept="image/*"></p>
+          </div>
+          
+          <form id="settings">
+            <ul>
+              <li><h3 class="pageTitle">Username</h3></li>
+              <li><p><label><input id="contractor" type="text" ></p></li></label>
+              <li><h3 class="pageTitle">Telephone</h3></li>
+              <li><p><label><input id="phoneNumber" type="text" ></p></li></label>
+              <li><p><label>List my Profile as Public</label><input type="checkbox" id="list" placeholder="true"></p></li>
+              <li><button id="save" class="action-button" >save</button></li>
+            </ul>
+          </form>
+          </div>
 
-        <fieldset class="spec" ?on="${ this.profileTopic === 'email' }">
+        <form class="spec" ?on="${ this.profileTopic === 'email' }">
+        ${this._userMail}
           <ul>
             <li><h3 class="pageTitle">Change Email</h3></li>
-            <li><p><label>Email            <input type="text" id="email"            placeholder="email"></label></p></li>
-            <li><p><label>Verify Email     <input type="text" id="emailVerify"      placeholder="verify"></label></p></li>
+            <li><p><label>Email<input type="text" id="email" placeholder="email"></label></p></li>
+            <li><p><label>Verify Email<input type="text" id="emailVerify" placeholder="verify"></label></p></li>
             <li><p><button id="update" class="action-button" >update</button></p></li>
             <li><div class="verified"></div></li>
           </ul>
-        </fieldset>
+        </form>
 
-        <fieldset class="spec" ?on="${ this.profileTopic === 'password' }">
+        <form class="spec" ?on="${ this.profileTopic === 'password' }">
         <ul>
           <li><h3 class="pageTitle">Update Password</h3></li>
           <li><p><label>New Password        <input type="text" id="newPass"         placeholder="password"></label></p></li>
           <li><p><label>Verify Password     <input type="text" id="passVerify"      placeholder="verify"></label></p></li>
           <li><p><button id="pass" class="action-button">create</button></p></li>
         </ul>
-        </fieldset>
+        </form>
 
-        <fieldset id="account" class="spec" ?on="${ this.profileTopic === 'delete' }">
+        <form id="account" class="spec" ?on="${ this.profileTopic === 'delete' }">
           <ul>
             <li><h3 class="pageTitle">Delete Account</h3></li>
             <li><p>Permanently delete the user account and data related to:</p></li>
             <!-- <li><p>\${this.userMail}</p></li> -->
             <li><p><button id="deleteUser" class="action-button">Delete</button></p></li>
           </ul>
-        </fieldset>
+        </form>
       </form>
   
       `

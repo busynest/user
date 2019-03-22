@@ -30,7 +30,10 @@ const start = {
   profileChoice:    'unChosen',
   settings:         'profile',
   photoURL:         null,
-  customer:         null
+  customer:         null,
+  name:             null,
+  phone:            null,
+  email:            null
 };
   
 const user = ( state = start, action ) => {

@@ -44,8 +44,7 @@ export const User = css`
 .userDrawer {
   max-width:            600px;
   margin:               auto;
-  background-image:     url("images/backgroundsvg.svg");
-  background-size:      cover;
+  background-color:     #fff;
   color:                #303030;
   padding:              8px 18px;
   box-sizing:           border-box;
@@ -138,7 +137,7 @@ input {
   border-radius:            4px;
 }
 
-a { text-transform: uppercase;  font-size: .6em; color: rgb(105,105,105); font-weight: 800; }
+a { text-transform: uppercase;  font-size: .6em; color: rgb(105,105,105); font-weight: 800; text-decoration: none; }
 p {text-align: center;}
 .inpat { display:grid; grid-template-columns: 60% 40%;}
 `;

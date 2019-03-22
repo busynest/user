@@ -18,7 +18,7 @@ export const Settings = css`
 form { box-sizing:          border-box; }
 .pageTitle          { margin: 0; }
 
-fieldset {
+form {
   max-width:        600px;
   margin:           auto;
   border:           0;

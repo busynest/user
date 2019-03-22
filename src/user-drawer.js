@@ -14,16 +14,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import { html, LitElement }             from 'lit-element';
 import { connect }                      from 'pwa-helpers/connect-mixin.js';
-import { store }                        from '../demo/store';
-// import { store }                        from '../../../src/store';
+import { store }                        from './store';
 import { userStyles, close }            from './styles';
 import { User }                         from './styles-drawer';
 import { closeSign }                    from './user-action'; 
 import { logOut, anon, google  }        from './user-functions';
-import  user                            from './user-reducer';
-store.addReducers({
-  user
-});
+
 export class UserDrawer extends connect(store)(LitElement) {
     static get properties() {
       return {
@@ -47,6 +43,7 @@ export class UserDrawer extends connect(store)(LitElement) {
     stateChanged(state) {
       this._subscribe   = state.user.snackState;
       this._log         = state.user.currentUser;
+      // this.welcome      = state.user.welcome;
     }
 
     _close() { closeSign(false) }
@@ -98,11 +95,11 @@ export class UserDrawer extends connect(store)(LitElement) {
       return html`
   
       <!-- Login Wrapper -->
-      <div class="visibility userDrawer" ?on="${ this._subscribe === true }" id="logs">
+      <div class="visibility userDrawer" ?on="${ this._subscribe === true }">
 
         <div class="exit">
           <div></div>
-          <h3 id="or">${this._log ? html`ACCOUNT` :  html`SUBSCRIBE` }</h3>
+          <h3 id="or">${this._log ? html`ACCOUNT` : html`SUBSCRIBE` }</h3>
           <button id="close" class="sign-right">${close}</button>
         </div>
 
@@ -119,11 +116,11 @@ export class UserDrawer extends connect(store)(LitElement) {
             <span     class="buttonText">Sign in with Google</span>
           </button></p>
 
-          <form>
+          <form id="logs">
           <ul>
             <li class="inpat">
-              <label><input   id="txtEmail"      type="email"      placeholder=""  >Email</label>
-              <label><input   id="txtPassword"   type="Password"   placeholder=""  >Password</label>
+              <label><input   id="txtEmail"      type="email"      >Email</label>
+              <label><input   id="txtPassword"   type="Password"   >Password</label>
             </li>
             <li><button id="log" class="action-button">Sign in</button></li>
           </ul>
@@ -133,8 +130,9 @@ export class UserDrawer extends connect(store)(LitElement) {
   
         <!-- Logged IN -->
         <div class="spec setLog" ?on="${ this._log === true }">
-          <p><a href="/settings">Profile Settings</a></p>
-          <p><a href="/feedback">Send Feedback</a></p>
+          <slot></slot>
+          <p><a href="/settings">Settings</a></p>
+          <!-- <p><a href="/feedback">Send Feedback</a></p> -->
           <p><a id="leave" aria-label="log out">log out</a></p>
         </div>
   
