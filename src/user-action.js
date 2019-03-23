@@ -20,6 +20,7 @@ export const SIGN_IN              = 'SIGN_IN';
 export const SET_USER             = 'SET_USER';
 export const SET_IMAGE            = 'SET_IMAGE';
 export const SET_NAME             = 'SET_NAME';
+export const IN_UP                = "IN_UP";
 
 // NAVIGATION
 export const navigate = (option) => {
@@ -49,12 +50,13 @@ export const closeSign            = (closeLogIN)    => (dispatch) => { dispatch(
 export const openSign             = (e)     => (dispatch, getState) => {
   if ( getState().user.snackState === true) { dispatch({ type: CLOSE_SIGN, e }); }
   else                                      { dispatch({ type: OPEN_SIGN,  e }); }
-} 
+}
 
+export const inUp                 = (register)     => { return { type: IN_UP, register }; }
 export const setAuth              = (currentUser)  => { return { type: LOG_IN_STATE, currentUser }; };
 export const setUser              = (user)         => { return { type: SET_USER, user }; };
 export const updateLogin          = (logged)       => { return { type: LOG_IN_STATE, logged }; };
-export const profile              = (profileType)   => (dispatch) => { dispatch({ type: PROFILE_TYPE, profileType }); };
+export const profile              = (profileType)  => (dispatch) => { dispatch({ type: PROFILE_TYPE, profileType }); };
 
 
 

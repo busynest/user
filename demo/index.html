@@ -16,7 +16,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1" /> <!-- user-scalable=no" -->
     <!-- BASE -->
     <base href="/">
-    <style> body { margin: 0; } .head { height: 64px; } </style>
+    <style>
+      body    { margin: 0; height: 100vh; }
+      .head   { height: 64px; display: grid; grid-template-columns: 1fr 64px ; background-color: #303030; }
+      main    { margin: 0 16px 0 16px; }
+      .links  { margin: auto; text-decoration: none; font-size: 1em; color: red; font-weight: 800; }
+      .link   { margin: auto; padding-left: 48px; text-decoration: none; font-size: 1em; color: #e8e8e8; font-weight: 800; }
+      footer  { background-color: #303030; height: 100%; color: #e8e8e8; display: grid; grid-template-rows: 64px 64px 64px;}
+      p       { margin: auto; }
+      @media all and (display-mode: standalone) {
+        body {
+          margin: 0;
+          border: 5px solid black;
+        }
+      }
+    </style>
     <script>
       // Redux assumes `process.env.NODE_ENV` exists in the ES module build.
       // https://github.com/reactjs/redux/issues/2907
@@ -27,6 +41,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <!-- Redux output to properties -->
     <div class="head">
+        <a class="link" href="https://www.inmostfire.com">pwa-auth</a>
         <user-icon></user-icon>
     </div>
     <main>
@@ -34,6 +49,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <user-settings> </user-settings>
     </main>
     
+    <footer>
+      <a class="links" href="https://www.npmjs.com/package/pwa-auth">NPM</a>
+      <a class="links" href="https://github.com/busynest/user">Github</a>
+    </footer>
+
     <!-- LOAD ANY POLYFILLS YOUR BROWSER NEEDS -->
     <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js" async ></script>
 

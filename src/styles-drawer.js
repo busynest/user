@@ -31,17 +31,17 @@ export const User = css`
 
 .visibility {
   position:             fixed;
-  top:                  0;
   right:                0;
   visibility:           hidden;
   will-change:          transform;
-  transform: translate3d(0, -100%, 0);
+  transform: translate3d(0, -150%, 0);
   transition-property:  visibility, transform;
   transition-duration:  1.4s;
   display:              block;
 }
 
 .userDrawer {
+  z-index: 1;
   max-width:            600px;
   margin:               auto;
   background-color:     #fff;

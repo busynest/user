@@ -1,9 +1,9 @@
 {
   "name": "pwa-auth",
   "author": "Modern Projects <jack.solutionbox@gmail.com>(https://www.contractorscentre.com)",
-  "version": "0.0.8",
+  "version": "0.0.12",
   "description": "A User Management Component with 3 HTML Tags, and 1 Boilerplate Function to help manage the subsriber's settings.",
-  "homepage": "https://www.contractorscentre.com",
+  "homepage": "https://www.inmostfire.com",
   "main": "pwa-auth.js",
   "repository": {
     "type": "git",

@@ -11,7 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 // @ts-check
 
-import { html, LitElement, css }             from 'lit-element';
+import { html, LitElement, css }        from 'lit-element';
 import { connect }                      from 'pwa-helpers/connect-mixin.js';
 import { store }                        from './store';
 import { navigate, setName }            from './user-action.js';
@@ -19,10 +19,12 @@ import { userStyles }                   from './styles';
 import { Settings }                     from './styles-settings';
 import { firebaseUser, deleteUser, runFirebase, userName, profileURL, userEmail }     from './user-functions'; // runFirebase
 
+export const faceIcon = html`<svg viewBox="0 0 24 24" height="175px" width="175px"><path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"></path></svg>`;
 export class UserSettings extends connect(store)(LitElement) {
     static get properties() {
       return {
         profileTopic:   { type: String },
+        _user:          { type: Boolean },
         _person:        { type: String },
         _phone:         { type: Number },
         _userMail:      { type: String },
@@ -54,20 +56,20 @@ export class UserSettings extends connect(store)(LitElement) {
       runFirebase();
 
       firebase.auth().onAuthStateChanged( (firebaseUser) => {
-        if (firebaseUser) { /* INCLUDE */ this._person = userName(); store.dispatch( setName( this._person ) ); }
+        if (firebaseUser) { /* INCLUDE */
+          this._person    = userName();
+          this._userMail  = userEmail();
+          this._photoURL  = profileURL();
+          store.dispatch( setName( this._person ) );
+        }
         else              { /* EXCLUDE */ }
         store.dispatch( setName( this._person ) );
       });
-
-      // this._person    = firebaseUser();
-      this._userMail  = userEmail();
-      this._name      = userName();
-      this._photoURL  = profileURL();
-      this._getProfile();
     }
   
     stateChanged(state) {
       this.profileTopic      = state.user.settings;
+      this._user             = state.user.currentUser;
       this._person           = state.user.customer;
       this._name             = state.user.name;
       this._phone            = state.user.phone;
@@ -224,47 +226,72 @@ export class UserSettings extends connect(store)(LitElement) {
         button:focus  { outline: none; }
 
         #uploader {
-          width: 100%;
-          height: 4px;
-          position: absolute;
-          top: 0; left: 0;
+          position:         absolute;
+          z-index:          -1;
+          right:            0;
+          width:            28px;
+          height:           28px;
+          border:           2px solid #303030;
+          border-radius:    50%;
+          transform:        rotateZ(90deg);
+          overflow:         hidden;
+          box-shadow:    1px 1px 2px black, 0 0 25px grey, 0 0 5px #fff;
         }
 
         .profile {
-          width: 175px;
-          margin: auto;
+          width:            200px;
+          margin:           auto;
         }
 
         .userImage {
           border-radius:  50%;
           overflow:       hidden;
-          margin: auto;
+          margin:         auto;
+          border:         2px solid #303030;
+          box-shadow:    1px 1px 2px black, 0 0 25px grey, 0 0 5px #fff;
         }
 
         .file-container {
-          position: relative;
-          width: 175px;
+  
         } 
 
         .trigger {
-          display: block;
-          padding: 14px 14px;
-          background: #39D2B4;
-          color: #fff;
-          font-size: 1em;
-          transition: all .4s;
-          cursor: pointer;
-          text-align: center;
+          position: relative;
+          width: 200px;
+          display:        block;
+          text-shadow:    1px 1px 12px black, 0 0 35px grey, 0 0 15px #fff;
+          font-size:      1em;
+          transition:     all .4s;
+          cursor:         pointer;
+          text-align:     center;
         }
 
         #fileupload {
-          width: 175px;
-          background: #39D2B4;
-          position: absolute;
+ 
+
+          width:          200px;
+          height:         100%;
+         /* background:   #39D2B4; */
+          position:       absolute;
           top: 0; left: 0;
-          opacity: 0;
-          padding: 14px 0;
-          cursor: pointer;
+          opacity:        0;
+
+          cursor:         pointer;
+        }
+
+        .max {
+          max-width: 600px;
+          margin: auto;
+        }
+
+        .welcome {
+          text-align: center;
+          text-shadow:    1px 1px 2px black, 0 0 15px grey, 0 0 5px #fff;
+        }
+
+        @media  (max-width: 460px) {
+          #profile, #email { text-align: left; }
+          #account, #password { text-align: right; }
         }
 
         `
@@ -287,33 +314,43 @@ export class UserSettings extends connect(store)(LitElement) {
         <div  class="spec" ?on="${ this.profileTopic === 'profile' }">
           <div class="profile">
 
+          <h2 class="welcome">Hello ${this._person}</h2>
+
+          <label for="fileupload" class="trigger">
+            <input type="file" name="fileupload" id="fileupload" accept="image/*">
+            ${this._user
+            ? html`
+            <progress value="0" max="100" id="uploader"></progress>
             <input
               type="image"
               class="userImage"
               id="image"
               alt="user"
-              height="175px"
-              width="175px"
+              height="171px"
+              width="171px"
               src="${this._photoURL}">
-            <p>${this._person}</p>
+              `
+              : html`${faceIcon}` }
+              upload a photo
+          </label>
+ 
             <p>${this._phone}</p>
 
-            <div class="file-container">
-              <progress value="0" max="100" id="uploader">0%</progress>
-              <label for="fileupload" class="trigger">upload a photo</label><input type="file" name="fileupload" id="fileupload" accept="image/*">
-            </div>
-          </div>
-          
+        </div>
           <form id="settings">
             <ul>
               <li><h3 class="pageTitle">Username</h3></li>
               <li><p><label><input id="contractor" type="text" ></p></li></label>
               <li><h3 class="pageTitle">Telephone</h3></li>
               <li><p><label><input id="phoneNumber" type="text" ></p></li></label>
-              <li><p><label>List my Profile as Public</label><input type="checkbox" id="list" placeholder="true"></p></li>
-              <li><button id="save" class="action-button" >save</button></li>
-            </ul>
+              </ul>
           </form>
+
+          <ul class="max">
+            <li><p><label><input type="checkbox" id="list" placeholder="true">Public Profile</label></p></li>
+            <li><button id="save" class="action-button" >save</button></li>
+          </ul>
+
           </div>
 
         <form class="spec" ?on="${ this.profileTopic === 'email' }">

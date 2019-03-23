@@ -29,7 +29,7 @@ form {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap:         8px;
   margin:           0px;
-  padding:          4px;
+  padding:          0px;
 }
   
 .topButton {
@@ -40,7 +40,7 @@ form {
   margin:                   auto;
   padding:                  0px;
   font-weight:              800;
-  font-size:                1em;
+  font-size:                .8em;
   border-radius:            5px;
   background-color:         transparent;
 }

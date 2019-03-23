@@ -20,7 +20,8 @@ import {
   SET_USER,
   SET_IMAGE,
   SET_NAME,
-  LOG_IN_STATE
+  LOG_IN_STATE,
+  IN_UP
 } from  './user-action';
 
 const start = {
@@ -33,7 +34,8 @@ const start = {
   customer:         null,
   name:             null,
   phone:            null,
-  email:            null
+  email:            null,
+  register:         true
 };
   
 const user = ( state = start, action ) => {
@@ -48,6 +50,7 @@ const user = ( state = start, action ) => {
     case SET_USER:        return { ...state, setUser:         action.user };
     case SET_IMAGE:       return { ...state, photoURL:        action.image };
     case SET_NAME:        return { ...state, customer:        action.name };
+    case IN_UP:           return { ...state, register:        action.register };
 
     case PROFILE_TYPE:    return { ...state, profileChoice:   action.profileChoice};
   

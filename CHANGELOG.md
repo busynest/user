@@ -13,12 +13,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Github Login
 - display nested content after webcomponent loads
 
-## [0.0.8] - 2019-03-22
+## [0.0.12] - 2019-03-23
+
+### Changed
+- `<user-icon>`: background-color, margin
+- `<user-settings>` > Profile Dashboard: new `<user-photo>` upload component, justified titles, 
+- Demo updated
+
+## [0.0.11] - 2019-03-22
 
 ### Changed
 - `<user-drawer>`: drawer's top starts at 0px.
 - `<user-icon>`: removed border to 0px.
 - `<user-settings>` > Profile: display circular photo, upload photo design
+
+## Fixed
+- `<user-drawer>`: position, layers
 
 ## [0.0.6] - 2019-03-21
 

@@ -53,13 +53,14 @@ export class UserIcon extends connect(store)(LitElement) {
     return [
       userStyles,
       css`
-        :host { z-index: 1; }
+        :host { margin: auto; display: block; }
 
         #subscribe:hover { background-color: lightgrey; }
         #subscribe {
+          display:          block;
           margin:           auto;
           padding:          0;
-          background:       transparent;
+          background:       #fff;
           border-radius:    50%;
           clip-path:        circle(50%);
           overflow:         hidden;
@@ -72,7 +73,7 @@ export class UserIcon extends connect(store)(LitElement) {
           overflow:       hidden;
           width:          32px;
           height:         32px;
-          margin: auto;
+          margin:         auto;
         }
         svg{ margin:auto;}
         `
@@ -97,7 +98,7 @@ export class UserIcon extends connect(store)(LitElement) {
           `
           : html`${faceIcon}` }
       </button>
-      <slot></slot>
+
     `;
   }
 }

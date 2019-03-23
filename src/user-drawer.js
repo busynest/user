@@ -12,19 +12,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 // @ts-check
 
-import { html, LitElement }             from 'lit-element';
+import { html, LitElement, css }        from 'lit-element';
 import { connect }                      from 'pwa-helpers/connect-mixin.js';
 import { store }                        from './store';
 import { userStyles, close }            from './styles';
 import { User }                         from './styles-drawer';
-import { closeSign }                    from './user-action'; 
+import { closeSign, inUp }              from './user-action'; 
 import { logOut, anon, google  }        from './user-functions';
 
 export class UserDrawer extends connect(store)(LitElement) {
     static get properties() {
       return {
         _log:             { type: Boolean },
-        _subscribe:       { type: Boolean }
+        _subscribe:       { type: Boolean },
+        _sign:            { type: Boolean }
       };
     }
     
@@ -33,16 +34,18 @@ export class UserDrawer extends connect(store)(LitElement) {
     }
 
     firstUpdated() {
-      this.shadowRoot.getElementById('close')         .addEventListener('click', () => { store.dispatch(closeSign(false)) } );
+      this.shadowRoot.getElementById('close')         .addEventListener('click', () => { store.dispatch( closeSign(false) ) } );
       this.shadowRoot.getElementById('or')            .addEventListener('click', () => { anon() } );
       this.shadowRoot.getElementById('googleSignIn')  .addEventListener('click', () => { google() } );
       this.shadowRoot.getElementById('leave')         .addEventListener('click', () => { logOut() } );
       this.shadowRoot.getElementById('log')           .addEventListener('click', () => { this._signIn() } );
+      this.shadowRoot.getElementById('subscribe')     .addEventListener('click', () => { store.dispatch( inUp(false) ) } );
     }
 
     stateChanged(state) {
       this._subscribe   = state.user.snackState;
       this._log         = state.user.currentUser;
+      this._sign        = state.user.register;
       // this.welcome      = state.user.welcome;
     }
 
@@ -88,7 +91,12 @@ export class UserDrawer extends connect(store)(LitElement) {
     static get styles() {
       return [
         userStyles,
-        User
+        User,
+        css`
+        :host { 
+
+         }
+        `
       ]}
   
     render() {
@@ -103,20 +111,16 @@ export class UserDrawer extends connect(store)(LitElement) {
           <button id="close" class="sign-right">${close}</button>
         </div>
 
-        <div
-          class="spec"
-          ?on="${ this._log === false }"
-          id="logForm"
-          autocomplete="on">
+        <div class="spec" ?on="${ this._log === false }">
 
-          <p><a href="/subscribe">create a new account</a></p>
+          <p><button id="subscribe">create a new account</button></p>
   
-          <p><button     id="googleSignIn" class="google">
-            <span     class="icon"></span>
-            <span     class="buttonText">Sign in with Google</span>
+          <p><button id="googleSignIn" class="google">
+            <span class="icon"></span>
+            <span class="buttonText">Sign in with Google</span>
           </button></p>
 
-          <form id="logs">
+          <form id="logs" autocomplete="on" class="spec" ?on="${ this._sign === true }">
           <ul>
             <li class="inpat">
               <label><input   id="txtEmail"      type="email"      >Email</label>
@@ -126,13 +130,25 @@ export class UserDrawer extends connect(store)(LitElement) {
           </ul>
           </form>
 
+        <!-- Sign UP -->
+        <form id="signup" autocomplete="on" class="spec" ?on="${ this._sign === false }">
+          <ul>
+            <li class="inpat">
+              <label><input   id="txtEmail"      type="email"      >Email</label>
+              <label><input   id="txtPassword"   type="Password"   >Password</label>
+              <label><input   id="txtEmail"      type="email"      >Verify Email</label>
+              <label><input   id="txtPassword"   type="Password"   >Verify Password</label>
+            </li>
+            <li><button id="log" class="action-button">Sign up</button></li>
+          </ul>
+        </form>
+
         </div>
   
         <!-- Logged IN -->
         <div class="spec setLog" ?on="${ this._log === true }">
           <slot></slot>
           <p><a href="/settings">Settings</a></p>
-          <!-- <p><a href="/feedback">Send Feedback</a></p> -->
           <p><a id="leave" aria-label="log out">log out</a></p>
         </div>
   
