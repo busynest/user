@@ -1,11 +1,10 @@
 
-A User Management Component is designed with 3 HTML Tags, and 1 Boilerplate Function to sign up, sign in, log out, change account details, delete account.
+User Management Component with 3 HTML Tags, and 1 Boilerplate Function to display user icon, sign up, sign in, log out, change account details, delete account.
 
-pwa-auth includes Firebase's Cloud Firestore, Cloud Storage, and User Management that require Firebase setup to use this component.
+![workflow](https://www.inmostfire.com/images/workflow.png)
+![Subscribe](https://www.inmostfire.com/images/pwa-auth.png)
 
- ![Subscribe](https://www.inmostfire.com/images/mobile-drawer.png)
-
- ![User Management](https://drive.google.com/file/d/1aUD--6x4eGrz-_F9UnvD0FDUuGjUcG90/view?usp=sharing)
+PWA-AUTH includes Firebase's Cloud Firestore, Cloud Storage, and User Management that require Firebase setup to use this component.
 
 Application Authentication
 ======================
