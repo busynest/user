@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Github Login
 - display nested content after webcomponent loads
 
-## [0.0.12] - 2019-03-23
+## [0.0.13] - 2019-03-23
 
 ### Changed
 - `<user-icon>`: background-color, margin

@@ -340,9 +340,9 @@ export class UserSettings extends connect(store)(LitElement) {
           <form id="settings">
             <ul>
               <li><h3 class="pageTitle">Username</h3></li>
-              <li><p><label><input id="contractor" type="text" ></p></li></label>
+              <li><p><label><input id="contractor" type="text" ></label></p></li>
               <li><h3 class="pageTitle">Telephone</h3></li>
-              <li><p><label><input id="phoneNumber" type="text" ></p></li></label>
+              <li><p><label><input id="phoneNumber" type="text" ></label></p></li>
               </ul>
           </form>
 
@@ -357,8 +357,8 @@ export class UserSettings extends connect(store)(LitElement) {
         ${this._userMail}
           <ul>
             <li><h3 class="pageTitle">Change Email</h3></li>
-            <li><p><label>Email<input type="text" id="email" placeholder="email"></label></p></li>
-            <li><p><label>Verify Email<input type="text" id="emailVerify" placeholder="verify"></label></p></li>
+            <li><p><label>Email<input type="text" id="email"></label></p></li>
+            <li><p><label>Verify Email<input type="text" id="emailVerify"></label></p></li>
             <li><p><button id="update" class="action-button" >update</button></p></li>
             <li><div class="verified"></div></li>
           </ul>
@@ -367,8 +367,8 @@ export class UserSettings extends connect(store)(LitElement) {
         <form class="spec" ?on="${ this.profileTopic === 'password' }">
         <ul>
           <li><h3 class="pageTitle">Update Password</h3></li>
-          <li><p><label>New Password        <input type="text" id="newPass"         placeholder="password"></label></p></li>
-          <li><p><label>Verify Password     <input type="text" id="passVerify"      placeholder="verify"></label></p></li>
+          <li><p><label>New Password        <input type="text" id="newPass"></label></p></li>
+          <li><p><label>Verify Password     <input type="text" id="passVerify"></label></p></li>
           <li><p><button id="pass" class="action-button">create</button></p></li>
         </ul>
         </form>

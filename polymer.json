@@ -6,7 +6,9 @@
   "license": "MIT",
   "extraDependencies": [
     "node_modules/@webcomponents/webcomponentsjs/**",
-    "node_modules/@webcomponents/webcomponentsjs/bundles/**"
+    "node_modules/@webcomponents/webcomponentsjs/bundles/**",
+    "demo/robots.txt",
+    "demo/manifest.json"
   ],
   "builds":
   [
