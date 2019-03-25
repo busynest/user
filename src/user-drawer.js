@@ -17,7 +17,7 @@ import { connect }                      from 'pwa-helpers/connect-mixin.js';
 import { store }                        from './store';
 import { userStyles, close }            from './styles';
 import { User }                         from './styles-drawer';
-import { closeSign, inUp }              from './user-action'; 
+import { closeSign, signUp }            from './user-action'; 
 import { logOut, anon, google  }        from './user-functions';
 
 export class UserDrawer extends connect(store)(LitElement) {
@@ -39,7 +39,7 @@ export class UserDrawer extends connect(store)(LitElement) {
       this.shadowRoot.getElementById('googleSignIn')  .addEventListener('click', () => { google() } );
       this.shadowRoot.getElementById('leave')         .addEventListener('click', () => { logOut() } );
       this.shadowRoot.getElementById('log')           .addEventListener('click', () => { this._signIn() } );
-      this.shadowRoot.getElementById('subscribe')     .addEventListener('click', () => { store.dispatch( inUp(false) ) } );
+      this.shadowRoot.getElementById('new')           .addEventListener('click', () => { store.dispatch( signUp() ) } );
     }
 
     stateChanged(state) {
@@ -113,7 +113,7 @@ export class UserDrawer extends connect(store)(LitElement) {
 
         <div class="spec" ?on="${ this._log === false }">
 
-          <p><button id="subscribe">create a new account</button></p>
+          <p><button id="new">create a new account</button></p>
   
           <p><button id="googleSignIn" class="google">
             <span class="icon"></span>

@@ -12,6 +12,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Twitter Login
 - Github Login
 - display nested content after webcomponent loads
+- create password after social Login
+
+## [0.0.14] - 2019-03-24
+
+###
+- Verify user before completing button click
+- Forms prevent default
+
+### Changed
+- `<user-drawer>`: create new account toggle,
 
 ## [0.0.13] - 2019-03-23
 

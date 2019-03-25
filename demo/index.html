@@ -17,19 +17,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- BASE -->
     <base href="/">
     <style>
-      body    { margin: 0; height: 100vh; }
-      .head   { height: 64px; display: grid; grid-template-columns: 1fr 64px ; background-color: #303030; }
-      main    { margin: 0 16px 0 16px; }
+      body    { margin: 0; background-color: #303030; }
+      header  { height: 64px; display: grid; grid-template-columns: 1fr 64px ; background-color: #303030; }
+      main    { margin: 0 16px 0 16px; background-color: #fff; border-radius: 8px; padding: 8px;}
+      footer  { background-color: #303030; height: 100%; color: #e8e8e8; }
       .links  { margin: auto; text-decoration: none; font-size: 1em; color: red; font-weight: 800; }
-      .link   { margin: auto; padding-left: 48px; text-decoration: none; font-size: 1em; color: #e8e8e8; font-weight: 800; }
-      footer  { background-color: #303030; height: 100%; color: #e8e8e8; display: grid; grid-template-rows: 64px 64px 64px;}
+      .link   { margin: auto; text-decoration: none; font-size: 1em; color: #e8e8e8; font-weight: 800; }
       p       { margin: auto; }
-      @media all and (display-mode: standalone) {
-        body {
-          margin: 0;
-          border: 5px solid black;
-        }
-      }
+      h1, h2  { text-align: center; }
+      h3      { text-align: center; color: #e8e8e8; padding-left: 64px; }
     </style>
     <!-- MANIFEST -->
     <link rel="manifest"                                href="manifest.json" />
@@ -41,19 +37,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </head>
   <body>
 
-    <!-- Redux output to properties -->
-    <div class="head">
-        <a class="link" href="https://www.inmostfire.com">pwa-auth</a>
+    <header>
+        <h3><a class="link" href="https://www.inmostfire.com">pwa-auth</a></h3>
+        <!-- ADD ICON -->
         <user-icon></user-icon>
-    </div>
+    </header>
+
+    <!-- ADD DRAWER -->
+    <user-drawer></user-drawer>
+
     <main>
-      <user-drawer></user-drawer>
+      <!-- ADD SETTINGS -->
       <user-settings> </user-settings>
     </main>
     
     <footer>
-      <a class="links" href="https://www.npmjs.com/package/pwa-auth">NPM</a>
-      <a class="links" href="https://github.com/busynest/user">Github</a>
+      <h2><a class="link" href="https://www.inmostfire.com">Application Authentication</a></h2>
+      <h2><a class="links" href="https://www.npmjs.com/package/pwa-auth">NPM</a></h2>
+      <p></p>
+      <h2><a class="links" href="https://github.com/busynest/user">Github</a></h2>
+      <p></p>
     </footer>
 
     <!-- LOAD ANY POLYFILLS YOUR BROWSER NEEDS -->

@@ -29,7 +29,7 @@ export class UserSettings extends connect(store)(LitElement) {
         _phone:         { type: Number },
         _userMail:      { type: String },
         _photoURL:      { type: String },
-        _name:          { type: String },
+        _name:          { type: String }
       }
     }
 
@@ -40,6 +40,12 @@ export class UserSettings extends connect(store)(LitElement) {
     firstUpdated() {
       const a = this.shadowRoot.getElementById('settings');
       a.addEventListener('click', e => { e.preventDefault(); });
+      const b = this.shadowRoot.getElementById('emailForm');
+      b.addEventListener('click', e => { e.preventDefault(); });
+      const c = this.shadowRoot.getElementById('passwordForm');
+      c.addEventListener('click', e => { e.preventDefault(); });
+      const d = this.shadowRoot.getElementById('deleteForm');
+      d.addEventListener('click', e => { e.preventDefault(); });
 
       this.shadowRoot.getElementById('profile')   .addEventListener('click',    () => { store.dispatch(navigate('profile')); } );
       this.shadowRoot.getElementById('email')     .addEventListener('click',    () => { store.dispatch(navigate('email')); } );
@@ -47,9 +53,9 @@ export class UserSettings extends connect(store)(LitElement) {
       this.shadowRoot.getElementById('account')   .addEventListener('click',    () => { store.dispatch(navigate('delete')); } );
 
       this.shadowRoot.getElementById('save')      .addEventListener('click',    () => { this.alertProfile(); } );
-      this.shadowRoot.getElementById('update')    .addEventListener('click',    () => { this.updateEmail(); } );
-      this.shadowRoot.getElementById('pass')      .addEventListener('click',    () => { this.updatePassword(); } );
-      this.shadowRoot.getElementById('deleteUser').addEventListener('click',    () => { this._deleteUser(); } );
+      this.shadowRoot.getElementById('update')    .addEventListener('click',    () => { this.alertEmail(); } );
+      this.shadowRoot.getElementById('pass')      .addEventListener('click',    () => { this.alertPassword(); } );
+      this.shadowRoot.getElementById('deleteUser').addEventListener('click',    () => { this.alertDelete(); } );
       
       this.shadowRoot.getElementById("fileupload").addEventListener('change',   () => { this._handleFiles(); }, false);
 
@@ -89,8 +95,7 @@ export class UserSettings extends connect(store)(LitElement) {
       //console.log(phone);
     }
 
-    alertProfile() { alert( this.updateProfile() ) }
-
+    alertProfile()  { if (this._user) { this.updateProfile() } }
     updateProfile() {
       const person          = firebaseUser();
       const contractor      = this.shadowRoot.getElementById('contractor').value;
@@ -125,6 +130,7 @@ export class UserSettings extends connect(store)(LitElement) {
     }
 
     /* Update email */
+    alertEmail()  { if (this._user) { this.updateEmail(); } }
     updateEmail() {
       const user = firebaseUser();
       const email = this.shadowRoot.getElementById('email').value;
@@ -137,6 +143,7 @@ export class UserSettings extends connect(store)(LitElement) {
     }
     
     /* Update Password */
+    alertPassword()  { if (this._user) { this.updatePassword(); } }
     updatePassword() {
       const user = firebaseUser();
       const newPassword = this.shadowRoot.getElementById('newPass').value;
@@ -146,7 +153,8 @@ export class UserSettings extends connect(store)(LitElement) {
     }
 
     /* Delete User Account */
-    _deleteUser() {
+    alertDelete()  { if (this._user) { this.deleteUser(); } }
+    deleteUser() {
       const d = confirm("Delete Account?");
       if    ( d == true ) { deleteUser(); console.log("user gone"); }
       else  { console.log("user here"); }
@@ -227,7 +235,6 @@ export class UserSettings extends connect(store)(LitElement) {
 
         #uploader {
           position:         absolute;
-          z-index:          -1;
           right:            0;
           width:            28px;
           height:           28px;
@@ -314,7 +321,7 @@ export class UserSettings extends connect(store)(LitElement) {
         <div  class="spec" ?on="${ this.profileTopic === 'profile' }">
           <div class="profile">
 
-          <h2 class="welcome">Hello ${this._person}</h2>
+          <h2 class="welcome">${this._person}</h2>
 
           <label for="fileupload" class="trigger">
             <input type="file" name="fileupload" id="fileupload" accept="image/*">
@@ -353,27 +360,27 @@ export class UserSettings extends connect(store)(LitElement) {
 
           </div>
 
-        <form class="spec" ?on="${ this.profileTopic === 'email' }">
+        <form class="spec" ?on="${ this.profileTopic === 'email' }" id="emailForm">
         ${this._userMail}
           <ul>
             <li><h3 class="pageTitle">Change Email</h3></li>
-            <li><p><label>Email<input type="text" id="email"></label></p></li>
-            <li><p><label>Verify Email<input type="text" id="emailVerify"></label></p></li>
+            <li><p><label>Email<input type="email" id="email"></label></p></li>
+            <li><p><label>Verify Email<input type="email" id="emailVerify"></label></p></li>
             <li><p><button id="update" class="action-button" >update</button></p></li>
             <li><div class="verified"></div></li>
           </ul>
         </form>
 
-        <form class="spec" ?on="${ this.profileTopic === 'password' }">
+        <form class="spec" ?on="${ this.profileTopic === 'password' }" id="passwordForm">
         <ul>
           <li><h3 class="pageTitle">Update Password</h3></li>
-          <li><p><label>New Password        <input type="text" id="newPass"></label></p></li>
-          <li><p><label>Verify Password     <input type="text" id="passVerify"></label></p></li>
+          <li><p><label>New Password        <input type="Password" id="newPass"></label></p></li>
+          <li><p><label>Verify Password     <input type="Password" id="passVerify"></label></p></li>
           <li><p><button id="pass" class="action-button">create</button></p></li>
         </ul>
         </form>
 
-        <form id="account" class="spec" ?on="${ this.profileTopic === 'delete' }">
+        <form class="spec" ?on="${ this.profileTopic === 'delete' }" id="deleteForm">
           <ul>
             <li><h3 class="pageTitle">Delete Account</h3></li>
             <li><p>Permanently delete the user account and data related to:</p></li>

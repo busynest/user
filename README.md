@@ -1,54 +1,69 @@
+Application Authentication
+======================
+![workflow](https://www.inmostfire.com/images/workflow.png) [Demo](https://www.inmostfire.com)
 
 User Management Component with 3 HTML Tags, and 1 Boilerplate Function to display user icon, sign up, sign in, log out, change account details, delete account.
 
-![workflow](https://www.inmostfire.com/images/workflow.png)
-![Subscribe](https://www.inmostfire.com/images/pwa-auth.png)
+![Subscribe](https://www.inmostfire.com/images/settings.png)
 
 PWA-AUTH includes Firebase's Cloud Firestore, Cloud Storage, and User Management that require Firebase setup to use this component.
 
-Application Authentication
-======================
-* `<user-icon>`
-  - 1 photo
-  - fetch social login photo
-  - Upload / Change Profile Photo
-  - logged in Photo
-  - logged out Photo
-  - unavailable Photo
-* `<user-drawer>`
-  - Drop-down 
-  - One click Google Login
-  - Email Addresses and Passwords
-* `<user-settings>` page:
-  - Profile
-  - Email
-  - Password
-  - Delete
-* We use lit-Element + Redux + Firebase to eliminate boilerplate code and promote best practices.
-
-## Please send Feedback
-All feedback, comments, bugs, and requests are welcome.
-
 ## Google & Firebase setup
-* Add Google Analytics to Website `<head>`
+* Add Google Analytics
 * Setup Firebase Project
-* Initialize Firebase Authentication
-  - email
-  - anonymous / For testing
-  - google
+* Initialize Firebase Authentication - email, anonymous, google
 * Initialize Firestore Database
+```javascript
+// Initialize Firebase
+const admin = {
+    apiKey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    authDomain: "xxxxxxx.firebaseapp.com",
+    databaseURL: "https://xxxxxxx.firebaseio.com",
+    projectId: "xxxxxxx",
+    storageBucket: "xxxxxxx.appspot.com",
+    messagingSenderId: "xxxxxxxxxxx"
+};
+// REFERENCE TO SERVICES - Global
+const application           = firebase.initializeApp(admin);
+const firestore             = application.firestore();
+const storage               = firebase.storage();
+const storageRef            = storage.ref();
+```
+
+| `<user-icon>` | `<user-drawer>` | `<user-settings>` |
+| ------------- |:-------------:| -----:|
+| 1 photo | Drop-down | Profile |
+| fetch social login photo | One click Google Login | Email |
+| Upload / Change Profile Photo | Email Addresses and Passwords | Password |
+| logged in Photo | | Delete |
+| logged out Photo |
+| unavailable Photo |
 
 ## Website Setup:
-* `import { runFirebase } from 'pwa-auth/src/user-functions';`
-* `constructor() { runFirebase(); }`
-* `import 'pwa-auth';`
-* `<header>`
-*   `<user-icon></user-icon>`
-* `</header>`
-* `<user-drawer></user-drawer>`
-* `<main>`
-*   `<user-settings></user-settings>`
-* `</main>`
+```javascript
+import 'pwa-auth';
+import { runFirebase } from 'pwa-auth/src/user-functions';
+constructor() { runFirebase(); }
+```
+
+```html
+<header>
+    <user-icon></user-icon>
+</header>
+
+<user-drawer></user-drawer>
+
+<main>
+    <user-settings></user-settings>
+</main>
+```
+
+## Properties (in Development)
+| Property      | Description   | Default |
+| ------------- |:-------------:| -----:|
+| --drawer-position:   | Static or Still during scrolling fixed / absolute | fixed |
+| --drawer-background-color:   | change background | #fff |
+| --drawer-border:   | border thinckness | 3px |
 
 ## Load any Pollyfills your browser needs
 * `<script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js" async ></script>`
@@ -63,3 +78,7 @@ All feedback, comments, bugs, and requests are welcome.
 
 [Jack's Publishing](https://www.jackspublishing.com)
 pwa-auth use case example: [contractor's centre](https://www.contractorscentre.com)
+
+## Please send Feedback
+All feedback, comments, bugs, and requests are welcome.
+

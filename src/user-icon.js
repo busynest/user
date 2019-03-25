@@ -34,7 +34,7 @@ export class UserIcon extends connect(store)(LitElement) {
   }
 
   firstUpdated() {
-    this.shadowRoot.getElementById('subscribe').addEventListener('click', (e) => { store.dispatch(openSign(e)) } );
+    this.shadowRoot.getElementById('subscribe').addEventListener('click', () => { store.dispatch(openSign()) } );
   
     firebase.auth().onAuthStateChanged( (firebaseUser) => {
       if (firebaseUser) { /* INCLUDE */ this._photoURL = profileURL(); }

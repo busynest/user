@@ -20,7 +20,8 @@ export const SIGN_IN              = 'SIGN_IN';
 export const SET_USER             = 'SET_USER';
 export const SET_IMAGE            = 'SET_IMAGE';
 export const SET_NAME             = 'SET_NAME';
-export const IN_UP                = "IN_UP";
+export const SIGN_UP_OPEN         = "SIGN_UP_OPEN";
+export const SIGN_UP_CLOSE        = "SIGN_UP_CLOSE";
 
 // NAVIGATION
 export const navigate = (option) => {
@@ -47,12 +48,17 @@ export const setImage             = (image)        => { return { type: SET_IMAGE
 export const setName              = (name)         => { return { type: SET_NAME,  name }; };
 
 export const closeSign            = (closeLogIN)    => (dispatch) => { dispatch({ type: CLOSE_SIGN, closeLogIN }); };
+
 export const openSign             = (e)     => (dispatch, getState) => {
   if ( getState().user.snackState === true) { dispatch({ type: CLOSE_SIGN, e }); }
   else                                      { dispatch({ type: OPEN_SIGN,  e }); }
 }
 
-export const inUp                 = (register)     => { return { type: IN_UP, register }; }
+export const signUp             = (register)     => (dispatch, getState) => {
+  if ( getState().user.register === false)   { dispatch({ type: SIGN_UP_OPEN,  register }); }
+  else                                      { dispatch({ type: SIGN_UP_CLOSE, register }); }
+}
+// export const signUp               = (register)     => { return { type: IN_UP, register }; }
 export const setAuth              = (currentUser)  => { return { type: LOG_IN_STATE, currentUser }; };
 export const setUser              = (user)         => { return { type: SET_USER, user }; };
 export const updateLogin          = (logged)       => { return { type: LOG_IN_STATE, logged }; };

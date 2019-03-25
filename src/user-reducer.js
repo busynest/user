@@ -21,7 +21,8 @@ import {
   SET_IMAGE,
   SET_NAME,
   LOG_IN_STATE,
-  IN_UP
+  SIGN_UP_OPEN,
+  SIGN_UP_CLOSE
 } from  './user-action';
 
 const start = {
@@ -45,12 +46,14 @@ const user = ( state = start, action ) => {
 
     case OPEN_SIGN:       return { ...state, snackState:      true };
     case CLOSE_SIGN:      return { ...state, snackState:      false };
+
+    case SIGN_UP_OPEN:    return { ...state, register:        true };
+    case SIGN_UP_CLOSE:   return { ...state, register:        false };
     
     case LOG_IN_STATE:    return { ...state, currentUser:     action.logged };
     case SET_USER:        return { ...state, setUser:         action.user };
     case SET_IMAGE:       return { ...state, photoURL:        action.image };
     case SET_NAME:        return { ...state, customer:        action.name };
-    case IN_UP:           return { ...state, register:        action.register };
 
     case PROFILE_TYPE:    return { ...state, profileChoice:   action.profileChoice};
   

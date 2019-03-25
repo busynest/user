@@ -35,6 +35,7 @@ export const userEmail    = () => { return firebase.auth().currentUser.email; };
 export const deleteUser   = () => { return firebase.auth().currentUser.delete() }; /* .then( () => { }).catch( () => { }) */
 export const deleteDoc    = (collect, item) => { return firestore.collection(collect).doc(item).delete() };
 
+// export const storageRef   = () => { return firebase.storage.ref(); }
 
 export const saveMessage  = (messageText) => {
   return firebase.firestore().collection('feedback')
