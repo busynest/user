@@ -12,10 +12,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <html lang="en">
   <head>
     <meta charset="UTF-8">
+    <!-- TITILE -->
+    <title>pwa-auth</title>
     <!-- VIEWPORT -->
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1" />
+    <meta name="viewport"     content="width=device-width, minimum-scale=1, initial-scale=1" />
     <!-- BASE -->
     <base href="/">
+    <!-- PRECONNECT -->
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://www.google-analytics.com">
+    <!-- STYLES -->
     <style>
       body    { margin: 0; background-color: #303030; }
       header  { height: 64px; display: grid; grid-template-columns: 1fr 64px ; background-color: #303030; }
@@ -23,22 +30,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       footer  { background-color: #303030; height: 100%; color: #e8e8e8; }
       .links  { margin: auto; text-decoration: none; font-size: 1em; color: red; font-weight: 800; }
       .link   { margin: auto; text-decoration: none; font-size: 1em; color: #e8e8e8; font-weight: 800; }
-      p       { margin: auto; }
+      p       { margin: 16px; background-color: #fff; color: black; border-radius: 8px; padding: 16px; font-size: 1em; }
       h1, h2  { text-align: center; }
-      h3      { text-align: center; color: #e8e8e8; padding-left: 64px; }
+      h3      { text-align: center; color: #e8e8e8; padding-left: 64px; text-transform: uppercase; font-size: 1em; }
     </style>
-    <!-- MANIFEST -->
-    <link rel="manifest"                                href="manifest.json" />
+    <!-- https://github.com/reactjs/redux/issues/2907 -->
     <script>
-      // Redux assumes `process.env.NODE_ENV` exists in the ES module build.
-      // https://github.com/reactjs/redux/issues/2907
-      window.process = { env: { NODE_ENV: 'production' } };
+    if ('serviceWorker' in navigator) { window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js', {
+          scope: '/',
+        });
+      });
+    }
+    window.process = { env: { NODE_ENV: 'production' } };
     </script>
+    <!-- MANIFEST -->
+    <link rel="manifest"       href="manifest.json" />
+    <!-- FAVICON -->
+    <link rel="icon"           href="images/favicon.ico">
+    <!-- THEME COLOR -->
+    <meta name="theme-color"   content="#272931" />
+    <!-- AUTHOR -->
+    <meta name="author"        content="Modern Projects" />
+    <!-- CANONICAL -->
+    <link rel="canonical"      href="https://inmostfire.com" />
+    <!-- DESCRIPTION -->
+    <meta name="description"   content="To provide a personalized experience, Apps need to know the identity of a user to securely store data in the cloud. pwa-auth is powered by The Firebase Authentication backend, consistently providing a centralized and predictable state behaviour with Redux, and declaratively rendering straight into the DOM with Google Polymer's fast and light Lit-Element. This Component includes 3 HTML Tags, and 1 Boilerplate Function to display the user icon, sign up, login, log out, change account details, and delete the user's account." />
+     <!-- KEYWORDS -->
+     <meta name="keywords"     content="lit-html, redux, firebase, user, management, drawer, settings, icon" />
   </head>
   <body>
 
     <header>
-        <h3><a class="link" href="https://www.inmostfire.com">pwa-auth</a></h3>
+        <a class="link" href="https://www.inmostfire.com"><h3>Application Authentication</h3></a>
         <!-- ADD ICON -->
         <user-icon></user-icon>
     </header>
@@ -52,15 +76,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </main>
     
     <footer>
-      <h2><a class="link" href="https://www.inmostfire.com">Application Authentication</a></h2>
-      <h2><a class="links" href="https://www.npmjs.com/package/pwa-auth">NPM</a></h2>
-      <p></p>
-      <h2><a class="links" href="https://github.com/busynest/user">Github</a></h2>
-      <p></p>
+      <p>To provide a personalized experience, Apps need to know the identity of a user to securely store data in the cloud. pwa-auth is powered by The Firebase Authentication backend, consistently providing a centralized and predictable state behaviour with Redux, and declaratively rendering straight into the DOM with Google Polymer's fast and light Lit-Element. This Component includes 3 HTML Tags, and 1 Boilerplate Function to display the user icon, sign up, login, log out, change account details, and delete the user's account.</p>
+      <p><a class="links" href="https://www.npmjs.com/package/pwa-auth">NPM</a> download: npm i --save pwa-auth</p>
+      <p><a class="links" href="https://github.com/busynest/user">Github</a> view on github</p>
     </footer>
 
     <!-- LOAD ANY POLYFILLS YOUR BROWSER NEEDS -->
-    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js" async ></script>
+    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js" async ></script>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-73943527-19"></script>

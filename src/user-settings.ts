@@ -11,56 +11,86 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 // @ts-check
 
-import { html, LitElement, css }        from 'lit-element';
-import { connect }                      from 'pwa-helpers/connect-mixin.js';
-import { store }                        from './store';
-import { navigate, setName }            from './user-action.js';
-import { userStyles }                   from './styles';
-import { Settings }                     from './styles-settings';
-import { firebaseUser, deleteUser, runFirebase, userName, profileURL, userEmail }     from './user-functions'; // runFirebase
+import { html, LitElement, css, customElement, property }  from 'lit-element';
+import { connect }                          from 'pwa-helpers/connect-mixin.js';
+import { store, RootState }                 from './store';
+import { navigate, setName }                from './user-action.js';
+import { userStyles }                       from './styles';
+import { Settings }                         from './styles-settings';
+import { firebaseUser, deleteUser, runFirebase, userName, profileURL, userEmail } from './user-functions'; // runFirebase
+
+import { Unsubscribe, Store, Dispatch }     from 'redux';
+
+export class Student {
+  fullName: string;
+  constructor(public firstName: string, public middleInitial: string, public lastName: string) {
+      this.fullName = firstName + " " + middleInitial + " " + lastName;
+  }
+}
+
+export interface Person extends HTMLElement {
+  firstName: string;
+  lastName: string;
+}
 
 export const faceIcon = html`<svg viewBox="0 0 24 24" height="175px" width="175px"><path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"></path></svg>`;
+
+@customElement('user-settings')
 export class UserSettings extends connect(store)(LitElement) {
-    static get properties() {
-      return {
-        profileTopic:   { type: String },
-        _user:          { type: Boolean },
-        _person:        { type: String },
-        _phone:         { type: Number },
-        _userMail:      { type: String },
-        _photoURL:      { type: String },
-        _name:          { type: String }
-      }
-    }
+
+    @property({type: String})
+    private profileTopic = '';
+
+    @property({type: Boolean})
+    private _user = false;
+    
+    @property({type: String})
+    private _name = '';
+
+    @property({type: String})
+    private _person = '';
+
+    @property({type: Number})
+    private _phone = '';
+
+    @property({type: String})
+    private _userMail = '';
+
+    @property({type: String})
+    private _photoURL = '';
+
+    @property({type: String})
+    private _imagePath = '';
 
     constructor() {
       super();
     }
 
-    firstUpdated() {
-      const a = this.shadowRoot.getElementById('settings');
+    protected firstUpdated() {
+      const a = this.shadowRoot!.getElementById('settings');
       a.addEventListener('click', e => { e.preventDefault(); });
-      const b = this.shadowRoot.getElementById('emailForm');
+      const b = this.shadowRoot!.getElementById('emailForm');
       b.addEventListener('click', e => { e.preventDefault(); });
-      const c = this.shadowRoot.getElementById('passwordForm');
+      const c = this.shadowRoot!.getElementById('passwordForm');
       c.addEventListener('click', e => { e.preventDefault(); });
-      const d = this.shadowRoot.getElementById('deleteForm');
+      const d = this.shadowRoot!.getElementById('deleteForm');
       d.addEventListener('click', e => { e.preventDefault(); });
 
-      this.shadowRoot.getElementById('profile')   .addEventListener('click',    () => { store.dispatch(navigate('profile')); } );
-      this.shadowRoot.getElementById('email')     .addEventListener('click',    () => { store.dispatch(navigate('email')); } );
-      this.shadowRoot.getElementById('password')  .addEventListener('click',    () => { store.dispatch(navigate('password')); } );
-      this.shadowRoot.getElementById('account')   .addEventListener('click',    () => { store.dispatch(navigate('delete')); } );
+      this.shadowRoot!.getElementById('profile')   .addEventListener('click',    () => { store.dispatch(navigate('profile')); } );
+      this.shadowRoot!.getElementById('email')     .addEventListener('click',    () => { store.dispatch(navigate('email')); } );
+      this.shadowRoot!.getElementById('password')  .addEventListener('click',    () => { store.dispatch(navigate('password')); } );
+      this.shadowRoot!.getElementById('account')   .addEventListener('click',    () => { store.dispatch(navigate('delete')); } );
 
-      this.shadowRoot.getElementById('save')      .addEventListener('click',    () => { this.alertProfile(); } );
-      this.shadowRoot.getElementById('update')    .addEventListener('click',    () => { this.alertEmail(); } );
-      this.shadowRoot.getElementById('pass')      .addEventListener('click',    () => { this.alertPassword(); } );
-      this.shadowRoot.getElementById('deleteUser').addEventListener('click',    () => { this.alertDelete(); } );
+      this.shadowRoot!.getElementById('save')      .addEventListener('click',    () => { this.alertProfile(); } );
+      this.shadowRoot!.getElementById('update')    .addEventListener('click',    () => { this.alertEmail(); } );
+      this.shadowRoot!.getElementById('pass')      .addEventListener('click',    () => { this.alertPassword(); } );
+      this.shadowRoot!.getElementById('deleteUser').addEventListener('click',    () => { this.alertDelete(); } );
       
-      this.shadowRoot.getElementById("fileupload").addEventListener('change',   () => { this._handleFiles(); }, false);
+      this.shadowRoot!.getElementById("fileupload").addEventListener('change',   () => { this._handleFiles(); }, false);
 
       runFirebase();
 
+      // @ts-ignore
       firebase.auth().onAuthStateChanged( (firebaseUser) => {
         if (firebaseUser) { /* INCLUDE */
           this._person    = userName();
@@ -73,50 +103,40 @@ export class UserSettings extends connect(store)(LitElement) {
       });
     }
   
-    stateChanged(state) {
-      this.profileTopic      = state.user.settings;
-      this._user             = state.user.currentUser;
-      this._person           = state.user.customer;
-      this._name             = state.user.name;
-      this._phone            = state.user.phone;
-      this._userMail         = state.user.email;
-      this._photoURL         = state.user.photoURL;
+    stateChanged(state: RootState) {
+      this.profileTopic      = state.user!.settings;
+      this._user             = state.user!.currentUser;
+      this._person           = state.user!.customer;
+      this._name             = state.user!.name;
+      this._phone            = state.user!.phone;
+      this._userMail         = state.user!.email;
+      this._photoURL         = state.user!.photoURL;
     }
 
-    _getProfile() {
-      console.log(this._name);
-      console.log(this._userMail);
-      console.log(this._photoURL);
-      console.log(this._phone);
-      // this._userMail         = userEmail();
-      //this.emailVerified    = firebaseUser.emailVerified;
-      //const phone           = firebaseUser.phoneNumber;
-      //console.log(this.emailVerified);
-      //console.log(phone);
-    }
-
-    alertProfile()  { if (this._user) { this.updateProfile() } }
-    updateProfile() {
+    private alertProfile()  { if (this._user) { this.updateProfile() } else { alert('Please Login'); } }
+    private updateProfile() {
       const person          = firebaseUser();
-      const contractor      = this.shadowRoot.getElementById('contractor').value;
-      const phone           = this.shadowRoot.getElementById('phoneNumber').value;
-      const list            = this.shadowRoot.getElementById('list').checked;
+      const contractor      = this.shadowRoot!.getElementById('contractor').value;
+      const phone           = this.shadowRoot!.getElementById('phoneNumber').value;
+      const list            = this.shadowRoot!.getElementById('list').checked;
       if( contractor === null ) { contractor === this._person }
       // const photo         = this.shadowRoot.getElementById('');
       // const company         = this.shadowRoot.getElementById('company').value;
       // const enroll          = this.shadowRoot.getElementById('who').value;
-      console.log(contractor);
-      console.log(phone);
-      console.log(list);
-      console.log(person);
       if (firebaseUser) {
         person.updateProfile({
           displayName: contractor,
           phoneNumber: phone
           // photoURL: ""
         })
-          .then( () => { console.log("User update successful!"); })
-          .catch( (error) =>{ console.error('Error writing new message to Firebase Database', error); });
+        .then( () => {
+          alert(
+          'updated name:' + contractor +
+          'updated phone:' + phone +
+          'Public Profile:' + list
+          );
+        })
+        .catch( (error: object) =>{ console.error('Error writing new message to Firebase Database', error); });
 /*
         firestore.collection("users").doc(user.id).set({
           company:             user.id,
@@ -130,44 +150,44 @@ export class UserSettings extends connect(store)(LitElement) {
     }
 
     /* Update email */
-    alertEmail()  { if (this._user) { this.updateEmail(); } }
-    updateEmail() {
+    private alertEmail()  { if (this._user) { this.updateEmail(); } else { alert('Please Login'); } }
+    private updateEmail() {
       const user = firebaseUser();
-      const email = this.shadowRoot.getElementById('email').value;
+      const email = this.shadowRoot!.getElementById('email').value;
       user.updateEmail(email)
         .then( () => { console.log("Email update successful!" ); })
-        .catch( (error) => { console.error('Error writing new message to Firebase Database', error); });
+        .catch( (error: object) => { console.error('Error writing new message to Firebase Database', error); });
       user.sendEmailVerification()
         .then( () => { console.log("Email Verification successful!");})
-        .catch( (error) => { console.error('Error writing new message to Firebase Database', error); });
+        .catch( (error: object) => { console.error('Error writing new message to Firebase Database', error); });
     }
     
     /* Update Password */
-    alertPassword()  { if (this._user) { this.updatePassword(); } }
-    updatePassword() {
+    private alertPassword()  { if (this._user) { this.updatePassword(); } else { alert('Please Login'); } }
+    private updatePassword() {
       const user = firebaseUser();
-      const newPassword = this.shadowRoot.getElementById('newPass').value;
+      const newPassword = this.shadowRoot!.getElementById('newPass').value;
       user.updatePassword(newPassword)
         .then( () => { console.log("Password successful!"); })
-        .catch( (error) => { console.error('Error writing new message to Firebase Database', error); });
+        .catch( (error: object) => { console.error('Error writing new message to Firebase Database', error); });
     }
 
-    /* Delete User Account */
-    alertDelete()  { if (this._user) { this.deleteUser(); } }
-    deleteUser() {
+    /* Delete Account */
+    private alertDelete()  { if (this._user) { this.deleteUser(); } else { alert('Please Login'); } }
+    private deleteUser() {
       const d = confirm("Delete Account?");
       if    ( d == true ) { deleteUser(); console.log("user gone"); }
       else  { console.log("user here"); }
     }
 
-    _handleFiles() {
-      const uploader  = this.shadowRoot.getElementById('uploader');
-      const file      = this.shadowRoot.getElementById('fileupload').files[0];
+    private _handleFiles() {
+      const uploader  = this.shadowRoot!.getElementById('uploader');
+      const file      = this.shadowRoot!.getElementById('fileupload').files[0];
       const now       = storageRef.child('/images/' + file.name );
       const task      = now.put(file);
       task.on('state_changed',
-        function progress(snapshot) { const percentage = ( snapshot.bytesTransferred / snapshot.totalBytes ) * 100; uploader.value = percentage },
-        function error(error) { },
+        function progress(snapshot: object) { const percentage = ( snapshot.bytesTransferred / snapshot.totalBytes ) * 100; uploader.value = percentage },
+        function error(error: object) { error },
         function complete() { }
       )
       this._imagePath = file.name;
@@ -300,12 +320,16 @@ export class UserSettings extends connect(store)(LitElement) {
           #profile, #email { text-align: left; }
           #account, #password { text-align: right; }
         }
-
+/*
+        @media (min-width: 640px) {
+          :host{ display: grid; grid-template-columns: 50% 50%; }
+        }
+*/
         `
       ];
     }
   
-    render() {
+    protected render() {
       return html`
         <!-- Page Menu -->
         <div>
@@ -340,16 +364,12 @@ export class UserSettings extends connect(store)(LitElement) {
               : html`${faceIcon}` }
               upload a photo
           </label>
- 
-            <p>${this._phone}</p>
 
         </div>
           <form id="settings">
             <ul>
-              <li><h3 class="pageTitle">Username</h3></li>
-              <li><p><label><input id="contractor" type="text" ></label></p></li>
-              <li><h3 class="pageTitle">Telephone</h3></li>
-              <li><p><label><input id="phoneNumber" type="text" ></label></p></li>
+              <li><p><label><h3 class="pageTitle">Username</h3><input id="contractor" type="text" ></label></p></li>
+              <li><p><label><h3 class="pageTitle">Telephone: ${this._phone}</h3><input id="phoneNumber" type="text" ></label></p></li>
               </ul>
           </form>
 
@@ -361,9 +381,8 @@ export class UserSettings extends connect(store)(LitElement) {
           </div>
 
         <form class="spec" ?on="${ this.profileTopic === 'email' }" id="emailForm">
-        ${this._userMail}
           <ul>
-            <li><h3 class="pageTitle">Change Email</h3></li>
+            <li><h3 class="pageTitle">Change Email ${this._userMail}</h3></li>
             <li><p><label>Email<input type="email" id="email"></label></p></li>
             <li><p><label>Verify Email<input type="email" id="emailVerify"></label></p></li>
             <li><p><button id="update" class="action-button" >update</button></p></li>
@@ -393,7 +412,5 @@ export class UserSettings extends connect(store)(LitElement) {
       `
     }
   }
-  
-  window.customElements.define('user-settings', UserSettings);
  
 

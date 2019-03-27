@@ -1,8 +1,8 @@
 {
   "name": "pwa-auth",
   "author": "Modern Projects <jack.solutionbox@gmail.com>(https://www.contractorscentre.com)",
-  "version": "0.0.14",
-  "description": "User Management Component with 3 HTML Tags, and 1 Boilerplate Function to display user icon, sign up, sign in, log out, change account details, delete account.",
+  "version": "0.0.15",
+  "description": "User Management Component with 3 HTML Tags, and 1 Boilerplate Function to display user icon, sign up, login, log out, change account details, delete account.",
   "homepage": "https://www.inmostfire.com",
   "main": "pwa-auth.js",
   "repository": {

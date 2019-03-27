@@ -12,60 +12,63 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 // @ts-check
 
-import { html, LitElement, css }        from 'lit-element';
+import { html, LitElement, css, customElement, property } from 'lit-element';
 import { connect }                      from 'pwa-helpers/connect-mixin.js';
-import { store }                        from './store';
+import { store, RootState }             from './store';
 import { userStyles, close }            from './styles';
 import { User }                         from './styles-drawer';
 import { closeSign, signUp }            from './user-action'; 
 import { logOut, anon, google  }        from './user-functions';
 
+@customElement('user-drawer')
 export class UserDrawer extends connect(store)(LitElement) {
-    static get properties() {
-      return {
-        _log:             { type: Boolean },
-        _subscribe:       { type: Boolean },
-        _sign:            { type: Boolean }
-      };
-    }
-    
+
+    @property({type: Boolean})
+    private _log = false;
+
+    @property({type: Boolean})
+    private _subscribe = false;
+
+    @property({type: Boolean})
+    private _sign = false;
+
     constructor() {
       super();
     }
 
-    firstUpdated() {
-      this.shadowRoot.getElementById('close')         .addEventListener('click', () => { store.dispatch( closeSign(false) ) } );
-      this.shadowRoot.getElementById('or')            .addEventListener('click', () => { anon() } );
-      this.shadowRoot.getElementById('googleSignIn')  .addEventListener('click', () => { google() } );
-      this.shadowRoot.getElementById('leave')         .addEventListener('click', () => { logOut() } );
-      this.shadowRoot.getElementById('log')           .addEventListener('click', () => { this._signIn() } );
-      this.shadowRoot.getElementById('new')           .addEventListener('click', () => { store.dispatch( signUp() ) } );
+    protected firstUpdated() {
+      this.shadowRoot!.getElementById('close')         .addEventListener('click', () => { store.dispatch( closeSign(false) ) } );
+      this.shadowRoot!.getElementById('or')            .addEventListener('click', () => { anon() } );
+      this.shadowRoot!.getElementById('googleSignIn')  .addEventListener('click', () => { google() } );
+      this.shadowRoot!.getElementById('leave')         .addEventListener('click', () => { logOut() } );
+      this.shadowRoot!.getElementById('log')           .addEventListener('click', () => { this._signIn() } );
+      this.shadowRoot!.getElementById('newUser')       .addEventListener('click', () => { this._signUp() } );
+      this.shadowRoot!.getElementById('new')           .addEventListener('click', () => { store.dispatch( signUp() ) } );
     }
 
-    stateChanged(state) {
-      this._subscribe   = state.user.snackState;
-      this._log         = state.user.currentUser;
-      this._sign        = state.user.register;
+    stateChanged(state: RootState) {
+      this._subscribe   = state.user!.snackState;
+      this._log         = state.user!.currentUser;
+      this._sign        = state.user!.register;
       // this.welcome      = state.user.welcome;
     }
-
-    _close() { closeSign(false) }
   
-    _signIn() {
-      const a = this.shadowRoot.getElementById('logs');
+    private _signIn() {
+      const a = this.shadowRoot!.getElementById('logs');
       a.addEventListener('click', e => { e.preventDefault(); });
       // Prevent Form's Page Refresh
-      const email       = this.shadowRoot.getElementById('txtEmail').value;
-      const password    = this.shadowRoot.getElementById('txtPassword').value;
+      const email       = this.shadowRoot!.getElementById('txtEmail').value;
+      const password    = this.shadowRoot!.getElementById('txtPassword').value;
+      // @ts-ignore
       firebase.auth().signInWithEmailAndPassword(email, password).catch( (error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
       });
     }
   
-    _signUp() {
-      const email = this.shadowRoot.getElementById('txtEmail').value;
-      const pass  = this.shadowRoot.getElementById('txtPassword').value;
+    private _signUp() {
+      const email = this.shadowRoot!.getElementById('newtEmail').value;
+      const pass  = this.shadowRoot!.getElementById('newPassword').value;
       if (email.length < 4) {
         alert('Please enter an email address.');
         return;
@@ -74,6 +77,7 @@ export class UserDrawer extends connect(store)(LitElement) {
         alert('Please enter a password.');
         return;
       }
+      // @ts-ignore
       firebase.auth().createUserWithEmailAndPassword(email, pass).catch( (error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -99,7 +103,7 @@ export class UserDrawer extends connect(store)(LitElement) {
         `
       ]}
   
-    render() {
+    protected render() {
       return html`
   
       <!-- Login Wrapper -->
@@ -134,12 +138,12 @@ export class UserDrawer extends connect(store)(LitElement) {
         <form id="signup" autocomplete="on" class="spec" ?on="${ this._sign === false }">
           <ul>
             <li class="inpat">
-              <label><input   id="txtEmail"      type="email"      >Email</label>
-              <label><input   id="txtPassword"   type="Password"   >Password</label>
-              <label><input   id="txtEmail"      type="email"      >Verify Email</label>
-              <label><input   id="txtPassword"   type="Password"   >Verify Password</label>
+              <label><input   id="newEmail"         type="email"      >Email</label>
+              <label><input   id="newPassword"      type="Password"   >Password</label>
+              <label><input   id="verifyEmail"      type="email"      >Verify Email</label>
+              <label><input   id="veriftPassword"   type="Password"   >Verify Password</label>
             </li>
-            <li><button id="log" class="action-button">Sign up</button></li>
+            <li><button id="newUser" class="action-button">Sign up</button></li>
           </ul>
         </form>
 
@@ -156,4 +160,3 @@ export class UserDrawer extends connect(store)(LitElement) {
       `;
     }
   }
-  window.customElements.define('user-drawer', UserDrawer);

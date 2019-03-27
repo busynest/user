@@ -8,9 +8,9 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-export { UserDrawer }       from './src/user-drawer.js';
-export { UserSettings }     from './src/user-settings.js';
-export { UserIcon }         from './src/user-icon.js';
+export { UserDrawer }       from './deploy/user-drawer.js';
+export { UserSettings }     from './deploy/user-settings.js';
+export { UserIcon }         from './deploy/user-icon.js';
 // module.exports = require('./src/user-drawer.js');
 // module.exports = require('./src/user-settings.js');
 // module.exports = require('./src/user-icon.js');

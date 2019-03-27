@@ -12,19 +12,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 // @ts-check
 
 import { store }                        from './store';
-import { setUser, updateLogin, setAuth } from './user-action';
+import { setUser, setAuth } from './user-action';
 
 
 
-export const runList      = () => { firebase.auth().onAuthStateChanged( (firebaseUser) => { if (firebaseUser) { store.dispatch(setList(firebaseUser)); } else { store.dispatch(setList(firebaseUser)); } }); };
-export const runFirebase  = () => { firebase.auth().onAuthStateChanged( (firebaseUser) => {
-                                    if (firebaseUser) { store.dispatch(updateLogin(true)); store.dispatch(setUser(firebaseUser)); }
-                                    else { store.dispatch(updateLogin(false)); store.dispatch(setUser(firebaseUser)); }
+// export const runList      = () => { firebase.auth().onAuthStateChanged( (firebaseUser) => { if (firebaseUser) { store.dispatch(setList(firebaseUser)); } else { store.dispatch(setList(firebaseUser)); } }); };
+export const runFirebase  = () => { firebase.auth().onAuthStateChanged( (firebaseUser: boolean) => {
+                                    if (firebaseUser) { store.dispatch(setAuth(true)); store.dispatch(setUser(firebaseUser)); }
+                                    else { store.dispatch(setAuth(false)); store.dispatch(setUser(firebaseUser)); }
                                   }); };
-export const authChange   = () => { return firebase.auth().onAuthStateChanged( (firebaseUser) => { if(firebaseUser) {store.dispatch( setAuth(true) )} else{store.dispatch( setAuth(false) )} });}
+                                  
+export const authChange   = () => { return firebase.auth().onAuthStateChanged( (firebaseUser: boolean) => { if(firebaseUser) {store.dispatch( setAuth(true) )} else{store.dispatch( setAuth(false) )} });}
 
 export const firebaseUser = () => { return firebase.auth().currentUser || "demo"; };
 export const firebaseID   = () => { return firebase.auth().currentUser.uid  || "demo" ; };
+
 export const logOut       = () => { return firebase.auth().signOut(); }; /* .then( () => { } ).catch( () => { } ) */
 export const isUser       = () => { return !!firebase.auth().currentUser; };
 
@@ -33,11 +35,11 @@ export const userName     = () => { return firebase.auth().currentUser.displayNa
 export const userEmail    = () => { return firebase.auth().currentUser.email; };
 
 export const deleteUser   = () => { return firebase.auth().currentUser.delete() }; /* .then( () => { }).catch( () => { }) */
-export const deleteDoc    = (collect, item) => { return firestore.collection(collect).doc(item).delete() };
+export const deleteDoc    = (collect:string, item:string) => { return firestore.collection(collect).doc(item).delete() };
 
 // export const storageRef   = () => { return firebase.storage.ref(); }
 
-export const saveMessage  = (messageText) => {
+export const saveMessage  = (messageText:string) => {
   return firebase.firestore().collection('feedback')
   .add({
     name: userName(),
@@ -69,7 +71,7 @@ export const saveImage = () => {
       imageUrl: LOADING_IMAGE_URL,
       profilePicUrl: profileURL(),
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    }).then( (messageRef) => {
+    }).then( (messageRef:string) => {
       // 2 - Upload the image to Cloud Storage.
       const filePath = firebase.auth().currentUser.uid + '/' + messageRef.id + '/' + file.name;
       return firebase.storage().ref(filePath).put(file).then( (fileSnapshot) => {
@@ -86,7 +88,7 @@ export const saveImage = () => {
 };
 export const deviceToken = () => {
   // Saves the messaging device token to the datastore.
-  firebase.messaging().getToken().then( (currentToken) => {
+  firebase.messaging().getToken().then( (currentToken:string) => {
     if (currentToken) {
       console.log('Got FCM device token:', currentToken);
       // Saving the Device Token to the datastore.

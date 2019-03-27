@@ -13,11 +13,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Github Login
 - display nested content after webcomponent loads
 - create password after social Login
+- animated login
+- animated data
+- update user info upon change submission
+- change user-icon to "Login" text
+
+## [0.1.0] - 2019-03-26
+
+### Added
+- Upgraded to Typescript
+- alert user to login when submitting form
 
 ## [0.0.14] - 2019-03-24
 
-###
-- Verify user before completing button click
+### Added
+- Verify user before submitting form
 - Forms prevent default
 
 ### Changed
