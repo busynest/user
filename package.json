@@ -23,8 +23,12 @@
   "flat": true,
   "scripts": {
     "start": "polymer serve",
-    "build": "polymer build --auto-base-path && gulp prpl-server",
+    "build": "polymer build --auto-base-path && workbox injectManifest workbox-config.js",
+    "rollup": "rollup -c",
+    "long": "rollup deploy/application-shell.js --format es --name 'ApplicationShell' --file application-shell.js",
     "build:static": "polymer build",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
     "serve": "prpl-server --root server/build",
     "serve:static": "polymer serve --port 5000 build/es5-bundled"
   },
