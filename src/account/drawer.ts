@@ -1,23 +1,23 @@
 
-import { html, LitElement, css, TemplateResult, CSSResult } from 'lit-element';
-import { customElement, property } from "lit-element/lib/decorators.js"
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../store';
-import { closeDrawer } from './state_drawer'; // , signUp
-import { logOut, googleSignIn } from '../functions/google';
+import { html, LitElement, css, TemplateResult, CSSResult } from 'lit';
+import { customElement, state }       from "lit/decorators.js"
+import { connect }                    from 'pwa-helpers/connect-mixin';
+import { store, RootState }           from '../store';
+import { closeDrawer }                from './state_drawer';
+import { logOut, google_SignIn }      from '../user-functions';
 import './login';
 
 @customElement('user-drawer')
 export class UserDrawer extends connect(store)(LitElement) {
 
-  @property({type: Boolean})  private _user:any = false;
+  @state() private user:any = false;
 
   constructor() {
     super();
   }
 
   stateChanged(state: RootState) {
-    this._user = state.profiles!.currentUser;
+    this.user = state.pwa_auth!.currentUser;
   }
 
   protected firstUpdated() {
@@ -97,18 +97,18 @@ export class UserDrawer extends connect(store)(LitElement) {
     -webkit-opacity:  .8;"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
     </button>
 
-    <h2 ?active ="${!this._user}" style="text-align: center;">Welcome Back</h2>
+    <h2 ?active ="${!this.user}" style="text-align: center;">Welcome Back</h2>
 
 <!-- Logged OUT-->
-<create-user ?active="${!this._user}"></create-user>
+<create-user ?active="${!this.user}"></create-user>
 
 
    <!-- GOOGLE SIGN IN-->
    <button
       id      ="googleOne"
       class   ="google"
-      @click  ="${ googleSignIn }"
-      ?active ="${!this._user}"
+      @click  ="${ google_SignIn }"
+      ?active ="${!this.user}"
       style   ="
       margin:                   auto auto 8px;;
       color:                    #444;
@@ -142,7 +142,7 @@ export class UserDrawer extends connect(store)(LitElement) {
     </button>
 
 <!-- Logged IN -->
-<div class="setLog" ?on="${ this._user === true }">
+<div class="setLog" ?on="${ this.user === true }">
   <p
     class="leave"
     style="
@@ -161,3 +161,11 @@ export class UserDrawer extends connect(store)(LitElement) {
       `;
     }
   }
+
+
+  
+declare global {
+  interface HTMLElementTagNameMap {
+      'user-drawer': UserDrawer;
+  }
+}

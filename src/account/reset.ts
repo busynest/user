@@ -1,32 +1,30 @@
 
 
-import { html, TemplateResult }                   from 'lit-element';
-import { customElement, property }                from "lit-element/lib/decorators.js"
-import { connect }                                from 'pwa-helpers/connect-mixin';
-import { store, RootState }                       from '../store';
-import { PageViewElement }                        from '../lazy-loader';
+import { html, TemplateResult,  }     from 'lit';
+import { customElement, state }       from "lit/decorators.js"
+import { connect }                    from 'pwa-helpers/connect-mixin';
+import { store, RootState }           from '../store';
+import { LazyLoader }                 from '../lazy-loader';
+import { sendPasswordResetEmail }     from 'firebase/auth';
+import { auth }                       from '../user-functions';
 
 @customElement('reset-options')
-export class ResetOptions extends connect(store)(PageViewElement) {
+export class ResetOptions extends connect(store)(LazyLoader) {
 
-  @property({type: String})   private _userEmail    :any = '';
+  @state() private userEmail :any = '';
 
   constructor() {
     super();
   }
 
   stateChanged (state: RootState) {
-    this._userEmail = state.account!.email;
+    this.userEmail = state.user!.email;
   }
 
 private _restPassword() {
+  let emailAddress:any = this.shadowRoot!.querySelector('.email')!;
 
-  // @ts-ignore
-  var auth = firebase.auth();
-  var emailAddress = this._userEmail;
-
-  auth
-    .sendPasswordResetEmail(emailAddress)
+  sendPasswordResetEmail(auth, emailAddress)
     .then( () => { } )
     .catch( (error:any) => { console.log(error); });
 

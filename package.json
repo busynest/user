@@ -22,32 +22,25 @@
   "license": "BSD-3-Clause",
   "flat": true,
   "scripts": {
-    "start": "polymer serve",
-    "build": "polymer build --auto-base-path && workbox injectManifest workbox-config.js",
     "rollup": "rollup -c",
     "long": "rollup deploy/application-shell.js --format es --name 'ApplicationShell' --file application-shell.js",
     "build:static": "polymer build",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
-    "serve": "prpl-server --root server/build",
-    "serve:static": "polymer serve --port 5000 build/es5-bundled"
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@webcomponents/webcomponentsjs": "^2.5.0",
-    "lit-element": "^2.4.0",
+    "lit-element": "^3.3.1",
     "pwa-helpers": "^0.9.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^6.0.22",
-    "@storybook/addon-essentials": "^6.0.22",
-    "@storybook/addon-links": "^6.0.22",
-    "@storybook/web-components": "^6.0.22",
-    "lit-html": "^1.3.0",
-    "polymer-cli": "^1.9.11",
-    "polyserve": "^0.27.0",
-    "prpl-server": "^1.4.2",
-    "typescript": "^4.0.3"
+    "@reduxjs/toolkit": "^1.9.3",
+    "@storybook/addon-actions": "^7.0.2",
+    "@storybook/addon-essentials": "^7.0.2",
+    "@storybook/addon-links": "^7.0.2",
+    "@storybook/web-components": "^7.0.2",
+    "firebase": "^9.19.1"
   }
 }

@@ -1,95 +1,39 @@
 
-
-/**
-@license
-Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
-*/
-
-// @ts-check
-
-import { html, LitElement, css, customElement, property } from 'lit-element';
-import { connect }                      from 'pwa-helpers/connect-mixin.js';
-import { store, RootState }             from './store';
-import { userStyles, close }            from './styles';
-import { User }                         from './styles-drawer';
-import { closeSign, signUp }            from './user-action'; 
-import { logOut, anon, google  }        from './user-functions';
+import { html, LitElement, css }                from 'lit';
+import { customElement, state }                 from 'lit/decorators.js';
+import { connect }                              from 'pwa-helpers/connect-mixin';
+import { store, RootState }                     from './store';
+import { userStyles, close }                    from './styles';
+import { User }                                 from './styles-drawer';
+import { closeSign, signUpAction }              from './user-action'; 
+import { logOut, anon_SignIn, google_SignIn, signIn, signUp  } from './user-functions';
 
 @customElement('user-drawer')
 export class UserDrawer extends connect(store)(LitElement) {
 
-    @property({type: Boolean})
-    private _log = false;
-
-    @property({type: Boolean})
-    private _subscribe = false;
-
-    @property({type: Boolean})
-    private _sign = false;
+    @state() private _log = false;
+    @state() private _subscribe = false;
+    @state() private _sign = false;
 
     constructor() {
       super();
     }
 
     protected firstUpdated() {
-      this.shadowRoot!.getElementById('close')         .addEventListener('click', () => { store.dispatch( closeSign(false) ) } );
-      this.shadowRoot!.getElementById('or')            .addEventListener('click', () => { anon() } );
-      this.shadowRoot!.getElementById('googleSignIn')  .addEventListener('click', () => { google() } );
-      this.shadowRoot!.getElementById('leave')         .addEventListener('click', () => { logOut() } );
-      this.shadowRoot!.getElementById('log')           .addEventListener('click', () => { this._signIn() } );
-      this.shadowRoot!.getElementById('newUser')       .addEventListener('click', () => { this._signUp() } );
-      this.shadowRoot!.getElementById('new')           .addEventListener('click', () => { store.dispatch( signUp() ) } );
+      this.shadowRoot!.querySelector('#close')!         .addEventListener('click', () => { store.dispatch( closeSign(false) ) } );
+      this.shadowRoot!.querySelector('#or')!            .addEventListener('click', () => { anon_SignIn() } );
+      this.shadowRoot!.querySelector('#googleSignIn')!  .addEventListener('click', () => { google_SignIn() } );
+      this.shadowRoot!.querySelector('#leave')!         .addEventListener('click', () => { logOut() } );
+      this.shadowRoot!.querySelector('#log')!           .addEventListener('click', () => { this._signIn() } );
+      this.shadowRoot!.querySelector('#newUser')!       .addEventListener('click', () => { this._signUp() } );
+      this.shadowRoot!.querySelector('#new')!           .addEventListener('click', () => { store.dispatch( signUpAction() ) } );
     }
 
     stateChanged(state: RootState) {
-      this._subscribe   = state.user!.snackState;
-      this._log         = state.user!.currentUser;
-      this._sign        = state.user!.register;
+      this._subscribe   = state.pwa_auth!.snackState;
+      this._log         = state.pwa_auth!.currentUser;
+      this._sign        = state.pwa_auth!.register;
       // this.welcome      = state.user.welcome;
-    }
-  
-    private _signIn() {
-      const a = this.shadowRoot!.getElementById('logs');
-      a.addEventListener('click', e => { e.preventDefault(); });
-      // Prevent Form's Page Refresh
-      const email       = this.shadowRoot!.getElementById('txtEmail').value;
-      const password    = this.shadowRoot!.getElementById('txtPassword').value;
-      // @ts-ignore
-      firebase.auth().signInWithEmailAndPassword(email, password).catch( (error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
-    }
-  
-    private _signUp() {
-      const email = this.shadowRoot!.getElementById('newtEmail').value;
-      const pass  = this.shadowRoot!.getElementById('newPassword').value;
-      if (email.length < 4) {
-        alert('Please enter an email address.');
-        return;
-      }
-      if (pass.length < 4) {
-        alert('Please enter a password.');
-        return;
-      }
-      // @ts-ignore
-      firebase.auth().createUserWithEmailAndPassword(email, pass).catch( (error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // [START_EXCLUDE]
-        if (errorCode == 'auth/weak-password') {
-          alert('The password is too weak.');
-        } else {
-          alert(errorMessage);
-        }
-        console.log(error);
-  
-      });
     }
   
     static get styles() {
@@ -97,9 +41,7 @@ export class UserDrawer extends connect(store)(LitElement) {
         userStyles,
         User,
         css`
-        :host { 
 
-         }
         `
       ]}
   
@@ -159,4 +101,40 @@ export class UserDrawer extends connect(store)(LitElement) {
       </div>
       `;
     }
+    
+    // Sign IN
+    private _signIn() {
+      // Prevent Form's Page Refresh
+      const a : any = this.shadowRoot!.getElementById('logs');
+      a.addEventListener('click', (e:any) => { e.preventDefault(); });
+      
+      const email : any       = this.shadowRoot!.getElementById('txtEmail');
+      const password : any    = this.shadowRoot!.getElementById('txtPassword');
+
+      if (email.length < 4) { alert('Please enter an email address.'); return; }
+      if (password.length < 4) { alert('Please enter a password.'); return; }
+
+      // Sign IN with email and password
+      signIn(email.value, password.value);
+    }
+  
+    // Sign UP.
+    private _signUp() {
+      const email : any = this.shadowRoot!.getElementById('newtEmail');
+      const pass : any = this.shadowRoot!.getElementById('newPassword');
+
+      if (email.length < 4) { alert('Please enter an email address.'); return; }
+      if (pass.length < 4)  { alert('Please enter a password.'); return; }
+
+      // Sign UP with email and password.
+      signUp(email.value, pass.value);
+  
   }
+
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+      'user-drawer': UserDrawer;
+  }
+}

@@ -1,10 +1,11 @@
+import { sendPasswordResetEmail } from "firebase/auth";
 
 // Reference the total number of existing documents
 export const _listImages = () => {
 
-    // @ts-ignore -- Reference to project's storage bucket.
-    const storageRef:any  = firebase
-      .storage()
+    // Create a reference under which you want to list
+    const storageRef:any  =
+      storage
       .ref();
   
     // Reference to list
@@ -34,18 +35,17 @@ export const _listImages = () => {
   }
 
   
-  export const _restCode = () => {
+  export const restPasswordcode = async () => {
     let x:any = document!.querySelector('.resetEmail')!
-    let email = x.value
+    let email = x.value;
 
-    let actionCodeSettings = {
-      url: 'https://www.contractorscentre.com',
-      handleCodeInApp: true
-    };
-
-    // @ts-ignore
-    firebase
-      .auth()
-      .sendPasswordResetEmail( email, actionCodeSettings )
-      .catch( (error:any) => { console.log(error); } );
+    await sendPasswordResetEmail( email, email )
+    .catch( (error:any) => { console.log(error); } );
   }
+
+    /*
+  let actionCodeSettings = {
+    url: 'https://www.contractorscentre.com',
+    handleCodeInApp: true
+  };
+  */

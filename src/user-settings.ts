@@ -1,33 +1,21 @@
 
-/**
-@license
-Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
-*/
-
-// @ts-check
-
-import { html, LitElement, css, customElement, property }  from 'lit-element';
+import { html, LitElement, css, }           from 'lit';
+import { customElement, state }             from 'lit/decorators.js';
 import { connect }                          from 'pwa-helpers/connect-mixin.js';
 import { store, RootState }                 from './store';
 import { navigate, setName }                from './user-action.js';
 import { userStyles }                       from './styles';
 import { Settings }                         from './styles-settings';
-import { firebaseUser, deleteUser, runFirebase, userName, profileURL, userEmail } from './user-functions'; // runFirebase
-
-import { Unsubscribe, Store, Dispatch }     from 'redux';
-
+import { firebaseUser, deleteUser, userName, profileURL, userEmail, auth } from './user-functions';
+import { onAuthStateChanged } from 'firebase/auth';
+/*
 export class Student {
   fullName: string;
   constructor(public firstName: string, public middleInitial: string, public lastName: string) {
       this.fullName = firstName + " " + middleInitial + " " + lastName;
   }
 }
-
+*/
 export interface Person extends HTMLElement {
   firstName: string;
   lastName: string;
@@ -38,60 +26,45 @@ export const faceIcon = html`<svg viewBox="0 0 24 24" height="175px" width="175p
 @customElement('user-settings')
 export class UserSettings extends connect(store)(LitElement) {
 
-    @property({type: String})
-    private profileTopic = '';
-
-    @property({type: Boolean})
-    private _user = false;
-    
-    @property({type: String})
-    private _name = '';
-
-    @property({type: String})
-    private _person = '';
-
-    @property({type: Number})
-    private _phone = '';
-
-    @property({type: String})
-    private _userMail = '';
-
-    @property({type: String})
-    private _photoURL = '';
-
-    @property({type: String})
-    private _imagePath = '';
+    @state() private profileTopic = '';
+    @state() private _user = false;
+    @state() private _name = '';
+    @state() private _person = '';
+    @state() private _phone = '';
+    @state() private _userMail = '';
+    @state() private _photoURL = '';
+    @state() private _imagePath = '';
 
     constructor() {
       super();
     }
 
     protected firstUpdated() {
-      const a = this.shadowRoot!.getElementById('settings');
-      a.addEventListener('click', e => { e.preventDefault(); });
-      const b = this.shadowRoot!.getElementById('emailForm');
-      b.addEventListener('click', e => { e.preventDefault(); });
-      const c = this.shadowRoot!.getElementById('passwordForm');
-      c.addEventListener('click', e => { e.preventDefault(); });
-      const d = this.shadowRoot!.getElementById('deleteForm');
-      d.addEventListener('click', e => { e.preventDefault(); });
+      const a : any = this.shadowRoot!.getElementById('settings');
+      a.addEventListener('click', (e:any) => { e.preventDefault(); });
+      const b : any = this.shadowRoot!.getElementById('emailForm');
+      b.addEventListener('click', (e:any) => { e.preventDefault(); });
+      const c : any = this.shadowRoot!.getElementById('passwordForm');
+      c.addEventListener('click', (e:any) => { e.preventDefault(); });
+      const d : any = this.shadowRoot!.getElementById('deleteForm');
+      d.addEventListener('click', (e:any) => { e.preventDefault(); });
 
-      this.shadowRoot!.getElementById('profile')   .addEventListener('click',    () => { store.dispatch(navigate('profile')); } );
-      this.shadowRoot!.getElementById('email')     .addEventListener('click',    () => { store.dispatch(navigate('email')); } );
-      this.shadowRoot!.getElementById('password')  .addEventListener('click',    () => { store.dispatch(navigate('password')); } );
-      this.shadowRoot!.getElementById('account')   .addEventListener('click',    () => { store.dispatch(navigate('delete')); } );
+      this.shadowRoot!.querySelector('#profile')!   .addEventListener('click',    () => { store.dispatch(navigate('profile')); } );
+      this.shadowRoot!.querySelector('#email')!     .addEventListener('click',    () => { store.dispatch(navigate('email')); } );
+      this.shadowRoot!.querySelector('#password')!  .addEventListener('click',    () => { store.dispatch(navigate('password')); } );
+      this.shadowRoot!.querySelector('#account')!   .addEventListener('click',    () => { store.dispatch(navigate('delete')); } );
 
-      this.shadowRoot!.getElementById('save')      .addEventListener('click',    () => { this.alertProfile(); } );
-      this.shadowRoot!.getElementById('update')    .addEventListener('click',    () => { this.alertEmail(); } );
-      this.shadowRoot!.getElementById('pass')      .addEventListener('click',    () => { this.alertPassword(); } );
-      this.shadowRoot!.getElementById('deleteUser').addEventListener('click',    () => { this.alertDelete(); } );
+      this.shadowRoot!.querySelector('#save')!      .addEventListener('click',    () => { this.alertProfile(); } );
+      this.shadowRoot!.querySelector('#update')!    .addEventListener('click',    () => { this.alertEmail(); } );
+      this.shadowRoot!.querySelector('#pass')!      .addEventListener('click',    () => { this.alertPassword(); } );
+      this.shadowRoot!.querySelector('#deleteUser')!.addEventListener('click',    () => { this.alertDelete(); } );
       
-      this.shadowRoot!.getElementById("fileupload").addEventListener('change',   () => { this._handleFiles(); }, false);
+      this.shadowRoot!.querySelector("#fileupload")!.addEventListener('change',   () => { this._handleFiles(); }, false);
 
-      runFirebase();
+      // runFirebase();
 
-      // @ts-ignore
-      firebase.auth().onAuthStateChanged( (firebaseUser) => {
+
+      onAuthStateChanged( auth, (firebaseUser) => {
         if (firebaseUser) { /* INCLUDE */
           this._person    = userName();
           this._userMail  = userEmail();
@@ -115,25 +88,25 @@ export class UserSettings extends connect(store)(LitElement) {
 
     private alertProfile()  { if (this._user) { this.updateProfile() } else { alert('Please Login'); } }
     private updateProfile() {
-      const person          = firebaseUser();
-      const contractor      = this.shadowRoot!.getElementById('contractor').value;
-      const phone           = this.shadowRoot!.getElementById('phoneNumber').value;
-      const list            = this.shadowRoot!.getElementById('list').checked;
+      const person : any        = firebaseUser();
+      const contractor : any    = this.shadowRoot!.getElementById('contractor');
+      const phone : any         = this.shadowRoot!.getElementById('phoneNumber');
+      const list : any          = this.shadowRoot!.getElementById('list');
       if( contractor === null ) { contractor === this._person }
       // const photo         = this.shadowRoot.getElementById('');
       // const company         = this.shadowRoot.getElementById('company').value;
       // const enroll          = this.shadowRoot.getElementById('who').value;
-      if (firebaseUser) {
+      if (auth.currentUser) {
         person.updateProfile({
-          displayName: contractor,
-          phoneNumber: phone
+          displayName: contractor.value,
+          phoneNumber: phone.value
           // photoURL: ""
         })
         .then( () => {
           alert(
-          'updated name:' + contractor +
-          'updated phone:' + phone +
-          'Public Profile:' + list
+          'updated name:' + contractor.value +
+          'updated phone:' + phone.value +
+          'Public Profile:' + list.checked
           );
         })
         .catch( (error: object) =>{ console.error('Error writing new message to Firebase Database', error); });
@@ -153,7 +126,7 @@ export class UserSettings extends connect(store)(LitElement) {
     private alertEmail()  { if (this._user) { this.updateEmail(); } else { alert('Please Login'); } }
     private updateEmail() {
       const user = firebaseUser();
-      const email = this.shadowRoot!.getElementById('email').value;
+      const email = this.shadowRoot!.getElementById('email')!.value;
       user.updateEmail(email)
         .then( () => { console.log("Email update successful!" ); })
         .catch( (error: object) => { console.error('Error writing new message to Firebase Database', error); });
@@ -166,7 +139,7 @@ export class UserSettings extends connect(store)(LitElement) {
     private alertPassword()  { if (this._user) { this.updatePassword(); } else { alert('Please Login'); } }
     private updatePassword() {
       const user = firebaseUser();
-      const newPassword = this.shadowRoot!.getElementById('newPass').value;
+      const newPassword = this.shadowRoot!.getElementById('newPass')!.value;
       user.updatePassword(newPassword)
         .then( () => { console.log("Password successful!"); })
         .catch( (error: object) => { console.error('Error writing new message to Firebase Database', error); });
@@ -181,8 +154,8 @@ export class UserSettings extends connect(store)(LitElement) {
     }
 
     private _handleFiles() {
-      const uploader  = this.shadowRoot!.getElementById('uploader');
-      const file      = this.shadowRoot!.getElementById('fileupload').files[0];
+      const uploader  = this.shadowRoot!.querySelector('#uploader');
+      const file      = this.shadowRoot!.querySelector('#fileupload')!.files[0];
       const now       = storageRef.child('/images/' + file.name );
       const task      = now.put(file);
       task.on('state_changed',
@@ -413,4 +386,8 @@ export class UserSettings extends connect(store)(LitElement) {
     }
   }
  
-
+  declare global {
+    interface HTMLElementTagNameMap {
+        'user-settings': UserSettings;
+    }
+  }

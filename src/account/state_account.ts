@@ -39,23 +39,13 @@ export type accountAction =
 accToggle
 | accAnon
 | accPhone
-
 | navigateX
 | accVerified
-
 | accUser
 | accName
 | accEmail
 | accImage ;
 export type accountResult = ThunkAction<void, RootState, undefined, accountAction>;
-
-/*
-  declare global {
-    interface HTMLElementTagNameMap {
-      "app-drawer": userState;
-    }
-*/
-
 
 
 

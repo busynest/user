@@ -1,44 +1,28 @@
-
-/**
-@license
-Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
-*/
-
-// @ts-check
-
-import { html, LitElement, css, customElement, property }        from 'lit-element';
+import { html, LitElement, css  }       from 'lit';
+import { customElement, state }         from 'lit/decorators.js';
 import { connect }                      from 'pwa-helpers/connect-mixin.js';
 import { store, RootState }             from './store';
 import { userStyles }                   from './styles';
 import { openSign, setImage }           from './user-action';
-import { profileURL }                   from './user-functions';
+import { auth, profileURL }             from './user-functions';
+import { onAuthStateChanged }           from 'firebase/auth';
 
 export const faceIcon = html`<svg viewBox="0 0 24 24" height="32px" width="32px"><path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"></path></svg>`;
 
 @customElement('user-icon')
 export class UserIcon extends connect(store)(LitElement) {
 
-  @property({type: Boolean})
-  private _user = false;
-
-  @property({type: String})
-  private _photoURL = '';
-
+  @state() private _user = false;
+  @state() private _photoURL = '';
 
   constructor() {
     super();
   }
 
   protected firstUpdated() {
-    this.shadowRoot!.getElementById('subscribe').addEventListener('click', () => { store.dispatch(openSign()) } );
-  
-    // @ts-ignore
-    firebase.auth().onAuthStateChanged( (firebaseUser) => {
+    this.shadowRoot!.getElementById('subscribe')!.addEventListener('click', () => { store.dispatch(openSign()) } );
+
+    onAuthStateChanged( auth, (firebaseUser) => {
       if (firebaseUser) { /* INCLUDE */ this._photoURL = profileURL(); }
       else              { /* EXCLUDE */ }
       store.dispatch( setImage( this._photoURL ) );
@@ -102,5 +86,11 @@ export class UserIcon extends connect(store)(LitElement) {
       </button>
 
     `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+      'user-icon': UserIcon;
   }
 }

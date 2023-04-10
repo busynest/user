@@ -1,14 +1,4 @@
 
-/**
-@license
-Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
-*/
-
 import { Action, ActionCreator }  from 'redux';
 import { ThunkAction }            from 'redux-thunk';
 import { RootState }              from './store.js';
@@ -70,11 +60,11 @@ export const navigate: ActionCreator<navigateX> = (option: string) => {
 }
 
 export const openSign: ActionCreator<ThunkResult> = ( snackState: boolean ) => (dispatch, getState) => {
-  if ( getState().user!.snackState === true)  { dispatch({ type: CLOSE_SIGN, snackState }); }
+  if ( getState().pwa_auth!.snackState === true)  { dispatch({ type: CLOSE_SIGN, snackState }); }
   else                                        { dispatch({ type: OPEN_SIGN,  snackState }); }
 }
-export const signUp: ActionCreator<ThunkResult>   = ( register: boolean )   => (dispatch, getState) => {
-  if ( getState().user!.register === false)   { dispatch({ type: SIGN_UP_OPEN,  register }); }
+export const signUpAction: ActionCreator<ThunkResult>   = ( register: boolean )   => (dispatch, getState) => {
+  if ( getState().pwa_auth!.register === false)   { dispatch({ type: SIGN_UP_OPEN,  register }); }
   else                                        { dispatch({ type: SIGN_UP_CLOSE, register }); }
 }
 

@@ -1,43 +1,123 @@
 
-/**
-@license
-Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
-*/
-
-// @ts-check
 
 import { store }                        from './store';
-import { setUser, setAuth } from './user-action';
+import { setAuth }             from './user-action';
+import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, getRedirectResult, onAuthStateChanged, signInAnonymously, signInWithEmailAndPassword, signInWithRedirect, signOut }           from 'firebase/auth';
+// import { doc } from 'firebase/firestore';
+
+export const auth : any = getAuth();
+export const authUser : any = auth.currentUser;
+       
+export const firebaseUser = () => { return auth.currentUser || "demo"; };
+export const firebaseID   = () => { return auth.currentUser.uid  || "demo" ; };
+
+export const authChange   = () => { return onAuthStateChanged( auth, () => (firebaseUser: boolean) => { if(firebaseUser) {store.dispatch( setAuth(true) )} else{store.dispatch( setAuth(false) )} });};
+export const logOut       = () => { return signOut(auth); };
+
+export const profileURL   = () => { return auth.currentUser.photoURL || '/images/manifest/icon-48x48.png'; }; 
+export const userName     = () => { return auth.currentUser.displayName; };
+export const userEmail    = () => { return auth.currentUser.email; };
+
+export const deleteUser   = () => { return auth.currentUser.delete() }; /* .then( () => { }).catch( () => { }) */
+// export const deleteDoc    = (collect:string, item:string) => { return doc(auth, collect, item).delete() };
+
+export const signUp = (email:any, password:any) => {
+  createUserWithEmailAndPassword(auth, email.value, password.value)
+  .then( () => { /*logAccount();*/ } )
+  // .then( this.gtag_report_conversion(window.location) );
+  .catch( (error:any) => { console.log( "error: ", error ); });
+}
+
+export const signIn = (email:any, password:any) => {
+  signInWithEmailAndPassword(auth, email.value, password.value)
+  .catch( (error:any) => { console.log( "error: ", error ); });
+}
+
+// Short-circuit evaluation
+// export const firebaseUser   = () => { return getAuth().currentUser || "demo" ; };
+// export const anonUser       = () => { return getAuth().isAnonymous; };
+// window.onerror = function(message, file, line, col, error){ console.log(arguments); }
+
+export const anon_SignIn = async () => {
+
+  signInAnonymously(auth)
+  .then(() => { })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorCode, errorMessage);
+  });
+
+}
+
+export const google_SignIn = async () => {
+
+  const provider:any = new GoogleAuthProvider();
+  provider.addScope('profile');
+  provider.addScope('email');
+
+  signInWithRedirect(auth, provider);
+
+  getRedirectResult(auth)
+    .then( (result: any) => {
+    if (result.credential) { /*Access Token to access Google API */
+    const token = result.credential.accessToken; console.log("Google Token", token); }
+    // The signed-in user info.
+    // const firebaseUser = result.firebaseUser;
+  }).catch( (error:any) => { console.log('Sign in error: ', error); } );
+
+  // GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);
+
+};
 
 
 
+
+
+
+
+
+
+
+
+
+
+/*
 // export const runList      = () => { firebase.auth().onAuthStateChanged( (firebaseUser) => { if (firebaseUser) { store.dispatch(setList(firebaseUser)); } else { store.dispatch(setList(firebaseUser)); } }); };
-export const runFirebase  = () => { firebase.auth().onAuthStateChanged( (firebaseUser: boolean) => {
+export const runFirebase  = () => { onAuthStateChanged( auth, ) => {
+  (firebaseUser: boolean) => {
                                     if (firebaseUser) { store.dispatch(setAuth(true)); store.dispatch(setUser(firebaseUser)); }
                                     else { store.dispatch(setAuth(false)); store.dispatch(setUser(firebaseUser)); }
                                   }); };
-                                  
-export const authChange   = () => { return firebase.auth().onAuthStateChanged( (firebaseUser: boolean) => { if(firebaseUser) {store.dispatch( setAuth(true) )} else{store.dispatch( setAuth(false) )} });}
-
-export const firebaseUser = () => { return firebase.auth().currentUser || "demo"; };
-export const firebaseID   = () => { return firebase.auth().currentUser.uid  || "demo" ; };
-
-export const logOut       = () => { return firebase.auth().signOut(); }; /* .then( () => { } ).catch( () => { } ) */
-export const isUser       = () => { return !!firebase.auth().currentUser; };
-
-export const profileURL   = () => { return firebase.auth().currentUser.photoURL || '/images/manifest/icon-48x48.png'; }; 
-export const userName     = () => { return firebase.auth().currentUser.displayName; };
-export const userEmail    = () => { return firebase.auth().currentUser.email; };
-
-export const deleteUser   = () => { return firebase.auth().currentUser.delete() }; /* .then( () => { }).catch( () => { }) */
-export const deleteDoc    = (collect:string, item:string) => { return firestore.collection(collect).doc(item).delete() };
-
+*/         
 // export const storageRef   = () => { return firebase.storage.ref(); }
+
+
+
+
+/*
+
+// MESSAGE TOKEN
+getIdToken(messaging, { vapidKey: 'BAz2eUmJrgElexalB5GmQOXLxZ7yJC2Jp69fsUfnYM73hfGIhWkRxPi5PgRXr5oEWJ0yvJlQ7GVFGYP3AiIigl4' })
+.then( (currentToken:any) => {
+
+  if (currentToken)  {
+    let created : any = currentToken;
+    store.dispatch(messageId(created));
+    let docSnap : any = doc( auth, 'users', firebaseID() )
+     // console.log('Current Token: ', currentToken);
+     // logEvent(analytics, 'active_msg_token');
+
+  } else {
+    console.log('No Instance ID token available.');
+    // logEvent(analytics, 'no_msg_token');
+  }
+
+}).catch( (err:Error) => { console.log('An error occurred while retrieving token. ', err); });
+
+
+
+
 
 export const saveMessage  = (messageText:string) => {
   return firebase.firestore().collection('feedback')
@@ -64,110 +144,29 @@ export const loadMessages = () => {
       });
     });
 };
+
 export const saveImage = () => {
-    // 1 - We add a message with a loading icon that will get updated with the shared image.
-    firebase.firestore().collection('messages').add({
-      name: userName(),
-      imageUrl: LOADING_IMAGE_URL,
-      profilePicUrl: profileURL(),
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    }).then( (messageRef:string) => {
-      // 2 - Upload the image to Cloud Storage.
-      const filePath = firebase.auth().currentUser.uid + '/' + messageRef.id + '/' + file.name;
-      return firebase.storage().ref(filePath).put(file).then( (fileSnapshot) => {
-        // 3 - Generate a public URL for the file.
-        return fileSnapshot.ref.getDownloadURL().then((url) => {
-          // 4 - Update the chat message placeholder with the image’s URL.
-          return messageRef.update({
-            imageUrl: url,
-            storageUri: fileSnapshot.metadata.fullPath
-          });
+  // 1 - We add a message with a loading icon that will get updated with the shared image.
+  firebase.firestore().collection('messages').add({
+    name: userName(),
+    imageUrl: LOADING_IMAGE_URL,
+    profilePicUrl: profileURL(),
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  }).then( (messageRef:string) => {
+    // 2 - Upload the image to Cloud Storage.
+    const filePath = firebase.auth().currentUser.uid + '/' + messageRef.id + '/' + file.name;
+    return firebase.storage().ref(filePath).put(file).then( (fileSnapshot) => {
+      // 3 - Generate a public URL for the file.
+      return fileSnapshot.ref.getDownloadURL().then((url) => {
+        // 4 - Update the chat message placeholder with the image’s URL.
+        return messageRef.update({
+          imageUrl: url,
+          storageUri: fileSnapshot.metadata.fullPath
         });
       });
-    }).catch( (error) => { console.error('There was an error uploading a file to Cloud Storage:', error); });
-};
-export const deviceToken = () => {
-  // Saves the messaging device token to the datastore.
-  firebase.messaging().getToken().then( (currentToken:string) => {
-    if (currentToken) {
-      console.log('Got FCM device token:', currentToken);
-      // Saving the Device Token to the datastore.
-      firebase.firestore().collection('fcmTokens').doc(currentToken)
-          .set({uid: firebase.auth().currentUser.uid});
-    } else {
-      // Need to request permissions to show notifications.
-      requestNotificationsPermissions();
-    }
-  }).catch( (error) => { console.error('Unable to get messaging token.', error); });
-};
-
-export const signUp = () => {
-  const email = this.shadowRoot.getElementById('txtEmail').value;
-  const pass  = this.shadowRoot.getElementById('txtPassword').value;
-  if (email.length < 4) {
-    alert('Please enter an email address.');
-    return;
-  }
-  if (pass.length < 4) {
-    alert('Please enter a password.');
-    return;
-  }
-  firebase.auth().createUserWithEmailAndPassword(email, pass).catch( (error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // [START_EXCLUDE]
-    if (errorCode == 'auth/weak-password') {
-      alert('The password is too weak.');
-    } else {
-      alert(errorMessage);
-    }
-    console.log(error);
-  });
-
-}
-
-export const anon = () => {
-  if (firebase.auth().currentUser) {
-    // [START signout]
-    firebase.auth().signOut();
-    // [END signout]
-  } else {
-    // [START authanon]
-    firebase.auth().signInAnonymously().catch( (error) => {
-      // Handle Errors here.
-      const errorCode     = error.code;
-      const errorMessage  = error.message;
-      // [START_EXCLUDE]
-      if (errorCode === 'auth/operation-not-allowed') {
-        alert('You must enable Anonymous auth in the Firebase Console.');
-      } else { console.error(error); }
-      // [END_EXCLUDE]
     });
-    // [END authanon]
-}
+  }).catch( (error) => { console.error('There was an error uploading a file to Cloud Storage:', error); });
 };
 
-export const google = () => {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  provider.addScope('profile');
-  provider.addScope('email');
-  firebase.auth().signInWithRedirect(provider);
-  firebase.auth().getRedirectResult().then( (result) => {
-    if (result.credential) {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const token         = result.credential.accessToken; console.log("Google Token");
-    }
-    // The signed-in user info.
-    const firebaseUser            = result.firebaseUser;
-  }).catch( (error) => {
-    // Handle Errors here.
-    const errorCode       = error.code;
-    const errorMessage    = error.message;
-    // The email of the user's account used.
-    const email           = error.email;
-    // The firebase.auth.AuthCredential type that was used.
-    const credential      = error.credential;
-  });
-};
 
-// window.onerror = function(message, file, line, col, error){ console.log(arguments); }
+*/

@@ -1,43 +1,19 @@
 
 
-import { LitElement, html, css, CSSResult, TemplateResult } from 'lit-element';
-import { customElement, property } from "lit-element/lib/decorators.js"
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store } from '../store';
+import { LitElement, html, css, CSSResult, TemplateResult } from 'lit';
+import { customElement, state }   from "lit/decorators.js"
+import { connect }                from 'pwa-helpers/connect-mixin';
+import { store }                  from '../store';
 
-import '@material/mwc-textfield';
-import '@material/mwc-button';
 
 @customElement('create-user')
 export class CreateUser extends connect(store)(LitElement) {
 
-  @property({type: Boolean}) private _method  = false;
-  @property({type: String})  private _error   = '';
+  @state() private _method  = false;
+  @state() private _error   = '';
 
   constructor() {
     super();
-  }
-
-
-  private _create() {
-    let email:any     = this.shadowRoot!.querySelector('.newEmail')!;
-    let password:any  = this.shadowRoot!.querySelector('.newSignal')!;
-    // @ts-ignore 
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email.value, password.value)
-      // .then( this.gtag_report_conversion(window.location) );
-      .catch( (error:any) => { this._error = error, console.log( "error: ", error ); });
-  }
-
-  private _signIn() {
-    let email:any = this.shadowRoot!.querySelector('.existingEmail')!;
-    let password:any = this.shadowRoot!.querySelector('.existingSignal')!;
-    // @ts-ignore 
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email.value, password.value)
-      .catch( (error:any) => { this._error = error, console.log( "error: ", error ); });
   }
 
   /*
@@ -187,6 +163,26 @@ export class CreateUser extends connect(store)(LitElement) {
   `}
 
     `
+  }
+  private _create() {
+    let email:any     = this.shadowRoot!.querySelector('.newEmail')!;
+    let password:any  = this.shadowRoot!.querySelector('.newSignal')!;
+    // @ts-ignore 
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email.value, password.value)
+      // .then( this.gtag_report_conversion(window.location) );
+      .catch( (error:any) => { this._error = error, console.log( "error: ", error ); });
+  }
+
+  private _signIn() {
+    let email:any = this.shadowRoot!.querySelector('.existingEmail')!;
+    let password:any = this.shadowRoot!.querySelector('.existingSignal')!;
+    // @ts-ignore 
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email.value, password.value)
+      .catch( (error:any) => { this._error = error, console.log( "error: ", error ); });
   }
 }
 
