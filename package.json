@@ -1,9 +1,9 @@
 {
   "name": "pwa-auth",
   "author": "Modern Projects <jack.solutionbox@gmail.com>(https://www.contractorscentre.com)",
-  "version": "0.0.15",
+  "version": "0.1.0",
   "description": "User Management Component with 3 HTML Tags, and 1 Boilerplate Function to display user icon, sign up, login, log out, change account details, delete account.",
-  "homepage": "https://www.inmostfire.com",
+  "homepage": "https://www.jackspublishing.com",
   "main": "pwa-auth.js",
   "repository": {
     "type": "git",
@@ -22,25 +22,21 @@
   "license": "BSD-3-Clause",
   "flat": true,
   "scripts": {
+    "server": "web-dev-server --node-resolve --watch --open --app-index demo/index.html",
     "rollup": "rollup -c",
     "long": "rollup deploy/application-shell.js --format es --name 'ApplicationShell' --file application-shell.js",
-    "build:static": "polymer build",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@webcomponents/webcomponentsjs": "^2.5.0",
-    "lit-element": "^3.3.1",
+    "lit": "^3.2.1",
     "pwa-helpers": "^0.9.1",
-    "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0"
+    "redux": "^5.0.1",
+    "redux-thunk": "^3.1.0"
   },
   "devDependencies": {
-    "@reduxjs/toolkit": "^1.9.3",
-    "@storybook/addon-actions": "^7.0.2",
-    "@storybook/addon-essentials": "^7.0.2",
-    "@storybook/addon-links": "^7.0.2",
-    "@storybook/web-components": "^7.0.2",
-    "firebase": "^9.19.1"
+    "@reduxjs/toolkit": "^2.5.0",
+    "@web/dev-server": "^0.4.6",
+    "firebase": "^12.0.0"
   }
 }

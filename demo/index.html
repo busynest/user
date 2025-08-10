@@ -1,126 +1,124 @@
-<!--
-@license
-Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
+
     <meta charset="UTF-8">
     <!-- TITILE -->
     <title>pwa-auth</title>
     <!-- VIEWPORT -->
-    <meta name="viewport"     content="width=device-width, minimum-scale=1, initial-scale=1" />
+    <meta name="viewport"       content="width=device-width, minimum-scale=1, initial-scale=1" />
+    <!-- THEME COLOR -->
+    <meta name="theme-color"    content="#272931" />
+    <!-- AUTHOR -->
+    <meta name="author"         content="Jacek Markiewicz" />
+    <!-- DESCRIPTION -->
+    <meta name="description"    content="To provide a personalized experience, Apps need to know the identity of a user to securely store data in the cloud. pwa-auth is powered by The Firebase Authentication backend, consistently providing a centralized and predictable state behaviour with Redux, and declaratively rendering straight into the DOM with Google Polymer's fast and light Lit-Element. This Component includes 3 HTML Tags, and 1 Boilerplate Function to display the user icon, sign up, login, log out, change account details, and delete the user's account." />
+    <!-- KEYWORDS -->
+    <meta name="keywords"       content="lit, redux, firebase, user, management, drawer, settings, icon" />
     <!-- BASE -->
     <base href="/">
-    <!-- PRECONNECT -->
-    <link rel="preconnect" href="https://www.googletagmanager.com">
-    <link rel="preconnect" href="https://www.gstatic.com">
-    <link rel="preconnect" href="https://www.google-analytics.com">
-    <!-- STYLES -->
-    <style>
-      body    { margin: 0; background-color: #303030; }
-      header  { height: 64px; display: grid; grid-template-columns: 1fr 64px ; background-color: #303030; }
-      main    { margin: 0 16px 0 16px; background-color: #fff; border-radius: 8px; padding: 8px;}
-      footer  { background-color: #303030; height: 100%; color: #e8e8e8; }
-      .links  { margin: auto; text-decoration: none; font-size: 1em; color: red; font-weight: 800; }
-      .link   { margin: auto; text-decoration: none; font-size: 1em; color: #e8e8e8; font-weight: 800; }
-      p       { margin: 16px; background-color: #fff; color: black; border-radius: 8px; padding: 16px; font-size: 1em; }
-      h1, h2  { text-align: center; }
-      h3      { text-align: center; color: #e8e8e8; padding-left: 64px; text-transform: uppercase; font-size: 1em; }
-    </style>
-    <!-- https://github.com/reactjs/redux/issues/2907 -->
-    <script>
-    if ('serviceWorker' in navigator) { window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js', {
-          scope: '/',
-        });
-      });
-    }
-    window.process = { env: { NODE_ENV: 'production' } };
-    </script>
-    <!-- MANIFEST -->
-    <link rel="manifest"       href="manifest.json" />
-    <!-- FAVICON -->
-    <link rel="icon"           href="images/favicon.ico">
-    <!-- THEME COLOR -->
-    <meta name="theme-color"   content="#272931" />
-    <!-- AUTHOR -->
-    <meta name="author"        content="Modern Projects" />
     <!-- CANONICAL -->
-    <link rel="canonical"      href="https://inmostfire.com" />
-    <!-- DESCRIPTION -->
-    <meta name="description"   content="To provide a personalized experience, Apps need to know the identity of a user to securely store data in the cloud. pwa-auth is powered by The Firebase Authentication backend, consistently providing a centralized and predictable state behaviour with Redux, and declaratively rendering straight into the DOM with Google Polymer's fast and light Lit-Element. This Component includes 3 HTML Tags, and 1 Boilerplate Function to display the user icon, sign up, login, log out, change account details, and delete the user's account." />
-     <!-- KEYWORDS -->
-     <meta name="keywords"     content="lit-html, redux, firebase, user, management, drawer, settings, icon" />
+    <link rel="canonical"       href="https://jackspublishing.com" />
+    <!-- MANIFEST -->
+    <link rel="manifest"        href="manifest.json" />
+    <!-- FAVICON -->
+    <link rel="icon"            href="images/favicon.ico">
+
+    <!-- Cascading Style Sheets -->
+    <style>
+
+      html {
+        overflow:                 auto;
+        scroll-behavior:          smooth;
+        display:                  grid;
+        height:                   100%;
+        padding:                  16px;
+        box-sizing:               border-box;
+        transition-duration:      1s;
+      }
+
+      body {
+        overflow:                 hidden;
+        margin:                   0;
+        background-color:       #303030;
+        color:                  white;
+        font-family:              Space Grotesk, system-ui, sans-serif;
+        -webkit-font-smoothing:   antialiased;
+        font-size:                .875rem;
+        line-height:              1.25rem;
+        display:                  grid;
+        grid-template-areas:
+            "head"
+            "main";
+        grid-template-rows:       60px 1fr;
+      }
+
+      user-icon       { grid-area: head; }
+      /* user-drawer     { grid-area: main; } */
+      user-settings   { grid-area: main; }
+
+    </style>
+
+    <!-- ECMA Script-->
+    <script>window.process = { env: { NODE_ENV: 'production' } };</script>
+
   </head>
+  
+  <!-- Body -->
   <body>
 
-    <header>
-        <a class="link" href="https://www.inmostfire.com"><h3>Application Authentication</h3></a>
-        <!-- ADD ICON -->
-        <user-icon></user-icon>
-    </header>
+    <!-- Button -->
+    <user-icon></user-icon>
 
-    <!-- ADD DRAWER -->
+    <!-- Drawer -->
     <user-drawer></user-drawer>
 
-    <main>
-      <!-- ADD SETTINGS -->
-      <user-settings> </user-settings>
-    </main>
-    
-    <footer>
-      <p>To provide a personalized experience, Apps need to know the identity of a user to securely store data in the cloud. pwa-auth is powered by The Firebase Authentication backend, consistently providing a centralized and predictable state behaviour with Redux, and declaratively rendering straight into the DOM with Google Polymer's fast and light Lit-Element. This Component includes 3 HTML Tags, and 1 Boilerplate Function to display the user icon, sign up, login, log out, change account details, and delete the user's account.</p>
-      <p><a class="links" href="https://www.npmjs.com/package/pwa-auth">NPM</a> download: npm i --save pwa-auth</p>
-      <p><a class="links" href="https://github.com/busynest/user">Github</a> view on github</p>
-    </footer>
+    <!-- Settings -->
+    <user-settings></user-settings>
 
-    <!-- LOAD ANY POLYFILLS YOUR BROWSER NEEDS -->
-    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js" async ></script>
+    <!-- Custom CSS Variables -->
+    <style>
+      :root {
+        --primary-color:    #007bff; /* Declares a global custom property named --primary-color */
+        --secondary-color:  #6c757d;
+      }
+    </style>
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-73943527-19"></script>
+    <!-- Custom JavaScript Information -->
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'UA-73943527-19');
-    </script>
 
-    <!-- FIREBASE -->
-    <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase-app.js"            ></script>
-    <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase-auth.js"           ></script>
-    <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase-firestore.js"      ></script>
-    <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase-storage.js"        ></script> 
-  
-    <script>
-      document.addEventListener("DOMContentLoaded", (event) => {  });  
-        // Initialize Firebase
-        const admin = {
-          apiKey: "AIzaSyAJfm5MahdHr4HzwRLWN7IBhVYXMjP65lQ",
-          authDomain: "inmostfire.firebaseapp.com",
-          databaseURL: "https://inmostfire.firebaseio.com",
-          projectId: "inmostfire",
-          storageBucket: "inmostfire.appspot.com",
-          messagingSenderId: "937289126032"
+      // Global NameSpace - Create Object Initial State
+      let connect = {
+        apiKey:             "AIzaSyAJfm5MahdHr4HzwRLWN7IBhVYXMjP65lQ",
+        authDomain:         "inmostfire.firebaseapp.com",
+        databaseURL:        "https://inmostfire.firebaseio.com",
+        projectId:          "inmostfire",
+        storageBucket:      "inmostfire.firebasestorage.app",
+        messagingSenderId:  "937289126032",
+        appId:              "1:937289126032:web:0e7f4b679b0f3da6",
+        measurementId:      "G-DKMV2HFJGE"
+      }
+
+      // Local Development Server
+      if ( location.hostname === 'localhost') {
+        console.log("localhost detected!");
+        connect = {
+          apiKey:             "AIzaSyAJfm5MahdHr4HzwRLWN7IBhVYXMjP65lQ",
+          authDomain:         "inmostfire.firebaseapp.com",
+          databaseURL:        "http://localhost:9000?ns=emulationui",
+          projectId:          "inmostfire",
+          storageBucket:      "inmostfire.firebasestorage.app",
+          messagingSenderId:  "937289126032",
+          appId:              "1:937289126032:web:0e7f4b679b0f3da6",
+          measurementId:      "G-DKMV2HFJGE"
         };
 
-        // REFERENCE TO SERVICES
-        const application           = firebase.initializeApp(admin);
-        const firestore             = application.firestore();
-        const storage               = firebase.storage();
-        const storageRef            = storage.ref();
+      }
 
     </script>
 
-    <!-- APPLICATION SHELL -->
-    <script type="module" src="../pwa-auth.js" async></script>
+    <!-- Application Shell -->
+    <script type="module" src="pwa-auth.js" async></script>
     
   </body>
 </html>

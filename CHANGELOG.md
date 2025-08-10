@@ -5,11 +5,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
+Added - for new features.
+Changed - for changes in existing functionality.
+Deprecated - for soon-to-be removed features.
+Removed - for now removed features.
+Fixed - for any bug fixes.
+Security - in case of vulnerabilities.
+
 ## [Unreleased]
 - Facebook Login
 - Phone Login
 - Play Games Login
-- Twitter Login
+- X Login
 - Github Login
 - display nested content after webcomponent loads
 - create password after social Login
@@ -18,15 +25,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - update user info upon change submission
 - change user-icon to "Login" text
 
-## [0.1.0] - 2019-03-26
+## [1.0.0] - 2025-08-04
+
+## Changed
+- Redux/Toolkit Upgrade
+- Lit Upgrade
+- Demo Index Update
+- Firebase Functions
+- Custom Elements into Personal Folders
+- Profile Section: Too many input, downsize
+- Email Section to Verification Section
+- Password Section to Security Section
+- 
+- Remove id's, Replace with class
+- CSS Color Memory Tags
 
 ### Added
-- Upgraded to Typescript
-- alert user to login when submitting form
+- Firebase Element for Firebase SDK
+- Google Firebase Analytics to Initialization
+- Firebase Web App to Initialization
+- Step Process #1 - Initialize Firebase Object
+- Space Saving Freature: Menu Bar: Icon > Active > Text 
+
+### Removed
+- Storybook
 
 ## [0.0.14] - 2019-03-24
 
 ### Added
+- Upgraded to Typescript
+- alert user to login when submitting form
 - Verify user before submitting form
 - Forms prevent default
 

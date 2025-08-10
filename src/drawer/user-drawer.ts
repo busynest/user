@@ -1,12 +1,11 @@
-
 import { html, LitElement, css }                from 'lit';
 import { customElement, state }                 from 'lit/decorators.js';
 import { connect }                              from 'pwa-helpers/connect-mixin';
-import { store, RootState }                     from './store';
-import { userStyles, close }                    from './styles';
+import { store, AppState }                      from '../store';
+import { userStyles, close }                    from '../styles';
 import { User }                                 from './styles-drawer';
-import { closeSign, signUpAction }              from './user-action'; 
-import { logOut, anon_SignIn, google_SignIn, signIn, signUp  } from './user-functions';
+import { signUpAction, toggleSign }             from '../settings/user-redux'; 
+import { logOut, anon_SignIn, google_SignIn, signIn, signUp  } from '../firebase-functions/user-firebase';
 
 @customElement('user-drawer')
 export class UserDrawer extends connect(store)(LitElement) {
@@ -20,16 +19,16 @@ export class UserDrawer extends connect(store)(LitElement) {
     }
 
     protected firstUpdated() {
-      this.shadowRoot!.querySelector('#close')!         .addEventListener('click', () => { store.dispatch( closeSign(false) ) } );
+      this.shadowRoot!.querySelector('.sign')!          .addEventListener('click', () => { store.dispatch(toggleSign()) } );
+      this.shadowRoot!.querySelector('.new')!           .addEventListener('click', () => { store.dispatch(signUpAction())} );
       this.shadowRoot!.querySelector('#or')!            .addEventListener('click', () => { anon_SignIn() } );
       this.shadowRoot!.querySelector('#googleSignIn')!  .addEventListener('click', () => { google_SignIn() } );
       this.shadowRoot!.querySelector('#leave')!         .addEventListener('click', () => { logOut() } );
       this.shadowRoot!.querySelector('#log')!           .addEventListener('click', () => { this._signIn() } );
       this.shadowRoot!.querySelector('#newUser')!       .addEventListener('click', () => { this._signUp() } );
-      this.shadowRoot!.querySelector('#new')!           .addEventListener('click', () => { store.dispatch( signUpAction() ) } );
     }
 
-    stateChanged(state: RootState) {
+    stateChanged(state: AppState) {
       this._subscribe   = state.pwa_auth!.snackState;
       this._log         = state.pwa_auth!.currentUser;
       this._sign        = state.pwa_auth!.register;
@@ -54,12 +53,12 @@ export class UserDrawer extends connect(store)(LitElement) {
         <div class="exit">
           <div></div>
           <h3 id="or">${this._log ? html`ACCOUNT` : html`SUBSCRIBE` }</h3>
-          <button id="close" class="sign-right">${close}</button>
+          <button class="sign">${close}</button>
         </div>
 
         <div class="spec" ?on="${ this._log === false }">
 
-          <p><button id="new">create a new account</button></p>
+          <p><button class="new">create a new account</button></p>
   
           <p><button id="googleSignIn" class="google">
             <span class="icon"></span>
@@ -70,7 +69,7 @@ export class UserDrawer extends connect(store)(LitElement) {
           <ul>
             <li class="inpat">
               <label><input   id="txtEmail"      type="email"      >Email</label>
-              <label><input   id="txtPassword"   type="Password"   >Password</label>
+              <label><input   id="txtPassword"   type="password"   >Password</label>
             </li>
             <li><button id="log" class="action-button">Sign in</button></li>
           </ul>
@@ -81,9 +80,9 @@ export class UserDrawer extends connect(store)(LitElement) {
           <ul>
             <li class="inpat">
               <label><input   id="newEmail"         type="email"      >Email</label>
-              <label><input   id="newPassword"      type="Password"   >Password</label>
+              <label><input   id="newPassword"      type="password"   >Password</label>
               <label><input   id="verifyEmail"      type="email"      >Verify Email</label>
-              <label><input   id="veriftPassword"   type="Password"   >Verify Password</label>
+              <label><input   id="veriftPassword"   type="password"   >Verify Password</label>
             </li>
             <li><button id="newUser" class="action-button">Sign up</button></li>
           </ul>

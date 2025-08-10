@@ -1,44 +1,47 @@
 {
+  "manifest_version": 3,
   "name": "pwa-auth",
-  "short_name": "pwa-auth",
+  "version": "1.0.0.",
   "description": "A User Management Component is designed with 3 HTML Tags, and 1 Boilerplate Function to sign up, sign in, log out, change account details, delete account.",
-  "start_url": "/",
-  "homepage": "https://www.inmostfire.com",
-  "manifest_version": 1,
-  "display": "standalone",
-  "orientation": "any",
-  "theme_color": "#303030",
-  "background_color": "#303030",
-  "icons": [
+    "icons": [
     {
-      "src": "images/icon-48x48.png",
+      "src": "images/manifest/logo-48.png",
       "sizes": "48x48",
       "type": "image/png"
     },
     {
-      "src": "images/icon-512x512.png",
+      "src": "images/manifest/logo-512.png",
       "sizes": "72x72",
       "type": "image/png"
     },
     {
-      "src": "images/icon-96x96.png",
+      "src": "images/manifest/logo-96.png",
       "sizes": "96x96",
       "type": "image/png"
     },
     {
-      "src": "images/icon-144x144.png",
+      "src": "images/manifest/logo-144.png",
       "sizes": "144x144",
       "type": "image/png"
     },
     {
-      "src": "images/icon-192x192.png",
+      "src": "images/manifest/logo-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "images/icon-512x512.png",
+      "src": "images/manifest/logo-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+
+  "start_url": "/",
+  "homepage": "https://www.jackspublishing.com",
+  "short_name": "pwa-auth",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#303030",
+  "background_color": "#303030"
+
 }

@@ -1,23 +1,13 @@
 
-/**
-@license
-Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
-*/
-
-// @ts-check
-
-import { html, css } from 'lit-element';
+import { html, css } from 'lit';
 
 export const userStyles = css`
 
+/*  */
 .spec[on]     { display:           block; }
 .spec         { display:           none; }
 
+/*  */
 .x-font {
   font-family:              Roboto, Arial, sans-serif; /* 'Montserrat' */
   line-height:              1.1;
@@ -29,12 +19,14 @@ export const userStyles = css`
   text-transform:           uppercase;
 }
 
+/*  */
 ul {
   list-style-type:          none;
   padding:                  0;
   margin:                   0;
 }
 
+/*  */
 input[type=submit]:hover  { background-color: #45a049; }
 input[type=submit] {
   box-sizing:         border-box;
@@ -63,6 +55,7 @@ input[type=password], select  {
   text-align:               center;
 }
 
+/*  */
 .action-button:focus, .topButton:focus {outline:0;}
 .action-button {
   display:              inline-block;

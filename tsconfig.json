@@ -3,14 +3,20 @@
     "target": "es2017",
     "module": "esnext",
     "moduleResolution": "node",
-    "lib": ["es2017", "dom"],
+    "lib": ["ES2024", "dom"],
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "experimentalDecorators": true,
-    "outDir": "deploy"
+    "outDir": "deploy",
+    // Lit - Declaration
+    "declaration": true,
+    "declarationMap": true,
+    // Comments
+    "removeComments": true,
+
   },
   "include": [
     "src/**/*.ts"

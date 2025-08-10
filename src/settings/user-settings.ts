@@ -1,13 +1,20 @@
-
-import { html, LitElement, css, }           from 'lit';
-import { customElement, state }             from 'lit/decorators.js';
+import { html, LitElement }                 from 'lit';
+import { state, customElement }             from 'lit/decorators.js';
 import { connect }                          from 'pwa-helpers/connect-mixin.js';
-import { store, RootState }                 from './store';
-import { navigate, setName }                from './user-action.js';
-import { userStyles }                       from './styles';
-import { Settings }                         from './styles-settings';
-import { firebaseUser, deleteUser, userName, profileURL, userEmail, auth } from './user-functions';
-import { onAuthStateChanged } from 'firebase/auth';
+import { store, AppState }                  from '../store';
+import { navigateX, setNameX }              from './user-redux.js';
+import { userStyles }                       from '../styles';
+import { Settings }                         from './settings-styles';
+import {
+  auth,           // Reference to Services
+  // firebaseUser,   // Exact Name Reference - Short-circuit Evaluation - State Logical OR
+  // profileURL,     // Exact Name Reference - Short-circuit Evaluation - State Logical OR
+  // userName,       // Exact Name Reference - Short-circuit Evaluation - State Return
+  // userEmail,      // Exact Name Reference - Short-circuit Evaluation - State Return
+  deleteUser,      // Exact Name Function - Action
+  user
+} from '../firebase-functions/user-firebase';
+import { onAuthStateChanged } from 'firebase/auth'; // Firebase Function
 /*
 export class Student {
   fullName: string;
@@ -40,19 +47,21 @@ export class UserSettings extends connect(store)(LitElement) {
     }
 
     protected firstUpdated() {
+
+      // ShadowRoot Default in Forms
       const a : any = this.shadowRoot!.getElementById('settings');
       a.addEventListener('click', (e:any) => { e.preventDefault(); });
-      const b : any = this.shadowRoot!.getElementById('emailForm');
+      const b : any = this.shadowRoot!.getElementById('verificationForm');
       b.addEventListener('click', (e:any) => { e.preventDefault(); });
       const c : any = this.shadowRoot!.getElementById('passwordForm');
       c.addEventListener('click', (e:any) => { e.preventDefault(); });
       const d : any = this.shadowRoot!.getElementById('deleteForm');
       d.addEventListener('click', (e:any) => { e.preventDefault(); });
 
-      this.shadowRoot!.querySelector('#profile')!   .addEventListener('click',    () => { store.dispatch(navigate('profile')); } );
-      this.shadowRoot!.querySelector('#email')!     .addEventListener('click',    () => { store.dispatch(navigate('email')); } );
-      this.shadowRoot!.querySelector('#password')!  .addEventListener('click',    () => { store.dispatch(navigate('password')); } );
-      this.shadowRoot!.querySelector('#account')!   .addEventListener('click',    () => { store.dispatch(navigate('delete')); } );
+      this.shadowRoot!.querySelector('#profile')!   .addEventListener('click',    () => { store.dispatch(navigateX('profile')); } );
+      this.shadowRoot!.querySelector('#verification')!     .addEventListener('click',    () => { store.dispatch(navigateX('verification')); } );
+      this.shadowRoot!.querySelector('#password')!  .addEventListener('click',    () => { store.dispatch(navigateX('password')); } );
+      this.shadowRoot!.querySelector('#account')!   .addEventListener('click',    () => { store.dispatch(navigateX('delete')); } );
 
       this.shadowRoot!.querySelector('#save')!      .addEventListener('click',    () => { this.alertProfile(); } );
       this.shadowRoot!.querySelector('#update')!    .addEventListener('click',    () => { this.alertEmail(); } );
@@ -64,31 +73,32 @@ export class UserSettings extends connect(store)(LitElement) {
       // runFirebase();
 
 
+      // Firebase Function
       onAuthStateChanged( auth, (firebaseUser) => {
         if (firebaseUser) { /* INCLUDE */
           this._person    = userName();
           this._userMail  = userEmail();
           this._photoURL  = profileURL();
-          store.dispatch( setName( this._person ) );
+          store.dispatch( setNameX( this._person ) );
         }
         else              { /* EXCLUDE */ }
-        store.dispatch( setName( this._person ) );
+        store.dispatch( setNameX( this._person ) );
       });
     }
   
-    stateChanged(state: RootState) {
-      this.profileTopic      = state.user!.settings;
-      this._user             = state.user!.currentUser;
-      this._person           = state.user!.customer;
-      this._name             = state.user!.name;
-      this._phone            = state.user!.phone;
-      this._userMail         = state.user!.email;
-      this._photoURL         = state.user!.photoURL;
+    stateChanged(state: AppState) {
+      this.profileTopic      = state.pwa_auth!.settings;      // Page String
+      this._user             = state.pwa_auth!.currentUser;   // Login State
+      this._person           = state.pwa_auth!.customer;      // ID
+      this._name             = state.pwa_auth!.name;          // Name
+      this._phone            = state.pwa_auth!.phone;         // Phone
+      this._userMail         = state.pwa_auth!.email;         // E-mail
+      this._photoURL         = state.pwa_auth!.photoURL;      // Photo
     }
 
     private alertProfile()  { if (this._user) { this.updateProfile() } else { alert('Please Login'); } }
     private updateProfile() {
-      const person : any        = firebaseUser();
+      const person : any        = this._name;
       const contractor : any    = this.shadowRoot!.getElementById('contractor');
       const phone : any         = this.shadowRoot!.getElementById('phoneNumber');
       const list : any          = this.shadowRoot!.getElementById('list');
@@ -125,9 +135,10 @@ export class UserSettings extends connect(store)(LitElement) {
     /* Update email */
     private alertEmail()  { if (this._user) { this.updateEmail(); } else { alert('Please Login'); } }
     private updateEmail() {
-      const user = firebaseUser();
-      const email = this.shadowRoot!.getElementById('email')!.value;
-      user.updateEmail(email)
+      const user = this._user;
+      // const user = firebaseUser();
+      const email = this.shadowRoot!.getElementById('email')!;
+      user.updateEmail(email.value)
         .then( () => { console.log("Email update successful!" ); })
         .catch( (error: object) => { console.error('Error writing new message to Firebase Database', error); });
       user.sendEmailVerification()
@@ -138,7 +149,8 @@ export class UserSettings extends connect(store)(LitElement) {
     /* Update Password */
     private alertPassword()  { if (this._user) { this.updatePassword(); } else { alert('Please Login'); } }
     private updatePassword() {
-      const user = firebaseUser();
+      const user = this._user
+      // const user = firebaseUser();
       const newPassword = this.shadowRoot!.getElementById('newPass')!.value;
       user.updatePassword(newPassword)
         .then( () => { console.log("Password successful!"); })
@@ -219,169 +231,119 @@ export class UserSettings extends connect(store)(LitElement) {
     }
 */
     static get styles() {
-      return [
-        Settings,
-        userStyles,
-        css`
-
-        button:focus  { outline: none; }
-
-        #uploader {
-          position:         absolute;
-          right:            0;
-          width:            28px;
-          height:           28px;
-          border:           2px solid #303030;
-          border-radius:    50%;
-          transform:        rotateZ(90deg);
-          overflow:         hidden;
-          box-shadow:    1px 1px 2px black, 0 0 25px grey, 0 0 5px #fff;
-        }
-
-        .profile {
-          width:            200px;
-          margin:           auto;
-        }
-
-        .userImage {
-          border-radius:  50%;
-          overflow:       hidden;
-          margin:         auto;
-          border:         2px solid #303030;
-          box-shadow:    1px 1px 2px black, 0 0 25px grey, 0 0 5px #fff;
-        }
-
-        .file-container {
-  
-        } 
-
-        .trigger {
-          position: relative;
-          width: 200px;
-          display:        block;
-          text-shadow:    1px 1px 12px black, 0 0 35px grey, 0 0 15px #fff;
-          font-size:      1em;
-          transition:     all .4s;
-          cursor:         pointer;
-          text-align:     center;
-        }
-
-        #fileupload {
- 
-
-          width:          200px;
-          height:         100%;
-         /* background:   #39D2B4; */
-          position:       absolute;
-          top: 0; left: 0;
-          opacity:        0;
-
-          cursor:         pointer;
-        }
-
-        .max {
-          max-width: 600px;
-          margin: auto;
-        }
-
-        .welcome {
-          text-align: center;
-          text-shadow:    1px 1px 2px black, 0 0 15px grey, 0 0 5px #fff;
-        }
-
-        @media  (max-width: 460px) {
-          #profile, #email { text-align: left; }
-          #account, #password { text-align: right; }
-        }
-/*
-        @media (min-width: 640px) {
-          :host{ display: grid; grid-template-columns: 50% 50%; }
-        }
-*/
-        `
-      ];
+      return [ Settings, userStyles ];
     }
   
     protected render() {
       return html`
         <!-- Page Menu -->
-        <div>
+        <nav>
           <ul class="setMenu">
-            <li><button id="profile"   value="profile"   class="topButton"  ?on="${ this.profileTopic === 'profile'}"   ><p>Profile</p>   </button></li>
-            <li><button id="email"     value="email"     class="topButton"  ?on="${ this.profileTopic === 'email'}"     ><p>Email</p>      </button></li>
-            <li><button id="password"  value="password"  class="topButton"  ?on="${ this.profileTopic === 'password'}"  ><p>Password</p>  </button></li>
-            <li><button id="account"   value="delete"    class="topButton"  ?on="${ this.profileTopic === 'delete'}"    ><p>Delete</p>   </button></li>
+            <li><button id="profile"        value="profile"        class="topButton"  ?on="${ this.profileTopic === 'profile'}"       >Profile        </button></li>
+            <li><button id="verification"   value="verification"   class="topButton"  ?on="${ this.profileTopic === 'verification'}"  >Verification   </button></li>
+            <li><button id="password"       value="password"       class="topButton"  ?on="${ this.profileTopic === 'password'}"      >Security       </button></li>
+            <li><button id="account"        value="delete"         class="topButton"  ?on="${ this.profileTopic === 'delete'}"        >Delete         </button></li>
           </ul>
-        </div>
+        </nav>
   
-        <!-- Page Body -->
-        <div  class="spec" ?on="${ this.profileTopic === 'profile' }">
+        <!-- Page Section: Profile -->
+        <section class="spec" ?on="${ this.profileTopic === 'profile' }">
+
+          <!-- Divider: Photo Uploader / Display -->
           <div class="profile">
 
-          <h2 class="welcome">${this._person}</h2>
+            <!-- Display: Username -->
+            <h2 class="welcome">${this._person}</h2>
 
-          <label for="fileupload" class="trigger">
-            <input type="file" name="fileupload" id="fileupload" accept="image/*">
-            ${this._user
-            ? html`
-            <progress value="0" max="100" id="uploader"></progress>
-            <input
-              type="image"
-              class="userImage"
-              id="image"
-              alt="user"
-              height="171px"
-              width="171px"
-              src="${this._photoURL}">
-              `
-              : html`${faceIcon}` }
-              upload a photo
-          </label>
+            <!-- Profile Picture -->
+            <label for="fileupload" class="trigger">
+              <input type="file" name="fileupload" id="fileupload" accept="image/*">
 
-        </div>
-          <form id="settings">
-            <ul>
-              <li><p><label><h3 class="pageTitle">Username</h3><input id="contractor" type="text" ></label></p></li>
-              <li><p><label><h3 class="pageTitle">Telephone: ${this._phone}</h3><input id="phoneNumber" type="text" ></label></p></li>
-              </ul>
-          </form>
+              <!-- If Firebase User Signed-in -->
+              ${this._user
+              ? html`
 
-          <ul class="max">
-            <li><p><label><input type="checkbox" id="list" placeholder="true">Public Profile</label></p></li>
-            <li><button id="save" class="action-button" >save</button></li>
-          </ul>
+              <!-- Progress Bar -->
+              <progress value="0" max="100" id="uploader"></progress>
 
+              <!-- Display Photo -->
+              <input
+                type="image"
+                class="userImage"
+                id="image"
+                alt="user"
+                height="171px"
+                width="171px"
+                src="${this._photoURL}">
+                `
+                : html`
+
+                  <!-- If Firebase User NOT Signed-in -->
+                  ${faceIcon}
+                  
+                ` }
+
+                <!-- Text -->
+                upload a photo
+
+            </label>
+
+          <!-- End Divider: Profile -->
           </div>
 
-        <form class="spec" ?on="${ this.profileTopic === 'email' }" id="emailForm">
-          <ul>
-            <li><h3 class="pageTitle">Change Email ${this._userMail}</h3></li>
-            <li><p><label>Email<input type="email" id="email"></label></p></li>
-            <li><p><label>Verify Email<input type="email" id="emailVerify"></label></p></li>
-            <li><p><button id="update" class="action-button" >update</button></p></li>
-            <li><div class="verified"></div></li>
-          </ul>
-        </form>
+          <!-- Username / Telephone / Publish - Input -->
+          <form id="settings">
+            <ul>
+              <li><p><label>Username<input id="contractor" type="text" ></label></p></li>
+              <li><button id="save" class="action-button" >save</button></li>
+            </ul>
+          </form>
 
-        <form class="spec" ?on="${ this.profileTopic === 'password' }" id="passwordForm">
-        <ul>
-          <li><h3 class="pageTitle">Update Password</h3></li>
-          <li><p><label>New Password        <input type="Password" id="newPass"></label></p></li>
-          <li><p><label>Verify Password     <input type="Password" id="passVerify"></label></p></li>
-          <li><p><button id="pass" class="action-button">create</button></p></li>
-        </ul>
-        </form>
+        </section>
+        
+        <!-- Page: Verification -->
+        <section class="spec" ?on="${ this.profileTopic === 'verification' }" id="verificationForm">
+          <form>
+            <ul>
+              <li class="formTitle"><h3 class="pageTitle">Email:</h3>${this._userMail}</li>
+              <li><p><label>Email<input type="email" id="email"></label></p></li>
+              <li><p><label>Verify Email<input type="email" id="emailVerify"></label></p></li>
+              <li class="formTitle"><h3 class="pageTitle">Telephone:</h3>${this._phone}</li>
+              <li><p><label>Telephone:<input id="phoneNumber" type="text" ></label></p></li>
+              <li><p><button id="update" class="action-button" >update</button></p></li>
+              <li><div class="verified"></div></li>
+            </ul>
+          </form>
+        </section>
 
-        <form class="spec" ?on="${ this.profileTopic === 'delete' }" id="deleteForm">
+        <!-- Page: Password -->
+        <section  class="spec" ?on="${ this.profileTopic === 'password' }" id="passwordForm">
+          <form>
           <ul>
-            <li><h3 class="pageTitle">Delete Account</h3></li>
-            <li><p>Permanently delete the user account and data related to:</p></li>
-            <!-- <li><p>\${this.userMail}</p></li> -->
-            <li><p><button id="deleteUser" class="action-button">Delete</button></p></li>
+            <li><h3 class="pageTitle">Password</h3></li>
+            <li><p><label>New Password <input type="password" id="newPass"></label></p></li>
+            <li><p><label>Verify Password <input type="password" id="passVerify"></label></p></li>
+            <li><h3 class="pageTitle">Consent</h3></li>
+            <li><p><label><input type="checkbox" id="list" placeholder="true">Public Profile</label></p></li>
+            <li><p><button id="pass" class="action-button">create</button></p></li>
           </ul>
-        </form>
-      </form>
+          </form>
+        </section>
+
+        <!-- Page: Delete -->
+         <section  class="spec" ?on="${ this.profileTopic === 'delete' }" id="deleteForm">
+          <form>
+            <ul>
+              <li><h3 class="pageTitle">Delete Account</h3></li>
+              <li><p>Permanently delete the user account and data related to:</p></li>
+              <!-- <li><p>\${this.userMail}</p></li> -->
+              <li><p><button id="deleteUser" class="action-button">Delete</button></p></li>
+            </ul>
+          </form>
+        </section>
   
+        
+
       `
     }
   }

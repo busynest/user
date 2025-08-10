@@ -1,29 +1,18 @@
+import { configureStore }     from '@reduxjs/toolkit';
+import { userSlice }          from './settings/user-redux';
+import { drawerSlice }        from './drawer/drawer-redux';
+import { accountSlice }       from './settings/account-redux';
 
-// Here is a comment by Shalaw
-declare global {
-    interface Window {
-      process?: Object;
-      __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
-    }
-  }
-
-import { compose, combineReducers } from 'redux';
-import { configureStore }           from '@reduxjs/toolkit';
-import thunk, { ThunkMiddleware }   from 'redux-thunk';
-import { lazyReducerEnhancer }      from 'pwa-helpers/lazy-reducer-enhancer.js';
-import pwa_auth, { AppState }       from './user-reducer';
-import { AppAction }                from './user-action';
-
-export interface RootState { 
-  pwa_auth?: AppState;
-}
-
-export type RootAction = AppAction ;
-
+// Configuring the store
 export const store = configureStore({
-  reducer : { pwa_auth },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk as ThunkMiddleware <RootState, RootAction>),
-  devTools: process.env.NODE_ENV == 'production',
-  enhancers: [lazyReducerEnhancer(combineReducers)],
-})
+  reducer: {
+    pwa_auth: userSlice.reducer,
+    drawer: drawerSlice.reducer,
+    account: accountSlice.reducer
+  },
+});
 
+export type AppState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
+export default store;
