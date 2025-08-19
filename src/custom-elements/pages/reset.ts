@@ -3,10 +3,10 @@
 import { html, TemplateResult,  }     from 'lit';
 import { customElement, state }       from "lit/decorators.js"
 import { connect }                    from 'pwa-helpers/connect-mixin';
-import { store, AppState }            from '../store';
-import { LazyLoader }                 from '../lazy-loader';
+import { store, AppState }            from '../../store';
+import { LazyLoader }                 from '../../lazy-loader';
 import { sendPasswordResetEmail }     from 'firebase/auth';
-import { auth }                       from '../firebase-functions/user-firebase';
+import { auth }                       from '../../firebase/start';
 
 @customElement('reset-options')
 export class ResetOptions extends connect(store)(LazyLoader) {
@@ -18,7 +18,7 @@ export class ResetOptions extends connect(store)(LazyLoader) {
   }
 
   stateChanged (state: AppState) {
-    this.userEmail = state.pwa_auth!.email;
+    this.userEmail = state.backend!.email;
   }
 
 private _restPassword() {

@@ -1,4 +1,18 @@
-import { sendPasswordResetEmail } from "firebase/auth";
+import { storage } from "./start";
+
+export const uploadIcon = (uploader, file) => {
+  const uploader  = this.shadowRoot!.querySelector('#uploader');
+  const file      = this.shadowRoot!.querySelector('#fileupload')!.files[0];
+  const now       = storageRef.child('/images/' + file.name );
+  const task      = now.put(file);
+  task.on('state_changed',
+    function progress(snapshot: object) { const percentage = ( snapshot.bytesTransferred / snapshot.totalBytes ) * 100; uploader.value = percentage },
+    function error(error: object) { error },
+    function complete() { }
+  )
+  this._imagePath = file.name;
+  console.log(this._imagePath);
+}
 
 // Reference the total number of existing documents
 export const _listImages = () => {
@@ -35,17 +49,4 @@ export const _listImages = () => {
   }
 
   
-  export const restPasswordcode = async () => {
-    let x:any = document!.querySelector('.resetEmail')!
-    let email = x.value;
-
-    await sendPasswordResetEmail( email, email )
-    .catch( (error:any) => { console.log(error); } );
-  }
-
-    /*
-  let actionCodeSettings = {
-    url: 'https://www.contractorscentre.com',
-    handleCodeInApp: true
-  };
-  */
+ 

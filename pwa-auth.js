@@ -1,7 +1,11 @@
+//import {authChange}          from './deploy/firebase-functions/user-firebase.js';
+//authChange();
 
-export { UserDrawer }       from './deploy/drawer/user-drawer.js';
-export { UserSettings }     from './deploy/settings/user-settings.js';
-export { UserIcon }         from './deploy/icon/user-icon.js';
+// import {connect} from './';
+
+export { UserDrawer }       from './deploy/custom-elements/pages/drawer.js';
+export { UserSettings }     from './deploy/custom-elements/pages/settings.js';
+export { UserIcon }         from './deploy/custom-elements/pages/icon.js';
 
 // module.exports = require('./src/user-drawer.js');
 // module.exports = require('./src/user-settings.js');

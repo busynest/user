@@ -1,14 +1,14 @@
 import { configureStore }     from '@reduxjs/toolkit';
-import { userSlice }          from './settings/user-redux';
-import { drawerSlice }        from './drawer/drawer-redux';
-import { accountSlice }       from './settings/account-redux';
+import { userSlice }          from './redux/frontend';
+import { drawerSlice }        from './redux/drawer';
+import { accountSlice }       from './redux/backend';
 
 // Configuring the store
 export const store = configureStore({
   reducer: {
-    pwa_auth: userSlice.reducer,
-    drawer: drawerSlice.reducer,
-    account: accountSlice.reducer
+    frontend:   userSlice.reducer,
+    drawer:     drawerSlice.reducer,
+    backend:    accountSlice.reducer
   },
 });
 

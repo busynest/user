@@ -1,0 +1,158 @@
+
+import { css } from 'lit';
+
+export const drawerStyles = css`
+
+  .visibility[on]  {
+    visibility:             visible;
+    transform:              translate3d(0, 0, 0);
+  }
+
+  .visibility {
+    position:               fixed;
+    right:                  0;
+    visibility:             hidden;
+    will-change:            transform;
+    transform:              translate3d(0, -150%, 0);
+    transition-property:    visibility, transform;
+    transition-duration:    1.4s;
+    display:                block;
+  }
+
+  .userDrawer {
+    z-index: 1;
+    max-width:              600px;
+    margin:                 auto;
+    background-color:       var(--pwa_drawer_background_color);
+    color:                  var(--pwa_drawer_text_color);
+    padding:                8px 18px;
+    box-sizing:             border-box;
+    border:                 3px #303030 solid;
+    border-radius:          20px;
+  }
+
+  .exit {
+    display:                grid;
+    grid-template-columns:  80px 1fr 80px;
+  }
+
+  .exit > h3 {
+    font-weight:            800;
+    font-size:              .9em;
+    margin:                 0px auto;
+    opacity:                .8;
+    line-height:            36px;
+  }
+
+  .exit > .remove {
+    background-color:       transparent;
+    border:                 0px;
+    color:                  red;
+    font-weight:            800;
+    font-size:              .7em;
+    text-transform:         uppercase;
+    opacity:                .6;
+  }
+
+  .exit > .refresh {
+    background-color:       transparent;
+    border:                 0px;
+    fill:                   blue;
+    height:                 36px;
+    width:                  36px;
+    padding:                0px;
+  }
+
+  .sign {
+    height:                 36px;
+    width:                  36px;
+    margin:                 auto;
+    background-color:       transparent;
+    border:                 0px;
+    fill:                   red;
+    opacity:                .8;
+  }
+
+  label         { font-size: .9em; }
+  .setLog > p   { margin: 12px; box-sizing: border-box; }
+  .divide       { border: 2px solid #606060; margin: 6px 0 0 0; border-radius: 50%; }
+
+  input {
+    box-sizing:               border-box;
+    width:                    100%;
+    padding:                  12px 20px;
+    margin:                   8px 0 0 0;
+    display:                  inline-block;
+    border:                   1px solid #ccc;
+    border-radius:            4px;
+  }
+
+  a {
+    text-transform:           uppercase;
+    font-size:                .6em;
+    color:                    rgb(105,105,105);
+    font-weight:              800;
+    text-decoration:          none;
+  }
+
+  p {
+    text-align: center;
+  }
+  
+  .inpat {
+    display:                grid;
+    grid-template-columns:  1fr;
+    grid-template-rows:     1fr 1fr;
+  }
+
+  @media (max-width: 460px) {
+
+    label, #bat { font-size: .8em; }
+
+  }
+
+`;
+
+
+
+/*
+
+
+/* Google Icon Load 
+  .icon {
+    display:          inline-block;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/28px-Google_%22G%22_Logo.svg.png') transparent 5px 50% no-repeat;
+    vertical-align:   middle;
+    width:            42px;
+    height:           42px;
+  }
+
+.google {
+  margin:           auto;
+  color:            #444;
+  width:            210px;
+  border-radius:    5px;
+  border:           thin solid #888;
+  box-shadow:       1px 1px 1px grey;
+  white-space:      nowrap;
+
+  background-color:         #ffffff;
+  size:                     14px;
+  font:                     Roboto-Medium;
+  line-height:              26px;
+  padding:                  8dp;
+  border-color:             #4267b2;
+  border-radius:            10px;
+  -webkit-font-smoothing:   antialiased;
+  font-weight:              bold;
+  justify-content:          center;
+  text-align:               center;
+  text-shadow:              none;
+}
+
+.google:hover {
+  cursor: pointer;
+}
+
+.imageGoogle  { height: 18dp; width:  18xp; }
+*/

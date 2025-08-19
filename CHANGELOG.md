@@ -36,19 +36,39 @@ Security - in case of vulnerabilities.
 - Profile Section: Too many input, downsize
 - Email Section to Verification Section
 - Password Section to Security Section
-- 
 - Remove id's, Replace with class
-- CSS Color Memory Tags
+- CSS Custom Properties
+- Drawer Input Design
+- Firebase CDN or SDK
+- firebase messaging service worker CDN
+- Check Analytics Integration
+- Input JavaScript Configuration - global let anywhere, or within slot
+- Input CSS Custom Properties - global :root anywhere, or within slot
+- Custom CSS Properties - namespase for each component
+- Merge Duplicate Redux Files
+- Visual Effects, CSS Active Content
+- Folder Namespace as technology stack
+- Redux Frontend / Backend State
 
 ### Added
 - Firebase Element for Firebase SDK
 - Google Firebase Analytics to Initialization
 - Firebase Web App to Initialization
 - Step Process #1 - Initialize Firebase Object
-- Space Saving Freature: Menu Bar: Icon > Active > Text 
+- Space Saving Freature: Menu Bar: Icon > Active > Text\
+- Firebase TypeScript Object - Analytics
+- Firebase TypeScript Object - Functions
+- Analytics Bootup Logic Check, Fallback, Local, Offline
+- Google Tag Manager Conversion - Integrateion
+- Content-Photo-Element Uploader
+- custom elements - input subdivision
+- Firestore Database Structure
+- Verify Email moved to custom event listener within firebase function onstate change
+- Theme Color Detection
 
 ### Removed
-- Storybook
+- Remove Storybook
+- Remove Firebase Cloud Messaging (FCM) Integration
 
 ## [0.0.14] - 2019-03-24
 

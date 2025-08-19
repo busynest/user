@@ -23,6 +23,14 @@
     <link rel="manifest"        href="manifest.json" />
     <!-- FAVICON -->
     <link rel="icon"            href="images/favicon.ico">
+<!--
+    <link rel="preconnect" href="https://www.google.com/"             SameSite=None Secure>
+    <link rel="preconnect" href="https://www.google.ca/"              SameSite=None Secure>
+    <link rel="preconnect" href="https://www.google-analytics.com/"   SameSite=None Secure>
+  -->
+
+     <!-- HTTPS REFERRER TAG-->
+    <meta name="referrer"       content="origin" />
 
     <!-- Cascading Style Sheets -->
     <style>
@@ -40,51 +48,122 @@
       body {
         overflow:                 hidden;
         margin:                   0;
-        background-color:       #303030;
-        color:                  white;
         font-family:              Space Grotesk, system-ui, sans-serif;
         -webkit-font-smoothing:   antialiased;
         font-size:                .875rem;
         line-height:              1.25rem;
-        display:                  grid;
-        grid-template-areas:
-            "head"
-            "main";
-        grid-template-rows:       60px 1fr;
+        /*
+        background-color:       #303030;
+        color:                  white;
+        */
       }
 
-      user-icon       { grid-area: head; }
-      /* user-drawer     { grid-area: main; } */
-      user-settings   { grid-area: main; }
+      /* Styling */
+      body {
+        display:                  grid;
+        grid-template-areas:
+          "head"
+          "drawer"
+          "main";
+        grid-template-rows:       auto auto 1fr;
+      }
+
+      header { grid-area: head; }
+      user-drawer { grid-area: drawer; }
+      main { grid-area: main; }
+
+    </style>
+
+    <!-- Google tag (gtag.js) 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DKMV2HFJGE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-DKMV2HFJGE');
+    </script>
+
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6Ld8R6orAAAAAIrAQBX7E_p-rPL7F290cMXaKiFS"></script>
+  -->
+  </head>
+  
+  <!-- Body -->
+  <body>
+
+    <header>
+
+      <!-- Button -->
+      <user-icon></user-icon>
+
+    </header>
+
+    <!-- Drawer -->
+    <user-drawer></user-drawer>
+
+    <main>
+
+      <!-- Settings -->
+      <user-settings></user-settings>
+
+    </main>
+
+    <!-- Custom CSS Variables -->
+    <style>
+      :root {
+
+        --primary-color:                #007bff; /* Declares a global custom property named --primary-color */
+        --secondary-color:              #b2bdc7;
+        
+        /* Top Border Color */
+        --pwa_divider:                  grey;
+
+        /* Section Header Color */
+        --pwa_section_header:           black;
+
+        /* Navigation Colors */
+        --pwa_nav:                      grey;
+        --pwa_nav_select:               black;
+
+        /* Label Color */
+        --pwa_label_text_color:         black;
+
+        /* Input Colors */
+        --pwa_input_background:         #E1E5EB;
+
+        /* Button Colors */
+        --pwa_action_text_color:        #fff;
+        --pwa_action_background_color:  #6cc04a;
+        --pwa_action_border_color:      #60b23e;
+
+        /* Drawer Colors */
+        --pwa_drawer_text_color:        #303030;
+        --pwa_drawer_background_color:  #fff;
+
+      }
+
+      /* Dark Theme */
+      @media (prefers-color-scheme: dark) {
+        body {
+          /*background-color: #121212;
+          color: white;*/
+        }
+      }
+
+      /* Light Theme */
+      @media (prefers-color-scheme: light) {
+        body {
+         /* background-color: #0a2840;/*#0a3b4f;/*#F7F9FB; /* #f0f5fc
+          color: black;*/
+        }
+      }
 
     </style>
 
     <!-- ECMA Script-->
     <script>window.process = { env: { NODE_ENV: 'production' } };</script>
 
-  </head>
-  
-  <!-- Body -->
-  <body>
-
-    <!-- Button -->
-    <user-icon></user-icon>
-
-    <!-- Drawer -->
-    <user-drawer></user-drawer>
-
-    <!-- Settings -->
-    <user-settings></user-settings>
-
-    <!-- Custom CSS Variables -->
-    <style>
-      :root {
-        --primary-color:    #007bff; /* Declares a global custom property named --primary-color */
-        --secondary-color:  #6c757d;
-      }
-    </style>
-
-    <!-- Custom JavaScript Information -->
+    <!-- Custom JavaScript Module Information -->
     <script>
 
       // Global NameSpace - Create Object Initial State
@@ -98,7 +177,7 @@
         appId:              "1:937289126032:web:0e7f4b679b0f3da6",
         measurementId:      "G-DKMV2HFJGE"
       }
-
+/*
       // Local Development Server
       if ( location.hostname === 'localhost') {
         console.log("localhost detected!");
@@ -114,8 +193,8 @@
         };
 
       }
-
-    </script>
+*/
+    </script><!-- End Custom JavaScript Module Information -->
 
     <!-- Application Shell -->
     <script type="module" src="pwa-auth.js" async></script>
