@@ -1,7 +1,7 @@
 General-purpose User Authentication and Management
 ======================
 ## Check out the library in action 
-![workflow](https://www.inmostfire.com/images/workflow.png) [Demo](https://www.inmostfire.com)
+[Demo](https://www.pwa-authentic.firebaseapp.com)
 
 To offer a personalized experience, apps need to have a user management center, a place where users can register and personalize their account.
 
@@ -14,7 +14,7 @@ With this library, your app will have the ability to turn into a real network wh
 This small library consists of three HTML Tags, and one boilerplate function to display the user icon, sign up, log in, log out, change account details, and delete user's account.
 
 ## Technology Stack
-- Firebase SDK v10, 2023,
+- Firebase SDK v12, 2025,
 - Redux v5.0.1, 2024,
 - Lit v3.2.1, 2024
 
@@ -124,10 +124,23 @@ runFirebase();
 
 ## CSS Custom Properties
 | Property | Description | Default |
+| Settings |   Custom Element   | :------:|
 | :------: | :---------: | :------:|
-| --drawer-position:   | Static or Still during scrolling fixed / absolute | fixed |
-| --drawer-background-color:   | change background | #fff |
-| --drawer-border:   | border thinckness | 3px |
+| --pwa_nav:                            |   Navigation  |   grey;
+| --pwa_nav_select:                     |   Navigation  |   black;
+| --pwa_input_background:               |   Input       | #E1E5EB;
+| --pwa_label_text_color:               |   Input       |   black;
+| --pwa_section_header:                 |   Header      |   black;
+| --pwa_divider:                        |   Divider     |   grey;
+| --pwa_action_text_color:              |   Button      | #fff;
+| --pwa_action_background_color:        |   Button      | #6cc04a;
+| --pwa_action_border_color:            |   Button      | #60b23e;
+
+| Drawer   |   Custom Element   | :------:|
+| :------: | :---------: | :------:|
+| --pwa_drawer_text_color:              |   Input       | #303030;
+| --pwa_drawer_background_color:        |   Input       | #fff;
+
 
 ## Form id's
 - userName
