@@ -3,6 +3,7 @@ import { CSSResultArray, LitElement, css, html } from "lit";
 import { property, state } from "lit/decorators.js";
 import { actionButton, inputStyles, labelStyles } from "./css/styles";
 import { AppState } from "../../store";
+import { updatePass } from "../../firebase/password";
 
 export class InputPassword extends LitElement {
 
@@ -31,13 +32,14 @@ export class InputPassword extends LitElement {
     /* Update Password */
     private alertPassword() {
 
-      if (this._user) {
+     // if (this._user) {
 
-        const password = this.shadowRoot!.querySelector("input type=password")!;
-        console.log("email: ", password);
+        const password = this.shadowRoot!.querySelector("#passVerify")!;
+
         // updatePassword(user, password);
+        updatePass(password.value);
 
-      } else { alert('Please Login'); }
+     // } else { alert('Please Login'); }
     
     }
 

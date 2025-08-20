@@ -10,136 +10,141 @@
   "storage": {
     "rules": "storage.rules"
   },
-
-
-    "headers": [
-      {
-        "source": "/**/*.@(jpg|jpeg|gif|png)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=31536000, immutable"
-          }
-        ]
-      },
-      {
-        "source": "/**/*.@(css|js)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=604800, immutable"
-          }
-        ]
-      },
-      {
-        "source": "demo.html",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=0, must-revalidate"
-          }
-        ]
-      },
-      {
-        "source": "/**/*.@(html|js)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=604800, immutable"
-          }
-        ]
-      },
-      {
-        "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "public, max-age=7200"
-          }
-        ]
-      },
-      {
-        "source": "**/*.@(jpg|jpeg|gif|png)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=7200"
-          }
-        ]
-      },
-      {
-        "source": "**",
-        "headers": [
-          {
-            "key": "Service-Worker-Allowed",
-            "value": "/"
-          }
-        ]
-      },
-
-      {
-        "source": "https://www.google.com",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "max-age=7200"
-          }
-        ]
-      },
-      {
-        "source": "https://www.google.ca",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "max-age=7200"
-          }
-        ]
-      },
-      {
-        "source": "https://cse.google.com",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "max-age=7200"
-          }
-        ]
-      },
-      {
-        "source": "https://www.gstatic.com",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "max-age=7200"
-          }
-        ]
-      },
-      {
-        "source": "https://fonts.googleapis.com",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "max-age=7200"
-          }
-        ]
-      },
-            {
-        "source": "https://firebasestorage.googleapis.com",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "max-age=7200"
-          }
-        ]
-      },
-      {
-        "source": "maps.googleapis.com",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "max-age=7200"
-          }
-        ]
-      }
-    ]
-
+  "headers": [
+    {
+      "source": "/**/*.@(jpg|jpeg|gif|png)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/**/*.@(css|js)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, immutable"
+        }
+      ]
+    },
+    {
+      "source": "demo.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/**/*.@(html|js)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, immutable"
+        }
+      ]
+    },
+    {
+      "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "public, max-age=7200"
+        }
+      ]
+    },
+    {
+      "source": "**/*.@(jpg|jpeg|gif|png)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=7200"
+        }
+      ]
+    },
+    {
+      "source": "**",
+      "headers": [
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
+      ]
+    },
+    {
+      "source": "https://storage.googleapis.com",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "max-age=7200"
+        }
+      ]
+    },
+    {
+      "source": "https://www.google.com",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "max-age=7200"
+        }
+      ]
+    },
+    {
+      "source": "https://www.google.ca",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "max-age=7200"
+        }
+      ]
+    },
+    {
+      "source": "https://cse.google.com",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "max-age=7200"
+        }
+      ]
+    },
+    {
+      "source": "https://www.gstatic.com",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "max-age=7200"
+        }
+      ]
+    },
+    {
+      "source": "https://fonts.googleapis.com",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "max-age=7200"
+        }
+      ]
+    },
+    {
+      "source": "https://firebasestorage.googleapis.com",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "max-age=7200"
+        }
+      ]
+    },
+    {
+      "source": "maps.googleapis.com",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "max-age=7200"
+        }
+      ]
+    }
+  ]
 }

@@ -27,6 +27,10 @@ Security - in case of vulnerabilities.
 
 ## [1.0.0] - 2025-08-04
 
+## To Do
+- Image Upload Minify
+- Image Upload Save Mini-url
+
 ## Changed
 - Redux/Toolkit Upgrade
 - Lit Upgrade
@@ -65,6 +69,7 @@ Security - in case of vulnerabilities.
 - Firestore Database Structure
 - Verify Email moved to custom event listener within firebase function onstate change
 - Theme Color Detection
+- CORS
 
 ### Removed
 - Remove Storybook

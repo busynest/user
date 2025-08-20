@@ -1,22 +1,24 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "esnext",
+    "target": "ES2020",// "es2017",
+    "module": "ESNext",
     "moduleResolution": "node",
-    "lib": ["ES2024", "dom"],
+    "lib": ["ES2024", "dom"], //ES2020 // ES2020 for modern JS features, DOM for Lit/Firebase browser APIs
     "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "experimentalDecorators": true,
-    "outDir": "deploy",
+    "outDir": "deploy", // Aligns with Rollup output
     // Lit - Declaration
     "declaration": true,
     "declarationMap": true,
     // Comments
     "removeComments": true,
-
+    "allowSyntheticDefaultImports": true // Simplifies imports for Redux/Firebase
   },
   "include": [
     "src/**/*.ts"

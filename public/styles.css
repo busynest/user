@@ -1,0 +1,31 @@
+      html {
+        overflow:                 auto;
+        scroll-behavior:          smooth;
+        display:                  grid;
+        height:                   100%;
+        padding:                  16px;
+        box-sizing:               border-box;
+        transition-duration:      1s;
+      }
+
+      body {
+        overflow:                 hidden;
+        margin:                   0;
+        font-family:              Space Grotesk, system-ui, sans-serif;
+        -webkit-font-smoothing:   antialiased;
+        font-size:                .875rem;
+        line-height:              1.25rem;
+      }
+
+      body {
+        display:                  grid;
+        grid-template-areas:
+          "head"
+          "drawer"
+          "main";
+        grid-template-rows:       auto auto 1fr;
+      }
+
+      header { grid-area: head; }
+      user-drawer { grid-area: drawer; }
+      main { grid-area: main; }

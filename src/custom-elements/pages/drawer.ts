@@ -121,8 +121,10 @@ export class UserDrawer extends connect(store)(LitElement) {
   
     // Sign UP.
     private _signUp() {
-      const email : any = this.shadowRoot!.getElementById('newtEmail');
+      const email : any = this.shadowRoot!.getElementById('newEmail');
       const pass : any = this.shadowRoot!.getElementById('newPassword');
+
+      console.log(email)
 
       if (email.length < 4) { alert('Please enter an email address.'); return; }
       if (pass.length < 4)  { alert('Please enter a password.'); return; }

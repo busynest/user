@@ -4,14 +4,14 @@ import { user } from "./start";
 // Update Password
 export const updatePass = async (newPassword:any) =>{
 
-  if (user) {
+  // if (user) {
 
     // Update new password
-    await updatePassword ( user, newPassword.value )
+    await updatePassword ( user, newPassword )
       .then           ( () => { console.log("Password successful!"); })
       .catch          ( (error: Error) => { console.log("Problem: "+ error.messge) }); //alertPassword(error); });
 
-  } else { alert('Please Login'); }
+  // } else { alert('Please Login'); }
 
 }
 

@@ -1,12 +1,23 @@
 
 import { LitElement, html, CSSResultArray, css } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { inputStyles } from '../css/styles';
+import { connect } from 'pwa-helpers';
+import store, { AppState } from '../../../store';
 
-export class PhoneFormat extends LitElement {
+export class PhoneFormat extends connect(store)(LitElement) {
 
   /** @attr value */
-  @property({ type: String }) value: string = '';
+  @property({ type: String }) public value: string = '';
+  @state() private phone: string = '';
+
+    constructor(){
+      super();
+    }
+
+    stateChanged(state: AppState) {
+      this.phone = state.backend!.phone ;
+    }
 
   connectedCallback() {
     super.connectedCallback();
@@ -28,10 +39,10 @@ export class PhoneFormat extends LitElement {
       <input
         id="phoneNumber"
         type="text"
-        value="${this.formatPhoneNumber(this.value)}"
+        value="${this.value}"
         @input="${this.onInput}"
         @keydown="${this.onKeyDown}"
-        placeholder="(XXX) XXX-XXXX"
+        placeholder="${this.formatPhoneNumber(this.phone) || '(XXX) XXX-XXXX'}"
         inputmode="numeric"
         pattern="[0-9]*"
         data-label="Phone Number"

@@ -1,16 +1,23 @@
 import { CSSResultArray, LitElement, css, html } from "lit";
-import { property } from "lit/decorators.js";
+import { property, state } from "lit/decorators.js";
 import { inputStyles, labelStyles, actionButton } from "./css/styles";
 import { auth } from "../../firebase/start";
 import { updateEmail } from "firebase/auth";
+import { connect } from "pwa-helpers";
+import store, { AppState } from "../../store";
 
-export class ContactEmail extends LitElement {
+export class ContactEmail extends connect(store)(LitElement) {
 
   @property({ type: String, reflect: true}) email = '';
+  @state() private mail: string = ""
 
     constructor(){
       super();
     }
+
+  stateChanged(state: AppState) {
+    this.mail = state.backend!.email ;
+  }
 
     static get styles(): CSSResultArray { return [ labelStyles, inputStyles, actionButton,
       css`
@@ -30,10 +37,10 @@ export class ContactEmail extends LitElement {
       <input
         id            = "pwa-email"
         type          = "text"
-        value         = "${this.email}"
         class         = "email"
         type          = "email"
-        data-label    = "Account Email" />
+        data-label    = "Account Email"
+        placeholder   = "${this.mail}"/>
 
       <button class="action-button"  @click="${this.saveEmail}">Update</button>
 
@@ -44,14 +51,16 @@ export class ContactEmail extends LitElement {
   private saveEmail = async () => {
     if ( auth.currentUser ) {
       
-      let contactMail :any = this.shadowRoot?.querySelector('contact-email');
+      let contactMail :any = this.shadowRoot?.querySelector('#pwa-email');
+      console.log(contactMail);
+      console.log(contactMail);
    
       // Change Email Firebase Function
-      await updateEmail( auth.currentUser, contactMail.email ).catch((error:Error) => { console.log(error); });
+      await updateEmail( auth.currentUser, contactMail.value ).catch((error:Error) => { console.log(error); });
 
       // Verify Email Custom Event
       const emailChangedEvent = new CustomEvent("userEmailChanged", {
-        detail: { email: contactMail.email }
+        detail: { email: contactMail.value }
       });
 
       // Dispatch Custom Event

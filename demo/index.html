@@ -3,6 +3,8 @@
   <head>
 
     <meta charset="UTF-8">
+    <!-- BASE -->
+    <base href="/">
     <!-- TITILE -->
     <title>pwa-auth</title>
     <!-- VIEWPORT -->
@@ -14,81 +16,24 @@
     <!-- DESCRIPTION -->
     <meta name="description"    content="To provide a personalized experience, Apps need to know the identity of a user to securely store data in the cloud. pwa-auth is powered by The Firebase Authentication backend, consistently providing a centralized and predictable state behaviour with Redux, and declaratively rendering straight into the DOM with Google Polymer's fast and light Lit-Element. This Component includes 3 HTML Tags, and 1 Boilerplate Function to display the user icon, sign up, login, log out, change account details, and delete the user's account." />
     <!-- KEYWORDS -->
-    <meta name="keywords"       content="lit, redux, firebase, user, management, drawer, settings, icon" />
-    <!-- BASE -->
-    <base href="/">
-    <!-- CANONICAL -->
-    <link rel="canonical"       href="https://jackspublishing.com" />
+    <meta name="keywords"       content="lit, redux, firebase, user, authentication, drawer, settings, icon" />
+    <!-- HTTPS REFERRER TAG-->
+    <meta name="referrer"       content="origin" />
     <!-- MANIFEST -->
     <link rel="manifest"        href="manifest.json" />
     <!-- FAVICON -->
     <link rel="icon"            href="images/favicon.ico">
-<!--
-    <link rel="preconnect" href="https://www.google.com/"             SameSite=None Secure>
-    <link rel="preconnect" href="https://www.google.ca/"              SameSite=None Secure>
-    <link rel="preconnect" href="https://www.google-analytics.com/"   SameSite=None Secure>
-  -->
-
-     <!-- HTTPS REFERRER TAG-->
-    <meta name="referrer"       content="origin" />
-
+    <!-- Preconnect -->
+    <link rel="preconnect"      href="https://firebasestorage.googleapis.com">
+    <!-- Pre-Fetch -->
+    <link rel="dns-prefetch"    href="https://firebasestorage.googleapis.com">
     <!-- Cascading Style Sheets -->
-    <style>
+    <link rel="stylesheet"      href="demo/styles.css">
 
-      html {
-        overflow:                 auto;
-        scroll-behavior:          smooth;
-        display:                  grid;
-        height:                   100%;
-        padding:                  16px;
-        box-sizing:               border-box;
-        transition-duration:      1s;
-      }
-
-      body {
-        overflow:                 hidden;
-        margin:                   0;
-        font-family:              Space Grotesk, system-ui, sans-serif;
-        -webkit-font-smoothing:   antialiased;
-        font-size:                .875rem;
-        line-height:              1.25rem;
-        /*
-        background-color:       #303030;
-        color:                  white;
-        */
-      }
-
-      /* Styling */
-      body {
-        display:                  grid;
-        grid-template-areas:
-          "head"
-          "drawer"
-          "main";
-        grid-template-rows:       auto auto 1fr;
-      }
-
-      header { grid-area: head; }
-      user-drawer { grid-area: drawer; }
-      main { grid-area: main; }
-
-    </style>
-
-    <!-- Google tag (gtag.js) 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DKMV2HFJGE"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-DKMV2HFJGE');
-    </script>
-
-    <script src="https://www.google.com/recaptcha/enterprise.js?render=6Ld8R6orAAAAAIrAQBX7E_p-rPL7F290cMXaKiFS"></script>
-  -->
   </head>
+  <!-- End Head -->
   
-  <!-- Body -->
+  <!-- Start Body -->
   <body>
 
     <header>
@@ -144,18 +89,12 @@
 
       /* Dark Theme */
       @media (prefers-color-scheme: dark) {
-        body {
-          /*background-color: #121212;
-          color: white;*/
-        }
+        body { }
       }
 
       /* Light Theme */
       @media (prefers-color-scheme: light) {
-        body {
-         /* background-color: #0a2840;/*#0a3b4f;/*#F7F9FB; /* #f0f5fc
-          color: black;*/
-        }
+        body { }
       }
 
     </style>
@@ -168,33 +107,17 @@
 
       // Global NameSpace - Create Object Initial State
       let connect = {
-        apiKey:             "AIzaSyAJfm5MahdHr4HzwRLWN7IBhVYXMjP65lQ",
-        authDomain:         "inmostfire.firebaseapp.com",
-        databaseURL:        "https://inmostfire.firebaseio.com",
-        projectId:          "inmostfire",
-        storageBucket:      "inmostfire.firebasestorage.app",
-        messagingSenderId:  "937289126032",
-        appId:              "1:937289126032:web:0e7f4b679b0f3da6",
-        measurementId:      "G-DKMV2HFJGE"
+        apiKey: "AIzaSyC1ZNYC9RAjSAE3syUBNi47AiqbAqkx99w",
+        authDomain: "pwa-authentic.firebaseapp.com",
+        projectId: "pwa-authentic",
+        storageBucket: "pwa-authentic.firebasestorage.app",
+        messagingSenderId: "749233996232",
+        appId: "1:749233996232:web:bbc410d53b7d39bdfb80fd",
+        measurementId: "G-G1GYM1HBJ4"
       }
-/*
-      // Local Development Server
-      if ( location.hostname === 'localhost') {
-        console.log("localhost detected!");
-        connect = {
-          apiKey:             "AIzaSyAJfm5MahdHr4HzwRLWN7IBhVYXMjP65lQ",
-          authDomain:         "inmostfire.firebaseapp.com",
-          databaseURL:        "http://localhost:9000?ns=emulationui",
-          projectId:          "inmostfire",
-          storageBucket:      "inmostfire.firebasestorage.app",
-          messagingSenderId:  "937289126032",
-          appId:              "1:937289126032:web:0e7f4b679b0f3da6",
-          measurementId:      "G-DKMV2HFJGE"
-        };
 
-      }
-*/
-    </script><!-- End Custom JavaScript Module Information -->
+    </script>
+    <!-- End Custom JavaScript Module Information -->
 
     <!-- Application Shell -->
     <script type="module" src="pwa-auth.js" async></script>

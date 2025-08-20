@@ -9,18 +9,15 @@ importScripts("https://www.gstatic.com/firebasejs/9.6.0/firebase-messaging.js");
 // const firebaseApp = await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js');
 // const firebaseAuth = await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js');
 
-// const admin = initializeApp({
 const admin = {
-  apiKey:             "AIzaSyAJfm5MahdHr4HzwRLWN7IBhVYXMjP65lQ",
-  authDomain:         "inmostfire.firebaseapp.com",
-  databaseURL:        "https://inmostfire.firebaseio.com",
-  projectId:          "inmostfire",
-  storageBucket:      "inmostfire.firebasestorage.app",
-  messagingSenderId:  "937289126032",
-  appId:              "1:937289126032:web:0e7f4b679b0f3da6",
-  measurementId:      "G-DKMV2HFJGE"
+  apiKey: "AIzaSyC1ZNYC9RAjSAE3syUBNi47AiqbAqkx99w",
+  authDomain: "pwa-authentic.firebaseapp.com",
+  projectId: "pwa-authentic",
+  storageBucket: "pwa-authentic.firebasestorage.app",
+  messagingSenderId: "749233996232",
+  appId: "1:749233996232:web:bbc410d53b7d39bdfb80fd",
+  measurementId: "G-G1GYM1HBJ4"
 } ;
-// });
 
 // const messaging = getMessaging(admin);
 
@@ -29,7 +26,7 @@ firebase.initializeApp(admin);
 // firebase.messaging();
 
 // Add the public key generated from the console.
-firebase.messaging().usePublicVapidKey("BAz2eUmJrgElexalB5GmQOXLxZ7yJC2Jp69fsUfnYM73hfGIhWkRxPi5PgRXr5oEWJ0yvJlQ7GVFGYP3AiIigl4");
+// firebase.messaging().usePublicVapidKey("BAz2eUmJrgElexalB5GmQOXLxZ7yJC2Jp69fsUfnYM73hfGIhWkRxPi5PgRXr5oEWJ0yvJlQ7GVFGYP3AiIigl4");
 
 // export const messaging = () => [] firebase.messaging();
 

@@ -1,0 +1,66 @@
+[debug] [2025-08-20T00:03:56.067Z] ----------------------------------------------------------------------
+[debug] [2025-08-20T00:03:56.071Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\jacks\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2025-08-20T00:03:56.071Z] CLI Version:   14.12.1
+[debug] [2025-08-20T00:03:56.071Z] Platform:      win32
+[debug] [2025-08-20T00:03:56.071Z] Node Version:  v22.17.0
+[debug] [2025-08-20T00:03:56.072Z] Time:          Tue Aug 19 2025 17:03:56 GMT-0700 (Pacific Daylight Time)
+[debug] [2025-08-20T00:03:56.072Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-08-20T00:03:56.271Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"headers"}
+[debug] [2025-08-20T00:03:56.275Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-08-20T00:03:56.276Z] > authorizing via signed-in user (jack.solutionbox@gmail.com)
+[debug] [2025-08-20T00:03:56.277Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"headers"}
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\jacks\OneDrive\Desktop\user
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-08-20T00:04:04.140Z] Using project from CLI flag: inmostfire
+[debug] [2025-08-20T00:04:04.142Z] Checked if tokens are valid: true, expires at: 1755651583098
+[debug] [2025-08-20T00:04:04.142Z] Checked if tokens are valid: true, expires at: 1755651583098
+[debug] [2025-08-20T00:04:04.143Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/inmostfire [none]
+[debug] [2025-08-20T00:04:04.529Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/inmostfire 200
+[debug] [2025-08-20T00:04:04.529Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/inmostfire {"projectId":"inmostfire","projectNumber":"937289126032","displayName":"Inmost Fire","name":"projects/inmostfire","resources":{"hostingSite":"inmostfire","realtimeDatabaseInstance":"inmostfire","locationId":"us-central"},"state":"ACTIVE","etag":"1_8fb8a1e2-fe57-4c5c-b1ad-9bb7614586a2"}
+[info] i  Using project inmostfire (Inmost Fire) 
+[info] 
+=== Hosting Setup
+[debug] [2025-08-20T00:04:04.604Z] Checked if tokens are valid: true, expires at: 1755651583098
+[debug] [2025-08-20T00:04:04.604Z] Checked if tokens are valid: true, expires at: 1755651583098
+[debug] [2025-08-20T00:04:04.605Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/inmostfire [none]
+[debug] [2025-08-20T00:04:04.877Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/inmostfire 200
+[debug] [2025-08-20T00:04:04.877Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/inmostfire {"projectId":"inmostfire","projectNumber":"937289126032","displayName":"Inmost Fire","name":"projects/inmostfire","resources":{"hostingSite":"inmostfire","realtimeDatabaseInstance":"inmostfire","locationId":"us-central"},"state":"ACTIVE","etag":"1_8fb8a1e2-fe57-4c5c-b1ad-9bb7614586a2"}
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
+[debug] [2025-08-20T00:04:08.446Z] ExitPromptError: User force closed the prompt with SIGINT
+    at Interface.sigint (C:\Users\jacks\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\@inquirer\core\dist\commonjs\lib\create-prompt.js:101:37)
+    at Interface.emit (node:events:518:28)
+    at Interface.emit (node:domain:489:12)
+    at [_ttyWrite] [as _ttyWrite] (node:internal/readline/interface:1132:18)
+    at ReadStream.onkeypress (node:internal/readline/interface:271:20)
+    at ReadStream.emit (node:events:530:35)
+    at ReadStream.emit (node:domain:489:12)
+    at emitKeys (node:internal/readline/utils:370:14)
+    at emitKeys.next (<anonymous>)
+    at ReadStream.onData (node:internal/readline/emitKeypressEvents:64:36)
+[error] 
+[error] Error: An unexpected error has occurred.

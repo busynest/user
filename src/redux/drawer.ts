@@ -1,5 +1,4 @@
 import { createSlice }    from "@reduxjs/toolkit";
-import store              from "../store";
 
 // Object Initializer Notation
 const initialState = { drawer: false }
@@ -12,7 +11,7 @@ export const drawerSlice = createSlice({
 
        setDrawer: ( state ) => {
         
-        if ( store.getState().drawer!.drawer === false)  {
+        if ( state.drawer === false)  {
 
           state.drawer = true;
 

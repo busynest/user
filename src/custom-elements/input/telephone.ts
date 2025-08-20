@@ -2,8 +2,10 @@ import { CSSResultArray, LitElement, css, html } from "lit";
 import { property } from "lit/decorators.js";
 import { inputStyles, labelStyles, actionButton } from "./css/styles";
 import { auth } from "../../firebase/start";
-import { updateEmail } from "firebase/auth";
+import { updatePhoneNumber } from "firebase/auth";
 import './format/phone';
+import store from "../../store";
+import { accPhone } from "../../redux/backend";
 
 export class InputTelephone extends LitElement {
 
@@ -40,20 +42,19 @@ export class InputTelephone extends LitElement {
   private saveTelephone = async () => {
     if ( auth.currentUser ) {
       
-      let contactMail :any = this.shadowRoot?.querySelector('contact-email');
+      let phone :any = this.shadowRoot?.querySelector('phone-format');
+
+      console.log(phone);
    
       // Change Email Firebase Function
-      await updateEmail( auth.currentUser, contactMail.email ).catch((error:Error) => { console.log(error); });
-
-      // Verify Email Custom Event
-      const emailChangedEvent = new CustomEvent("userEmailChanged", {
-        detail: { email: contactMail.email }
-      });
+      await updatePhoneNumber(
+        // auth.PhoneAuthProvider.credential(verificationId, verificationCode).catch((error:Error) => { console.log(error); });
+        auth.currentUser, phone.value ).catch((error:Error) => { console.log(error); });
 
       // Dispatch Custom Event
-      window.dispatchEvent(emailChangedEvent);
+      store.dispatch(accPhone(phone.value));
 
-      alert('Email Updated');
+      alert('Telephone Updated: ' + phone.value);
 
     }
   }

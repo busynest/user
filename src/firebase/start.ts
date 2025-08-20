@@ -58,7 +58,7 @@ const admin: fire = {
 export const application    : FirebaseApp       = initializeApp(admin); // Initialize Application
 export const db             : Firestore         = getFirestore(application);  // Initialize Database
 export const storage        : FirebaseStorage   = getStorage(application); // Reference:   Represents a reference to a file or directory in Storage, returned by ref(). // UploadTask:  Represents an ongoing upload operation, returned by upload methods. // ListResult:  Represents the result of listing files in a directory.
-export const auth           : Auth              = getAuth();
+export const auth           : Auth              = getAuth(application);
 export const user           : User | null       = auth.currentUser;
 console.log('user 1: ', user);
 
@@ -175,12 +175,17 @@ onAuthStateChanged(auth, (user) => {
 // End Distribute Informatiom ---------------- ----------------
 
 // Exact Name Reference - Firebase Action 
-export const logOut             = () => { return signOut(auth); };
+export const logOut             = async () => { return signOut(auth); };
 export const logAccount         = async () => { logEvent(analytics, 'create_account'); }
 export const logAccountDelete   = async () => { logEvent(analytics, 'delete_account'); }
 
 // Delete Declaration
-export const deleteUser         = () => { return user.delete().then( () => { }).catch( () => { }); };
+export const deleteUser         = async () => {
+
+  return user.delete().then( () => { }).catch( () => { });
+  
+};
+
 export const deleteDocument     = async (collect:string, item:string) => {
   
   await deleteDoc(doc(db, collect, item));
@@ -188,36 +193,3 @@ export const deleteDocument     = async (collect:string, item:string) => {
 };
 
 
-
-
-
-
-
-// TypeScript ---------------- ----------------
-/*
-// Global NamesSpace Process #1
-declare global {
-  interface Window {
-    connect: typeof admin;
-}
-*/
-
-
-
-/*
-    // Function to handle email change and dispatch custom event
-    export const changeUserEmail = (user, newEmail) => {
-      updateEmail(user, newEmail)
-        .then(() => {
-          console.log("Email updated successfully to:", newEmail);
-          // Dispatch custom event to signal email change
-          const emailChangedEvent = new CustomEvent("userEmailChanged", {
-            detail: { email: newEmail }
-          });
-          window.dispatchEvent(emailChangedEvent);
-        })
-        .catch((error) => {
-          console.error("Error updating email:", error.message);
-        });
-    }
-*/

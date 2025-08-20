@@ -8,8 +8,9 @@ export const store = configureStore({
   reducer: {
     frontend:   userSlice.reducer,
     drawer:     drawerSlice.reducer,
-    backend:    accountSlice.reducer
+    backend:    accountSlice.reducer,
   },
+  devTools: true // Enables Redux DevTools in development
 });
 
 export type AppState = ReturnType<typeof store.getState>;
