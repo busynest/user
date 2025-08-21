@@ -1,5 +1,8 @@
-General-purpose User Authentication and Management
+Progressive Website Application
 ======================
+User Authentication and Management
+======================
+
 ## Check out the library in action 
 [Demo](https://www.pwa-authentic.firebaseapp.com)
 
@@ -25,18 +28,18 @@ This library, pwa-auth, provides a secure way to store user's data in the cloud.
 
 ## Library Custom Elements
 
-# `<user-icon>`
+### `<user-icon>`
 - Login Word Button - State
 - 1 Photo Icon Display - State
 
-# `<user-drawer>`
+### `<user-drawer>`
 - Drop-down
 - Sign-up by Email Addresses and Password
 - Sign-in by Email Addresses and Password
 - logged-in state
 - logged-out state
 
-# `<user-settings>`
+### `<user-settings>`
 - 1 Photo Upload
 - Unavailable Photo
 - Delete Account
@@ -58,10 +61,6 @@ This library, pwa-auth, provides a secure way to store user's data in the cloud.
 - Cloud Firestore
 - Cloud Storage
 
-## Firebase NPM
-```javascript
-npm i firebase firestore @firebase/storage @getstation/use-firebase-auth
-```
 ## Javascript Setup
 * Add Google Analytics
 * Setup Firebase Project
