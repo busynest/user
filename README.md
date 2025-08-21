@@ -50,6 +50,22 @@ This library, pwa-auth, provides a secure way to store user's data in the cloud.
 - Redux v5.0.1, 2024,
 - Lit v3.2.1, 2024
 
+## Website Setup:
+```html
+<header>
+  <user-icon></user-icon>
+</header>
+
+<user-drawer></user-drawer>
+
+<main>
+  <user-settings></user-settings>
+</main>
+
+<script>/* Initialize ECMA Script Properties */</script>
+<style>/* CSS Custom Properties */</style>
+<script src="pwa-auth.js"></script>
+```
 ## Google Setup
 - Add Google Analytics
 - Setup Firebase Project
@@ -62,10 +78,11 @@ This library, pwa-auth, provides a secure way to store user's data in the cloud.
 - Cloud Storage
 
 ## Javascript Setup
-* Add Google Analytics
-* Setup Firebase Project
-* Initialize Firebase Authentication - email, anonymous, google
-* Initialize Firestore Database
+- Add Google Analytics
+- Setup Firebase Project
+- Initialize Firebase Authentication - email, anonymous, google
+- Initialize Firestore Database
+
 ```javascript
 // Initialize Firebase
 let connect = {
@@ -125,47 +142,29 @@ firebase.initializeApp(admin);
 firebase.messaging().usePublicVapidKey("xxxxxxxxx");
 ```
 
-## Website Setup:
-```javascript
-import 'pwa-auth';
-import { runFirebase } from 'pwa-auth/src/user-functions';
-runFirebase();
-```
-```html
-<header>
-  <user-icon></user-icon>
-</header>
-
-<user-drawer></user-drawer>
-
-<main>
-  <user-settings></user-settings>
-</main>
-```
-
 ## CSS Default Custom Properties
-| Property | Description | Default | Custom Element
+| Property | Description | Default | Custom Element |
 
 | :------: | :---------: | :------:|
 
-| --pwa_nav                             |   Navigation  |   grey;       | Settings
-| --pwa_nav_select                      |   Navigation  |   black;      | Settings
+| --pwa_nav                             |   Navigation  |   grey;       | Settings |
+| --pwa_nav_select                      |   Navigation  |   black;      | Settings |
 | :------: | :---------: | :------:|
-| --pwa_input_background                |   Input       | #E1E5EB;    | Settings
-| --pwa_label_text_color                |   Input       |   black;      | Settings
+| --pwa_input_background                |   Input       | #E1E5EB;    | Settings |
+| --pwa_label_text_color                |   Input       |   black;      | Settings |
 | :------: | :---------: | :------:|
-| --pwa_section_header                  |   Header      |   black;      | Settings
+| --pwa_section_header                  |   Header      |   black;      | Settings |
 | :------: | :---------: | :------:|
-| --pwa_divider                         |   Divider     |   grey;       | Settings
+| --pwa_divider                         |   Divider     |   grey;       | Settings |
 | :------: | :---------: | :------:|
-| --pwa_action_text_color               |   Button      | #fff;       | Settings
-| --pwa_action_background_color         |   Button      | #6cc04a;    | Settings
-| --pwa_action_border_color             |   Button      | #60b23e;    | Settings
+| --pwa_action_text_color               |   Button      | #fff;       | Settings |
+| --pwa_action_background_color         |   Button      | #6cc04a;    | Settings |
+| --pwa_action_border_color             |   Button      | #60b23e;    | Settings |
 
 | :------: | :---------: | :------:|
 
-| --pwa_drawer_text_color               |   Input       | #303030;    | Drawer
-| --pwa_drawer_background_color         |   Input       | #fff;       | Drawer
+| --pwa_drawer_text_color               |   Input       | #303030;    | Drawer |
+| --pwa_drawer_background_color         |   Input       | #fff;       | Drawer |
 
 ## Form id's
 - userName
