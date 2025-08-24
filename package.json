@@ -1,9 +1,9 @@
 {
   "name": "pwa-auth",
   "author": "Modern Projects <jack.solutionbox@gmail.com>(https://www.contractorscentre.com)",
-  "version": "0.1.0",
+  "version": "1.0.8",
   "description": "User Management Component with 3 HTML Tags, and 1 Boilerplate Function to display user icon, sign up, login, log out, change account details, delete account.",
-  "homepage": "https://www.jackspublishing.com",
+  "homepage": "https://pwa-authentic.firebaseapp.com",
   "main": "pwa-auth.js",
   "repository": {
     "type": "git",

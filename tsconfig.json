@@ -22,6 +22,8 @@
   },
   "include": [
     "src/**/*.ts"
+, "backup/interface.ts", "backup/password.ts", "backup/phone.ts"  ],
+  "exclude": [
+    "backup/**/*.ts"
   ],
-  "exclude": [],
 }

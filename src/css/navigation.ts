@@ -5,12 +5,13 @@ export const navigation = css`
 
   /* Navigation Menu */
   nav > ul {
-
+    
+    list-style-type:  none;
+    margin:           0px;
+    padding:          0px;
     display:          grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap:         8px;
-    margin:           0px;
-    padding:          0px;
 
   }
 
@@ -51,6 +52,9 @@ export const navigation = css`
     button[value=delete], button[value=password]   { text-align: right; }
 
   }
+
+  section[on]     { display:           grid; }
+  section         { display:           none; }
 
 `;
 

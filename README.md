@@ -1,14 +1,11 @@
-Progressive Website Application
-======================
-User Authentication and Management
+Progressive Website Application Authentication
 ======================
 
-## Check out the library in action 
-[Demo](https://www.pwa-authentic.firebaseapp.com)
+# The library [Demo](https://pwa-authentic.firebaseapp.com)
 
 To offer a personalized experience, apps need to have a user management center, a place where users can register and personalize their account.
 
-This library, pwa-auth, provides a secure way to store user's data in the cloud. The library uses Google's Firebase in the backend, through a predicate state behavior using Redux, and the front-end with Lit.
+This library provides Identity Access Managementy to securely store user's backend data in Google Cloud: [Firebase](), through a predicate state behavior: [Redux](), and the front-end: [Lit]().
 
 ## Library Features:
 - Register through Email and Password
@@ -44,13 +41,13 @@ This library, pwa-auth, provides a secure way to store user's data in the cloud.
 - Unavailable Photo
 - Delete Account
 
-## Technology Stack
+# Technological Stack
 - Node JavaScript
 - Firebase SDK v12, 2025,
 - Redux v5.0.1, 2024,
 - Lit v3.2.1, 2024
 
-## Website Setup:
+# Website Setup:
 ```html
 <header>
   <user-icon></user-icon>
@@ -109,6 +106,44 @@ if (lolalhost) {
     }
 }
 ```
+
+## CSS Default Custom Properties
+| CSS Custom Property | Description | Default | Custom Element |
+
+| Navigation | :---------: | :------:| :------:|
+| --pwa_nav | Navigation | grey; | Settings |
+| --pwa_nav_select | Navigation | black; | Settings |
+
+| Input | :---------: | :------:| :------:|
+| --pwa_input_background | Input | #E1E5EB; | Settings |
+| --pwa_label_text_color | Input | black; | Settings |
+
+| Header | :---------: | :------:| :------:|
+| --pwa_section_header | Header | black; | Settings |
+
+| Divider | :---------: | :------:| :------:|
+| --pwa_divider | Divider | grey; | Settings |
+
+| Button | :---------: | :------:| :------:|
+| --pwa_action_text_color | Button | #fff;| Settings |
+| --pwa_action_background_color | Button | #6cc04a; | Settings |
+| --pwa_action_border_color | Button | #60b23e; | Settings |
+
+| Input | :---------: | :------:|:------:|
+| --pwa_drawer_text_color | Input | #303030; | Drawer |
+| --pwa_drawer_background_color | Input | #fff; | Drawer |
+
+## Logged-in State Drawer Menu Items
+```html
+  <user-drawer>
+    <p><a href="/page1">Page 1</a></p>
+    <p><a href="/page2">Page 2</a></p>
+    <p><a href="/page3">Page 3</a></p>
+  </user-drawer>
+```
+
+# Footnotes
+
 ## firebase-messaging-sw.js Setup
 ```javascript
 // Initialize Firebase
@@ -142,41 +177,7 @@ firebase.initializeApp(admin);
 firebase.messaging().usePublicVapidKey("xxxxxxxxx");
 ```
 
-## CSS Default Custom Properties
-| Property | Description | Default | Custom Element |
-
-| :------: | :---------: | :------:|
-
-| --pwa_nav                             |   Navigation  |   grey;       | Settings |
-| --pwa_nav_select                      |   Navigation  |   black;      | Settings |
-| :------: | :---------: | :------:|
-| --pwa_input_background                |   Input       | #E1E5EB;    | Settings |
-| --pwa_label_text_color                |   Input       |   black;      | Settings |
-| :------: | :---------: | :------:|
-| --pwa_section_header                  |   Header      |   black;      | Settings |
-| :------: | :---------: | :------:|
-| --pwa_divider                         |   Divider     |   grey;       | Settings |
-| :------: | :---------: | :------:|
-| --pwa_action_text_color               |   Button      | #fff;       | Settings |
-| --pwa_action_background_color         |   Button      | #6cc04a;    | Settings |
-| --pwa_action_border_color             |   Button      | #60b23e;    | Settings |
-
-| :------: | :---------: | :------:|
-
-| --pwa_drawer_text_color               |   Input       | #303030;    | Drawer |
-| --pwa_drawer_background_color         |   Input       | #fff;       | Drawer |
-
-## Form id's
-- userName
-  - 
-- userVerify
-  - 
-- userPassword
-  - 
-- userDelete
-  - 
-
-## Please send Feedback
+# Feedback
 All feedback, comments, bugs, and requests are welcome.
 * [Jack's Publishing](https://www.jackspublishing.com)
 * [contractor's centre](https://www.contractorscentre.com)

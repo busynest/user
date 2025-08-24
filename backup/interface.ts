@@ -1,5 +1,5 @@
 import { UserCredential } from "firebase/auth";
-import { auth } from "./start";
+import { auth } from "../src/firebase/start";
 import { FirebaseError } from "firebase/app";
 
 interface base {

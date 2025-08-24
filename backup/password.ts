@@ -1,6 +1,6 @@
 import { sendPasswordResetEmail, updatePassword } from "firebase/auth";
-import { user } from "./start";
-
+import { user } from "../src/firebase/start";
+/*
 // Update Password
 export const updatePass = async (newPassword:any) =>{
 
@@ -14,6 +14,7 @@ export const updatePass = async (newPassword:any) =>{
   // } else { alert('Please Login'); }
 
 }
+
 
 // Reset Password Email
 export const restPasswordcode = async () => {

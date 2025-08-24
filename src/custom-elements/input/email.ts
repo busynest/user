@@ -1,19 +1,19 @@
 import { CSSResultArray, LitElement, css, html } from "lit";
 import { property, state } from "lit/decorators.js";
 import { inputStyles, labelStyles, actionButton } from "./css/styles";
-import { auth } from "../../firebase/start";
+import { auth } from "../../start";
 import { updateEmail } from "firebase/auth";
 import { connect } from "pwa-helpers";
 import store, { AppState } from "../../store";
 
 export class ContactEmail extends connect(store)(LitElement) {
 
+  /** @attr email */
   @property({ type: String, reflect: true}) email = '';
+  
   @state() private mail: string = ""
 
-    constructor(){
-      super();
-    }
+  constructor() { super(); }
 
   stateChanged(state: AppState) {
     this.mail = state.backend!.email ;
@@ -23,8 +23,11 @@ export class ContactEmail extends connect(store)(LitElement) {
       css`
       
       :host {
-        display: grid;
+        display:      grid;
+        border-top:   2px solid var(--pwa_divider);
       }
+
+      form { display: grid; }
 
       `
      ]; }
@@ -32,26 +35,38 @@ export class ContactEmail extends connect(store)(LitElement) {
     render() {
       return html`
 
-      <label for="pwa-email" >E-mail:</label>
+      <form
+        @submit="${this.default}">
 
-      <input
-        id            = "pwa-email"
-        type          = "text"
-        class         = "email"
-        type          = "email"
-        data-label    = "Account Email"
-        placeholder   = "${this.mail}"/>
+        <label for="pwa-email" >E-mail:</label>
 
-      <button class="action-button"  @click="${this.saveEmail}">Update</button>
+        <input
+          id            = "pwa-email"
+          type          = "text"
+          class         = "email"
+          type          = "email"
+          data-label    = "Account Email"
+          placeholder   = "${this.mail}"/>
+
+        <button
+          class="action-button" 
+          @click="${this.saveEmail}">Update</button>
+
+      </form>
 
       `;
     }
+
+  /* Form Default */
+  private default = (e:Event) => {
+    e.preventDefault();
+  }
 
   // Save Email
   private saveEmail = async () => {
     if ( auth.currentUser ) {
       
-      let contactMail :any = this.shadowRoot?.querySelector('#pwa-email');
+      let contactMail :any = this.shadowRoot?.querySelector('#pwa-email')!;
       console.log(contactMail);
       console.log(contactMail);
    

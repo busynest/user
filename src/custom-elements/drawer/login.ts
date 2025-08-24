@@ -1,0 +1,99 @@
+import { html, LitElement }               from 'lit';
+import { customElement, state }           from 'lit/decorators.js';
+import { loginStyles }                    from './css/styles';
+import { EmailAuthProvider, signInWithCredential } from 'firebase/auth';
+import { auth } from '../../start';
+
+@customElement('user-log-in')
+export class UserLogIn extends LitElement {
+
+  @state() private email        = '';
+  @state() private password     = '';
+
+  constructor() { super(); }
+
+  static get styles() { return [ loginStyles ] };
+
+  protected render() {
+    return html`
+
+      <!-- Log-in State -->
+      <form
+        @submit=${this._handleSubmit}
+        autocomplete="on">
+
+        <ul>
+
+          <li>
+            <label>
+              <input
+                type="email"
+                @change="${this.handleEmail}">Email
+            </label>
+          </li>
+
+          <li>
+            <label>
+              <input
+                type="password"
+                @change="${this.handlePassword}">Password
+            </label>
+          </li>
+    
+          <li>
+            <button
+              class="login action-button"
+              @click="${this.login}">Sign in</button>
+          </li>
+
+        </ul>
+
+      </form>
+
+    `;
+  }
+
+  // Sync Email
+  private handleEmail(event: Event) {
+    const input   = event.target as HTMLInputElement;
+    this.email    = input.value; // Update the property with the input value
+  }
+
+  // Sync Password
+  private handlePassword(event: Event) {
+    const input     = event.target as HTMLInputElement;
+    this.password   = input.value; // Update the property with the input value
+  }
+
+  // Form Default
+  private _handleSubmit(event: Event) {
+    event.preventDefault(); // Prevent Form Default Behaviour
+  }
+  
+  // Login Action
+  private login() {
+    if (this.email.length < 4) { alert('Please enter an email address.'); return; }
+    if (this.password.length < 4) { alert('Please enter a password.'); return; }
+    this.signIn(this.email,this.password); // Sign in with email and password
+  }
+
+  
+  // Firebase Authentication Function: Sign in using Email and Password
+  private signIn = async (email:any, password:any) => {
+  
+    const authCredential = EmailAuthProvider.credential(email, password);
+
+    await signInWithCredential(auth, authCredential).then((credentials)=>{console.log(credentials)}).catch((error)=>{console.log(error)});  
+  
+    // await signInWithEmailAndPassword(auth, email, password);
+    // EmailAuthProvider.credential(email, password);
+  
+  }
+
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+      'user-log-in': UserLogIn;
+  }
+}

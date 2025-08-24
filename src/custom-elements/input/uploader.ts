@@ -3,7 +3,7 @@ import { html, css, LitElement, CSSResult, PropertyValueMap }   from 'lit';
 import { property, state }          from 'lit/decorators.js';
 import { store, AppState }          from '../../store';
 import { connect }                  from 'pwa-helpers';
-import { auth, storage }            from '../../firebase/start';
+import { auth, storage }            from '../../start';
 import { updateProfile }            from 'firebase/auth';
 import { accImage }                 from '../../redux/backend';
 import { ref, uploadBytes, updateMetadata, getDownloadURL } from "@firebase/storage";
@@ -14,12 +14,10 @@ export class ContactPhoto extends connect(store)(LitElement) {
   @property() public photo : string | void | any = '';
 
   @state() private user : string | void = '';
-  // @state() private uploadProgress = 0;
-  // private uploadComplete = false;
+  @state() private uploadProgress = 0;
+  @state() private uploadComplete = false;
 
-  constructor() {
-    super();
-  }
+  constructor() { super(); }
 
   stateChanged(state: AppState) {
     this.user     = state.backend!.userId;
@@ -30,8 +28,8 @@ export class ContactPhoto extends connect(store)(LitElement) {
     console.log("contractor photo: ", this.photo);
   }
 
-static get styles():CSSResult {
-  return css`
+  static get styles():CSSResult {
+    return css`
 
       :host {
         box-sizing:               border-box;
@@ -52,59 +50,71 @@ static get styles():CSSResult {
       }
 
       label {
-        color:                var(--pwa_label_text_color);
-        box-sizing:           border-box;
-        width:                100%;
-        font-size:            smaller;
-        margin:               auto;
-        margin-bottom:        0;
-        font-weight:          bold;
+        color:                    var(--pwa_label_text_color);
+        box-sizing:               border-box;
+        width:                    100%;
+        font-size:                smaller;
+        margin:                   auto;
+        margin-bottom:            0;
+        font-weight:              bold;
       }
 
     `
-}
+  }
 
-protected render() {
-  return html`
+  protected render() {
+    return html`
 
-  <!-- Input - Upload Image -->
-  <input
-    id      ="photoURL"
-    type    ="file"
-    name    ="photoURL"
-    class   ="contractorPhoto"
-    accept  ="image/*"
-    @change ="${this.saveImage}"
-    style   ="
-      display:        none;
-      cursor:         pointer;
-      position:       absolute;
-      z-index:        -1;
-    "/>
-
-  <label
-    style="font-size: smaller; font-weight: bold; line-height: 36px;"
-    for ="photoURL">Photo:
-  
-    <!-- Output - Retrieved Image -->
-    <canvas
+    <progress
+      class="uploader"
+      value   ="0"
+      max     ="100"
       style="
-        margin:                 auto;
-        height:                 200px;
-        width:                  100%;
-        background-image:       url(${this.photo});
-        background-size:        contain;
-        background-repeat:      no-repeat;
-        background-position:    center;
-        cursor:                 pointer;
-        overflow:               hidden;
-        box-sizing:             border-box;
-      ">
-      </canvas>
+        height:               6px;
+        width:                100%;
+        border:               0;
+        -webkit-appearance:   none;
+        appearance:           none;
+      "></progress>
 
-  </label>
-    `;
-}
+    <!-- Input - Upload Image -->
+    <input
+      id      ="photoURL"
+      type    ="file"
+      name    ="photoURL"
+      class   ="contractorPhoto"
+      accept  ="image/*"
+      @change ="${this.saveImage}"
+      style   ="
+        display:        none;
+        cursor:         pointer;
+        position:       absolute;
+        z-index:        -1;
+      "/>
+
+    <label
+      style="font-size: smaller; font-weight: bold; line-height: 36px;"
+      for ="photoURL">Photo:
+    
+      <!-- Output - Retrieved Image -->
+      <canvas
+        style="
+          margin:                 auto;
+          height:                 200px;
+          width:                  100%;
+          background-image:       url(${this.photo});
+          background-size:        contain;
+          background-repeat:      no-repeat;
+          background-position:    center;
+          cursor:                 pointer;
+          overflow:               hidden;
+          box-sizing:             border-box;
+        ">
+        </canvas>
+
+    </label>
+      `;
+  }
 
 
 
@@ -129,9 +139,13 @@ protected render() {
   // Save Image to Storage and Database - Update Profile Photo URL in Database and State 
   private async saveImage() {
 
-    // let uploader  : any = this.shadowRoot!.querySelector('.uploader');  // Select Progress Bar
+    // Select Progress Bar
+    const uploader  = this.shadowRoot!.querySelector('.uploader');
+
+    // Select: File
     const file : any = this.shadowRoot!.querySelector('#photoURL');
 
+    // If File Empty
     if (!file) {
       console.error('No file selected');
       return;
@@ -192,11 +206,6 @@ protected render() {
   }
 
 }
-
-
-
-
-
 
 customElements.define('contact-photo', ContactPhoto);
 

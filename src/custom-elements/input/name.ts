@@ -1,84 +1,83 @@
 import { CSSResultArray, LitElement, PropertyValues, css, html } from "lit";
-import { property, state } from "lit/decorators.js";
+import { property } from "lit/decorators.js";
 import { actionButton, inputStyles, labelStyles } from "./css/styles";
 import { store, AppState } from "../../store";
-import { Auth, getAuth, updateProfile } from "firebase/auth";
+import { updateProfile } from "firebase/auth";
 import { connect } from "pwa-helpers";
 import { accName } from "../../redux/backend";
+import { auth } from "../../start";
 
 export class InputName extends connect(store)(LitElement) {
 
   /** @attr value */
   @property({ type: String, reflect: true}) public value = '';
-  @state() private _user = false;
+
+  constructor() { super(); }
+
+  stateChanged(state: AppState) {
+    this.value = state.frontend!.name;  // user-name
+  }
+
+  static get styles(): CSSResultArray { return [ labelStyles, inputStyles, actionButton,
+    css`
+
+    :host, form { display: grid; }
+
+    ` ]; }
+
+  render() {
+    return html`
+
+      <form
+        @submit="${this.default}">
   
-    constructor(){
-      super();
-    }
+        <label
+          for="pwa-name"><span>Name:</span></label>
 
-    protected firstUpdated(_changedProperties: PropertyValues): void {
-
-      this.shadowRoot!.querySelector('.save')!.addEventListener('click',(e:Event) => {
-        e.preventDefault();
-        console.log('save click');
-        this.alertProfile();
-      } );
-
-    }
-
-    stateChanged(state: AppState) {
-
-      this._user = state.frontend!.login; // Login State
-      this.value = state.frontend!.name;  // user-name
-
-    }
-
-    static get styles(): CSSResultArray { return [ labelStyles, inputStyles, actionButton,
-      css`
-
-      :host {
-        display:  grid;
-        grid-template-rows: auto auto;
-      }
-      
-      ` ]; }
-
-    render() {
-      return html`
-
-      <label for="pwa-name">Name:</label>
-
-      <input
-        id            = "pwa-name" 
-        type          = "text"
-        data-label    = "Contact Name"
-        value         = "${ this.value }" />
-
-      <!-- Save to Database -->
-      <button class="action-button save">save</button>
-
-      `;
-    }
-
-    private alertProfile = async () => {
-
-      const username : any = this.shadowRoot!.querySelector('#pwa-name');
-
-      // Dispatch the Information to Firestore Function
-      if (this._user) {
-
-        const user:Auth = getAuth();
-
-        await updateProfile(user.currentUser, { displayName: username.value })
-        .then( () => { store.dispatch(accName(username.value)) })
-        .then( () => { alert('updated name:' + username.value); });
-
-      } else { alert('Please Login'); }
+          <input
+            id            = "pwa-name"
+            name          = "username"
+            type          = "text"
+            data-label    = "Contact Name"
+            @input        = "${ this.handleInput }"
+            .value        = "${ this.value }" />
     
-    }
+        <!-- Save to Database -->
+        <button
+          class="action-button save"
+          @click="${this.alertProfile}">save</button>
+
+      </form>
+
+    `;
+  }
+
+  /* Form Default */
+  private default = (e:Event) => {
+    e.preventDefault();
+  }
+
+  // Handle input changes to keep the password property in sync
+  private handleInput(event: Event) {
+    const input   = event.target as HTMLInputElement;
+    this.value    = input.value; // Update the property with the input value
+  }
+
+  private alertProfile = async () => {
+
+    // Dispatch the Information to Firestore Function
+    if (auth.currentUser) {
+
+      await updateProfile(auth.currentUser, { displayName: this.value })
+      .then( () => { store.dispatch(accName(this.value)) })
+      .then( () => { alert('updated name:' + this.value); });
+
+    } else { alert('Please Login'); }
   
-    
-  // Redux Dispatch Updated Information
+  }
+
+  
+// Redux Dispatch Updated Information
 
 }
 
@@ -89,21 +88,3 @@ declare global {
     'input-name': InputName;
   }
 }
-
-        /* Update Password 
-        private alertPassword() {
-          if (this._user) {
-    
-            const password = this.shadowRoot!.querySelector("input type=password")!;
-            console.log("email: ", password);
-            // updatePassword(user, password);
-    
-          } else { alert('Please Login'); } }
-    */
-
-
-/*
-  .catch( (error: object) =>{
-    console.error('Error writing new message to Firebase Database', error);
-  });
-*/

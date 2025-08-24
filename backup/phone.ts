@@ -1,9 +1,9 @@
 
 import { LitElement, html, CSSResultArray, css } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { inputStyles } from '../css/styles';
+import { inputStyles, labelStyles } from '../src/custom-elements/change/css/styles';
 import { connect } from 'pwa-helpers';
-import store, { AppState } from '../../../store';
+import store, { AppState } from '../src/store';
 
 export class PhoneFormat extends connect(store)(LitElement) {
 
@@ -11,9 +11,7 @@ export class PhoneFormat extends connect(store)(LitElement) {
   @property({ type: String }) public value: string = '';
   @state() private phone: string = '';
 
-    constructor(){
-      super();
-    }
+    constructor() { super(); }
 
     stateChanged(state: AppState) {
       this.phone = state.backend!.phone ;
@@ -24,7 +22,7 @@ export class PhoneFormat extends connect(store)(LitElement) {
     this.addFormResetListener();
   }
 
-  static get styles() : CSSResultArray { return [ inputStyles, 
+  static get styles() : CSSResultArray { return [ inputStyles, labelStyles,
     css`
     
     :host {
@@ -36,8 +34,9 @@ export class PhoneFormat extends connect(store)(LitElement) {
 
   render() {
     return html`
+    <label>Telephone:
       <input
-        id="phoneNumber"
+        name="telephone"
         type="text"
         value="${this.value}"
         @input="${this.onInput}"
@@ -47,23 +46,29 @@ export class PhoneFormat extends connect(store)(LitElement) {
         pattern="[0-9]*"
         data-label="Phone Number"
       />
+    </label>
     `;
   }
 
   private onKeyDown(event: KeyboardEvent) {
+
     // Allow backspace, delete, tab, escape, enter, and arrow keys
     const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+    
     if (allowedKeys.includes(event.key) || (event.key >= '0' && event.key <= '9') || (event.key >= 'Numpad0' && event.key <= 'Numpad9')) {
       // Allow normal operation
     } else {
       // Prevent the default action (e.g., character input)
       event.preventDefault();
     }
+    
   }
 
   private onInput(event: Event) {
+
     const inputElement = event.target as HTMLInputElement;
     const unformattedValue = this.unformatPhoneNumber(inputElement.value);
+
     // Check the length of the unformatted phone number
     if (unformattedValue.length <= 10) {
       this.value = unformattedValue;

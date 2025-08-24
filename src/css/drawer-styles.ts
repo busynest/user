@@ -63,7 +63,7 @@ export const drawerStyles = css`
     padding:                0px;
   }
 
-  .sign {
+  .close {
     height:                 36px;
     width:                  36px;
     margin:                 auto;
@@ -73,19 +73,8 @@ export const drawerStyles = css`
     opacity:                .8;
   }
 
-  label         { font-size: .9em; }
   .setLog > p   { margin: 12px; box-sizing: border-box; }
   .divide       { border: 2px solid #606060; margin: 6px 0 0 0; border-radius: 50%; }
-
-  input {
-    box-sizing:               border-box;
-    width:                    100%;
-    padding:                  12px 20px;
-    margin:                   8px 0 0 0;
-    display:                  inline-block;
-    border:                   1px solid #ccc;
-    border-radius:            4px;
-  }
 
   a {
     text-transform:           uppercase;
@@ -97,18 +86,6 @@ export const drawerStyles = css`
 
   p {
     text-align: center;
-  }
-  
-  .inpat {
-    display:                grid;
-    grid-template-columns:  1fr;
-    grid-template-rows:     1fr 1fr;
-  }
-
-  @media (max-width: 460px) {
-
-    label, #bat { font-size: .8em; }
-
   }
 
 `;

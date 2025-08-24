@@ -1,4 +1,4 @@
-import { user } from "../../firebase/start";
+import { user } from "../../src/firebase/start";
 
    export const updateInformation = (id :any, person: any, username: any, phone: any, list: any) => {
       //const person : any        = this._name;

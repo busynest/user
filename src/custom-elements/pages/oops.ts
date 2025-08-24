@@ -6,7 +6,7 @@ import { connect }                    from 'pwa-helpers/connect-mixin';
 import { store, AppState }            from '../../store';
 import { LazyLoader }                 from '../../lazy-loader';
 import { sendPasswordResetEmail }     from 'firebase/auth';
-import { auth }                       from '../../firebase/start';
+import { auth }                       from '../../start';
 
 @customElement('reset-options')
 export class ResetOptions extends connect(store)(LazyLoader) {
@@ -57,6 +57,20 @@ protected firstUpdated() {
 
   `
 }
+
+
+// Reset Password Email
+private restPasswordcode = async () => {
+
+  let x:any = document!.querySelector('.resetEmail')!
+  let email = x.value;
+
+  await sendPasswordResetEmail( email, email )
+  .catch( (error:any) => { console.log(error); } );
+
+}
+
+
 }
 
 

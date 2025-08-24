@@ -3,15 +3,15 @@ import { customElement, state }               from 'lit/decorators.js';
 import { connect }                            from 'pwa-helpers/connect-mixin.js';
 import { store, AppState }                    from '../../store';
 import { iconStyles }                         from '../../css/icon-styles';
-import { faceIcon }                           from '../../css/svg';
 import { toggleSign }                         from '../../redux/frontend';
+// import { faceIcon }                           from '../../css/svg';
 
 @customElement('user-icon')
 export class UserIcon extends connect(store)(LitElement) {
 
   @state() private _user = false;
   @state() private _photoURL = '';
-  @state() private _sign = false;
+  // @state() private _sign = false;
 
   constructor() {
     super();
@@ -27,7 +27,7 @@ export class UserIcon extends connect(store)(LitElement) {
   stateChanged(state: AppState) {
     this._user        = state.frontend!.login;
     this._photoURL    = state.backend!.photoURL;
-    this._sign        = state.frontend!.register;
+    // this._sign        = state.frontend!.register;
   }  
 
   static get styles():CSSResultArray { return [ iconStyles, css`

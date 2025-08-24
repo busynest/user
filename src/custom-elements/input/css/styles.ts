@@ -23,6 +23,7 @@ export const inputStyles : CSSResult = css`
 export const labelStyles : CSSResult = css`
 
   label {
+    display:              grid;
     color:                var(--pwa_label_text_color);
     box-sizing:           border-box;
     width:                100%;
@@ -35,26 +36,11 @@ export const labelStyles : CSSResult = css`
 }
 
 `;
-/*
-export const buttonStyles : CSSResult = css\`
 
-  .saving{
-    transition: background-color 0.3s; /* Smooth transition for hover effect 
-    background-color:   #D6EBD3;
-    border:             0.5px solid black;
-    border-radius:      4px;
-    height:             50px;
-    width:              100%;
-    margin:             auto;
-    box-shadow:         1px 1px 1px grey;
-  }
-
-\`;
-*/
 export const actionButton = css`
 
-/*  */
-.action-button:focus, .topButton:focus {outline:0;}
+.action-button:focus { outline:0; }
+
 .action-button {
   display:              inline-block;
   box-sizing:           border-box;
@@ -76,5 +62,22 @@ export const actionButton = css`
   border-color:         var(--pwa_action_border_color);
   box-shadow:           1px 1px 1px grey;
 }
+
+`;
+
+
+
+export const buttonStyles : CSSResult = css`
+
+  .saving{
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    background-color:   #D6EBD3;
+    border:             0.5px solid black;
+    border-radius:      4px;
+    height:             50px;
+    width:              100%;
+    margin:             auto;
+    box-shadow:         1px 1px 1px grey;
+  }
 
 `;

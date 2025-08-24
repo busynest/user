@@ -3,9 +3,9 @@
 // Module Imports ---------------- ---------------- ----------------
 
 // Redux
-import { store } from '../store';
-import { closeSign, nameAuth, userAuth } from '../redux/frontend';
-import { accID, accAnon, accEmail, accImage, accName, accPhone } from '../redux/backend';
+import { store } from './store';
+import { closeSign, nameAuth, userAuth } from './redux/frontend';
+import { accID, accAnon, accEmail, accImage, accName, accPhone } from './redux/backend';
 
 // Firebase App 
 import { FirebaseApp, initializeApp } from 'firebase/app';
@@ -60,9 +60,6 @@ export const db             : Firestore         = getFirestore(application);  //
 export const storage        : FirebaseStorage   = getStorage(application); // Reference:   Represents a reference to a file or directory in Storage, returned by ref(). // UploadTask:  Represents an ongoing upload operation, returned by upload methods. // ListResult:  Represents the result of listing files in a directory.
 export const auth           : Auth              = getAuth(application);
 export const user           : User | null       = auth.currentUser;
-console.log('user 1: ', user);
-
-console.log('auth: ', auth);
 
 // LANGUAGE
 getAuth().useDeviceLanguage();
@@ -176,16 +173,8 @@ onAuthStateChanged(auth, (user) => {
 
 // Exact Name Reference - Firebase Action 
 export const logOut             = async () => { return signOut(auth); };
-export const logAccount         = async () => { logEvent(analytics, 'create_account'); }
-export const logAccountDelete   = async () => { logEvent(analytics, 'delete_account'); }
-
-// Delete Declaration
-export const deleteUser         = async () => {
-
-  return user.delete().then( () => { }).catch( () => { });
-  
-};
-
+export const logAccount         = async () => { logEvent(analytics, 'create_account'); };
+export const logAccountDelete   = async () => { logEvent(analytics, 'delete_account'); };
 export const deleteDocument     = async (collect:string, item:string) => {
   
   await deleteDoc(doc(db, collect, item));

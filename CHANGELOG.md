@@ -12,6 +12,24 @@ Removed - for now removed features.
 Fixed - for any bug fixes.
 Security - in case of vulnerabilities.
 
+# [1.0.8] - 2025-08-23
+
+## Changed
+- Read me file: updated information
+- CSS Custom Variables: update color schemes
+- Redux: check and update all connections
+- Input: Password: update correctness
+
+## Add
+- Element Internals Standard
+
+## REMOVED
+- Telephone Verification for version 1 simplicity
+
+
+
+
+
 ## [Unreleased]
 - Facebook Login
 - Phone Login
