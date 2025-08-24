@@ -13,20 +13,17 @@
     "lit",
     "redux",
     "firebase",
-    "user",
     "authentication",
     "drawer",
     "settings",
-    "icon"
+    "icon",
+    "username"
   ],
   "license": "BSD-3-Clause",
   "flat": true,
   "scripts": {
     "server": "web-dev-server --node-resolve --watch --open --app-index demo/index.html",
-    "rollup": "rollup -c",
-    "long": "rollup deploy/application-shell.js --format es --name 'ApplicationShell' --file application-shell.js",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "rollup": "rollup -c"
   },
   "dependencies": {
     "lit": "^3.2.1",

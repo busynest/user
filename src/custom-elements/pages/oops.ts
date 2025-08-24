@@ -2,75 +2,78 @@
 
 import { html, TemplateResult,  }     from 'lit';
 import { customElement, state }       from "lit/decorators.js"
-import { connect }                    from 'pwa-helpers/connect-mixin';
-import { store, AppState }            from '../../store';
 import { LazyLoader }                 from '../../lazy-loader';
-import { sendPasswordResetEmail }     from 'firebase/auth';
+import { sendPasswordResetEmail, verifyPasswordResetCode }     from 'firebase/auth';
 import { auth }                       from '../../start';
 
-@customElement('reset-options')
-export class ResetOptions extends connect(store)(LazyLoader) {
+@customElement('reset-email')
+export class ResetEmail extends LazyLoader {
 
-  @state() private userEmail :any = '';
+  @state() private userEmail :string = '';
+  @state() private code :string = '';
 
-  constructor() {
-    super();
+  constructor() { super(); }
+
+  protected firstUpdated() {
+
+    this.shadowRoot!.querySelector(".reset")!.addEventListener("click", () => { 
+      this.restPassword();
+    } );
+
   }
 
-  stateChanged (state: AppState) {
-    this.userEmail = state.backend!.email;
+  // Handle input changes to keep the password property in sync
+  private handleEmail(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.userEmail = input.value; // Update the property with the input value
   }
 
-private _restPassword() {
-  let emailAddress:any = this.shadowRoot!.querySelector('.email')!;
+    protected render():TemplateResult {
+      return html`
 
-  sendPasswordResetEmail(auth, emailAddress)
-    .then( () => { } )
-    .catch( (error:any) => { console.log(error); });
+        <form class="resetPass">
 
-    // -- verifyPasswordResetCode(code)
-}
+          <input
+            class       ="email"
+            type        ="text"
+            placeholder ="email"
+            @change     ="${this.handleEmail}">
 
-protected firstUpdated() {
-  this.shadowRoot!.querySelector(".reset")!.addEventListener("click", () => { this._restPassword(); } );
-}
+          <button
+            type        ="submit"
+            class       ="reset">Forgot Password</button>
 
-  protected render():TemplateResult {
-    return html`
+        </form>
 
-<form class="resetPass">
+        <input
+          class ="phoneVerify"
+          type  ="text" />
 
-  <input
-    class       ="email"
-    type        ="text"
-    placeholder ="email">
-
-  <input
-    type        ="submit"
-    class       ="reset"/>
-
-</form>
-
-  <input
-    class ="phoneVerify"
-    type  ="text" />
-
-  `
-}
+    `
+  }
 
 
-// Reset Password Email
-private restPasswordcode = async () => {
+  // Reset Password Email
+  private restPassword = async () => {
 
-  let x:any = document!.querySelector('.resetEmail')!
-  let email = x.value;
+    await sendPasswordResetEmail( auth, this.userEmail )
+    .catch( (error:any) => { console.log(error); } );
 
-  await sendPasswordResetEmail( email, email )
-  .catch( (error:any) => { console.log(error); } );
+  }
+
+  private async restCode () {
+
+    await verifyPasswordResetCode(auth, this.code);
+    
+  }
+
 
 }
 
-
+declare global { 
+  interface HTMLElementTagNameMap {
+    'reset-email': ResetEmail;
+  }
 }
 
 

@@ -19,43 +19,50 @@ export class ContactEmail extends connect(store)(LitElement) {
     this.mail = state.backend!.email ;
   }
 
-    static get styles(): CSSResultArray { return [ labelStyles, inputStyles, actionButton,
-      css`
-      
-      :host {
-        display:      grid;
-        border-top:   2px solid var(--pwa_divider);
-      }
+  // Handle input changes to keep the password property in sync
+  private handleEmail(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.mail = input.value; // Update the property with the input value
+  }
 
-      form { display: grid; }
-
-      `
-     ]; }
-
-    render() {
-      return html`
-
-      <form
-        @submit="${this.default}">
-
-        <label for="pwa-email" >E-mail:</label>
-
-        <input
-          id            = "pwa-email"
-          type          = "text"
-          class         = "email"
-          type          = "email"
-          data-label    = "Account Email"
-          placeholder   = "${this.mail}"/>
-
-        <button
-          class="action-button" 
-          @click="${this.saveEmail}">Update</button>
-
-      </form>
-
-      `;
+  static get styles(): CSSResultArray { return [ labelStyles, inputStyles, actionButton,
+    css`
+    
+    :host {
+      display:      grid;
+      border-top:   2px solid var(--pwa_divider);
     }
+
+    form { display: grid; }
+
+    `
+    ]; }
+
+  render() {
+    return html`
+
+    <form
+      @submit="${this.default}">
+
+      <label for="pwa-email" >E-mail:</label>
+
+      <input
+        id            = "pwa-email"
+        @change       = "${this.handleEmail}"
+        type          = "text"
+        class         = "email"
+        type          = "email"
+        data-label    = "Account Email"
+        placeholder   = "${this.mail}"/>
+
+      <button
+        class="action-button" 
+        @click="${this.saveEmail}">Update</button>
+
+    </form>
+
+    `;
+  }
 
   /* Form Default */
   private default = (e:Event) => {
@@ -67,9 +74,7 @@ export class ContactEmail extends connect(store)(LitElement) {
     if ( auth.currentUser ) {
       
       let contactMail :any = this.shadowRoot?.querySelector('#pwa-email')!;
-      console.log(contactMail);
-      console.log(contactMail);
-   
+    
       // Change Email Firebase Function
       await updateEmail( auth.currentUser, contactMail.value ).catch((error:Error) => { console.log(error); });
 
@@ -84,6 +89,7 @@ export class ContactEmail extends connect(store)(LitElement) {
       alert('Email Updated');
 
     }
+
   }
 
 }

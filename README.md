@@ -109,27 +109,22 @@ if (lolalhost) {
 
 ## CSS Default Custom Properties
 | CSS Custom Property | Description | Default | Custom Element |
-
-| Navigation | :---------: | :------:| :------:|
+| :--- | :--- | :--- | :--- |
+| Navigation |  |  |  |
 | --pwa_nav | Navigation | grey; | Settings |
 | --pwa_nav_select | Navigation | black; | Settings |
-
-| Input | :---------: | :------:| :------:|
+| Input |  | | |
 | --pwa_input_background | Input | #E1E5EB; | Settings |
 | --pwa_label_text_color | Input | black; | Settings |
-
-| Header | :---------: | :------:| :------:|
+| Header |  | | |
 | --pwa_section_header | Header | black; | Settings |
-
-| Divider | :---------: | :------:| :------:|
+| Divider |  | | |
 | --pwa_divider | Divider | grey; | Settings |
-
-| Button | :---------: | :------:| :------:|
+| Button |  | | |
 | --pwa_action_text_color | Button | #fff;| Settings |
 | --pwa_action_background_color | Button | #6cc04a; | Settings |
 | --pwa_action_border_color | Button | #60b23e; | Settings |
-
-| Input | :---------: | :------:|:------:|
+| Input | | | |
 | --pwa_drawer_text_color | Input | #303030; | Drawer |
 | --pwa_drawer_background_color | Input | #fff; | Drawer |
 

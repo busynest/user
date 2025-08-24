@@ -16,19 +16,22 @@
     <!-- DESCRIPTION -->
     <meta name="description"    content="To provide a personalized experience, Apps need to know the identity of a user to securely store data in the cloud. pwa-auth is powered by The Firebase Authentication backend, consistently providing a centralized and predictable state behaviour with Redux, and declaratively rendering straight into the DOM with Google Polymer's fast and light Lit-Element. This Component includes 3 HTML Tags, and 1 Boilerplate Function to display the user icon, sign up, login, log out, change account details, and delete the user's account." />
     <!-- KEYWORDS -->
-    <meta name="keywords"       content="lit, redux, firebase, user, authentication, drawer, settings, icon" />
+    <meta name="keywords"       content="lit, redux, firebase, authentication, drawer, settings, icon, username, email, password, delete" />
     <!-- HTTPS REFERRER TAG-->
     <meta name="referrer"       content="origin" />
     <!-- MANIFEST -->
     <link rel="manifest"        href="manifest.json" />
     <!-- FAVICON -->
     <link rel="icon"            href="images/favicon.ico">
+    <!-- Cascading Style Sheets -->
+    <link rel="stylesheet"      href="styles.css">
     <!-- Preconnect -->
     <link rel="preconnect"      href="https://firebasestorage.googleapis.com">
     <!-- Pre-Fetch -->
     <link rel="dns-prefetch"    href="https://firebasestorage.googleapis.com">
-    <!-- Cascading Style Sheets -->
-    <link rel="stylesheet"      href="demo/styles.css">
+
+    <!-- ECMA Script-->
+    <script>window.process = { env: { NODE_ENV: 'production' } };</script>
 
   </head>
   <!-- End Head -->
@@ -36,30 +39,20 @@
   <!-- Start Body -->
   <body>
 
-    <header>
-
-      <!-- Button -->
-      <user-icon></user-icon>
-
-    </header>
+    <!-- Button -->
+    <header><user-icon></user-icon></header>
 
     <!-- Drawer -->
     <user-drawer></user-drawer>
 
-    <main>
+    <!-- Settings -->
+    <main><user-settings></user-settings></main>
 
-      <!-- Settings -->
-      <user-settings></user-settings>
-
-    </main>
-
-    <!-- Custom CSS Variables -->
+    <!-- CSS: Custom Variables: <head> tag -->
     <style>
+            
       :root {
 
-        --primary-color:                #007bff; /* Declares a global custom property named --primary-color */
-        --secondary-color:              #b2bdc7;
-        
         /* Top Border Color */
         --pwa_divider:                  grey;
 
@@ -88,21 +81,14 @@
       }
 
       /* Dark Theme */
-      @media (prefers-color-scheme: dark) {
-        body { }
-      }
+      @media (prefers-color-scheme: dark) { }
 
       /* Light Theme */
-      @media (prefers-color-scheme: light) {
-        body { }
-      }
+      @media (prefers-color-scheme: light) { }
 
     </style>
 
-    <!-- ECMA Script-->
-    <script>window.process = { env: { NODE_ENV: 'production' } };</script>
-
-    <!-- Custom JavaScript Module Information -->
+    <!-- ECMA Script: Module: Firebase Information -->
     <script>
 
       // Global NameSpace - Create Object Initial State

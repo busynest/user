@@ -20,6 +20,12 @@ export class InputPassword extends LitElement {
 
   }
 
+  // Handle input changes to keep the password property in sync
+  private handleInputChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.password = input.value; // Update the property with the input value
+  }
+
   static get styles(): CSSResultArray { return [ labelStyles, inputStyles, actionButton,
     css`
 
@@ -107,14 +113,6 @@ export class InputPassword extends LitElement {
 
     }
     
-  }
-
-  // Handle input changes to keep the password property in sync
-  private handleInputChange(event: Event) {
-
-    const input = event.target as HTMLInputElement;
-    this.password = input.value; // Update the property with the input value
-
   }
 
   // Firebase Password Function
