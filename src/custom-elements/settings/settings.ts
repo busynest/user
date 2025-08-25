@@ -63,6 +63,7 @@ export class UserSettings extends connect(store)(LitElement) {
       :host {
         margin:           0 3px 0 3px;
         display:          grid;
+        background-color: var(--pwa_settings_background);
       }
 
       /* Page Form */

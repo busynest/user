@@ -42,10 +42,12 @@
   <body>
 
     <!-- Button -->
-    <header><user-icon settingsURL="/"></user-icon></header>
+    <header><user-icon settingsURL="/">Subscribe</user-icon></header>
 
     <!-- Drawer -->
-    <user-drawer></user-drawer>
+    <user-drawer>
+      <p><a href="/settings">Settings</a></p>
+    </user-drawer>
 
     <!-- Settings -->
     <main><user-settings></user-settings></main>
@@ -54,6 +56,8 @@
     <style>
             
       :root {
+
+        --pwa_settings_background:      white;
 
         /* Top Border Color */
         --pwa_divider:                  grey;

@@ -35,7 +35,7 @@ export const iconStyles = css`
 
   /* The Login Button */
   .login {
-    width:                  80px;
+    width:                  auto;
 
     border-radius:          6px;
 

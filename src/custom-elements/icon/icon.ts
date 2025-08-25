@@ -54,7 +54,7 @@ export class UserIcon extends connect(store)(LitElement) {
               width   = "38px"
               src     = "${this._photoURL}">
        <!--   </div> -->
-          ` : 'Login' }
+          ` : html`<slot></slot>` }
 
       </button>
 

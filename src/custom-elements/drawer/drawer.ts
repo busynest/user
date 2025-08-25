@@ -88,11 +88,10 @@ export class UserDrawer extends connect(store)(LitElement) {
         class="spec setLog"
         ?on="${ this._log === true }">
 
+          <slot></slot>
+
           <p><a class="leave" aria-label="log out">log out</a></p>
-          <!--
-            <slot></slot>
-            <p><a href="/settings">Settings</a></p>
-          -->
+          
       </div>
 
     </div>

@@ -2,15 +2,16 @@ Progressive Website Application Authentication
 ======================
 
 # The library [Demo](https://pwa-authentic.firebaseapp.com)
-
-- Simplicty: copy js bundle: node_modules/pwa-auth/npm/pwa-auth.js
-
-3 HTML Custom Elements with Firebase Authentication:
-- user-icon
-- user-drawer
-- user-settings
-
 This library provides Identity Access Managementy to securely store user's data.
+
+## Standard JavaScript
+- copy the bundle: node_modules/pwa-auth/npm/pwa-auth.js
+
+## Module JavaScript
+```javascript
+/* To do: Bare Module Specifiers - Currently: Absolute / Relative */
+import 'pwa-auth';
+```
 
 ## Technological Stack
 - Development Environment: [Node JavaScript](https://nodejs.org)
@@ -18,7 +19,15 @@ This library provides Identity Access Managementy to securely store user's data.
 - Predicate State Behavior: [Redux](https://redux.js.org/)
 - Frontend: [Lit](https://lit.dev)
 
-## Library Features:
+## Boilerplate
+- 3 Tag Placements (Custom HTML Elements)
+  - user-icon
+  - user-drawer
+  - user-settings
+- Cascading Style Sheets (CSS)
+- ECMA Script (JavaScript)
+
+## Features:
 - Register through Email and Password
 - Log-in
 - Log-out
@@ -28,12 +37,7 @@ This library provides Identity Access Managementy to securely store user's data.
 - Change Password
 - Delete Account
 
-## Library Boilerplate
-- 3 Tag Placements (Custom HTML Elements)
-- Cascading Style Sheets (CSS)
-- ECMA Script (JavaScript)
-
-## Library Custom Elements
+## Custom Elements
 
 ### `<user-icon>`
 - Login Word Button - State
@@ -54,10 +58,12 @@ This library provides Identity Access Managementy to securely store user's data.
 # Website Setup:
 ```html
 <header>
-  <user-icon></user-icon>
+  <user-icon>Subscribe</user-icon>
 </header>
 
-<user-drawer></user-drawer>
+<user-drawer>
+  <p><a href="/settings">Settings</a></p>
+</user-drawer>
 
 <main>
   <user-settings></user-settings>
@@ -96,6 +102,7 @@ if (lolalhost) { connect = { /* etc. */ } }
 ## CSS Default Custom Properties
 | CSS Custom Property | Description | Default | Custom Element |
 | :--- | ---: | :---: | :--- |
+| --pwa_settings_background       | Navigation  | grey;         | Settings |
 | --pwa_nav_button                | Navigation  | grey;         | Settings |
 | --pwa_nav_select                | Navigation  | black;        | Settings |
 | --pwa_input_background          | Input       | #E1E5EB;    | Settings |
@@ -128,9 +135,7 @@ if (lolalhost) { connect = { /* etc. */ } }
 </style>
 ```
 
-# Footnotes
-
-## Feedback
+# Feedback
 All feedback, comments, bugs, and requests are welcome.
 * [Jack's Publishing](https://www.jackspublishing.com)
 * [contractor's centre](https://www.contractorscentre.com)
