@@ -3,14 +3,14 @@
 import { html, TemplateResult,  }     from 'lit';
 import { customElement, state }       from "lit/decorators.js"
 import { LazyLoader }                 from '../../../lazy-loader';
-import { sendPasswordResetEmail, verifyPasswordResetCode }     from 'firebase/auth';
+import { sendPasswordResetEmail/*, verifyPasswordResetCode*/ }     from 'firebase/auth';
 import { auth }                       from '../../../start';
 
 @customElement('reset-email')
 export class ResetEmail extends LazyLoader {
 
   @state() private userEmail :string = '';
-  @state() private code :string = '';
+  // @state() private code :string = '';
 
   constructor() { super(); }
 
@@ -60,13 +60,13 @@ export class ResetEmail extends LazyLoader {
     .catch( (error:any) => { console.log(error); } );
 
   }
-
+/*
   private async restCode () {
 
     await verifyPasswordResetCode(auth, this.code);
     
   }
-
+*/
 
 }
 

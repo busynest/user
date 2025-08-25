@@ -12,7 +12,6 @@ export const labelStyle : CSSResult = css`
     margin:               auto;
     margin-bottom:        0;
     font-weight:          bold;
-    height:               36px;
     line-height:          36px; 
   }
 

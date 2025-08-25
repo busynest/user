@@ -43,7 +43,6 @@ export class InputPassword extends connect(store)(LitElement) {
 
       :host{
         display:        grid;
-        border-top:     2px solid var(--pwa_divider);
       }
 
       form { display: grid; }
@@ -81,7 +80,7 @@ export class InputPassword extends connect(store)(LitElement) {
         <!-- Submit -->
         <button
           class="action-button pass"
-          ?disabled="${this.login === false}">update</button>
+          ?disabled="${this.login === false}">Update</button>
 
         ${this.message ? html`
 

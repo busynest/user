@@ -1,12 +1,13 @@
 
-import { html, css, LitElement, CSSResult }   from 'lit';
+import { html, css, LitElement, CSSResultArray }   from 'lit';
 import { property, state }          from 'lit/decorators.js';
 import { store, AppState }          from '../../../store';
 import { connect }                  from 'pwa-helpers';
 import { auth, storage }            from '../../../start';
 import { updateProfile }            from 'firebase/auth';
 import { accImage }                 from '../../../redux/backend';
-import { ref, uploadBytes, updateMetadata, getDownloadURL } from "@firebase/storage";
+import { ref, updateMetadata, getDownloadURL, uploadBytesResumable } from "@firebase/storage";
+import { labelStyle } from '../../../css/form/label';
 
 export class ContactPhoto extends connect(store)(LitElement) {
 
@@ -15,8 +16,8 @@ export class ContactPhoto extends connect(store)(LitElement) {
 
   @state() private user : string | void = '';
   @state() private login : boolean = false;
-  @state() private uploadProgress = 0;
-  @state() private uploadComplete = false;
+  //@state() private uploadProgress = 0;
+  //@state() private uploadComplete = false;
 
   constructor() { super(); }
 
@@ -30,8 +31,10 @@ export class ContactPhoto extends connect(store)(LitElement) {
 
   // }
 
-  static get styles():CSSResult {
-    return css`
+  static get styles():CSSResultArray {
+    return[
+      labelStyle,
+      css`
 
       :host {
         box-sizing:               border-box;
@@ -40,10 +43,9 @@ export class ContactPhoto extends connect(store)(LitElement) {
         grid-template-columns:    1fr;
         grid-gap:                 4px;
         width:                    100%;
-        border-top:               2px solid var(--pwa_divider);
       }
 
-      .contractorPhoto {
+      input[type=file] {
         border-radius:            50%;
         overflow:                 hidden;
         margin:                   auto;
@@ -51,33 +53,29 @@ export class ContactPhoto extends connect(store)(LitElement) {
         box-shadow:               1px 1px 2px black, 0 0 25px grey, 0 0 5px #fff;
       }
 
-      label {
-        color:                    var(--pwa_label_text_color);
-        box-sizing:               border-box;
-        width:                    100%;
-        font-size:                smaller;
-        margin:                   auto;
-        margin-bottom:            0;
-        font-weight:              bold;
-      }
-
     `
+    ]
   }
 
   protected render() {
     return html`
-
+<label
+    for="pwa-uploader"
+    style="
+      grid-template-columns: auto 1fr;
+      grid-gap:16px;
+      padding: 0 16px;
+    ">Upload:
     <progress
-      class="uploader"
+      id      ="pwa-uploader"
+      class   ="uploader"
       value   ="0"
       max     ="100"
       style="
-        height:               6px;
-        width:                100%;
-        border:               0;
-        -webkit-appearance:   none;
-        appearance:           none;
-      "></progress>
+        height:       24px;
+        width:        100%;
+        margin:       auto;
+      "></label>
 
     <!-- Input - Upload Image -->
     <input
@@ -93,16 +91,13 @@ export class ContactPhoto extends connect(store)(LitElement) {
         cursor:         pointer;
         position:       absolute;
         z-index:        -1;
-      "/>
+      "/></progress>
 
     <label
       style="
-        font-size: smaller;
-        font-weight: bold;
-        line-height: 36px;
         border: 2px dashed;
         border-radius: 6px;
-        padding: 0 16px;
+        padding: 0 16px 16px 16px;
       "
       for ="photoURL">Photo:
     
@@ -149,10 +144,12 @@ export class ContactPhoto extends connect(store)(LitElement) {
   // Save Image to Storage and Database - Update Profile Photo URL in Database and State 
   private async saveImage() {
 
+    // Select Progress Bar
+    const uploader: HTMLProgressElement  = this.shadowRoot!.querySelector('.uploader')!;
+
+
     if(auth.currentUser){
 
-      // Select Progress Bar
-      // const uploader  = this.shadowRoot!.querySelector('.uploader');
 
       // Select: File
       const file : any = this.shadowRoot!.querySelector('#photoURL');
@@ -172,35 +169,95 @@ export class ContactPhoto extends connect(store)(LitElement) {
         "/" + 
         file.files[0].name );
 
+      // const uploadTask = uploadBytesResumable(location, file);
+
       // Create metadata from file information
       const newMetadata = {
         cacheControl:   'public,max-age=300',
         contentType:    file.files[0].type     // 'image/jpeg'
       };
 
-      // Update metadata properties
-      updateMetadata(location, newMetadata)
-        .then((metadata:any) => { console.log("metadata: ", metadata); }).catch((error:any) => { console.log("error: ", error); });
-      
-      // Upload - Blob or File API
-      uploadBytes (location, file.files[0], newMetadata).then((snapshot:any) => {
 
+
+
+
+    // Upload - Blob or File API
+      const uploadTask = uploadBytesResumable (location, file.files[0], newMetadata);// .then((snapshot:any) => {
+
+
+
+
+
+      // Monitor upload progress
+  uploadTask.on(
+    'state_changed',
+    (snapshot) => {
+// Calculate progress percentage safely
+      let progress = 0;
+      if (snapshot.totalBytes > 0) {
+        progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      }
+      // Ensure progress is finite before setting
+      if (isFinite(progress)) {
+        uploader.value = progress;
+        uploader.textContent = `${Math.round(progress)}%`;
+      } else {
+        uploader.value = 0;
+        uploader.textContent = '0%';
+      }
+    },
+    (error) => {
+      // Handle errors
+      console.error('Upload failed:', error);
+      uploader.value = 0;
+      uploader.textContent = 'Error';
+      // uploadButton.disabled = false;
+    },
+    () => {
+      // Upload completed successfully
+
+
+  
         // Get URL
-        getDownloadURL(snapshot.ref)
+       getDownloadURL(uploadTask.snapshot.ref)
           .then( (url:any) => {
 
-            // To Do: Save Minified Photo - Service
-            const modifiedFilePath = this.appendToFileLocation(url, '_400x400');
-            console.log('modifiedFilePath', modifiedFilePath);
+            // Update metadata properties
+            updateMetadata(location, newMetadata)
+              .then((metadata:any) => { console.log("metadata: ", metadata); }).catch((error:any) => { console.log("error: ", error); });
+      
+             // To Do: Save Minified Photo - Service
+             const modifiedFilePath = this.appendToFileLocation(url, '_400x400');
+             console.log('modifiedFilePath', modifiedFilePath);
+
+              updateProfile(auth.currentUser, { photoURL: modifiedFilePath })
+              .then(() => {
+                console.log('Profile picture updated successfully');
+                uploader.value = 100;
+                uploader.textContent = 'Complete';
+              });
+
+            // const resizedLocation = ref(storage, 'images/article/' + file.name + '_400x400' ); // Path where the image will be stored in Firebase Storage
 
             // Save URL
             this.dispatchPhoto(url);
 
         }).catch( () => {} );
 
-      }).catch( () => {} );
+     // }).catch( () => {} );
+
 
     }
+  );
+
+
+
+    }
+
+
+
+
+    
 
   }
 

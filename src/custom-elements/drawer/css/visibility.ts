@@ -9,6 +9,7 @@ export const visibility: CSSResult = css`
 
   .visibility {
     position:               fixed;
+    left:                   0;
     right:                  0;
     visibility:             hidden;
     will-change:            transform;

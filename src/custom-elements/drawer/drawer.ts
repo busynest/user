@@ -16,10 +16,12 @@ import { logOut }                         from '../../start';
 
 import './input/login';
 import './input/sign-up';
+import { listStyle } from '../../css/form/list';
 
 @customElement('user-drawer')
 export class UserDrawer extends connect(store)(LitElement) {
 
+  @state() private _name        = ""; // Drawer State
   @state() private _subscribe   = false; // Drawer State
   @state() private _log         = false; // Login State
   @state() private _sign        = false; // Sign-up State
@@ -33,6 +35,7 @@ export class UserDrawer extends connect(store)(LitElement) {
   }
 
   stateChanged(state: AppState) {
+    this._name        = state.backend!.name;        // Drawer State
     this._subscribe   = state.frontend!.drawer;     // Drawer State
     this._log         = state.frontend!.login;      // Logged in-out State
     this._sign        = state.frontend!.register;   // Sign-up State
@@ -44,7 +47,8 @@ export class UserDrawer extends connect(store)(LitElement) {
     drawerStyle,
     exitStyle,
     linkStyle,
-    lineStyle
+    lineStyle,
+    listStyle
   ] };
 
   protected render() {
@@ -58,7 +62,7 @@ export class UserDrawer extends connect(store)(LitElement) {
       <!-- Exit Button -->
       <div class="exit">
         <div></div>
-        <h3>${this._log ? "ACCOUNT" : "SUBSCRIBE" }</h3>
+        <h3>${this._log ? this._name + " : Logged-in" : "SUBSCRIBE" }</h3>
         <button class="close">${close}</button>
       </div>
 
@@ -88,10 +92,11 @@ export class UserDrawer extends connect(store)(LitElement) {
         class="spec setLog"
         ?on="${ this._log === true }">
 
-        <slot></slot>
-        <p><a href="/settings">Settings</a></p>
-        <p><a class="leave" aria-label="log out">log out</a></p>
-
+          <p><a class="leave" aria-label="log out">log out</a></p>
+          <!--
+            <slot></slot>
+            <p><a href="/settings">Settings</a></p>
+          -->
       </div>
 
     </div>

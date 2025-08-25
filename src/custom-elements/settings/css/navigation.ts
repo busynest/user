@@ -3,6 +3,10 @@ import { css } from 'lit';
 
 export const navigation = css`
 
+  nav {
+    overflow: hidden;
+  }
+
   /* Navigation Menu */
   nav > ul {
     

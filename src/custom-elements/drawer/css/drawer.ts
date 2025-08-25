@@ -5,7 +5,7 @@ export const drawerStyle: CSSResult = css`
   .userDrawer {
     z-index: 1;
     max-width:              600px;
-    margin:                 auto;
+    margin:                 16px auto auto auto;
     background-color:       var(--pwa_drawer_background_color);
     color:                  var(--pwa_drawer_text_color);
     padding:                8px 18px;

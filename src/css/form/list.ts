@@ -8,4 +8,6 @@ export const listStyle: CSSResult = css`
     margin:                   0;
   }
 
+  li { display: grid; }
+
 `;

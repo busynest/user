@@ -101,23 +101,17 @@ if (lolalhost) { connect = { /* etc. */ } }
 ## CSS Default Custom Properties
 | CSS Custom Property | Description | Default | Custom Element |
 | :--- | ---: | :---: | :--- |
-| | | | |
-| --pwa_nav | Navigation | grey; | Settings |
-| --pwa_nav_select | Navigation | black; | Settings |
-| | | | |
-| --pwa_input_background | Input | #E1E5EB; | Settings |
-| --pwa_label_text_color | Input | black; | Settings |
-| | | | |
-| --pwa_section_header | Header | black; | Settings |
-| | | | |
-| --pwa_divider | Divider | grey; | Settings |
-| | | | |
-| --pwa_action_text_color | Button | #fff;| Settings |
-| --pwa_action_background_color | Button | #6cc04a; | Settings |
-| --pwa_action_border_color | Button | #60b23e; | Settings |
-| | | | |
-| --pwa_drawer_text_color | Input | #303030; | Drawer |
-| --pwa_drawer_background_color | Input | #fff; | Drawer |
+| --pwa_nav                       | Navigation  | grey;         | Settings |
+| --pwa_nav_select                | Navigation  | black;        | Settings |
+| --pwa_input_background          | Input       | #E1E5EB;    | Settings |
+| --pwa_label_text_color          | Input       | black;        | Settings |
+| --pwa_section_header            | Header      | black;        | Settings |
+| --pwa_divider                   | Divider     | grey;         | Settings |
+| --pwa_action_text_color         | Button      | #fff;       | Settings |
+| --pwa_action_background_color   | Button      | #6cc04a;    | Settings |
+| --pwa_action_border_color       | Button      | #60b23e;    | Settings |
+| --pwa_drawer_text_color         | Input       | #303030;    | Drawer |
+| --pwa_drawer_background_color   | Input       | #fff;       | Drawer |
 
 ## Logged-in State Drawer Menu Items
 ```html

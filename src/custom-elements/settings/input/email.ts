@@ -37,7 +37,6 @@ export class ContactEmail extends connect(store)(LitElement) {
     
       :host {
         display:      grid;
-        border-top:   2px solid var(--pwa_divider);
       }
 
       form { display: grid; }
@@ -56,17 +55,17 @@ export class ContactEmail extends connect(store)(LitElement) {
 
       <input
         id            = "pwa-email"
-        @change       = "${this.handleEmail}"
-        type          = "text"
-        class         = "email"
+        name          = "email"
         type          = "email"
+        class         = "email"
         data-label    = "Account Email"
-        placeholder   = "${this.mail}"/>
+        @input        = "${this.handleEmail}"
+        .value        = "${this.mail}"/>
 
       <button
-        class="action-button" 
-        @click="${this.saveEmail}"
-        ?disabled="${this.login === false}">Update</button>
+        class         = "action-button" 
+        @click        = "${this.saveEmail}"
+        ?disabled     = "${this.login === false}">Update</button>
 
     </form>
 

@@ -30,7 +30,6 @@ export class DeleteUser extends connect(store)(LitElement) {
     :host {
       display:                  grid;
       grid-template-rows:       auto auto;
-      border-top:               2px solid var(--pwa_divider);
     }
     
     ` ]; }

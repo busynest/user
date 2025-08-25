@@ -79,6 +79,12 @@ export class UserSettings extends connect(store)(LitElement) {
         color:            var(--pwa_section_header);
         text-align:       center;
         text-shadow:      1px 1px 2px black, 0 0 15px grey, 0 0 5px #fff;
+        
+        border-top:       2px solid var(--pwa_divider);
+        border-bottom:    2px solid var(--pwa_divider);
+
+        margin:           0;
+        padding:          8px 0;
       }
 
     `
@@ -95,14 +101,14 @@ export class UserSettings extends connect(store)(LitElement) {
           <li>
             <button
               value="profile"
-              ?on="${ this.profileTopic === 'profile'}">Profile
+              ?on="${ this.profileTopic === 'profile'}">Icon
             </button>
           </li>
 
           <li>
             <button
               value="verification"
-              ?on="${ this.profileTopic === 'verification'}">Email
+              ?on="${ this.profileTopic === 'verification'}">Profile
             </button>
           </li>
 
@@ -132,9 +138,6 @@ export class UserSettings extends connect(store)(LitElement) {
 
         <!-- Custom Image Element - Display / Upload -->
         <contact-photo></contact-photo>
-          
-        <!-- Custom - Username -->
-        <input-name></input-name>
 
       </section>
       
@@ -142,7 +145,10 @@ export class UserSettings extends connect(store)(LitElement) {
       <section ?on="${ this.profileTopic === 'verification' }">
 
         <!-- Page Title -->
-        <h2>Change E-mail</h2>
+        <h2>Contact Information</h2>
+
+        <!-- Custom - Username -->
+        <input-name></input-name>
 
         <!-- Custom - Email -->
         <contact-email></contact-email>
@@ -156,7 +162,7 @@ export class UserSettings extends connect(store)(LitElement) {
       <section ?on="${ this.profileTopic === 'password' }">
 
         <!-- Page Title -->
-        <h2>Change Password</h2>
+        <h2>Password</h2>
 
         <!-- Custom - Password -->
         <input-password></input-password>

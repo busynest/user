@@ -54,7 +54,7 @@ export class InputName extends connect(store)(LitElement) {
         <button
           class="action-button save"
           @click="${this.alertProfile}"
-          ?disabled="${this.login === false}">save</button>
+          ?disabled="${this.login === false}">Update</button>
 
       </form>
 
