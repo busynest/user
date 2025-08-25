@@ -1,27 +1,35 @@
-import { CSSResultArray, LitElement, PropertyValues, css, html } from "lit";
-import { property } from "lit/decorators.js";
-import { actionButton, inputStyles, labelStyles } from "./css/styles";
-import { store, AppState } from "../../store";
-import { updateProfile } from "firebase/auth";
-import { connect } from "pwa-helpers";
-import { accName } from "../../redux/backend";
-import { auth } from "../../start";
+import { CSSResultArray, LitElement, css, html } from "lit";
+import { property, state }    from "lit/decorators.js";
+import { connect }            from "pwa-helpers";
+import { store, AppState }    from "../../../store";
+import { updateProfile }      from "firebase/auth";
+import { accName }            from "../../../redux/backend";
+import { auth }               from "../../../start";
+import { labelStyle }         from "../../../css/form/label";
+import { inputStyle }         from "../../../css/form/input";
+import { buttonStyle }        from "../../../css/form/button";
 
 export class InputName extends connect(store)(LitElement) {
 
   /** @attr value */
   @property({ type: String, reflect: true}) public value = '';
 
+  @state() private login : boolean = false;
+
   constructor() { super(); }
 
   stateChanged(state: AppState) {
-    this.value = state.frontend!.name;  // user-name
+    this.login  = state.frontend!.login;
+    this.value  = state.frontend!.name;  // user-name
   }
 
-  static get styles(): CSSResultArray { return [ labelStyles, inputStyles, actionButton,
+  static get styles(): CSSResultArray { return [
+    labelStyle,
+    inputStyle,
+    buttonStyle,
     css`
 
-    :host, form { display: grid; }
+      :host, form { display: grid; }
 
     ` ]; }
 
@@ -45,7 +53,8 @@ export class InputName extends connect(store)(LitElement) {
         <!-- Save to Database -->
         <button
           class="action-button save"
-          @click="${this.alertProfile}">save</button>
+          @click="${this.alertProfile}"
+          ?disabled="${this.login === false}">save</button>
 
       </form>
 

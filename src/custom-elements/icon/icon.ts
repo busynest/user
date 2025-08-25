@@ -2,7 +2,7 @@ import { css, CSSResultArray, html, LitElement }                   from 'lit';
 import { customElement, state }               from 'lit/decorators.js';
 import { connect }                            from 'pwa-helpers/connect-mixin.js';
 import { store, AppState }                    from '../../store';
-import { iconStyles }                         from '../../css/icon-styles';
+import { iconStyles }                         from './css/icon';
 import { toggleSign }                         from '../../redux/frontend';
 // import { faceIcon }                           from '../../css/svg';
 
@@ -13,9 +13,7 @@ export class UserIcon extends connect(store)(LitElement) {
   @state() private _photoURL = '';
   // @state() private _sign = false;
 
-  constructor() {
-    super();
-  }
+  constructor() { super(); }
 
   protected firstUpdated() {
     this.shadowRoot!.querySelector('button')!.addEventListener('click', () => {
@@ -30,9 +28,11 @@ export class UserIcon extends connect(store)(LitElement) {
     // this._sign        = state.frontend!.register;
   }  
 
-  static get styles():CSSResultArray { return [ iconStyles, css`
+  static get styles():CSSResultArray { return [
+    iconStyles,
+    css`
 
-  :host { margin: auto; display: grid; }
+      :host { margin: auto; display: grid; }
 
     ` ] }
   

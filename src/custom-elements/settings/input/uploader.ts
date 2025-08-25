@@ -1,11 +1,11 @@
 
-import { html, css, LitElement, CSSResult, PropertyValueMap }   from 'lit';
+import { html, css, LitElement, CSSResult }   from 'lit';
 import { property, state }          from 'lit/decorators.js';
-import { store, AppState }          from '../../store';
+import { store, AppState }          from '../../../store';
 import { connect }                  from 'pwa-helpers';
-import { auth, storage }            from '../../start';
+import { auth, storage }            from '../../../start';
 import { updateProfile }            from 'firebase/auth';
-import { accImage }                 from '../../redux/backend';
+import { accImage }                 from '../../../redux/backend';
 import { ref, uploadBytes, updateMetadata, getDownloadURL } from "@firebase/storage";
 
 export class ContactPhoto extends connect(store)(LitElement) {
@@ -14,19 +14,21 @@ export class ContactPhoto extends connect(store)(LitElement) {
   @property() public photo : string | void | any = '';
 
   @state() private user : string | void = '';
+  @state() private login : boolean = false;
   @state() private uploadProgress = 0;
   @state() private uploadComplete = false;
 
   constructor() { super(); }
 
   stateChanged(state: AppState) {
+    this.login    = state.frontend!.login;
     this.user     = state.backend!.userId;
     this.photo    = state.backend!.photoURL;
   }
 
-  protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
-    console.log("contractor photo: ", this.photo);
-  }
+  // protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
+
+  // }
 
   static get styles():CSSResult {
     return css`
@@ -85,6 +87,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
       class   ="contractorPhoto"
       accept  ="image/*"
       @change ="${this.saveImage}"
+      ?disabled="${this.login === false}"
       style   ="
         display:        none;
         cursor:         pointer;
@@ -93,7 +96,14 @@ export class ContactPhoto extends connect(store)(LitElement) {
       "/>
 
     <label
-      style="font-size: smaller; font-weight: bold; line-height: 36px;"
+      style="
+        font-size: smaller;
+        font-weight: bold;
+        line-height: 36px;
+        border: 2px dashed;
+        border-radius: 6px;
+        padding: 0 16px;
+      "
       for ="photoURL">Photo:
     
       <!-- Output - Retrieved Image -->
@@ -139,54 +149,58 @@ export class ContactPhoto extends connect(store)(LitElement) {
   // Save Image to Storage and Database - Update Profile Photo URL in Database and State 
   private async saveImage() {
 
-    // Select Progress Bar
-    const uploader  = this.shadowRoot!.querySelector('.uploader');
+    if(auth.currentUser){
 
-    // Select: File
-    const file : any = this.shadowRoot!.querySelector('#photoURL');
+      // Select Progress Bar
+      // const uploader  = this.shadowRoot!.querySelector('.uploader');
 
-    // If File Empty
-    if (!file) {
-      console.error('No file selected');
-      return;
-    }
+      // Select: File
+      const file : any = this.shadowRoot!.querySelector('#photoURL');
 
-    // Test Storage Reference location.fullPath  location.name location.bucket
-    const location = ref(storage,
-      "/" +
-      "pwa-auth" + 
-      "/" + 
-      this.user + 
-      "/" + 
-      file.files[0].name );
+      // If File Empty
+      if (!file) {
+        console.error('No file selected');
+        return;
+      }
 
-    // Create metadata from file information
-    const newMetadata = {
-      cacheControl:   'public,max-age=300',
-      contentType:    file.files[0].type     // 'image/jpeg'
-    };
+      // Test Storage Reference location.fullPath  location.name location.bucket
+      const location = ref(storage,
+        "/" +
+        "pwa-auth" + 
+        "/" + 
+        this.user + 
+        "/" + 
+        file.files[0].name );
 
-    // Update metadata properties
-    updateMetadata(location, newMetadata)
-      .then((metadata:any) => { console.log("metadata: ", metadata); }).catch((error:any) => { console.log("error: ", error); });
-    
-    // Upload - Blob or File API
-    uploadBytes (location, file.files[0], newMetadata).then((snapshot:any) => {
+      // Create metadata from file information
+      const newMetadata = {
+        cacheControl:   'public,max-age=300',
+        contentType:    file.files[0].type     // 'image/jpeg'
+      };
 
-      // Get URL
-      getDownloadURL(snapshot.ref)
-        .then( (url:any) => {
+      // Update metadata properties
+      updateMetadata(location, newMetadata)
+        .then((metadata:any) => { console.log("metadata: ", metadata); }).catch((error:any) => { console.log("error: ", error); });
+      
+      // Upload - Blob or File API
+      uploadBytes (location, file.files[0], newMetadata).then((snapshot:any) => {
 
-          // To Do: Save Minified Photo - Service
-          const modifiedFilePath = this.appendToFileLocation(url, '_400x400');
-          console.log('modifiedFilePath', modifiedFilePath);
+        // Get URL
+        getDownloadURL(snapshot.ref)
+          .then( (url:any) => {
 
-          // Save URL
-          this.dispatchPhoto(url);
+            // To Do: Save Minified Photo - Service
+            const modifiedFilePath = this.appendToFileLocation(url, '_400x400');
+            console.log('modifiedFilePath', modifiedFilePath);
+
+            // Save URL
+            this.dispatchPhoto(url);
+
+        }).catch( () => {} );
 
       }).catch( () => {} );
 
-    }).catch( () => {} );
+    }
 
   }
 

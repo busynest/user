@@ -23,6 +23,6 @@
   "include": [
     "src/**/*.ts" ],
   "exclude": [
-    "backup/**/*.ts"
+    "demo/**/*.ts"
   ],
 }

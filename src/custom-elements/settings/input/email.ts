@@ -1,22 +1,26 @@
 import { CSSResultArray, LitElement, css, html } from "lit";
-import { property, state } from "lit/decorators.js";
-import { inputStyles, labelStyles, actionButton } from "./css/styles";
-import { auth } from "../../start";
-import { updateEmail } from "firebase/auth";
-import { connect } from "pwa-helpers";
-import store, { AppState } from "../../store";
+import { property, state }  from "lit/decorators.js";
+import { connect }          from "pwa-helpers";
+import store, { AppState }  from "../../../store";
+import { auth }             from "../../../start";
+import { labelStyle }       from "../../../css/form/label";
+import { inputStyle }       from "../../../css/form/input";
+import { buttonStyle }      from "../../../css/form/button";
+import { updateEmail }      from "firebase/auth";
 
 export class ContactEmail extends connect(store)(LitElement) {
 
   /** @attr email */
   @property({ type: String, reflect: true}) email = '';
   
-  @state() private mail: string = ""
+  @state() private login      : boolean   = false;
+  @state() private mail       : string    = "";
 
   constructor() { super(); }
 
   stateChanged(state: AppState) {
-    this.mail = state.backend!.email ;
+    this.login  = state.frontend!.login;
+    this.mail   = state.backend!.email ;
   }
 
   // Handle input changes to keep the password property in sync
@@ -25,15 +29,18 @@ export class ContactEmail extends connect(store)(LitElement) {
     this.mail = input.value; // Update the property with the input value
   }
 
-  static get styles(): CSSResultArray { return [ labelStyles, inputStyles, actionButton,
+  static get styles(): CSSResultArray { return [
+    labelStyle,
+    inputStyle,
+    buttonStyle,
     css`
     
-    :host {
-      display:      grid;
-      border-top:   2px solid var(--pwa_divider);
-    }
+      :host {
+        display:      grid;
+        border-top:   2px solid var(--pwa_divider);
+      }
 
-    form { display: grid; }
+      form { display: grid; }
 
     `
     ]; }
@@ -42,6 +49,7 @@ export class ContactEmail extends connect(store)(LitElement) {
     return html`
 
     <form
+      autocomplete="off"
       @submit="${this.default}">
 
       <label for="pwa-email" >E-mail:</label>
@@ -57,7 +65,8 @@ export class ContactEmail extends connect(store)(LitElement) {
 
       <button
         class="action-button" 
-        @click="${this.saveEmail}">Update</button>
+        @click="${this.saveEmail}"
+        ?disabled="${this.login === false}">Update</button>
 
     </form>
 

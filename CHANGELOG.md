@@ -22,6 +22,7 @@ Security - in case of vulnerabilities.
 
 ## Add
 - Element Internals Standard
+- Forgot Password Reset
 
 ## REMOVED
 - Telephone Verification for version 1 simplicity

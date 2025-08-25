@@ -1,14 +1,19 @@
 
 import { CSSResultArray, LitElement, css, html } from "lit";
-import { state } from "lit/decorators.js";
-import { actionButton, inputStyles, labelStyles } from "./css/styles";
-import { auth } from "../../start";
-import { updatePassword } from "firebase/auth";
+import { state }            from "lit/decorators.js";
+import { connect }          from "pwa-helpers";
+import store, { AppState }  from "../../../store";
+import { auth }             from "../../../start";
+import { labelStyle }       from "../../../css/form/label";
+import { inputStyle }       from "../../../css/form/input";
+import { buttonStyle  }     from "../../../css/form/button";
+import { updatePassword }   from "firebase/auth";
 
-export class InputPassword extends LitElement {
+export class InputPassword extends connect(store)(LitElement) {
 
   @state() private message    : string    = '';
   @state() private password   : string    = '';
+  @state() private login      : boolean   = false;
 
   constructor() { super(); }
 
@@ -20,13 +25,20 @@ export class InputPassword extends LitElement {
 
   }
 
+   stateChanged(state: AppState) {
+      this.login = state.frontend!.login;
+    }
+
   // Handle input changes to keep the password property in sync
   private handleInputChange(event: Event) {
     const input = event.target as HTMLInputElement;
     this.password = input.value; // Update the property with the input value
   }
 
-  static get styles(): CSSResultArray { return [ labelStyles, inputStyles, actionButton,
+  static get styles(): CSSResultArray { return [
+    labelStyle,
+    inputStyle,
+    buttonStyle,
     css`
 
       :host{
@@ -44,7 +56,8 @@ export class InputPassword extends LitElement {
     return html`
 
       <form
-          @submit="${this.default}">
+        autocomplete="off"
+        @submit="${this.default}">
 
         <!-- Input - 1 -->
         <label for="pwa-new-password">New Password</label>
@@ -67,7 +80,8 @@ export class InputPassword extends LitElement {
 
         <!-- Submit -->
         <button
-          class="action-button pass" >update</button>
+          class="action-button pass"
+          ?disabled="${this.login === false}">update</button>
 
         ${this.message ? html`
 

@@ -4,11 +4,18 @@ import { connect }                        from 'pwa-helpers/connect-mixin';
 import { store, AppState }                from '../../store';
 import { close }                          from '../../css/svg';
 import { show }                           from '../../css/toggle';
-import { drawerStyles }                   from '../../css/drawer-styles';
+
+import { visibility }   from './css/visibility';
+import { drawerStyle }  from './css/drawer';
+import { exitStyle }    from './css/exit';
+import { linkStyle }    from './css/link';
+import { lineStyle }    from './css/paragraph';
+
 import { signUpAction, toggleSign }       from '../../redux/frontend'; 
 import { logOut }                         from '../../start';
-import '../drawer/login';
-import '../drawer/sign-up';
+
+import './input/login';
+import './input/sign-up';
 
 @customElement('user-drawer')
 export class UserDrawer extends connect(store)(LitElement) {
@@ -20,11 +27,9 @@ export class UserDrawer extends connect(store)(LitElement) {
   constructor() { super(); }
 
   protected firstUpdated() {
-
     this.shadowRoot!.querySelector('.new')!       .addEventListener('click', () => { store.dispatch(signUpAction())} );
     this.shadowRoot!.querySelector('.close')!     .addEventListener('click', () => { store.dispatch(toggleSign()) } );
     this.shadowRoot!.querySelector('.leave')!     .addEventListener('click', () => { logOut() } );
-
   }
 
   stateChanged(state: AppState) {
@@ -33,7 +38,14 @@ export class UserDrawer extends connect(store)(LitElement) {
     this._sign        = state.frontend!.register;   // Sign-up State
   }
 
-  static get styles() { return [ show, drawerStyles ] };
+  static get styles() { return [
+    show,
+    visibility,
+    drawerStyle,
+    exitStyle,
+    linkStyle,
+    lineStyle
+  ] };
 
   protected render() {
     return html`

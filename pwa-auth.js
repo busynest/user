@@ -1,3 +1,3 @@
-export { UserDrawer }       from './deploy/custom-elements/pages/drawer.js';
-export { UserSettings }     from './deploy/custom-elements/pages/settings.js';
-export { UserIcon }         from './deploy/custom-elements/pages/icon.js';
+export { UserDrawer }       from './deploy/custom-elements/drawer/drawer.js';
+export { UserSettings }     from './deploy/custom-elements/settings/settings.js';
+export { UserIcon }         from './deploy/custom-elements/icon/icon.js';

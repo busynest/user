@@ -23,12 +23,15 @@
     <link rel="manifest"        href="manifest.json" />
     <!-- FAVICON -->
     <link rel="icon"            href="images/favicon.ico">
-    <!-- Cascading Style Sheets -->
-    <link rel="stylesheet"      href="demo/styles.css">
+
     <!-- Preconnect -->
     <link rel="preconnect"      href="https://firebasestorage.googleapis.com">
     <!-- Pre-Fetch -->
     <link rel="dns-prefetch"    href="https://firebasestorage.googleapis.com">
+
+    <!-- Cascading Style Sheets -->
+    <link rel="stylesheet"      href="demo/styles.css">
+    <link rel="stylesheet"      href="demo/loading.css">
 
     <!-- ECMA Script-->
     <script>window.process = { env: { NODE_ENV: 'production' } };</script>
@@ -46,7 +49,20 @@
     <user-drawer></user-drawer>
 
     <!-- Settings -->
-    <main><user-settings></user-settings></main>
+    <main>
+      <user-settings>
+        <!-- Start Slot: Loading Paint -->
+        <nav>
+          <ul>
+            <li><button>Profile</button></li>
+            <li><button>Email</button></li>
+            <li><button>Password</button></li>
+            <li><button>Delete</button></li>
+          </ul>
+        </nav>
+        <!-- End Slot: Loading Paint -->
+      </user-settings>
+    </main>
 
     <!-- CSS: Custom Variables: <head> tag -->
     <style>

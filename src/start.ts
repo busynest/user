@@ -25,37 +25,10 @@ import { Analytics, getAnalytics, logEvent } from "firebase/analytics";
 // Firebse Messaginmg
 import { isSupported } from "firebase/messaging";
 
-// Public Initialization Code
-// mport { connect } from '../../demo/config'
-
 // Module Exports ---------------- ---------------- ----------------
 
-// Object Initializer Notation
-export interface fire {
-  apiKey:                 string,
-  authDomain:             string,
-  databaseURL:            string,
-  projectId:              string,
-  storageBucket:          string,
-  messagingSenderId:      string,
-  appId:                  string,
-  measurementId:          string
-}
-
-// Initialize Firebase Data
-const admin: fire = {
-  appId:                connect.appId,
-  apiKey:               connect.apiKey,
-  authDomain:           connect.authDomain,
-  databaseURL:          connect.databaseURL,
-  projectId:            connect.projectId,
-  storageBucket:        connect.storageBucket,
-  messagingSenderId:    connect.messagingSenderId,
-  measurementId:        connect.measurementId
-};
-
 // Memory Reference to Services - Object Type
-export const application    : FirebaseApp       = initializeApp(admin); // Initialize Application
+export const application    : FirebaseApp       = initializeApp(connect); // Initialize Application
 export const db             : Firestore         = getFirestore(application);  // Initialize Database
 export const storage        : FirebaseStorage   = getStorage(application); // Reference:   Represents a reference to a file or directory in Storage, returned by ref(). // UploadTask:  Represents an ongoing upload operation, returned by upload methods. // ListResult:  Represents the result of listing files in a directory.
 export const auth           : Auth              = getAuth(application);
@@ -81,6 +54,18 @@ let analytics: Analytics;
 })();
 
 // END ANALYTICS ----------------
+
+// Start Support Checks
+
+// Check for Service Worker support
+if ('serviceWorker' in navigator) { console.log('Service Worker is supported'); }
+else { console.log('Service Worker is not supported'); }
+
+// Check for Push API support
+if ('PushManager' in window) { console.log('Push API is supported'); }
+else { console.log('Push API is not supported'); }
+
+// End Support Checks
 
 // Start Distribute Information ---------------- ----------------
 
@@ -182,3 +167,32 @@ export const deleteDocument     = async (collect:string, item:string) => {
 };
 
 
+
+
+
+/*
+// Object Initializer Notation
+export interface fire {
+  apiKey:                 string,
+  authDomain:             string,
+  databaseURL:            string,
+  projectId:              string,
+  storageBucket:          string,
+  messagingSenderId:      string,
+  appId:                  string,
+  measurementId:          string
+};
+
+
+// Initialize Firebase Data
+const admin: fire = {
+  appId:                connect.appId,
+  apiKey:               connect.apiKey,
+  authDomain:           connect.authDomain,
+  databaseURL:          connect.databaseURL,
+  projectId:            connect.projectId,
+  storageBucket:        connect.storageBucket,
+  messagingSenderId:    connect.messagingSenderId,
+  measurementId:        connect.measurementId
+};
+*/

@@ -2,10 +2,18 @@ Progressive Website Application Authentication
 ======================
 
 # The library [Demo](https://pwa-authentic.firebaseapp.com)
-
-To offer a personalized experience, apps need to have a user management center, a place where users can register and personalize their account.
+Three HTML Custom Elements for Firebase Authentication:
+- user-icon:  State 1: Login Button / State 2: User Icon
+- user-drawer: Logged -out State: Login / sign-up
+- user-settings:
 
 This library provides Identity Access Managementy to securely store user's backend data in Google Cloud: [Firebase](), through a predicate state behavior: [Redux](), and the front-end: [Lit]().
+
+# Technological Stack
+- Node JavaScript
+- Firebase SDK v12, 2025,
+- Redux v5.0.1, 2024,
+- Lit v3.2.1, 2024
 
 ## Library Features:
 - Register through Email and Password
@@ -40,12 +48,6 @@ This library provides Identity Access Managementy to securely store user's backe
 - 1 Photo Upload
 - Unavailable Photo
 - Delete Account
-
-# Technological Stack
-- Node JavaScript
-- Firebase SDK v12, 2025,
-- Redux v5.0.1, 2024,
-- Lit v3.2.1, 2024
 
 # Website Setup:
 ```html
@@ -93,38 +95,27 @@ let connect = {
     measurementId: "xxxxxxxxxxx"
 };
 
-if (lolalhost) {
-    connect = {
-        apiKey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-        authDomain: "xxxxxxx.xxxxxxx.xxx",
-        databaseURL: "https://xxxxxxx.xxxxxxx.xxx",
-        projectId: "xxxxxxx",
-        storageBucket: "xxxxxxx.xxxxxxx.xxx",
-        messagingSenderId: "xxxxxxxxxxx",
-        appId: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-        measurementId: "xxxxxxxxxxx" 
-    }
-}
+if (lolalhost) { connect = { /* etc. */ } }
 ```
 
 ## CSS Default Custom Properties
 | CSS Custom Property | Description | Default | Custom Element |
-| :--- | :--- | :--- | :--- |
-| Navigation |  |  |  |
+| :--- | ---: | :---: | :--- |
+| | | | |
 | --pwa_nav | Navigation | grey; | Settings |
 | --pwa_nav_select | Navigation | black; | Settings |
-| Input |  | | |
+| | | | |
 | --pwa_input_background | Input | #E1E5EB; | Settings |
 | --pwa_label_text_color | Input | black; | Settings |
-| Header |  | | |
+| | | | |
 | --pwa_section_header | Header | black; | Settings |
-| Divider |  | | |
+| | | | |
 | --pwa_divider | Divider | grey; | Settings |
-| Button |  | | |
+| | | | |
 | --pwa_action_text_color | Button | #fff;| Settings |
 | --pwa_action_background_color | Button | #6cc04a; | Settings |
 | --pwa_action_border_color | Button | #60b23e; | Settings |
-| Input | | | |
+| | | | |
 | --pwa_drawer_text_color | Input | #303030; | Drawer |
 | --pwa_drawer_background_color | Input | #fff; | Drawer |
 
@@ -137,42 +128,16 @@ if (lolalhost) {
   </user-drawer>
 ```
 
-# Footnotes
-
-## firebase-messaging-sw.js Setup
-```javascript
-// Initialize Firebase
-importScripts("https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js");
-importScripts("https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js");
-importScripts("https://www.gstatic.com/firebasejs/9.6.0/firebase-storage.js");
-importScripts("https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js");
-importScripts("https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics.js");
-importScripts("https://www.gstatic.com/firebasejs/9.6.0/firebase-messaging.js");
-
-let connect = {
-    apiKey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    authDomain: "xxxxxxx.xxxxxxx.xxx",
-    databaseURL: "https://xxxxxxx.xxxxxxx.xxx",
-    projectId: "xxxxxxx",
-    storageBucket: "xxxxxxx.xxxxxxx.xxx",
-    messagingSenderId: "xxxxxxxxxxx",
-    appId: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    measurementId: "xxxxxxxxxxx"
-};
-
-// REFERENCE TO SERVICES
-firebase.initializeApp(admin);
-
-// REFERENCE TO SERVICES
-firebase.initializeApp(admin);                                           
-// firebase.messaging();
-// const messaging = getMessaging(admin);
-
-// Add the public key generated from the console.
-firebase.messaging().usePublicVapidKey("xxxxxxxxx");
+## Loading Artwork
+```html
+  <user-settings>
+    
+  </user-settings>
 ```
 
-# Feedback
+# Footnotes
+
+## Feedback
 All feedback, comments, bugs, and requests are welcome.
 * [Jack's Publishing](https://www.jackspublishing.com)
 * [contractor's centre](https://www.contractorscentre.com)

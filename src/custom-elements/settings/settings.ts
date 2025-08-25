@@ -3,13 +3,13 @@ import { state, customElement }           from 'lit/decorators.js';
 import { connect }                        from 'pwa-helpers/connect-mixin.js';
 import { store, AppState }                from '../../store';
 import { navigateAuth }                   from '../../redux/frontend';
-import { navigation }                     from '../../css/navigation';
-import { actionButton }                   from '../input/css/styles';
-import '../input/uploader';
-import '../input/name';
-import '../input/email';
-import '../input/password';
-import '../input/delete';
+import { navigation }                     from './css/navigation';
+import './input/uploader';
+import './input/name';
+import './input/email';
+import './input/password';
+import './input/delete';
+import { listStyle } from '../../css/form/list';
 
 @customElement('user-settings')
 export class UserSettings extends connect(store)(LitElement) {
@@ -54,12 +54,15 @@ export class UserSettings extends connect(store)(LitElement) {
     this.name           = state.backend!.name;            // Username
   }
 
-  static get styles() { return [ navigation, actionButton,
+  static get styles() { return [
+    navigation,
+    listStyle,
     css`
 
-      /* Button Padding Overflow */
+      /* Button Padding for Border Outline */
       :host {
         margin:           0 3px 0 3px;
+        display:          grid;
       }
 
       /* Page Form */

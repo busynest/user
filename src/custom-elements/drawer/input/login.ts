@@ -1,8 +1,13 @@
 import { html, LitElement }               from 'lit';
 import { customElement, state }           from 'lit/decorators.js';
-import { loginStyles }                    from './css/styles';
+
 import { EmailAuthProvider, signInWithCredential } from 'firebase/auth';
-import { auth } from '../../start';
+import { auth }                           from '../../../start';
+
+import { buttonStyle }    from '../../../css/form/button';
+import { labelStyle }     from '../../../css/form/label';
+import { inputStyle }     from '../../../css/form/input';
+import { listStyle }      from '../../../css/form/list';
 
 @customElement('user-log-in')
 export class UserLogIn extends LitElement {
@@ -12,7 +17,12 @@ export class UserLogIn extends LitElement {
 
   constructor() { super(); }
 
-  static get styles() { return [ loginStyles ] };
+  static get styles() { return [
+    listStyle,
+    labelStyle,
+    inputStyle,
+    buttonStyle
+  ] };
 
   protected render() {
     return html`
@@ -25,19 +35,19 @@ export class UserLogIn extends LitElement {
         <ul>
 
           <li>
-            <label>
-              <input
-                type="email"
-                @change="${this.handleEmail}">Email
-            </label>
+            <label for="pwa-login-email">Email</label>
+            <input
+              id="pwa-login-email"
+              type="email"
+              @change="${this.handleEmail}">
           </li>
 
           <li>
-            <label>
-              <input
-                type="password"
-                @change="${this.handlePassword}">Password
-            </label>
+            <label for="pwa-login-pass">Password</label>
+            <input
+              id="pwa-login-pass"
+              type="password"
+              @change="${this.handlePassword}">
           </li>
     
           <li>

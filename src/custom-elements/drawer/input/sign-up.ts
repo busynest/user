@@ -1,8 +1,13 @@
 import { html, LitElement }               from 'lit';
 import { customElement, state }           from 'lit/decorators.js';
-import { loginStyles }                    from './css/styles';
+
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { auth, logAccount }               from '../../start';
+import { auth, logAccount }               from '../../../start';
+
+import { buttonStyle }    from '../../../css/form/button';
+import { labelStyle }     from '../../../css/form/label';
+import { inputStyle }     from '../../../css/form/input';
+import { listStyle }      from '../../../css/form/list';
 
 @customElement('user-sign-up')
 export class UserSignUp extends LitElement {
@@ -12,7 +17,12 @@ export class UserSignUp extends LitElement {
 
   constructor() { super(); }
 
-  static get styles() { return [ loginStyles ] };
+  static get styles() { return [
+    listStyle,
+    labelStyle,
+    inputStyle,
+    buttonStyle
+  ] };
 
   protected render() {
     return html`
@@ -25,21 +35,21 @@ export class UserSignUp extends LitElement {
         <ul>
 
           <li>
-            <label>
-              <input
-                type="email"
-                @change="${this.handleEmail}">Email
-            </label>
+            <label for="pwa-signup-email">Email</label>
+            <input
+              id="pwa-signup-email"
+              type="email"
+              @change="${this.handleEmail}">
           </li>
 
               <!-- <label><input   id="verifyEmail"      type="email"      >Verify Email</label> -->
 
           <li>
-            <label>
-              <input
-                type="password"
-                @change="${this.handlePassword}">Password
-            </label>
+            <label for="pwa-signup-pass">Password</label>
+            <input
+              id="pwa-signup-pass"
+              type="password"
+              @change="${this.handlePassword}">
           </li>
 
             <!-- <label><input   id="veriftPassword"   type="password"   >Verify Password</label> -->

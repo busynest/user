@@ -2,9 +2,9 @@
 
 import { html, TemplateResult,  }     from 'lit';
 import { customElement, state }       from "lit/decorators.js"
-import { LazyLoader }                 from '../../lazy-loader';
+import { LazyLoader }                 from '../../../lazy-loader';
 import { sendPasswordResetEmail, verifyPasswordResetCode }     from 'firebase/auth';
-import { auth }                       from '../../start';
+import { auth }                       from '../../../start';
 
 @customElement('reset-email')
 export class ResetEmail extends LazyLoader {
