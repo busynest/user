@@ -1,4 +1,4 @@
-import { html, LitElement }               from 'lit';
+import { css, html, LitElement }               from 'lit';
 import { customElement, state }           from 'lit/decorators.js';
 
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
@@ -8,6 +8,8 @@ import { buttonStyle }    from '../../../css/form/button';
 import { labelStyle }     from '../../../css/form/label';
 import { inputStyle }     from '../../../css/form/input';
 import { listStyle }      from '../../../css/form/list';
+import store from '../../../store';
+import { signUpAction } from '../../../redux/frontend';
 
 @customElement('user-sign-up')
 export class UserSignUp extends LitElement {
@@ -21,7 +23,15 @@ export class UserSignUp extends LitElement {
     listStyle,
     labelStyle,
     inputStyle,
-    buttonStyle
+    buttonStyle,
+    css`
+    
+      .double {
+        display: grid;
+        grid-template-columns: 1fr auto;
+      }
+
+    `
   ] };
 
   protected render() {
@@ -54,10 +64,17 @@ export class UserSignUp extends LitElement {
 
             <!-- <label><input   id="veriftPassword"   type="password"   >Verify Password</label> -->
           
-          <li>
+          <li class="double">
+
+            <!-- Change State -->
+            <button
+              class="new"
+              @click="${ this.change }">create a new account</button>
+
             <button
               class="newUser action-button"
               @click="${this.signUp}">Sign up</button>
+
           </li>
 
         </ul>
@@ -65,6 +82,10 @@ export class UserSignUp extends LitElement {
       </form>
 
     `;
+  }
+
+  private change() {
+    store.dispatch(signUpAction());
   }
 
   // Form Default Behavior

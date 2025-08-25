@@ -31,7 +31,6 @@
 
     <!-- Cascading Style Sheets -->
     <link rel="stylesheet"      href="demo/styles.css">
-    <link rel="stylesheet"      href="demo/loading.css">
 
     <!-- ECMA Script-->
     <script>window.process = { env: { NODE_ENV: 'production' } };</script>
@@ -49,20 +48,7 @@
     <user-drawer></user-drawer>
 
     <!-- Settings -->
-    <main>
-      <user-settings>
-        <!-- Start Slot: Loading Paint -->
-        <nav>
-          <ul>
-            <li><button>Profile</button></li>
-            <li><button>Email</button></li>
-            <li><button>Password</button></li>
-            <li><button>Delete</button></li>
-          </ul>
-        </nav>
-        <!-- End Slot: Loading Paint -->
-      </user-settings>
-    </main>
+    <main><user-settings></user-settings></main>
 
     <!-- CSS: Custom Variables: <head> tag -->
     <style>
@@ -76,7 +62,7 @@
         --pwa_section_header:           black;
 
         /* Navigation Colors */
-        --pwa_nav:                      grey;
+        --pwa_nav_button:               grey;
         --pwa_nav_select:               black;
 
         /* Label Color */
@@ -93,6 +79,10 @@
         /* Drawer Colors */
         --pwa_drawer_text_color:        #303030;
         --pwa_drawer_background_color:  #fff;
+
+        /* Icon Colors */
+        --pwa_icon_background:          #6cc04a;
+        --pwa_icon_hover:               lightgrey;
 
       }
 

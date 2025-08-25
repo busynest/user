@@ -10,13 +10,13 @@ import { drawerStyle }  from './css/drawer';
 import { exitStyle }    from './css/exit';
 import { linkStyle }    from './css/link';
 import { lineStyle }    from './css/paragraph';
+import { listStyle }    from '../../css/form/list';
 
-import { signUpAction, toggleSign }       from '../../redux/frontend'; 
-import { logOut }                         from '../../start';
+import { toggleSign }   from '../../redux/frontend'; 
+import { logOut }       from '../../start';
 
 import './input/login';
 import './input/sign-up';
-import { listStyle } from '../../css/form/list';
 
 @customElement('user-drawer')
 export class UserDrawer extends connect(store)(LitElement) {
@@ -29,7 +29,7 @@ export class UserDrawer extends connect(store)(LitElement) {
   constructor() { super(); }
 
   protected firstUpdated() {
-    this.shadowRoot!.querySelector('.new')!       .addEventListener('click', () => { store.dispatch(signUpAction())} );
+    // this.shadowRoot!.querySelector('.new')!       .addEventListener('click', () => { store.dispatch(signUpAction())} );
     this.shadowRoot!.querySelector('.close')!     .addEventListener('click', () => { store.dispatch(toggleSign()) } );
     this.shadowRoot!.querySelector('.leave')!     .addEventListener('click', () => { logOut() } );
   }
@@ -70,10 +70,6 @@ export class UserDrawer extends connect(store)(LitElement) {
       <div
         class="spec"
         ?on="${ this._log === false }">
-
-        <!-- Change State -->
-        <button
-          class="new">${ this._sign ? 'create a new account' : 'sign-in' }</button>
 
         <!-- Log-in State -->
         <user-log-in

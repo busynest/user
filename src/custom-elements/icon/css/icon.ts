@@ -15,14 +15,14 @@ export const iconStyles = css`
     margin:                   auto;
     overflow:                 hidden;
     border:                   2px solid black;
-    background-color:         green;
+    background-color:         var(--pwa_icon_background);
     color:                    white;
     font-size:                15px;
     text-decoration:          none;
   }
 
   /* Hover Styles */
-  .icon:hover, .login:hover { background-color: lightgrey; }
+  .icon:hover, .login:hover { background-color: var(--pwa_icon_hover); }
 
   /* The Icon Button */
   .icon {

@@ -2,18 +2,18 @@ Progressive Website Application Authentication
 ======================
 
 # The library [Demo](https://pwa-authentic.firebaseapp.com)
-Three HTML Custom Elements for Firebase Authentication:
-- user-icon:  State 1: Login Button / State 2: User Icon
-- user-drawer: Logged -out State: Login / sign-up
-- user-settings:
+3 HTML Custom Elements with Firebase Authentication:
+- user-icon
+- user-drawer
+- user-settings
 
-This library provides Identity Access Managementy to securely store user's backend data in Google Cloud: [Firebase](), through a predicate state behavior: [Redux](), and the front-end: [Lit]().
+This library provides Identity Access Managementy to securely store user's data.
 
-# Technological Stack
-- Node JavaScript
-- Firebase SDK v12, 2025,
-- Redux v5.0.1, 2024,
-- Lit v3.2.1, 2024
+## Technological Stack
+- Development Environment: [Node JavaScript](https://nodejs.org)
+- Backend: Google Cloud: [Firebase](https://firebase.google.com/)
+- Predicate State Behavior: [Redux](https://redux.js.org/)
+- Frontend: [Lit](https://lit.dev)
 
 ## Library Features:
 - Register through Email and Password
@@ -22,12 +22,11 @@ This library provides Identity Access Managementy to securely store user's backe
 - Change Username
 - Change Profile Picture
 - Change Email
-- Change Phone Number
 - Change Password
 - Delete Account
 
 ## Library Boilerplate
-- Tag Placement(Custom HTML Elements)
+- 3 Tag Placements (Custom HTML Elements)
 - Cascading Style Sheets (CSS)
 - ECMA Script (JavaScript)
 
@@ -66,21 +65,13 @@ This library provides Identity Access Managementy to securely store user's backe
 <script src="pwa-auth.js"></script>
 ```
 ## Google Setup
-- Add Google Analytics
-- Setup Firebase Project
-- Initialize Firebase Authentication - email, anonymous, google
-- Initialize Firestore Database
+- Google Analytics
+- Firebase Project
 
 ## Firebase Setup
-- User Management
-- Cloud Firestore
+- Authentication - email
+- Cloud Firestore - database
 - Cloud Storage
-
-## Javascript Setup
-- Add Google Analytics
-- Setup Firebase Project
-- Initialize Firebase Authentication - email, anonymous, google
-- Initialize Firestore Database
 
 ```javascript
 // Initialize Firebase
@@ -101,7 +92,7 @@ if (lolalhost) { connect = { /* etc. */ } }
 ## CSS Default Custom Properties
 | CSS Custom Property | Description | Default | Custom Element |
 | :--- | ---: | :---: | :--- |
-| --pwa_nav                       | Navigation  | grey;         | Settings |
+| --pwa_nav_button                | Navigation  | grey;         | Settings |
 | --pwa_nav_select                | Navigation  | black;        | Settings |
 | --pwa_input_background          | Input       | #E1E5EB;    | Settings |
 | --pwa_label_text_color          | Input       | black;        | Settings |
@@ -112,22 +103,8 @@ if (lolalhost) { connect = { /* etc. */ } }
 | --pwa_action_border_color       | Button      | #60b23e;    | Settings |
 | --pwa_drawer_text_color         | Input       | #303030;    | Drawer |
 | --pwa_drawer_background_color   | Input       | #fff;       | Drawer |
-
-## Logged-in State Drawer Menu Items
-```html
-  <user-drawer>
-    <p><a href="/page1">Page 1</a></p>
-    <p><a href="/page2">Page 2</a></p>
-    <p><a href="/page3">Page 3</a></p>
-  </user-drawer>
-```
-
-## Loading Artwork
-```html
-  <user-settings>
-    
-  </user-settings>
-```
+| --pwa_icon_background           | Input       | #6cc04a;    | Icon |
+| --pwa_icon_hover                | Input       | lightgrey     | Icon |
 
 # Footnotes
 

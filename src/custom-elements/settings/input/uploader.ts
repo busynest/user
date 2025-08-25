@@ -136,7 +136,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
     const basePath    = filePath.substring(0, lastDotIndex); // Slice the filePath into the base path and extension
     const extension   = filePath.substring(lastDotIndex); // Includes the dot
     
-    console.log('path: ', basePath, appendString, extension);
+    // console.log('path: ', basePath, appendString, extension);
 
     return `${basePath}${appendString}${extension}`; // Append the string and add the extension back
   }
@@ -213,7 +213,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
       uploader.textContent = 'Error';
       // uploadButton.disabled = false;
     },
-    () => {
+    async () => {
       // Upload completed successfully
 
 
@@ -224,18 +224,18 @@ export class ContactPhoto extends connect(store)(LitElement) {
 
             // Update metadata properties
             updateMetadata(location, newMetadata)
-              .then((metadata:any) => { console.log("metadata: ", metadata); }).catch((error:any) => { console.log("error: ", error); });
+              .then((/*metadata:any*/) => { /* console.log("metadata: ", metadata); */ }).catch((error:any) => { console.log("error: ", error); });
       
              // To Do: Save Minified Photo - Service
-             const modifiedFilePath = this.appendToFileLocation(url, '_400x400');
-             console.log('modifiedFilePath', modifiedFilePath);
+             // const modifiedFilePath = this.appendToFileLocation(url, '_400x400');
+             // console.log('modifiedFilePath', modifiedFilePath);
 
-              updateProfile(auth.currentUser, { photoURL: modifiedFilePath })
-              .then(() => {
-                console.log('Profile picture updated successfully');
-                uploader.value = 100;
-                uploader.textContent = 'Complete';
-              });
+              updateProfile(auth.currentUser, { photoURL: url })
+                .then(() => {
+                  // console.log('Profile picture updated successfully');
+                  uploader.value = 100;
+                  uploader.textContent = 'Complete';
+                });
 
             // const resizedLocation = ref(storage, 'images/article/' + file.name + '_400x400' ); // Path where the image will be stored in Firebase Storage
 
@@ -246,16 +246,11 @@ export class ContactPhoto extends connect(store)(LitElement) {
 
      // }).catch( () => {} );
 
+    });
 
-    }
-  );
+      
 
-
-
-    }
-
-
-
+    } // End - if (auth.currentUser) {}
 
     
 

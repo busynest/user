@@ -4,7 +4,7 @@
 
 // Redux
 import { store } from './store';
-import { closeSign, nameAuth, userAuth } from './redux/frontend';
+import { closeSign, iconAuth, nameAuth, userAuth } from './redux/frontend';
 import { accID, accAnon, accEmail, accImage, accName, accPhone } from './redux/backend';
 
 // Firebase App 
@@ -73,8 +73,8 @@ else { console.log('Push API is not supported'); }
     let pendingEmailVerification = false;
 
     // Listen for the custom email change event
-    window.addEventListener("userEmailChanged", (event) => {
-      console.log("Custom event received: Email changed to", event.detail.email);
+    window.addEventListener("userEmailChanged", (/*event*/) => {
+      // console.log("Custom event received: Email changed to", event.detail.email);
       pendingEmailVerification = true; // Set flag to trigger verification
     });
 
@@ -84,7 +84,6 @@ onAuthStateChanged(auth, (user) => {
 
   // Account Login
   if (user) {
-    console.log('user 2: ', user);
 
     // Login Indicator
     store.dispatch( userAuth(true) );
@@ -94,22 +93,23 @@ onAuthStateChanged(auth, (user) => {
 
     // Backend Data Redux - Firebase User Information - account redux
     store.dispatch( accID     ( user.uid ) );
-    store.dispatch( accAnon   ( user.isAnonymous ) );
-    
     store.dispatch( accName   ( user.displayName || 'John Doe' ) );
     store.dispatch( accEmail  ( user.email || 'Nothing' ) );
     store.dispatch( accImage  ( user.photoURL || 'images/empty.jpg' ) );
-    store.dispatch( accPhone  ( user.phoneNumber || '(000) 000-0000' ) );
+
+    // store.dispatch( accPhone  ( user.phoneNumber || '(000) 000-0000' ) );
+    // store.dispatch( accAnon   ( user.isAnonymous ) );
 
     // Frontend Data Redux - Firebase User Information - user redux
     store.dispatch( nameAuth   ( user.displayName || 'John Doe' ) );
+    store.dispatch( iconAuth   ( user.photoURL || 'images/empty.jpg' ) );
 
     // Email Change Listener - Custom Event
     if (pendingEmailVerification && !user.emailVerified) {
       // Send verification email for the updated email
       sendEmailVerification(user)
         .then(() => {
-          console.log("Verification email sent to:", user.email);
+          console.log("Verification email sent to:"/*, user.email*/);
           pendingEmailVerification = false; // Reset flag after sending
         })
         .catch((error) => {
@@ -117,9 +117,9 @@ onAuthStateChanged(auth, (user) => {
           pendingEmailVerification = false; // Reset flag on error
         });
     } else if (user.emailVerified) {
-      console.log("User's email is already verified:", user.email);
+      console.log("User's email is already verified:"/*, user.email*/);
     } else {
-      console.log("User signed in, no email verification pending:", user.email);
+      console.log("User signed in, no email verification pending:"/*, user.email*/);
     }
     
     // Existing Redux Profile Object
@@ -136,17 +136,19 @@ onAuthStateChanged(auth, (user) => {
 
     // Login Indicator
     store.dispatch( userAuth  ( false ) );
-       // Backend Data Redux - Firebase User Information - account redux
+
+    // Backend Data Redux - Firebase User Information - account redux
     store.dispatch( accID     ( '' ) );
-    store.dispatch( accAnon   ( false ) );
-    
     store.dispatch( accName   ( 'John Doe' ) );
     store.dispatch( accEmail  ( 'Nothing' ) );
     store.dispatch( accImage  ( 'images/empty.jpg' ) );
-    store.dispatch( accPhone  ( '(000) 000-0000' ) );
+
+    //  store.dispatch( accAnon   ( false ) );
+    // store.dispatch( accPhone  ( '(000) 000-0000' ) );
 
     // Frontend Data Redux - Firebase User Information - user redux
     store.dispatch( nameAuth   ( 'John Doe' ) );
+    store.dispatch( iconAuth   ( 'images/empty.jpg' ) );
 
     // Dispatch Information
 

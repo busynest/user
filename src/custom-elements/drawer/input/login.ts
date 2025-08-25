@@ -1,13 +1,15 @@
-import { html, LitElement }               from 'lit';
+import { html, LitElement, css }          from 'lit';
 import { customElement, state }           from 'lit/decorators.js';
 
 import { EmailAuthProvider, signInWithCredential } from 'firebase/auth';
-import { auth }                           from '../../../start';
+import { auth }           from '../../../start';
 
 import { buttonStyle }    from '../../../css/form/button';
 import { labelStyle }     from '../../../css/form/label';
 import { inputStyle }     from '../../../css/form/input';
 import { listStyle }      from '../../../css/form/list';
+import store from '../../../store';
+import { signUpAction } from '../../../redux/frontend';
 
 @customElement('user-log-in')
 export class UserLogIn extends LitElement {
@@ -21,7 +23,15 @@ export class UserLogIn extends LitElement {
     listStyle,
     labelStyle,
     inputStyle,
-    buttonStyle
+    buttonStyle,
+    css`
+    
+      .double {
+        display: grid;
+        grid-template-columns: 1fr auto;
+      }
+
+    `
   ] };
 
   protected render() {
@@ -50,10 +60,17 @@ export class UserLogIn extends LitElement {
               @change="${this.handlePassword}">
           </li>
     
-          <li>
+          <li class="double">
+
+            <!-- Change State -->
+            <button
+              class="new"
+              @click="${ this.change }">login with existing email</button>
+
             <button
               class="login action-button"
               @click="${this.login}">Sign in</button>
+
           </li>
 
         </ul>
@@ -61,6 +78,10 @@ export class UserLogIn extends LitElement {
       </form>
 
     `;
+  }
+
+  private change() {
+    store.dispatch(signUpAction());
   }
 
   // Sync Email

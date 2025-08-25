@@ -22,7 +22,7 @@ export const navigation = css`
   /* Navigation Button */
   nav > ul > li > button {
 
-    color:            var(--pwa_nav);
+    color:            var(--pwa_nav_button);
     border:           0;
     width:            100%;
     height:           36px;
