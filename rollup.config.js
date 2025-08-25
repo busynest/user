@@ -7,10 +7,36 @@ import summary from 'rollup-plugin-summary';
 import { copy } from '@web/rollup-plugin-copy';
 import { babel } from '@rollup/plugin-babel';
 
+import license from 'rollup-plugin-license';
+
 // Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
 //     typescript({ // Compiles TypeScript; adjust tsconfig.json if needed
 //      tsconfig: './tsconfig.json', // Assumes tsconfig.json exists; create if missing
 //    }),
+
+/*
+output: [
+    {
+      file: 'finish/index.cjs.js',
+      format: 'cjs',
+      sourcemap: true,
+      plugins: [terser()]
+    },
+    {
+      file: 'finish/index.esm.js',
+      format: 'esm',
+      sourcemap: true,
+      plugins: [terser()]
+    },
+    {
+      file: 'finish/index.umd.js',
+      format: 'umd',
+      name: 'MyPackage',
+      sourcemap: true,
+      plugins: [terser()]
+    }
+  ],
+  */
 
 export default {
   input: 'pwa-auth.js', // HTML entry point with script tags for app logic
@@ -21,7 +47,12 @@ export default {
     // file: 'public/pwa-auth.js', // Single bundled output
     format: 'iife', // IIFE for direct browser script tag use worldwide
     name: 'PwaAuth', // Global namespace if needed
-    sourcemap: true, // For debugging; remove in full prod
+    // sourcemap: true, // For debugging; remove in full prod
+    plugins: [terser({
+                      format: {
+                        comments: false // Explicitly remove all comments
+                      }
+                  })]
   },
   plugins: [
     replace({
@@ -55,9 +86,46 @@ export default {
     }), // Minifies for prod efficiency
     summary(), // Prints bundle size summary for optimization checks
     copy({
-      patterns: ['images/**/*'], // Optional: Copy static files to dist
+      patterns: ['images/empty.jpg', 'images/favicon.ico'], // Optional: Copy static files to dist
     }),
+
+    license({
+      // Deduplicate and collect license comments
+      banner: {
+        commentStyle: 'regular', // Use /* */ comments
+        content: `
+          My Package Name
+          Copyright (c) <%= moment().format('YYYY') %> Your Name
+          Licensed under MIT
+        `
+      },
+      thirdParty: {
+        output: {
+          file: 'npm/THIRD_PARTY_LICENSES.txt', // Output licenses to a separate file
+          template: dependencies => {
+            // Deduplicate and format license information
+            const uniqueLicenses = new Map();
+            dependencies.forEach(dep => {
+              if (dep.license) {
+                uniqueLicenses.set(dep.name, {
+                  name: dep.name,
+                  version: dep.version,
+                  license: dep.license,
+                  licenseText: dep.licenseText || 'No license text provided'
+                });
+              }
+            });
+            return Array.from(uniqueLicenses.values())
+              .map(dep => `${dep.name}@${dep.version}\n${dep.license}\n${dep.licenseText}\n`)
+              .join('\n---\n');
+          }
+        },
+        allow: '(MIT OR Apache-2.0 OR BSD-2-Clause OR BSD-3-Clause)' // Only allow common open-source licenses
+      }
+    }),
+
   ],
+
   // No externals; bundle everything including Firebase/Redux/Lit
 };
 

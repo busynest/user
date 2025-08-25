@@ -1,10 +1,10 @@
 {
   "name": "pwa-auth",
   "author": "Modern Projects <jack.solutionbox@gmail.com>(https://www.contractorscentre.com)",
-  "version": "1.1.0",
+  "version": "1.1.4",
   "description": "User Management Component with 3 HTML Tags, and 1 Boilerplate Function to display user icon, sign up, login, log out, change account details, delete account.",
   "homepage": "https://pwa-authentic.firebaseapp.com",
-  "main": "pwa-auth.js",
+  "main": "npm/pwa-auth.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/busynest/user"
@@ -45,6 +45,7 @@
     "firebase": "^12.1.0",
     "rollup": "^4.46.3",
     "rollup-plugin-html-literals": "^2.0.0",
+    "rollup-plugin-license": "^3.6.0",
     "rollup-plugin-summary": "^3.0.1"
   }
 }

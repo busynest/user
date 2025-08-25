@@ -2,6 +2,9 @@ Progressive Website Application Authentication
 ======================
 
 # The library [Demo](https://pwa-authentic.firebaseapp.com)
+
+- Simplicty: copy js bundle: node_modules/pwa-auth/npm/pwa-auth.js
+
 3 HTML Custom Elements with Firebase Authentication:
 - user-icon
 - user-drawer
@@ -64,6 +67,7 @@ This library provides Identity Access Managementy to securely store user's data.
 <style>/* CSS Custom Properties */</style>
 <script src="pwa-auth.js"></script>
 ```
+
 ## Google Setup
 - Google Analytics
 - Firebase Project
@@ -105,6 +109,24 @@ if (lolalhost) { connect = { /* etc. */ } }
 | --pwa_drawer_background_color   | Input       | #fff;       | Drawer |
 | --pwa_icon_background           | Input       | #6cc04a;    | Icon |
 | --pwa_icon_hover                | Input       | lightgrey     | Icon |
+
+```html
+<!-- CSS: Custom Variables: <head> tag -->
+<style>
+        
+  :root {
+    --pwa_divider: grey;
+    /* etc. */
+  }
+
+  /* Dark Theme */
+  @media (prefers-color-scheme: dark) { /* etc. */ }
+
+  /* Light Theme */
+  @media (prefers-color-scheme: light) { /* etc. */ }
+
+</style>
+```
 
 # Footnotes
 
