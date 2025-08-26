@@ -1,31 +1,57 @@
-      html {
-        overflow:                 auto;
-        scroll-behavior:          smooth;
-        display:                  grid;
-        height:                   100%;
-        padding:                  16px;
-        box-sizing:               border-box;
-        transition-duration:      1s;
-      }
+html {
+  overflow:                 auto;
+  scroll-behavior:          smooth;
+  display:                  grid;
+  height:                   100%;
+  padding:                  16px;
+  box-sizing:               border-box;
+  transition-duration:      1s;
+}
 
-      body {
-        overflow:                 hidden;
-        margin:                   0;
-        font-family:              Space Grotesk, system-ui, sans-serif;
-        -webkit-font-smoothing:   antialiased;
-        font-size:                .875rem;
-        line-height:              1.25rem;
-      }
+body {
+  overflow:                 hidden;
+  margin:                   0;
+  font-family:              Space Grotesk, system-ui, sans-serif;
+  -webkit-font-smoothing:   antialiased;
+  font-size:                .875rem;
+  line-height:              1.25rem;
+}
 
-      body {
-        display:                  grid;
-        grid-template-areas:
-          "head"
-          "drawer"
-          "main";
-        grid-template-rows:       auto auto 1fr;
-      }
+body {
+  display:                  grid;
+  grid-gap:                 16px;
+  grid-template-areas:
+    "head"
+    "main";
+  grid-template-rows:       auto 1fr;
+}
 
-      header { grid-area: head; }
-      user-drawer { grid-area: drawer; }
-      main { grid-area: main; }
+header { grid-area: head; }
+main { grid-area: main; }
+
+main {
+  border: 2px solid black;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+body {
+  background: linear-gradient(124deg, #e8891d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+  background-size: 1800%;
+  -webkit-animation: rainbow 64s cubic-bezier(0.6,0.8,0.8,0.6) infinite;
+  -z-animation: rainbow 64s cubic-bezier(0.6,0.8,0.8,0.6) infinite;
+  -o-animation: rainbow 64s cubic-bezier(0.6,0.8,0.8,0.6) infinite;
+  animation: rainbow 64s cubic-bezier(0.6,0.8,0.8,0.6) infinite;
+}
+
+@keyframes rainbow {
+  0% {
+    background-position: 0% 100%;
+  }
+  50% {
+    background-position: 100% 0%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}

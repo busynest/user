@@ -19,7 +19,19 @@ export class ContactPhoto extends connect(store)(LitElement) {
   //@state() private uploadProgress = 0;
   //@state() private uploadComplete = false;
 
-  constructor() { super(); }
+  @state() private progress: number = 0;
+  @state() private downloadURL: string = '';
+  @state() private error: string = '';
+  @state() private status: string = '';
+
+
+  constructor() {
+    super();
+    this.progress = 0;
+    this.downloadURL = '';
+    this.error = '';
+    this.status = '';
+  }
 
   stateChanged(state: AppState) {
     this.login    = state.frontend!.login;
@@ -77,6 +89,8 @@ export class ContactPhoto extends connect(store)(LitElement) {
         margin:       auto;
       "></label>
 
+  
+
     <!-- Input - Upload Image -->
     <input
       id      ="photoURL"
@@ -97,6 +111,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
       style="
         border: 2px dashed;
         border-radius: 6px;
+        overflow: hidden;
         padding: 0 16px 16px 16px;
       "
       for ="photoURL">Photo:
@@ -118,6 +133,8 @@ export class ContactPhoto extends connect(store)(LitElement) {
         </canvas>
 
     </label>
+
+       <p style="text-align:center;">${this.status}</p>
       `;
   }
 
@@ -149,6 +166,9 @@ export class ContactPhoto extends connect(store)(LitElement) {
 
 
     if(auth.currentUser){
+
+      this.error = '';
+      this.status = 'Uploading...';
 
 
       // Select: File
@@ -192,7 +212,18 @@ export class ContactPhoto extends connect(store)(LitElement) {
   uploadTask.on(
     'state_changed',
     (snapshot) => {
-// Calculate progress percentage safely
+      // Calculate progress percentage safely
+      this.progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      this.status = `Upload is ${Math.round(this.progress)}% done`;
+        switch (snapshot.state) {
+          case 'paused':
+            this.status = 'Upload is paused';
+            break;
+          case 'running':
+            this.status = `Upload is running (${Math.round(this.progress)}%)`;
+            break;
+        }
+      
       let progress = 0;
       if (snapshot.totalBytes > 0) {
         progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -208,6 +239,9 @@ export class ContactPhoto extends connect(store)(LitElement) {
     },
     (error) => {
       // Handle errors
+      this.error = `Upload failed: ${error.message}`;
+      this.status = '';
+
       console.error('Upload failed:', error);
       uploader.value = 0;
       uploader.textContent = 'Error';
@@ -219,7 +253,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
 
   
         // Get URL
-       getDownloadURL(uploadTask.snapshot.ref)
+       await getDownloadURL(uploadTask.snapshot.ref)
           .then( (url:any) => {
 
             // Update metadata properties
@@ -236,6 +270,8 @@ export class ContactPhoto extends connect(store)(LitElement) {
                   uploader.value = 100;
                   uploader.textContent = 'Complete';
                 });
+
+                this.status = 'User profile updated successfully!';
 
             // const resizedLocation = ref(storage, 'images/article/' + file.name + '_400x400' ); // Path where the image will be stored in Firebase Storage
 

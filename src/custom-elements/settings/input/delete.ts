@@ -8,6 +8,7 @@ import { auth }               from '../../../start';
 export class DeleteUser extends connect(store)(LitElement) {
    
   @state() private login : boolean = false;
+  @state() private email : string ='';
 
   constructor() { super(); }
 
@@ -21,6 +22,7 @@ export class DeleteUser extends connect(store)(LitElement) {
 
   stateChanged(state: AppState) {
     this.login = state.frontend!.login;
+    this.email = state.backend!.email;
   }
 
   static get styles(): CSSResultArray { return [
@@ -32,12 +34,16 @@ export class DeleteUser extends connect(store)(LitElement) {
       grid-template-rows:       auto auto;
     }
     
+    p {
+      padding:              0 16px;
+    }
+
     ` ]; }
 
   render() {
     return html`
 
-      <p>Permanently delete the user account and data related to:</p>
+      <p>Permanently delete the user account and data related to: ${this.email}</p>
 
       <button
         class="action-button deleteUser"

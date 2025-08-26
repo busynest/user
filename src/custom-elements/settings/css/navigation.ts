@@ -49,13 +49,13 @@ export const navigation = css`
 
   }
 
-  /* Navigation Button - Media Text Justification */
+  /* Navigation Button - Media Text Justification 
   @media  (max-width: 460px) {
 
     button[value=profile], button[value=email]      { text-align: left; }
     button[value=delete], button[value=password]   { text-align: right; }
 
-  }
+  }*/
 
   section[on]     { display:           grid; }
   section         { display:           none; }

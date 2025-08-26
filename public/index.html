@@ -23,15 +23,17 @@
     <link rel="manifest"        href="manifest.json" />
     <!-- FAVICON -->
     <link rel="icon"            href="images/favicon.ico">
-    <!-- Cascading Style Sheets -->
-    <link rel="stylesheet"      href="styles.css">
+
     <!-- Preconnect -->
     <link rel="preconnect"      href="https://firebasestorage.googleapis.com">
     <!-- Pre-Fetch -->
     <link rel="dns-prefetch"    href="https://firebasestorage.googleapis.com">
 
-    <!-- ECMA Script-->
-    <script>window.process = { env: { NODE_ENV: 'production' } };</script>
+    <!-- Cascading Style Sheets -->
+    <link rel="stylesheet"      href="styles.css">
+
+    <!-- ECMA Script-
+    <script>window.process = { env: { NODE_ENV: 'production' } };</script>-->
 
   </head>
   <!-- End Head -->
@@ -40,10 +42,10 @@
   <body>
 
     <!-- Button -->
-    <header><user-icon></user-icon></header>
+    <header><user-icon register></user-icon></header>
 
     <!-- Drawer -->
-    <user-drawer></user-drawer>
+    <user-drawer url="/settings"></user-drawer>
 
     <!-- Settings -->
     <main><user-settings></user-settings></main>
@@ -53,6 +55,8 @@
             
       :root {
 
+        --pwa_settings_background:      white;
+
         /* Top Border Color */
         --pwa_divider:                  grey;
 
@@ -60,7 +64,7 @@
         --pwa_section_header:           black;
 
         /* Navigation Colors */
-        --pwa_nav:                      grey;
+        --pwa_nav_button:               grey;
         --pwa_nav_select:               black;
 
         /* Label Color */
@@ -78,13 +82,11 @@
         --pwa_drawer_text_color:        #303030;
         --pwa_drawer_background_color:  #fff;
 
+        /* Icon Colors */
+        --pwa_icon_background:          #6cc04a;
+        --pwa_icon_hover:               lightgrey;
+
       }
-
-      /* Dark Theme */
-      @media (prefers-color-scheme: dark) { }
-
-      /* Light Theme */
-      @media (prefers-color-scheme: light) { }
 
     </style>
 

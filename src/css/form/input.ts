@@ -10,7 +10,7 @@ export const inputStyle : CSSResult = css`
     -webkit-box-sizing:       border-box;
     height:                   50px;
     text-align:               left;
-    margin:                   0 3px 0 3px;
+    margin:                   0 16px 0 16px;
     padding:                  8px 16px;
     background-color:         var(--pwa_input_background);
     border:                   0;

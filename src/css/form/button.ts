@@ -8,7 +8,7 @@ export const buttonStyle: CSSResult = css`
     display:              inline-block;
     box-sizing:           border-box;
     white-space:          nowrap;
-    margin:               10px 3px 10px auto;
+    margin:               16px 16px 16px auto;
     font-weight:          400;
     text-align:           center;
     vertical-align:       middle;

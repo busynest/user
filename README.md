@@ -9,7 +9,6 @@ This library provides Identity Access Managementy to securely store user's data.
 
 ## Module JavaScript
 ```javascript
-/* To do: Bare Module Specifiers - Currently: Absolute / Relative */
 import 'pwa-auth';
 ```
 

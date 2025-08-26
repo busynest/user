@@ -10,7 +10,6 @@ export const iconStyles = css`
 
   /* Shared Styles */
   .icon, .login {
-    height:                   40px;
     cursor:                   pointer;
     margin:                   auto;
     overflow:                 hidden;
@@ -26,6 +25,7 @@ export const iconStyles = css`
 
   /* The Icon Button */
   .icon {
+    height:                   40px;
     width:                    40px;
 
     border-radius:            50%;

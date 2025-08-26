@@ -20,7 +20,7 @@ export class InputName extends connect(store)(LitElement) {
 
   stateChanged(state: AppState) {
     this.login  = state.frontend!.login;
-    this.value  = state.frontend!.name;  // user-name
+    this.value  = state.backend!.name;  // user-name
   }
 
   static get styles(): CSSResultArray { return [
