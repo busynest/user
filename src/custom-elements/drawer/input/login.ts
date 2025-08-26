@@ -114,7 +114,7 @@ export class UserLogIn extends LitElement {
   
     const authCredential = EmailAuthProvider.credential(email, password);
 
-    await signInWithCredential(auth, authCredential).then((credentials)=>{console.log(credentials)}).catch((error)=>{console.log(error)});  
+    await signInWithCredential(auth, authCredential).catch((error)=>{console.log(error)}); /*.then((/*credentials*)=>{/*onsole.log(credentials)})*/ 
   
     // await signInWithEmailAndPassword(auth, email, password);
     // EmailAuthProvider.credential(email, password);

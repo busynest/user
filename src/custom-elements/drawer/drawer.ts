@@ -27,11 +27,23 @@ export class UserDrawer extends connect(store)(LitElement) {
   /** @attr drawer */
   @property({type:Boolean, attribute: true, reflect: true}) public drawer = false; // Drawer State
   
+ /** @attr register */
+  @property({type:Boolean, attribute: true, reflect: true}) public register = false; // Drawer State
+  
   @state() private _name        = ""; // Drawer State
   @state() private _log         = false; // Login State
   @state() private _sign        = false; // Sign-up State
 
-  constructor() { super(); }
+  constructor() {
+    super(); 
+  }
+
+  stateChanged(state: AppState) {
+    this._name        = state.backend!.name;        // User Name
+    this.drawer       = state.frontend!.drawer;     // Drawer State
+    this._log         = state.frontend!.login;      // Logged in-out State
+    this._sign        = state.frontend!.register;   // Sign-up State
+  }
 
   protected firstUpdated() {
 
@@ -44,13 +56,6 @@ export class UserDrawer extends connect(store)(LitElement) {
         store.dispatch( toggleSign() ); 
       } );
       
-  }
-
-  stateChanged(state: AppState) {
-    this._name        = state.backend!.name;        // User Name
-    this.drawer       = state.frontend!.drawer;     // Drawer State
-    this._log         = state.frontend!.login;      // Logged in-out State
-    this._sign        = state.frontend!.register;   // Sign-up State
   }
 
   static get styles(): CSSResultArray { return [
@@ -90,16 +95,16 @@ export class UserDrawer extends connect(store)(LitElement) {
     return html`
 
     <!-- Drawer Wrapper -->
-    <div
+    <section
       class=" userDrawer"
       ?on="${ this.drawer === true }">
 
       <!-- Exit Button -->
-      <div class="exit">
+      <header class="exit">
         <div></div>
         <h3>${this._log ? this._name + " : Logged-in" : "SUBSCRIBE" }</h3>
         <button class="close">${close}</button>
-      </div>
+      </header>
 
       <!-- Logged-out State -->
       <div
@@ -109,12 +114,13 @@ export class UserDrawer extends connect(store)(LitElement) {
         <!-- Log-in State -->
         <user-log-in
           class="spec"
-          ?on="${ this._sign === true }"></user-log-in>
+
+          ?on="${ true === this._sign ? !this.register : this.register}"></user-log-in>
 
         <!-- Sign-up State -->
         <user-sign-up
           class="spec"
-          ?on="${ this._sign === false }"></user-sign-up>
+          ?on="${ false === this._sign ? !this.register : this.register }"></user-sign-up>
 
       </div>
 
@@ -129,7 +135,7 @@ export class UserDrawer extends connect(store)(LitElement) {
           
       </div>
 
-    </div>
+    </section>
 
     `;
   }

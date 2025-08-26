@@ -19,7 +19,7 @@ export class UserIcon extends connect(store)(LitElement) {
 
   protected firstUpdated() {
     this.shadowRoot!.querySelector('button')!.addEventListener('click', () => {
-      console.log('logged-in: ',this._user);
+      // console.log('logged-in: ',this._user);
       store.dispatch(toggleSign());
     } );
   }

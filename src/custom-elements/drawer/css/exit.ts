@@ -5,6 +5,7 @@ export const exitStyle: CSSResult = css`
   .exit {
     display:                grid;
     grid-template-columns:  80px 1fr 80px;
+    padding:                16px;
   }
 
   .exit > h3 {
@@ -35,8 +36,8 @@ export const exitStyle: CSSResult = css`
   }
 
   .close {
-    height:                 36px;
-    width:                  36px;
+    height:                 30px;
+    width:                  42px;
     margin:                 auto;
     background-color:       transparent;
     border:                 0px;

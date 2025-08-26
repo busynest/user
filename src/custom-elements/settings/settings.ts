@@ -87,6 +87,13 @@ export class UserSettings extends connect(store)(LitElement) {
         padding:          8px 0;
       }
 
+      /* up to 576 pixels */
+      @media only screen and (max-width: 576px) {
+        h2 {
+          font-size: medium;
+        }
+      }
+
     `
     ]; }
 

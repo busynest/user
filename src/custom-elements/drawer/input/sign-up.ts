@@ -1,4 +1,4 @@
-import { css, html, LitElement }               from 'lit';
+import { css, html, LitElement }          from 'lit';
 import { customElement, state }           from 'lit/decorators.js';
 
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
@@ -8,8 +8,8 @@ import { buttonStyle }    from '../../../css/form/button';
 import { labelStyle }     from '../../../css/form/label';
 import { inputStyle }     from '../../../css/form/input';
 import { listStyle }      from '../../../css/form/list';
-import store from '../../../store';
-import { signUpAction } from '../../../redux/frontend';
+import store              from '../../../store';
+import { signUpAction }   from '../../../redux/frontend';
 
 @customElement('user-sign-up')
 export class UserSignUp extends LitElement {
@@ -118,7 +118,7 @@ export class UserSignUp extends LitElement {
     await createUserWithEmailAndPassword(auth, email, password)
     
     .then((userCredential) => {
-      console.log("User created: ", userCredential.user);
+
       // User created
       const user = userCredential.user;
       // Send email verification
@@ -139,7 +139,7 @@ export class UserSignUp extends LitElement {
 private gtag_report_conversion = async () => {
 
   // @ts-ignore
-  gtag('event', 'conversion', {'send_to': 'AW-937270922/amGHCMaJ06QYEIq99r4D'});
+  gtag('event', 'conversion', {'send_to': 'AW-/'});
 
 }
 

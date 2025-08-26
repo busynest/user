@@ -74,9 +74,31 @@ export const userSlice = createSlice({
 
       // Sign-up State
       signUpAction: ( state ) => {
-        if ( state.register === false)  { state.register = true; }
-        else                            { state.register = false; }
+
+         if ( state.register === false)   { state.register = true; }
+        else                              { state.register = false; }
+
        },
+
+        // Sign-up State
+     // initialSignUp: ( state, action: PayloadAction<boolean>  ) => {
+
+        // state.register = action.payload ? !state.register : state.register;
+
+        /*
+
+        function toggleBoolean(initialState, toggle) {
+          return toggle ? !initialState : initialState;
+        }
+
+        toggleBoolean(true, false)  returns true
+        toggleBoolean(true, true)   returns false
+        toggleBoolean(false, false) returns false
+        toggleBoolean(false, true)  returns true
+
+        */
+
+       //},
 
       signUpClose: ( state, action: PayloadAction<boolean> ) => { 
         state.register = action.payload;

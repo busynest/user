@@ -52,18 +52,23 @@ import 'pwa-auth';
 ### `<user-settings>`
 - 1 Photo Upload
 - Unavailable Photo
+- Update Username
+- Update Email / Verify
+- Update Password
 - Delete Account
 
 # Website Setup:
 ```html
 <header>
-  <!-- Indicate the 'register' boolean for 'subscribe state' -->
-  <!-- else 'login state' -->
+  <!-- register: Indicate the 'register' boolean for 'subscribe state' -->
+  <!-- register: else 'login state' -->
   <user-icon register></user-icon>
 </header>
 
-<!-- Indicate where the <pwa-settings> Tag will be Paged-->
-<user-drawer url="/settings"></user-drawer>
+<!-- url: Indicate where the <pwa-settings> Tag will be Paged-->
+<!-- register: Indicate the 'register' boolean for 'subscribe state' -->
+<!-- register: else 'login state' -->
+<user-drawer register url="/settings"></user-drawer>
 
 <main>
   <user-settings></user-settings>
@@ -72,6 +77,73 @@ import 'pwa-auth';
 <script>/* Initialize ECMA Script Properties */</script>
 <style>/* CSS Custom Properties */</style>
 <script src="pwa-auth.js"></script>
+```
+
+## CSS Default Custom Properties
+| CSS Custom Property | Description | Default | Custom Element |
+| :--- | ---: | :---: | :--- |
+| --pwa_settings_background       | Navigation  | grey;         | Settings |
+| --pwa_nav_button                | Navigation  | grey;         | Settings |
+| --pwa_nav_select                | Navigation  | black;        | Settings |
+| --pwa_input_background          | Input       | #E1E5EB;    | Settings |
+| --pwa_label_text_color          | Input       | black;        | Settings |
+| --pwa_section_header            | Header      | black;        | Settings |
+| --pwa_divider                   | Divider     | grey;         | Settings |
+| --pwa_action_text_color         | Button      | #fff;       | Settings |
+| --pwa_action_background_color   | Button      | #6cc04a;    | Settings |
+| --pwa_action_border_color       | Button      | #60b23e;    | Settings |
+| --pwa_drawer_text_color         | Input       | #303030;    | Drawer |
+| --pwa_drawer_background_color   | Input       | #fff;       | Drawer |
+| --pwa_icon_background           | Input       | #6cc04a;    | Icon |
+| --pwa_icon_hover                | Input       | lightgrey     | Icon |
+
+```html
+<!-- CSS: Custom Variables -->
+<!-- Place this txt into your document -->
+<style>
+        
+  :root {
+
+    --pwa_settings_background:      white;
+
+    /* Top Border Color */
+    --pwa_divider:                  grey;
+
+    /* Section Header Color */
+    --pwa_section_header:           black;
+
+    /* Navigation Colors */
+    --pwa_nav_button:               grey;
+    --pwa_nav_select:               black;
+
+    /* Label Color */
+    --pwa_label_text_color:         black;
+
+    /* Input Colors */
+    --pwa_input_background:         #E1E5EB;
+
+    /* Button Colors */
+    --pwa_action_text_color:        #fff;
+    --pwa_action_background_color:  #6cc04a;
+    --pwa_action_border_color:      #60b23e;
+
+    /* Drawer Colors */
+    --pwa_drawer_text_color:        #303030;
+    --pwa_drawer_background_color:  #fff;
+
+    /* Icon Colors */
+    --pwa_icon_background:          #6cc04a;
+    --pwa_icon_hover:               lightgrey;
+
+  }
+
+  /* Dark Theme */
+  @media (prefers-color-scheme: dark) { /* etc. */ }
+
+  /* Light Theme */
+  @media (prefers-color-scheme: light) { /* etc. */ }
+
+</style>
 ```
 
 ## Google Setup
@@ -99,43 +171,8 @@ let connect = {
 if (lolalhost) { connect = { /* etc. */ } }
 ```
 
-## CSS Default Custom Properties
-| CSS Custom Property | Description | Default | Custom Element |
-| :--- | ---: | :---: | :--- |
-| --pwa_settings_background       | Navigation  | grey;         | Settings |
-| --pwa_nav_button                | Navigation  | grey;         | Settings |
-| --pwa_nav_select                | Navigation  | black;        | Settings |
-| --pwa_input_background          | Input       | #E1E5EB;    | Settings |
-| --pwa_label_text_color          | Input       | black;        | Settings |
-| --pwa_section_header            | Header      | black;        | Settings |
-| --pwa_divider                   | Divider     | grey;         | Settings |
-| --pwa_action_text_color         | Button      | #fff;       | Settings |
-| --pwa_action_background_color   | Button      | #6cc04a;    | Settings |
-| --pwa_action_border_color       | Button      | #60b23e;    | Settings |
-| --pwa_drawer_text_color         | Input       | #303030;    | Drawer |
-| --pwa_drawer_background_color   | Input       | #fff;       | Drawer |
-| --pwa_icon_background           | Input       | #6cc04a;    | Icon |
-| --pwa_icon_hover                | Input       | lightgrey     | Icon |
-
-```html
-<!-- CSS: Custom Variables: <head> tag -->
-<style>
-        
-  :root {
-    --pwa_divider: grey;
-    /* etc. */
-  }
-
-  /* Dark Theme */
-  @media (prefers-color-scheme: dark) { /* etc. */ }
-
-  /* Light Theme */
-  @media (prefers-color-scheme: light) { /* etc. */ }
-
-</style>
-```
-
 # Feedback
 All feedback, comments, bugs, and requests are welcome.
 * [Jack's Publishing](https://www.jackspublishing.com)
 * [contractor's centre](https://www.contractorscentre.com)
+* [Node Package Manager](https://www.npmjs.com/package/pwa-auth)

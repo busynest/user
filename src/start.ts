@@ -132,7 +132,7 @@ onAuthStateChanged(auth, (user) => {
 
   // Account Log out
   else {
-    console.log('logged out');
+    // console.log('logged out');
 
     // Login Indicator
     store.dispatch( userAuth  ( false ) );
