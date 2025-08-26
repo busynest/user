@@ -58,12 +58,13 @@ import 'pwa-auth';
 # Website Setup:
 ```html
 <header>
-  <user-icon>Subscribe</user-icon>
+  <!-- Indicate the 'register' boolean for 'subscribe state' -->
+  <!-- else 'login state' -->
+  <user-icon register></user-icon>
 </header>
 
-<user-drawer>
-  <p><a href="/settings">Settings</a></p>
-</user-drawer>
+<!-- Indicate where the <pwa-settings> Tag will be Paged-->
+<user-drawer url="/settings"></user-drawer>
 
 <main>
   <user-settings></user-settings>

@@ -1,5 +1,5 @@
 import { css, CSSResultArray, html, LitElement }                   from 'lit';
-import { customElement, state }               from 'lit/decorators.js';
+import { customElement, property, state }               from 'lit/decorators.js';
 import { connect }                            from 'pwa-helpers/connect-mixin.js';
 import { store, AppState }                    from '../../store';
 import { iconStyles }                         from './css/icon';
@@ -8,7 +8,9 @@ import { toggleSign }                         from '../../redux/frontend';
 
 @customElement('user-icon')
 export class UserIcon extends connect(store)(LitElement) {
-
+  
+  /** @attr url */
+  @property({type: Boolean, reflect: true}) public register = false;
   @state() private _user = false;
   @state() private _photoURL = '';
   // @state() private _sign = false;
@@ -54,7 +56,7 @@ export class UserIcon extends connect(store)(LitElement) {
               width   = "38px"
               src     = "${this._photoURL}">
        <!--   </div> -->
-          ` : html`<slot></slot>` }
+          ` : this.register ? 'Subscribe' : 'Login' }
 
       </button>
 

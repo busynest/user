@@ -12,6 +12,11 @@ Removed - for now removed features.
 Fixed - for any bug fixes.
 Security - in case of vulnerabilities.
 
+# [1.1.6] - 2025-08-25
+
+## Changed
+- Drawer - should be the custome element itself, not internal wrapper
+
 # [1.0.8] - 2025-08-23
 
 ## Changed

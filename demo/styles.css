@@ -19,16 +19,21 @@ body {
 
 body {
   display:                  grid;
+  grid-gap:                 16px;
   grid-template-areas:
     "head"
-    "drawer"
     "main";
-  grid-template-rows:       auto auto 1fr;
+  grid-template-rows:       auto 1fr;
 }
 
 header { grid-area: head; }
-user-drawer { grid-area: drawer; }
 main { grid-area: main; }
+
+main {
+  border: 2px solid black;
+  border-radius: 6px;
+  overflow: hidden;
+}
 
 body {
   background: linear-gradient(124deg, #e8891d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
