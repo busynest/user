@@ -69,6 +69,7 @@ export class UserDrawer extends connect(store)(LitElement) {
     css`
     
       :host {
+        z-index:                2;
         position:               fixed;
         top:                    0;
         left:                   0;
@@ -78,6 +79,7 @@ export class UserDrawer extends connect(store)(LitElement) {
         transform:              translate3d(0, -150%, 0);
         transition-property:    visibility, transform;
         /*transition-duration:    1.4s;*/
+        transition-duration:    0s;
         display:                block;
       }
 

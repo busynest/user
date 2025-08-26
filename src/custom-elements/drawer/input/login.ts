@@ -65,7 +65,7 @@ export class UserLogIn extends LitElement {
             <!-- Change State -->
             <button
               class="new"
-              @click="${ this.change }">login with existing email</button>
+              @click="${ this.change }">create a new account</button>
 
             <button
               class="login action-button"
