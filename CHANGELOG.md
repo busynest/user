@@ -15,6 +15,12 @@ Security - in case of vulnerabilities.
 # [1.1.6] - 2025-08-25
 
 ## Changed
+- Login Button Standard Height: Medium: 40px
+- Drawer Animation: from 3d transition, to max-height mechanism
+
+# [1.1.6] - 2025-08-25
+
+## Changed
 - Drawer - should be the custome element itself, not internal wrapper
 
 # [1.0.8] - 2025-08-23

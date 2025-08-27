@@ -1,7 +1,7 @@
 import { css, CSSResult } from "lit";
 
 export const visibility: CSSResult = css`
-
+/*
   .visibility[on]  {
     visibility:             visible;
     transform:              translate3d(0, 0, 0);
@@ -16,8 +16,10 @@ export const visibility: CSSResult = css`
     will-change:            transform;
     transform:              translate3d(0, -150%, 0);
     transition-property:    visibility, transform;
-    transition-duration:    1.4s;
     display:                block;
   }
+*/
+  /* max-height is a programmed transition effect */
+
 
 `;

@@ -5,7 +5,6 @@ import { store, AppState }                from '../../store';
 import { close }                          from '../../css/svg';
 import { show }                           from '../../css/toggle';
 
-import { visibility }   from './css/visibility';
 import { drawerStyle }  from './css/drawer';
 import { exitStyle }    from './css/exit';
 import { linkStyle }    from './css/link';
@@ -35,7 +34,7 @@ export class UserDrawer extends connect(store)(LitElement) {
   @state() private _sign        = false; // Sign-up State
 
   constructor() {
-    super(); 
+    super();
   }
 
   stateChanged(state: AppState) {
@@ -48,19 +47,18 @@ export class UserDrawer extends connect(store)(LitElement) {
   protected firstUpdated() {
 
     this.shadowRoot!.querySelector('.close')!.addEventListener('click', () => {
-       store.dispatch(toggleSign())
+       store.dispatch(toggleSign());
       } );
 
     this.shadowRoot!.querySelector('.leave')!.addEventListener('click', () => {
         if (this._log) { logOut() }
-        store.dispatch( toggleSign() ); 
+        store.dispatch( toggleSign() );
       } );
       
   }
 
   static get styles(): CSSResultArray { return [
     show,
-    visibility,
     drawerStyle,
     exitStyle,
     linkStyle,
@@ -74,19 +72,29 @@ export class UserDrawer extends connect(store)(LitElement) {
         top:                    0;
         left:                   0;
         right:                  0;
-        visibility:             hidden;
-        will-change:            transform;
-        transform:              translate3d(0, -150%, 0);
-        transition-property:    visibility, transform;
-        /*transition-duration:    1.4s;*/
-        transition-duration:    0s;
+        overflow:               hidden;
+
+        transition-property:    max-height;
+        transition-duration:    1.4s;
+        height:                 auto;
+        max-height:             0px;
+        transition:             max-height 1.5s ease-out;
+
         display:                block;
+        padding-top:            env(safe-area-inset-top);
       }
+
+        /*visibility:             hidden;
+        /*will-change:            transform;
+        transform:              translate3d(0, -150%, 0);
+        transition-property:    visibility, transform;*/
+
+        /*transform:              translate3d(0, 0, 0);*/
 
       :host([drawer]) {       
         transition-duration:    1.4s;
-        visibility:             visible;
-        transform:              translate3d(0, 0, 0);
+        max-height:             100%;
+        transition:             max-height 1.5s ease-out;
       }
 
     `
@@ -98,8 +106,7 @@ export class UserDrawer extends connect(store)(LitElement) {
 
     <!-- Drawer Wrapper -->
     <section
-      class=" userDrawer"
-      ?on="${ this.drawer === true }">
+      class="userDrawer ${this.drawer ? 'opened' : 'closed'}">
 
       <!-- Exit Button -->
       <header class="exit">
@@ -116,8 +123,7 @@ export class UserDrawer extends connect(store)(LitElement) {
         <!-- Log-in State -->
         <user-log-in
           class="spec"
-
-          ?on="${ true === this._sign ? !this.register : this.register}"></user-log-in>
+          ?on="${ true === this._sign ? !this.register : this.register }"></user-log-in>
 
         <!-- Sign-up State -->
         <user-sign-up

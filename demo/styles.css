@@ -29,6 +29,11 @@ body {
 header { grid-area: head; }
 main { grid-area: main; }
 
+header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
 main {
   border: 2px solid black;
   border-radius: 6px;

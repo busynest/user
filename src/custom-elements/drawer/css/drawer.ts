@@ -10,6 +10,17 @@ export const drawerStyle: CSSResult = css`
     box-sizing:             border-box;
     border:                 3px #303030 solid;
     border-radius:          20px;
+    height:                 auto;
+  }
+
+  .closed {
+    max-height: 0px;
+    transition: max-height 1.4s ease-out;
+  }
+
+  .opened {
+    max-height: 100%;
+    transition: max-height 1.4s ease-out;
   }
 
 `;
