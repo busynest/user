@@ -1,12 +1,26 @@
-Progressive Website Application Authentication
+Progressive Website Application - Authentication
 ======================
 
-<iframe src="https://github.com/sponsors/busynest/button" title="Sponsor busynest" height="32" width="114" style="border: 0; border-radius: 6px;  margin: auto 0 auto 0;"></iframe>
+# PWA-Auth Components [Demo](https://pwa-authentic.firebaseapp.com)
+Hello, and welcome to Jack's Publishing of Custom HTML Elements.
 
-# The library [Demo](https://pwa-authentic.firebaseapp.com)
-This library provides Identity Access Managementy to securely store user's data.
+PWA-AUTH is a bundle of 3 Custom HTML Elements for Firebase (IAM) Authenication using email and password, with the ability to change username, icon, email, password, or delete your own account and it's content all together. 
 
-## Standard JavaScript
+You will learn how to reference, initialize, and place 3 Custom HTML Tags for use. By either <b>Standard</b> or <b>Modular</b> ECMA Script.
+
+Authentication Components are for anyone who is looking for a quick and simple way to sign-up, log-in, log-out, modify, or delete a firebase account from thier own personal domain.
+
+Jack's Publishing is dedicated to maintaining components for your projects. This specific project is design to be simple, and meet basic user needs, with the interplay of an Icon Button, Drop-down Drawer, and a Settings Page.
+
+Continue reading to start installing the bundle:
+- Pick the JavaScript File Type to Reference
+- Understand the Library Features
+- Understand the Library Boilerplate
+  - 3 Tag Placement
+  - Color Scheme: CSS Custom Properties
+  - Firebase Initialization
+
+## Standard, Namespaced JavaScript
 - copy the bundle: node_modules/pwa-auth/npm/pwa-auth.js
 
 ## Module JavaScript
@@ -20,15 +34,7 @@ import 'pwa-auth';
 - Predicate State Behavior: [Redux](https://redux.js.org/)
 - Frontend: [Lit](https://lit.dev)
 
-## Boilerplate
-- 3 Tag Placements (Custom HTML Elements)
-  - user-icon
-  - user-drawer
-  - user-settings
-- Cascading Style Sheets (CSS)
-- ECMA Script (JavaScript)
-
-## Features:
+## PWA-AUTH Features:
 - Register through Email and Password
 - Log-in
 - Log-out
@@ -37,6 +43,14 @@ import 'pwa-auth';
 - Change Email
 - Change Password
 - Delete Account
+
+## Boilerplate
+- 3 Tag Placements (Custom HTML Elements)
+  - user-icon
+  - user-drawer
+  - user-settings
+- Cascading Style Sheets (CSS)
+- ECMA Script (JavaScript)
 
 ## Custom Elements
 
@@ -153,10 +167,11 @@ import 'pwa-auth';
 - Firebase Project
 
 ## Firebase Setup
-- Authentication - email
-- Cloud Firestore - database
-- Cloud Storage
+- Authentication - email login
+- Cloud Storage - icon save location
 
+## Firebase Instance Configuration
+### Modular Firebase Initialization
 ```javascript
 // Initialize Firebase
 let connect = {
@@ -173,8 +188,15 @@ let connect = {
 if (lolalhost) { connect = { /* etc. */ } }
 ```
 
+### Global Namespaced Firebase Configuration
+pwa-auth is built upon the Firebase SDK (Software Development Kit).
+The entire bundle is one instance of firebase that takes in the configuration information, internally.
+
+If you are looking for a Namespaced Firebase Configuration, please send it as feedback, and will make that version for you.
+
 # Feedback
 All feedback, comments, bugs, and requests are welcome.
 * [Jack's Publishing](https://www.jackspublishing.com)
 * [contractor's centre](https://www.contractorscentre.com)
 * [Node Package Manager](https://www.npmjs.com/package/pwa-auth)
+* [Sponsor Jacek Markiewicz](https://github.com/sponsors/busynest/button)
