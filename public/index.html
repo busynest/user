@@ -47,12 +47,12 @@
       <iframe src="https://github.com/sponsors/busynest/button" title="Sponsor busynest" height="32" width="114" style="border: 0; border-radius: 6px;  margin: auto 0 auto 0;"></iframe>
 
       <!-- Icon Tag -->
-      <user-icon register></user-icon>
+      <user-icon subscribe></user-icon>
 
     </header>
 
     <!-- Drawer Tag-->
-    <user-drawer register url="/demo/settings"></user-drawer>
+    <user-drawer subscribe settingsURL="/demo/settings"></user-drawer>
 
     <main>
 
@@ -66,36 +66,71 @@
             
       :root {
 
-        --pwa_settings_background:      white;
+        /* WebComponent 1 : User Icon
+        <user-icon>
+          <button> */
+        --pwa_icon_hover:               lightgrey;
+        --pwa_icon_background:          #6cc04a;
+        --pwa_icon_border:              2px solid black;
 
-        /* Top Border Color */
-        --pwa_divider:                  grey;
+        /* WebComponent 1: logged-out
+        <user-icon>
+          <button class="login"> */
+        --pwa_icon_height:              32px;
+        --pwa_icon_padding:             0px 16px;
+        --pwa_icon_radius:              6px;
+        --pwa_icon_font:                'Arial', sans-serif;
 
-        /* Section Header Color */
-        --pwa_section_header:           black;
+        /* WebComponent 1: logged-in
+        <user-icon>
+          <button class="icon"> */
+        --pwa_icon_diameter:            40px;
 
-        /* Navigation Colors */
-        --pwa_nav_button:               grey;
-        --pwa_nav_select:               black;
 
-        /* Label Color */
-        --pwa_label_text_color:         black;
 
-        /* Input Colors */
-        --pwa_input_background:         #E1E5EB;
+        /* WebComponent 2: Drop-down Drawer
+        <user-drawer>
+          <section>
+            <header></header>
+            <div class="spec"> */
+        --pwa_drawer_border:            3px #303030 solid;
+        --pwa_drawer_z-index:           2;
+        --pwa_drawer_border-radius:     20px;
 
-        /* Button Colors */
-        --pwa_action_text_color:        #fff;
-        --pwa_action_background_color:  #6cc04a;
-        --pwa_action_border_color:      #60b23e;
-
-        /* Drawer Colors */
+        /* WebComponent 2: Drop-down Drawer - logged-out
+        <div class="spec"> */
         --pwa_drawer_text_color:        #303030;
         --pwa_drawer_background_color:  #fff;
 
-        /* Icon Colors */
-        --pwa_icon_background:          #6cc04a;
-        --pwa_icon_hover:               lightgrey;
+        /* WebComponent 2: Drop-down Drawer - logged-in
+        <div class="spec" on> */
+
+
+
+        /* WebComponent 3: Settings Page
+        <user-settings>
+          <nav></nav>
+          <section></section> */
+        --pwa_settings_background:      white;
+        --pwa_divider:                  black;
+
+        /* Navigation */
+        --pwa_nav_button:               grey;
+        --pwa_nav_select:               black;
+
+        /* Section Header */
+        --pwa_section_header:    black;
+
+        /* Label */
+        --pwa_label_text_color:         black;
+
+        /* Input */
+        --pwa_input_background:         #E1E5EB;
+
+        /* Button */
+        --pwa_action_text_color:        #fff;
+        --pwa_action_background_color:  #6cc04a;
+        --pwa_action_border_color:      #60b23e;
 
       }
 

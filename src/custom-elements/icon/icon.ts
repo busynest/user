@@ -1,5 +1,5 @@
-import { css, CSSResultArray, html, LitElement }                   from 'lit';
-import { customElement, property, state }               from 'lit/decorators.js';
+import { CSSResultArray, html, LitElement }   from 'lit';
+import { customElement, property, state }     from 'lit/decorators.js';
 import { connect }                            from 'pwa-helpers/connect-mixin.js';
 import { store, AppState }                    from '../../store';
 import { iconStyles }                         from './css/icon';
@@ -10,7 +10,8 @@ import { toggleSign }                         from '../../redux/frontend';
 export class UserIcon extends connect(store)(LitElement) {
   
   /** @attr url */
-  @property({type: Boolean, reflect: true}) public register = false;
+  @property({type: Boolean, reflect: true}) public subscribe = false;
+
   @state() private _user = false;
   @state() private _photoURL = '';
   // @state() private _sign = false;
@@ -18,7 +19,7 @@ export class UserIcon extends connect(store)(LitElement) {
   constructor() { super(); }
 
   protected firstUpdated() {
-    this.shadowRoot!.querySelector('button')!.addEventListener('click', () => {
+    this.shadowRoot!.querySelector('.toggles')!.addEventListener('click', () => {
       // console.log('logged-in: ',this._user);
       store.dispatch(toggleSign());
     } );
@@ -30,19 +31,14 @@ export class UserIcon extends connect(store)(LitElement) {
     // this._sign        = state.frontend!.register;
   }  
 
-  static get styles():CSSResultArray { return [
-    iconStyles,
-    css`
-
-      :host { margin: auto; display: grid; }
-
-    ` ] }
+  static get styles():CSSResultArray { return [ iconStyles ] }
   
   protected render() {
     return html`
 
+      <!-- two classes: icon / login -->
       <button
-        class="${this._user ? 'icon' : 'login'}"
+        class="${this._user ? 'icon' : 'login'} toggles"
         aria-label="login">
         
         ${ this._user ? html`
@@ -56,7 +52,7 @@ export class UserIcon extends connect(store)(LitElement) {
               width   = "38px"
               src     = "${this._photoURL}">
        <!--   </div> -->
-          ` : this.register ? 'Subscribe' : 'Login' }
+          ` : this.subscribe ? 'Subscribe' : 'Login' }
 
       </button>
 

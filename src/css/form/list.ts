@@ -8,6 +8,16 @@ export const listStyle: CSSResult = css`
     margin:                   0;
   }
 
-  li { display: grid; }
+  li {
+    display:                  grid;
+  }
+
+  .divider {
+    border-top:     2px dotted black;
+    border-bottom:  2px dotted black;
+    text-align:     center;
+    width:          80%;
+    margin:         auto;
+  }
 
 `;

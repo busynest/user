@@ -1,11 +1,8 @@
-
 import { css } from 'lit';
 
 export const navigation = css`
 
-  nav {
-    overflow: hidden;
-  }
+  nav { overflow: hidden; }
 
   /* Navigation Menu */
   nav > ul {
@@ -49,23 +46,20 @@ export const navigation = css`
 
   }
 
-  /* Navigation Button - Media Text Justification 
-  @media  (max-width: 460px) {
-
-    button[value=profile], button[value=email]      { text-align: left; }
-    button[value=delete], button[value=password]   { text-align: right; }
-
-  }*/
-
   section[on]     { display:           grid; }
   section         { display:           none; }
 
 `;
 
 
+/* Navigation Button - Media Text Justification 
+@media  (max-width: 460px) {
 
+  button[value=profile], button[value=email]      { text-align: left; }
+  button[value=delete], button[value=password]   { text-align: right; }
 
-/*
+}
+
 .formTitle {
   display:                grid;
   grid-auto-flow:         column;
@@ -87,7 +81,6 @@ export const navigation = css`
   border:           2px solid #303030;
   box-shadow:       1px 1px 2px black, 0 0 25px grey, 0 0 5px #fff;
 } 
-  
 
 /* Uploader - button Visual Indicator Outline
 button:focus  { outline: none; } 

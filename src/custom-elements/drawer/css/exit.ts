@@ -17,6 +17,7 @@ export const exitStyle: CSSResult = css`
   }
 
   .exit > .remove {
+    cursor:                 pointer;
     background-color:       transparent;
     border:                 0px;
     color:                  red;
@@ -25,7 +26,7 @@ export const exitStyle: CSSResult = css`
     text-transform:         uppercase;
     opacity:                .6;
   }
-
+/*
   .exit > .refresh {
     background-color:       transparent;
     border:                 0px;
@@ -34,7 +35,7 @@ export const exitStyle: CSSResult = css`
     width:                  36px;
     padding:                0px;
   }
-
+*/
   .close {
     height:                 30px;
     width:                  42px;

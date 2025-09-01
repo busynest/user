@@ -2,10 +2,9 @@ import { css } from 'lit';
 
 export const iconStyles = css`
 
-  /* Animation background-color, transform, width, height, clip-path */
-  .icon, .login {
-    transition-property:      width, border-radius;
-    transition-duration:      2s;
+  :host {
+    margin:                   auto;
+    display:                  grid;
   }
 
   /* Shared Styles */
@@ -13,65 +12,60 @@ export const iconStyles = css`
     cursor:                   pointer;
     margin:                   auto;
     overflow:                 hidden;
-    border:                   2px solid black;
+    border:                   var(--pwa_icon_border);
     background-color:         var(--pwa_icon_background);
     color:                    white;
     font-size:                15px;
     text-decoration:          none;
+    transition-duration:      2s; 
   }
 
   /* Hover Styles */
-  .icon:hover, .login:hover { background-color: var(--pwa_icon_hover); }
+  .icon:hover,
+  .login:hover {
+    background-color:         var(--pwa_icon_hover);
+  }
 
-  /* The Icon Button */
+  /* Logged-in State: The Icon Button */
   .icon {
-    height:                   40px;
-    width:                    40px;
-
+    height:                   var(--pwa_icon_diameter);
+    width:                    var(--pwa_icon_diameter);
     border-radius:            50%;
-
     padding:                  0;
   }
 
   /* The Login Button */
   .login {
-    width:                  auto;
-
-    border-radius:          6px;
-
-    padding:                10px 20px;
-  }
- 
-  /* Icon Artwork Wrapper */
-  .iconArea {
-    border-radius:          50%;
-    overflow:               hidden;
-    width:                  38px;
-    height:                 38px;
-    margin:                 auto;
+    width:                    auto;
+    border-radius:            var(--pwa_icon_radius);
+    height:                   var(--pwa_icon_height);
+    line-height:              var(--pwa_icon_height);
+    padding:                  var(--pwa_icon_padding);
+    font-family:              var(--pwa_icon_font);
+    font-weight:              500;
+    text-align:               center;
   }
 
   /* Icon Artwork */
   .userImage {
-    object-fit:             cover; 
-    transition-property:    all;
-    transition-duration:    2s;
-    clip-path:              circle(50%);
-    margin:                 auto;
+    object-fit:               cover; 
+    transition-property:      all;
+    transition-duration:      2s;
+    clip-path:                circle(50%);
+    overflow:                 hidden;
+    width:                    calc(var(--pwa_icon_diameter) - 2px);
+    height:                   calc(var(--pwa_icon_diameter) - 2px);
+    margin:                   auto;
   }  
   
 `;
 
-
-
-  /*
-
-
-  svg{ margin:auto;}
-
-    display:          block;
-    background:       #fff;
-    background-color, transform, width, height, clip-path
-    clip-path:        circle(50%);
-    transition: background-color 5s;
-  */
+ /* Icon Artwork Wrapper 
+  .iconArea {
+    border-radius:            50%;
+    overflow:                 hidden;
+    width:                    calc(var(--pwa_icon_diameter) - 2px);
+    height:                   calc(var(--pwa_icon_diameter) - 2px);
+    margin:                   auto;
+  }
+    */

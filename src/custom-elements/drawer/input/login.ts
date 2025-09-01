@@ -8,8 +8,10 @@ import { buttonStyle }    from '../../../css/form/button';
 import { labelStyle }     from '../../../css/form/label';
 import { inputStyle }     from '../../../css/form/input';
 import { listStyle }      from '../../../css/form/list';
-import store from '../../../store';
-import { signUpAction } from '../../../redux/frontend';
+import { toggleStyle }    from '../css/toggle';
+
+import store              from '../../../store';
+import { signUpAction }   from '../../../redux/frontend';
 
 @customElement('user-log-in')
 export class UserLogIn extends LitElement {
@@ -24,6 +26,7 @@ export class UserLogIn extends LitElement {
     labelStyle,
     inputStyle,
     buttonStyle,
+    toggleStyle,
     css`
     
       .double {
@@ -59,18 +62,20 @@ export class UserLogIn extends LitElement {
               type="password"
               @change="${this.handlePassword}">
           </li>
-    
-          <li class="double">
 
-            <!-- Change State -->
-            <button
-              class="new"
-              @click="${ this.change }">create a new account</button>
-
+          <li>
             <button
               class="login action-button"
               @click="${this.login}">Sign in</button>
 
+          </li>
+    
+          <!-- Change State -->
+          <li>
+            <p class="divider">Or</p>
+            <button
+              class="new"
+              @click="${ this.change }">create a new account</button>
           </li>
 
         </ul>

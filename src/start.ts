@@ -5,7 +5,7 @@
 // Redux
 import { store } from './store';
 import { closeSign, iconAuth, nameAuth, userAuth } from './redux/frontend';
-import { accID, accAnon, accEmail, accImage, accName, accPhone } from './redux/backend';
+import { accID, accEmail, accImage, accName } from './redux/backend';
 
 // Firebase App 
 import { FirebaseApp, initializeApp } from 'firebase/app';

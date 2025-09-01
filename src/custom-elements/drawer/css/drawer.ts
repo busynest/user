@@ -2,25 +2,63 @@ import { css, CSSResult } from "lit";
 
 export const drawerStyle: CSSResult = css`
 
+  /* <user-drawer> : parent container */
+  :host {
+    position:               absolute;
+    max-height:             0px;
+    transition:             max-height 1.4s ease-out;
+    overflow:               hidden;
+    height:                 auto;
+    display:                grid;
+    padding-top:            env(safe-area-inset-top);
+  }
+
+  :host([drawer]) {       
+    transition-duration:    1.4s;
+    max-height:             100%;
+    transition:             max-height 1.4s ease-out;
+  }
+
+  /* wrapper : child container*/
   .userDrawer {
-    max-width:              600px;
-    margin:                 16px auto auto auto;
+    position:               fixed;
+    top:                    0;
+    left:                   0;
+    right:                  0;
+    transition-duration:    1.4s;
+    border:                 var(--pwa_drawer_border);
+    z-index:                var(--pwa_drawer_z-index);
+    overflow:               hidden;
     background-color:       var(--pwa_drawer_background_color);
     color:                  var(--pwa_drawer_text_color);
     box-sizing:             border-box;
-    border:                 3px #303030 solid;
-    border-radius:          20px;
+    border-radius:          var(--pwa_drawer_border-radius);
     height:                 auto;
+    transition-property:    visibility, max-height;
   }
 
+  /* wrapper closed */
   .closed {
-    max-height: 0px;
-    transition: max-height 1.4s ease-out;
+    max-height:             0px;
+    transition: max-height  1.4s ease-out;
+    visibility:             hidden;
+    transition-property:    visibility, max-height;
   }
 
+  /* wrapper opened */
   .opened {
-    max-height: 100%;
-    transition: max-height 1.4s ease-out;
+    max-height:             100%;
+    transition: max-height  1.4s ease-out;
+    visibility:             visible;
+    transition-property:    visibility, max-height;
   }
 
 `;
+
+/*
+visibility:             hidden;
+will-change:            transform;
+transform:              translate3d(0, -150%, 0);
+transition-property:    visibility, transform;
+transform:              translate3d(0, 0, 0);
+*/

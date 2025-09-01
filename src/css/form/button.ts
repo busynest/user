@@ -52,18 +52,4 @@ export const buttonStyle: CSSResult = css`
     cursor:             pointer;
   }
 
-  /* Switch Login / Sign-up Button */
-  .new {
-    padding:            12px;
-    border-radius:      4px;
-    appearance:         none;
-    background-color:   transparent;
-    border:             0px;
-    color:              inherit;
-    cursor:             pointer;
-    text-decoration:    underline;
-    font-size:          small;
-  }
-
-
 `;

@@ -8,6 +8,8 @@ import { buttonStyle }    from '../../../css/form/button';
 import { labelStyle }     from '../../../css/form/label';
 import { inputStyle }     from '../../../css/form/input';
 import { listStyle }      from '../../../css/form/list';
+import { toggleStyle }    from '../css/toggle';
+
 import store              from '../../../store';
 import { signUpAction }   from '../../../redux/frontend';
 
@@ -24,6 +26,7 @@ export class UserSignUp extends LitElement {
     labelStyle,
     inputStyle,
     buttonStyle,
+    toggleStyle,
     css`
     
       .double {
@@ -62,19 +65,20 @@ export class UserSignUp extends LitElement {
               @change="${this.handlePassword}">
           </li>
 
-            <!-- <label><input   id="veriftPassword"   type="password"   >Verify Password</label> -->
-          
-          <li class="double">
-
-            <!-- Change State -->
-            <button
-              class="new"
-              @click="${ this.change }">login with existing email</button>
-
+          <li>
             <button
               class="newUser action-button"
               @click="${this.signUp}">Sign up</button>
+          </li>
 
+          <!-- <label><input   id="veriftPassword"   type="password"   >Verify Password</label> -->
+
+          <!-- Change State -->
+          <li>
+            <p class="divider">Or</p>
+            <button
+              class="new"
+              @click="${ this.change }">login with existing email</button>
           </li>
 
         </ul>

@@ -1,10 +1,8 @@
 Progressive Website Application - Authentication
 ======================
-
-# PWA-Auth Components [Demo](https://pwa-authentic.firebaseapp.com)
 Hello, and welcome to Jack's Publishing of Custom HTML Elements.
 
-PWA-AUTH is a bundle of 3 Custom HTML Elements for Firebase (IAM) Authenication using email and password, with the ability to change username, icon, email, password, or delete your own account and it's content all together. 
+pwa-auth.js is a bundle of 3 Custom HTML Elements for Firebase (IAM) Authenication using email and password, with the ability to change username, icon, email, password, or delete your own account and it's content all together. 
 
 You will learn how to reference, initialize, and place 3 Custom HTML Tags for use. By either <b>Standard</b> or <b>Modular</b> ECMA Script.
 
@@ -20,10 +18,12 @@ Continue reading to start installing the bundle:
   - Color Scheme: CSS Custom Properties
   - Firebase Initialization
 
+[Live Demo](https://pwa-authentic.firebaseapp.com)
+
 ## Standard, Namespaced JavaScript
 - copy the bundle: node_modules/pwa-auth/npm/pwa-auth.js
 
-## Module JavaScript
+## Modular JavaScript
 ```javascript
 import 'pwa-auth';
 ```
@@ -54,18 +54,24 @@ import 'pwa-auth';
 
 ## Custom Elements
 
-### `<user-icon>`
+```html
+<user-icon subscribe></user-icon>
+```
 - Login Word Button - State
 - 1 Photo Icon Display - State
 
-### `<user-drawer>`
+```html
+<user-drawer subscribe settingsURL=""></user-drawer>
+```
 - Drop-down
 - Sign-up by Email Addresses and Password
 - Sign-in by Email Addresses and Password
 - logged-in state
 - logged-out state
 
-### `<user-settings>`
+```html
+<user-settings></user-settings>
+```
 - 1 Photo Upload
 - Unavailable Photo
 - Update Username
@@ -76,15 +82,15 @@ import 'pwa-auth';
 # Website Setup:
 ```html
 <header>
-  <!-- register: Indicate the 'register' boolean for 'subscribe state' -->
-  <!-- register: else 'login state' -->
-  <user-icon register></user-icon>
+  <!-- subscribe: Indicate the 'register' boolean for 'subscribe state' -->
+  <!-- subscribe: else 'login state' -->
+  <user-icon subscribe></user-icon>
 </header>
 
-<!-- url: Indicate where the <pwa-settings> Tag will be Paged-->
-<!-- register: Indicate the 'register' boolean for 'subscribe state' -->
-<!-- register: else 'login state' -->
-<user-drawer register url="/settings"></user-drawer>
+<!-- settingsURL: where the <pwa-settings> Tag will be placed-->
+<!-- subscribe: boolean for 'subscribe state' -->
+<!-- subscribe: else 'login state' -->
+<user-drawer subscribe settingsURL="/settings"></user-drawer>
 
 <main>
   <user-settings></user-settings>
@@ -117,47 +123,82 @@ import 'pwa-auth';
 <!-- CSS: Custom Variables -->
 <!-- Place this txt into your document -->
 <style>
-        
-  :root {
 
-    --pwa_settings_background:      white;
+:root {
 
-    /* Top Border Color */
-    --pwa_divider:                  grey;
+  /* WebComponent 1 : User Icon
+  <user-icon>
+    <button> */
+  --pwa_icon_hover:               lightgrey;
+  --pwa_icon_background:          #6cc04a;
+  --pwa_icon_border:              2px solid black;
 
-    /* Section Header Color */
-    --pwa_section_header:           black;
+  /* WebComponent 1: logged-out
+  <user-icon>
+    <button class="login"> */
+  --pwa_icon_height:              32px;
+  --pwa_icon_padding:             0px 16px;
+  --pwa_icon_radius:              6px;
+  --pwa_icon_font:                'Arial', sans-serif;
 
-    /* Navigation Colors */
-    --pwa_nav_button:               grey;
-    --pwa_nav_select:               black;
+  /* WebComponent 1: logged-in
+  <user-icon>
+    <button class="icon"> */
+  --pwa_icon_diameter:            40px;
 
-    /* Label Color */
-    --pwa_label_text_color:         black;
 
-    /* Input Colors */
-    --pwa_input_background:         #E1E5EB;
 
-    /* Button Colors */
-    --pwa_action_text_color:        #fff;
-    --pwa_action_background_color:  #6cc04a;
-    --pwa_action_border_color:      #60b23e;
+  /* WebComponent 2: Drop-down Drawer
+  <user-drawer>
+    <section>
+      <header></header>
+      <div class="spec"> */
+  --pwa_drawer_border:            3px #303030 solid;
+  --pwa_drawer_z-index:           2;
+  --pwa_drawer_border-radius:     20px;
 
-    /* Drawer Colors */
-    --pwa_drawer_text_color:        #303030;
-    --pwa_drawer_background_color:  #fff;
+  /* WebComponent 2: Drop-down Drawer - logged-out
+  <div class="spec"> */
+  --pwa_drawer_text_color:        #303030;
+  --pwa_drawer_background_color:  #fff;
 
-    /* Icon Colors */
-    --pwa_icon_background:          #6cc04a;
-    --pwa_icon_hover:               lightgrey;
+  /* WebComponent 2: Drop-down Drawer - logged-in
+  <div class="spec" on> */
 
-  }
 
-  /* Dark Theme */
-  @media (prefers-color-scheme: dark) { /* etc. */ }
 
-  /* Light Theme */
-  @media (prefers-color-scheme: light) { /* etc. */ }
+  /* WebComponent 3: Settings Page
+  <user-settings>
+    <nav></nav>
+    <section></section> */
+  --pwa_settings_background:      white;
+  --pwa_divider:                  black;
+
+  /* Navigation */
+  --pwa_nav_button:               grey;
+  --pwa_nav_select:               black;
+
+  /* Section Header */
+  --pwa_section_header:    black;
+
+  /* Label */
+  --pwa_label_text_color:         black;
+
+  /* Input */
+  --pwa_input_background:         #E1E5EB;
+
+  /* Button */
+  --pwa_action_text_color:        #fff;
+  --pwa_action_background_color:  #6cc04a;
+  --pwa_action_border_color:      #60b23e;
+
+}
+
+/* Dark Theme */
+@media (prefers-color-scheme: dark) { /* etc. */ }
+
+/* Light Theme */
+@media (prefers-color-scheme: light) { /* etc. */ }
 
 </style>
 ```

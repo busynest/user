@@ -12,6 +12,14 @@ Removed - for now removed features.
 Fixed - for any bug fixes.
 Security - in case of vulnerabilities.
 
+# [1.2.4] - 2025-08-31
+
+## Changed
+- user-icon: property namespace: subscribe
+- user-drawer: property namespace: subscribe, settingsURL
+- updated ReadMe File
+- updated CSS Custom Properties
+
 # [1.1.6] - 2025-08-25
 
 ## Changed
