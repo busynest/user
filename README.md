@@ -6,9 +6,9 @@ pwa-auth.js is a bundle of 3 Custom HTML Elements for Firebase (IAM) Authenicati
 
 You will learn how to reference, initialize, and place 3 Custom HTML Tags for use. By either <b>Standard</b> or <b>Modular</b> ECMA Script.
 
-Authentication Components are for anyone who is looking for a quick and simple way to sign-up, log-in, log-out, modify, or delete a firebase account from thier own personal domain.
+pwa-auth.js (Authentication Components) are for anyone who is looking for a quick and simple way to sign-up, log-in, log-out, modify, or delete a firebase account information from thier own personal domain.
 
-Jack's Publishing is dedicated to maintaining components for your projects. This specific project is design to be simple, and meet basic user needs, with the interplay of an Icon Button, Drop-down Drawer, and a Settings Page.
+Jack's Publishing is dedicated to maintaining components for your projects. This specific project is designed to be simple, by meeting basic user needs with the interplay of an Icon Button, Drop-down Drawer, and a Settings Page.
 
 Continue reading to start installing the bundle:
 - Pick the JavaScript File Type to Reference
@@ -20,29 +20,30 @@ Continue reading to start installing the bundle:
 
 [Live Demo](https://pwa-authentic.firebaseapp.com)
 
-## Standard, Namespaced JavaScript
-- copy the bundle: node_modules/pwa-auth/npm/pwa-auth.js
+## pwa-auth.js Features:
+- Register through Email and Password
+  - Log-in
+  - Log-out
+- Change Username
+- Change Profile Picture
+- Change Email
+- Change Password
+  - Delete Account
 
-## Modular JavaScript
-```javascript
-import 'pwa-auth';
-```
+## Standard JavaScript
+- copy the bundle
+  - node_modules/pwa-auth/npm/pwa-auth.js
 
-## Technological Stack
+## Technological Engineering
 - Development Environment: [Node JavaScript](https://nodejs.org)
 - Backend: Google Cloud: [Firebase](https://firebase.google.com/)
 - Predicate State Behavior: [Redux](https://redux.js.org/)
 - Frontend: [Lit](https://lit.dev)
 
-## PWA-AUTH Features:
-- Register through Email and Password
-- Log-in
-- Log-out
-- Change Username
-- Change Profile Picture
-- Change Email
-- Change Password
-- Delete Account
+## Modular JavaScript
+```javascript
+import 'pwa-auth';
+```
 
 ## Boilerplate
 - 3 Tag Placements (Custom HTML Elements)
@@ -53,31 +54,27 @@ import 'pwa-auth';
 - ECMA Script (JavaScript)
 
 ## Custom Elements
-
 ```html
 <user-icon subscribe></user-icon>
-```
-- Login Word Button - State
-- 1 Photo Icon Display - State
+<!-- Logged-out txt: Login Button (State) -->
+<!-- Logged-out txt: Subscribe Button (State) -->
+<!-- Logged-in Icon Button (State) -->
 
-```html
 <user-drawer subscribe settingsURL=""></user-drawer>
-```
-- Drop-down
-- Sign-up by Email Addresses and Password
-- Sign-in by Email Addresses and Password
-- logged-in state
-- logged-out state
+<!-- Top-down, Drop-down Feature -->
+<!-- Sign-up by Email Addresses and Password (State) -->
+<!-- Sign-in by Email Addresses and Password (State) -->
+<!-- logged-in (State) -->
+<!-- logged-out (State) -->
 
-```html
 <user-settings></user-settings>
+<!-- 1 Photo Upload Feature, view uploaded bucket of photos, photo ediotr -->
+<!-- Unavailable Photo --> 
+<!-- Update Username -->
+<!-- Update Email / Verify -->
+<!-- Update Password -->
+<!-- Delete Account, Photos, Information -->
 ```
-- 1 Photo Upload
-- Unavailable Photo
-- Update Username
-- Update Email / Verify
-- Update Password
-- Delete Account
 
 # Website Setup:
 ```html
@@ -104,20 +101,30 @@ import 'pwa-auth';
 ## CSS Default Custom Properties
 | CSS Custom Property | Description | Default | Custom Element |
 | :--- | ---: | :---: | :--- |
-| --pwa_settings_background       | Navigation  | grey;         | Settings |
-| --pwa_nav_button                | Navigation  | grey;         | Settings |
-| --pwa_nav_select                | Navigation  | black;        | Settings |
-| --pwa_input_background          | Input       | #E1E5EB;    | Settings |
-| --pwa_label_text_color          | Input       | black;        | Settings |
-| --pwa_section_header            | Header      | black;        | Settings |
-| --pwa_divider                   | Divider     | grey;         | Settings |
-| --pwa_action_text_color         | Button      | #fff;       | Settings |
-| --pwa_action_background_color   | Button      | #6cc04a;    | Settings |
-| --pwa_action_border_color       | Button      | #60b23e;    | Settings |
-| --pwa_drawer_text_color         | Input       | #303030;    | Drawer |
-| --pwa_drawer_background_color   | Input       | #fff;       | Drawer |
-| --pwa_icon_background           | Input       | #6cc04a;    | Icon |
-| --pwa_icon_hover                | Input       | lightgrey     | Icon |
+| --pwa_icon_background           | Button  | #6cc04a; | user-icon |
+| --pwa_icon_hover                | Button      | lightgrey     | user-icon |
+| --pwa_icon_border               | Button      | 2px solid black | user-icon |
+| --pwa_icon_height (sync)        | Login State      | 32px      | user-icon |
+| --pwa_icon_padding              | Login State      | 0px 16px | user-icon |
+| --pwa_icon_radius               | Login State      | 6px      | user-icon |
+| --pwa_icon_font         | Login State   | 'Arial', sans-serif | user-icon |
+| --pwa_icon_diameter (sync)      | Icon State  | 32px        | user-icon |
+| --pwa_drawer_border             | Drawer      | 3px #303030 solid | user-drawer |
+| --pwa_drawer_z-index            | Drawer      | 2         | user-drawer |
+| --pwa_drawer_border-radius      | Drawer      | 20px        | user-drawer |
+| --pwa_drawer_text_color         | Input txt   | #303030    | user-drawer |
+| --pwa_drawer_background_color   | Input txt   | #fff       | user-drawer |
+| --pwa_settings_background       | Navigation  | grey       | user-settings |
+| --pwa_nav_button                | Navigation  | grey       | user-settings |
+| --pwa_nav_select                | Navigation  | black      | user-settings |
+| --pwa_divider                   | Divider     | grey       | user-settings |
+| --pwa_input_background          | Input       | #E1E5EB  | user-settings |
+| --pwa_label_text_color          | Input       | black      | user-settings |
+| --pwa_section_header            | Header      | black      | user-settings |
+| --pwa_action_text_color         | Button      | #fff     | user-settings |
+| --pwa_action_background_color   | Button      | #6cc04a  | user-settings |
+| --pwa_action_border_color       | Button      | #60b23e  | user-settings |
+
 
 ```html
 <!-- CSS: Custom Variables -->
@@ -136,7 +143,7 @@ import 'pwa-auth';
   /* WebComponent 1: logged-out
   <user-icon>
     <button class="login"> */
-  --pwa_icon_height:              32px;
+  --pwa_icon_height:              32px; /* sync to --pwa_icon_diameter */
   --pwa_icon_padding:             0px 16px;
   --pwa_icon_radius:              6px;
   --pwa_icon_font:                'Arial', sans-serif;
@@ -144,7 +151,7 @@ import 'pwa-auth';
   /* WebComponent 1: logged-in
   <user-icon>
     <button class="icon"> */
-  --pwa_icon_diameter:            40px;
+  --pwa_icon_diameter:            32px; /* sync to --pwa_icon_height */
 
 
 
@@ -161,9 +168,6 @@ import 'pwa-auth';
   <div class="spec"> */
   --pwa_drawer_text_color:        #303030;
   --pwa_drawer_background_color:  #fff;
-
-  /* WebComponent 2: Drop-down Drawer - logged-in
-  <div class="spec" on> */
 
 
 
@@ -230,7 +234,7 @@ if (lolalhost) { connect = { /* etc. */ } }
 ```
 
 ### Global Namespaced Firebase Configuration
-pwa-auth is built upon the Firebase SDK (Software Development Kit).
+pwa-auth.js is built upon the Firebase SDK (Software Development Kit).
 The entire bundle is one instance of firebase that takes in the configuration information, internally.
 
 If you are looking for a Namespaced Firebase Configuration, please send it as feedback, and will make that version for you.

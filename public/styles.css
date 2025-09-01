@@ -22,22 +22,27 @@ body {
   grid-gap:                 16px;
   grid-template-areas:
     "head"
-    "main";
-  grid-template-rows:       auto 1fr;
+    "main"
+    "foot";
+  grid-template-rows:       auto 1fr auto;
 }
 
 header { grid-area: head; }
 main { grid-area: main; }
+footer { grid-area: foot; }
 
 header {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display:          grid;
 }
 
 main {
-  border: 2px solid black;
-  border-radius: 6px;
-  overflow: hidden;
+  border:           2px solid black;
+  border-radius:    6px;
+  overflow:         hidden;
+}
+
+footer {
+  display:          grid;
 }
 
 body {

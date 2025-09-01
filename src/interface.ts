@@ -1,5 +1,5 @@
-import { UserCredential } from "firebase/auth";
-import { auth } from "../src/firebase/start";
+import { applyActionCode, beforeAuthStateChanged, checkActionCode, confirmPasswordReset, createUserWithEmailAndPassword, fetchSignInMethodsForEmail, getRedirectResult, isSignInWithEmailLink, onAuthStateChanged, onIdTokenChanged, sendPasswordResetEmail, setPersistence, signInAnonymously, signInWithCredential, signInWithCustomToken, signInWithEmailAndPassword, signInWithEmailLink, signInWithPhoneNumber, signInWithPopup, signInWithRedirect, signOut, updateCurrentUser, useDeviceLanguage, UserCredential, verifyPasswordResetCode } from "firebase/auth";
+import { auth } from "./start";
 import { FirebaseError } from "firebase/app";
 
 interface base {
@@ -34,7 +34,7 @@ updateCurrentUser : any,
 useDeviceLanguage : any,
 validatePassword : any,
 verifyPasswordResetCode : any
-
+handleRecoverEmail:any
 }
 
 /*
@@ -93,7 +93,7 @@ export const authFunctions : base = {
   // out-of-band verification code
   applyActionCode: {
     description: "Applies an out-of-band verification code (e.g., email verification).",
-    example: (oobCode:any) => firebase.auth.applyActionCode(auth, oobCode)
+    example: (oobCode:any) => applyActionCode(auth, oobCode)
       .then(() => ({ success: true }))
       .catch( (error:FirebaseError) => ({ error: error.code, message: error.message }))
   },
@@ -101,19 +101,19 @@ export const authFunctions : base = {
   // out-of-band metadata verification code
   checkActionCode: {
     description: "Checks the metadata of an out-of-band verification code.",
-    example: (code:any) => firebase.auth.checkActionCode(auth, code)
+    example: (code:any) => checkActionCode(auth, code)
       .then( (info:any) => ({ info }))
       .catch((error:FirebaseError) => ({ error: error.code, message: error.message }))
   },
 
   beforeAuthStateChanged: {
     description:'Adds a blocking callback that runs before an auth state change sets a new user.',
-    code: (callback:any, onAbort:any) => firebase.auth.beforeAuthStateChanged(auth, callback, onAbort)
+    code: (callback:any, onAbort:any) => beforeAuthStateChanged(auth, callback, onAbort)
   },
 
   confirmPasswordReset: {
     description: "Completes the password reset process with a code and new password.",
-    example: (code:any, newPassword:string) => firebase.auth.confirmPasswordReset(auth, code, newPassword)
+    example: (code:any, newPassword:string) => confirmPasswordReset(auth, code, newPassword)
       .then(() => ({ success: true }))
       .catch( (error:FirebaseError) => ({ error: error.code, message: error.message }))
   },
@@ -123,7 +123,7 @@ export const authFunctions : base = {
   // User Creation and Sign-In
   createUserWithEmailAndPassword: {
     description: "Creates a new user account with email and password, and signs them in.",
-    example: (email:any, password:any) => firebase.auth.createUserWithEmailAndPassword(auth, email, password)
+    example: (email:any, password:any) => createUserWithEmailAndPassword(auth, email, password)
       .then( (userCredential:UserCredential) => ({ user: userCredential.user }))
       .catch( (error:FirebaseError) => ({ error: error.code, message: error.message }))
   },
@@ -131,7 +131,7 @@ export const authFunctions : base = {
     // Utility
   fetchSignInMethodsForEmail: {
     description: "Gets the list of sign-in methods for a given email.",
-    example: (email:string) => firebase.auth.fetchSignInMethodsForEmail(auth, email)
+    example: (email:string) => fetchSignInMethodsForEmail(auth, email)
       .then( (methods:any) => ({ methods }))
       .catch( (error:FirebaseError) => ({ error: error.code, message: error.message }))
   },
@@ -140,7 +140,7 @@ export const authFunctions : base = {
 
   getRedirectResult: {
     description: "Retrieves the result of a redirect-based sign-in flow.",
-    example: () => firebase.auth.getRedirectResult(auth)
+    example: () => getRedirectResult(auth)
       .then( (result) => ({ user: result.user }))
       .catch( (error:FirebaseError) => ({ error: error.code, message: error.message }))
   },
@@ -149,19 +149,19 @@ export const authFunctions : base = {
 
   isSignInWithEmailLink: {
     description: "Checks if a link is a valid sign-in with email link.",
-    example: (link) => firebase.auth.isSignInWithEmailLink(auth, link)
+    example: (link) => isSignInWithEmailLink(auth, link)
   },
 
   // Authentication State
   onAuthStateChanged: {
     description: "Listens for changes in the authentication state.",
-    example: (callback) => firebase.auth.onAuthStateChanged(auth, callback)
+    example: (callback) => onAuthStateChanged(auth, callback)
   },
 
   // Sign-Out
   signOut: {
     description: "Signs out the current user.",
-    example: () => firebase.auth.signOut(auth)
+    example: () => signOut(auth)
       .then(() => ({ success: true }))
       .catch(error => ({ error: error.code, message: error.message }))
   },
@@ -169,13 +169,13 @@ export const authFunctions : base = {
 
   onIdTokenChanged: {
     description: "Listens for changes in the ID token.",
-    example: (callback) => firebase.auth.onIdTokenChanged(auth, callback)
+    example: (callback) => onIdTokenChanged(auth, callback)
   },
 
-  handleRecoverEmail(auth, actionCode, lang) {
+  handleRecoverEmail(/*auth,*/ actionCode:any, lang:any) {
   // Localize the UI to the selected language as determined by the lang
   // parameter.
-  let restoredEmail = null;
+  let restoredEmail : any = null;
   // Confirm the action code is valid.
   checkActionCode(auth, actionCode).then((info) => {
     // Get the restored email address.
@@ -203,49 +203,49 @@ export const authFunctions : base = {
 
   signInWithEmailAndPassword: {
     description: "Signs in a user with email and password.",
-    example: (email, password) => firebase.auth.signInWithEmailAndPassword(auth, email, password)
+    example: (email:string, password:string) => signInWithEmailAndPassword(auth, email, password)
       .then(userCredential => ({ user: userCredential.user }))
       .catch(error => ({ error: error.code, message: error.message }))
   },
   signInWithPopup: {
     description: "Signs in a user via a popup with a federated provider (e.g., Google, Facebook).",
-    example: (provider) => firebase.auth.signInWithPopup(auth, provider)
+    example: (provider) => signInWithPopup(auth, provider)
       .then(result => ({ user: result.user }))
       .catch(error => ({ error: error.code, message: error.message }))
   },
   signInWithRedirect: {
     description: "Signs in a user via redirect with a federated provider.",
-    example: (provider) => firebase.auth.signInWithRedirect(auth, provider)
+    example: (provider) => signInWithRedirect(auth, provider)
       .catch(error => ({ error: error.code, message: error.message }))
   },
 
   signInAnonymously: {
     description: "Signs in a user anonymously without credentials.",
-    example: () => firebase.auth.signInAnonymously(auth)
+    example: () => signInAnonymously(auth)
       .then(userCredential => ({ user: userCredential.user }))
       .catch(error => ({ error: error.code, message: error.message }))
   },
   signInWithCustomToken: {
     description: "Signs in a user with a custom token from an external auth system.",
-    example: (token) => firebase.auth.signInWithCustomToken(auth, token)
+    example: (token) => signInWithCustomToken(auth, token)
       .then(userCredential => ({ user: userCredential.user }))
       .catch(error => ({ error: error.code, message: error.message }))
   },
   signInWithEmailLink: {
     description: "Signs in a user with an email link.",
-    example: (email, link) => firebase.auth.signInWithEmailLink(auth, email, link)
+    example: (email:string, link) => signInWithEmailLink(auth, email, link)
       .then(userCredential => ({ user: userCredential.user }))
       .catch(error => ({ error: error.code, message: error.message }))
   },
   signInWithPhoneNumber: {
     description: "Signs in a user with a phone number and verification code.",
-    example: (phoneNumber, appVerifier) => firebase.auth.signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+    example: (phoneNumber, appVerifier) => signInWithPhoneNumber(auth, phoneNumber, appVerifier)
       .then(confirmationResult => ({ confirmationResult }))
       .catch(error => ({ error: error.code, message: error.message }))
   },
   signInWithCredential: {
     description: "Signs in a user with a credential object (e.g., from OAuth).",
-    example: (credential) => firebase.auth.signInWithCredential(auth, credential)
+    example: (credential) => signInWithCredential(auth, credential)
       .then(userCredential => ({ user: userCredential.user }))
       .catch(error => ({ error: error.code, message: error.message }))
   },
@@ -253,7 +253,7 @@ export const authFunctions : base = {
   // User Management
   updateCurrentUser: {
     description: "Updates the current user with a new User object.",
-    example: (user) => firebase.auth.updateCurrentUser(auth, user)
+    example: (user) => updateCurrentUser(auth, user)
       .then(() => ({ success: true }))
       .catch(error => ({ error: error.code, message: error.message }))
   },
@@ -261,14 +261,14 @@ export const authFunctions : base = {
   // Password Management
   sendPasswordResetEmail: {
     description: "Sends a password reset email to the user.",
-    example: (email) => firebase.auth.sendPasswordResetEmail(auth, email)
+    example: (email:string) => sendPasswordResetEmail(auth, email)
       .then(() => ({ success: true }))
       .catch(error => ({ error: error.code, message: error.message }))
   },
 
   verifyPasswordResetCode: {
     description: "Verifies a password reset code sent to the user.",
-    example: (code) => firebase.auth.verifyPasswordResetCode(auth, code)
+    example: (code) => verifyPasswordResetCode(auth, code)
       .then(email => ({ email }))
       .catch(error => ({ error: error.code, message: error.message }))
   },
@@ -289,19 +289,19 @@ export const authFunctions : base = {
 
   setPersistence: {
     description: "Sets the persistence mechanism for auth state.",
-    example: (persistence) => firebase.auth.setPersistence(auth, persistence)
+    example: (persistence) => setPersistence(auth, persistence)
       .then(() => ({ success: true }))
       .catch(error => ({ error: error.code, message: error.message }))
   },
   useDeviceLanguage: {
     description: "Sets the auth instance language to the device's language.",
-    example: () => firebase.auth.useDeviceLanguage(auth)
-  },
+    example: () => useDeviceLanguage(auth)
+  },/*
   useEmulator: {
     description: "Configures the auth instance to use the Firebase emulator.",
-    example: (url) => firebase.auth.useEmulator(auth, url)
+    example: (url) => useEmulator(auth, url)
   }
-};
+};*/
 
 // Handle messages from the main script
 self.onmessage = (event) => {

@@ -45,9 +45,6 @@
 
     <header>
 
-      <!-- Sponsor Me -->
-      <iframe src="https://github.com/sponsors/busynest/button" title="Sponsor busynest" height="32" width="114" style="border: 0; border-radius: 6px;  margin: auto 0 auto 0;"></iframe>
-
       <!-- Icon Tag -->
       <user-icon subscribe></user-icon>
 
@@ -62,6 +59,15 @@
       <user-settings></user-settings>
 
     </main>
+
+    <footer>
+
+      <div style="margin: auto">
+        <!-- Sponsor Me -->
+        <iframe src="https://github.com/sponsors/busynest/button" title="Sponsor busynest" height="32" width="114" style="border: 0; border-radius: 6px;  margin: auto 0 auto 0;"></iframe>
+      </div>
+
+    </footer>
 
     <!-- CSS: Custom Variables: <head> tag -->
     <style>
@@ -78,7 +84,7 @@
       /* WebComponent 1: logged-out
       <user-icon>
         <button class="login"> */
-      --pwa_icon_height:              32px;
+      --pwa_icon_height:              32px; /* sync to --pwa_icon_diameter */
       --pwa_icon_padding:             0px 16px;
       --pwa_icon_radius:              6px;
       --pwa_icon_font:                'Arial', sans-serif;
@@ -86,7 +92,7 @@
       /* WebComponent 1: logged-in
       <user-icon>
         <button class="icon"> */
-      --pwa_icon_diameter:            40px;
+      --pwa_icon_diameter:            32px; /* sync to --pwa_icon_height */
 
 
 

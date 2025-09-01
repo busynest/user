@@ -1,4 +1,12 @@
+/*
+window.connect = {};
 
+declare global {
+  interface Window {
+    connect: any;
+  }
+}
+*/
 // Representational State Transfer - Application Programming Interface
 // Module Imports ---------------- ---------------- ----------------
 
@@ -25,7 +33,13 @@ import { Analytics, getAnalytics, logEvent } from "firebase/analytics";
 // Firebse Messaginmg
 import { isSupported } from "firebase/messaging";
 
+
+
 // Module Exports ---------------- ---------------- ----------------
+
+//if (window.firebase) {
+//  window.firebase.initializeApp(connect);
+//}
 
 // Memory Reference to Services - Object Type
 export const application    : FirebaseApp       = initializeApp(connect); // Initialize Application
