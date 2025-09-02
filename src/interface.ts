@@ -33,16 +33,17 @@ signOut : any,
 updateCurrentUser : any,
 useDeviceLanguage : any,
 validatePassword : any,
-verifyPasswordResetCode : any
-handleRecoverEmail:any
+verifyPasswordResetCode : any,
+handleRecoverEmail:any,
+sendEmailVerification: any
 }
 
 /*
 
 // Checks
 applyActionCode(auth, oobCode)	// Applies a verification code sent to the user by email or other out-of-band mechanism.
-beforeAuthStateChanged(auth, callback, onAbort)	// Adds a blocking callback that runs before an auth state change sets a new user.
 checkActionCode(auth, oobCode)	// Checks a verification code sent to the user by email or other out-of-band mechanism.
+beforeAuthStateChanged(auth, callback, onAbort)	// Adds a blocking callback that runs before an auth state change sets a new user.
 
 // Reset
 confirmPasswordReset(auth, oobCode, newPassword)	// Completes the password reset process, given a confirmation code and new password.
@@ -90,7 +91,7 @@ verifyPasswordResetCode(auth, code)	// Checks a password reset code sent to the 
 // List of Firebase Authentication functions with descriptions
 export const authFunctions : base = {
 
-  // out-of-band verification code
+  // Applies a verification code
   applyActionCode: {
     description: "Applies an out-of-band verification code (e.g., email verification).",
     example: (oobCode:any) => applyActionCode(auth, oobCode)
@@ -98,7 +99,7 @@ export const authFunctions : base = {
       .catch( (error:FirebaseError) => ({ error: error.code, message: error.message }))
   },
 
-  // out-of-band metadata verification code
+  // Checks a verification code
   checkActionCode: {
     description: "Checks the metadata of an out-of-band verification code.",
     example: (code:any) => checkActionCode(auth, code)
@@ -106,6 +107,7 @@ export const authFunctions : base = {
       .catch((error:FirebaseError) => ({ error: error.code, message: error.message }))
   },
 
+  // Adds a blocking call
   beforeAuthStateChanged: {
     description:'Adds a blocking callback that runs before an auth state change sets a new user.',
     code: (callback:any, onAbort:any) => beforeAuthStateChanged(auth, callback, onAbort)

@@ -18,7 +18,7 @@ Continue reading to start installing the bundle:
   - Color Scheme: CSS Custom Properties
   - Firebase Initialization
 
-[Live Demo](https://pwa-authentic.firebaseapp.com)
+## [Visit: Live Demo](https://pwa-authentic.firebaseapp.com)
 
 ## pwa-auth.js Features:
 - Register through Email and Password
@@ -34,72 +34,66 @@ Continue reading to start installing the bundle:
 - copy the bundle
   - node_modules/pwa-auth/npm/pwa-auth.js
 
-## Technological Engineering
-- Development Environment: [Node JavaScript](https://nodejs.org)
-- Backend: Google Cloud: [Firebase](https://firebase.google.com/)
-- Predicate State Behavior: [Redux](https://redux.js.org/)
-- Frontend: [Lit](https://lit.dev)
-
 ## Modular JavaScript
 ```javascript
 import 'pwa-auth';
 ```
 
 ## Boilerplate
-- 3 Tag Placements (Custom HTML Elements)
+- 3 Tag Placements (HTML - Custom Elements)
   - user-icon
   - user-drawer
   - user-settings
-- Cascading Style Sheets (CSS)
+- Cascading Style Sheets (CSS - Custom Properties)
 - ECMA Script (JavaScript)
 
-## Custom Elements
+## HTML Custom Elements
 ```html
-<user-icon subscribe></user-icon>
-<!-- Logged-out txt: Login Button (State) -->
-<!-- Logged-out txt: Subscribe Button (State) -->
-<!-- Logged-in Icon Button (State) -->
+<head>
 
-<user-drawer subscribe settingsURL=""></user-drawer>
-<!-- Top-down, Drop-down Feature -->
-<!-- Sign-up by Email Addresses and Password (State) -->
-<!-- Sign-in by Email Addresses and Password (State) -->
-<!-- logged-in (State) -->
-<!-- logged-out (State) -->
+  <!-- CSS Custom Properties - Choice 1: Link Tag -->
+  <link type="stylesheet" href="pwa-styles.css">
 
-<user-settings></user-settings>
-<!-- 1 Photo Upload Feature, view uploaded bucket of photos, photo ediotr -->
-<!-- Unavailable Photo --> 
-<!-- Update Username -->
-<!-- Update Email / Verify -->
-<!-- Update Password -->
-<!-- Delete Account, Photos, Information -->
+</head>
+
+<body>
+
+  <header>
+    <!-- subscribe property: (Initial State): Subscribe -->
+    <!-- subscribe property: else (Initial State): Login -->
+    <!-- Logged-out (State): txt: Login Button -->
+    <!-- Logged-out (State): txt: Subscribe Button -->
+    <!-- Logged-in (State): photo: Icon Button -->
+    <user-icon subscribe></user-icon>
+  </header>
+
+  <!-- settingsURL property: location of <pwa-settings> Tag -->
+  <!-- subscribe property: (Initial State): Subscribe -->
+  <!-- subscribe property: else (Initial State): Login -->
+  <!-- Top-down, Drop-down Feature: height, 1.4 seconds -->
+  <!-- logged-out (State): Sign-up by Email Addresses and Password -->
+  <!-- logged-out (State): Sign-in by Email Addresses and Password -->
+  <!-- logged-in (State): Settings Page Link, Log-out Button -->
+  <user-drawer subscribe settingsURL="/settings"></user-drawer>
+
+  <main>
+    <!-- 1 Photo Upload Feature, view uploaded bucket of photos, photo ediotr -->
+    <!-- Unavailable Photo --> 
+    <!-- Update Username -->
+    <!-- Update Email / Verify -->
+    <!-- Update Password -->
+    <!-- Delete Account, Photos, Information -->
+    <user-settings></user-settings>
+  </main>
+
+  <script>/* Initialize ECMA Script Properties */</script>
+  <style>/* CSS Custom Properties - Choice 2: Style Tag */</style>
+  <script src="pwa-auth.js"></script>
+
+</body>
 ```
-
-# Website Setup:
-```html
-<header>
-  <!-- subscribe: Indicate the 'register' boolean for 'subscribe state' -->
-  <!-- subscribe: else 'login state' -->
-  <user-icon subscribe></user-icon>
-</header>
-
-<!-- settingsURL: where the <pwa-settings> Tag will be placed-->
-<!-- subscribe: boolean for 'subscribe state' -->
-<!-- subscribe: else 'login state' -->
-<user-drawer subscribe settingsURL="/settings"></user-drawer>
-
-<main>
-  <user-settings></user-settings>
-</main>
-
-<script>/* Initialize ECMA Script Properties */</script>
-<style>/* CSS Custom Properties */</style>
-<script src="pwa-auth.js"></script>
-```
-
-## CSS Default Custom Properties
-| CSS Custom Property | Description | Default | Custom Element |
+## CSS Custom Properties
+| Custom Namespace | Description | Default | Custom Element |
 | :--- | ---: | :---: | :--- |
 | --pwa_icon_background           | Button  | #6cc04a; | user-icon |
 | --pwa_icon_hover                | Button      | lightgrey     | user-icon |
@@ -125,7 +119,7 @@ import 'pwa-auth';
 | --pwa_action_background_color   | Button      | #6cc04a  | user-settings |
 | --pwa_action_border_color       | Button      | #60b23e  | user-settings |
 
-
+## CSS Setup
 ```html
 <!-- CSS: Custom Variables -->
 <!-- Place this txt into your document -->
@@ -183,7 +177,7 @@ import 'pwa-auth';
   --pwa_nav_select:               black;
 
   /* Section Header */
-  --pwa_section_header:    black;
+  --pwa_section_header:           black;
 
   /* Label */
   --pwa_label_text_color:         black;
@@ -198,25 +192,19 @@ import 'pwa-auth';
 
 }
 
-/* Dark Theme */
-@media (prefers-color-scheme: dark) { /* etc. */ }
-
-/* Light Theme */
-@media (prefers-color-scheme: light) { /* etc. */ }
-
 </style>
 ```
+# JavaScript Setup
 
-## Google Setup
+## Google
 - Google Analytics
 - Firebase Project
 
-## Firebase Setup
+## Firebase
 - Authentication - email login
 - Cloud Storage - icon save location
 
-## Firebase Instance Configuration
-### Modular Firebase Initialization
+### Initialize Modular Firebase Instance Configuration
 ```javascript
 // Initialize Firebase
 let connect = {
@@ -238,6 +226,12 @@ pwa-auth.js is built upon the Firebase SDK (Software Development Kit).
 The entire bundle is one instance of firebase that takes in the configuration information, internally.
 
 If you are looking for a Namespaced Firebase Configuration, please send it as feedback, and will make that version for you.
+
+# Technological Engineering
+- Development Environment: [Node JavaScript](https://nodejs.org)
+- Backend: Google Cloud: [Firebase](https://firebase.google.com/)
+- Predicate State Behavior: [Redux](https://redux.js.org/)
+- Frontend: [Lit](https://lit.dev)
 
 # Feedback
 All feedback, comments, bugs, and requests are welcome.

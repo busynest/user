@@ -1,16 +1,20 @@
 Change Log
 ==========
+All notable changes to pwa-auth.js will be documented in this file.
 
-All notable changes to this project will be documented in this file.
+## [Unreleased]
+- Social Login Flow
+- animated login and data
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/).
+# [2.0.4] - 2025-09-31
 
-Added - for new features.
-Changed - for changes in existing functionality.
-Deprecated - for soon-to-be removed features.
-Removed - for now removed features.
-Fixed - for any bug fixes.
-Security - in case of vulnerabilities.
+## Changed
+- updated readme file
+
+## Goals
+- Photo Editor
+- Password Verifier
+- Email Verifier
 
 # [1.2.4] - 2025-08-31
 
@@ -45,23 +49,6 @@ Security - in case of vulnerabilities.
 
 ## REMOVED
 - Telephone Verification for version 1 simplicity
-
-
-
-
-
-## [Unreleased]
-- Facebook Login
-- Phone Login
-- Play Games Login
-- X Login
-- Github Login
-- display nested content after webcomponent loads
-- create password after social Login
-- animated login
-- animated data
-- update user info upon change submission
-- change user-icon to "Login" text
 
 ## [1.0.0] - 2025-08-04
 
@@ -153,3 +140,14 @@ Security - in case of vulnerabilities.
 
 ### Removed
 - `<user-drawer>`: Custom Drawer Header Text
+
+
+# Footnotes
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/).
+
+Added - for new features.
+Changed - for changes in existing functionality.
+Deprecated - for soon-to-be removed features.
+Removed - for now removed features.
+Fixed - for any bug fixes.
+Security - in case of vulnerabilities.
