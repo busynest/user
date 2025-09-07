@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-
   <head>
     <title>pwa-auth</title>
     <meta charset="UTF-8">
+
     <meta name="viewport"       content="width=device-width, minimum-scale=1, initial-scale=1" />
-    
-    <!-- Preconnect -->
+    <meta name="theme-color"    content="#272931" />
+    <meta name="author"         content="Jacek Markiewicz" />
+    <meta name="description"    content="To provide a personalized experience, Apps need to know the identity of a user to securely store data in the cloud. pwa-auth is powered by The Firebase Authentication backend, consistently providing a centralized and predictable state behaviour with Redux, and declaratively rendering straight into the DOM with Google Polymer's fast and light Lit-Element. This Component includes 3 HTML Tags, and 1 Boilerplate Function to display the user icon, sign up, login, log out, change account details, and delete the user's account." />
+    <meta name="keywords"       content="lit, redux, firebase, authentication, drawer, settings, icon, username, email, password, delete" />
+    <meta name="referrer"       content="origin" />
+    <link rel="manifest"        href="manifest.json" />
+    <link rel="icon"            href="images/favicon.ico">
+
     <link rel="preconnect"      href="https://firebasestorage.googleapis.com">
-    
-    <!-- Pre-Fetch -->
     <link rel="dns-prefetch"    href="https://firebasestorage.googleapis.com">
 
-    <!-- Cascading Style Sheets -->
-    <link rel="stylesheet"      href="styles.css">
+    <link rel="stylesheet"      href="/css/styles.css">
+    <link rel="stylesheet"      href="/pwa-styles.css">
 
-    <!-- pwa-auth.js - CSS Custom Variables -->
-    <link rel="stylesheet"      href="pwa-styles.css">
-
-    <!-- pwa-auth.js - Module Configuration Objects -->
     <script>
       window.process = { env: { NODE_ENV: 'production' } };
       window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
@@ -38,34 +38,27 @@
   <body>
 
     <header>
-
       <!-- Icon Tag -->
       <user-icon subscribe></user-icon>
-
     </header>
 
     <!-- Drawer Tag-->
-    <user-drawer subscribe settingsURL="/demo/settings"></user-drawer>
+    <user-drawer subscribe settingsURL="/settings"></user-drawer>
 
     <main>
-
       <!-- Settings Tag-->
       <user-settings></user-settings>
-
     </main>
 
     <footer>
-
       <div style="margin: auto">
         <!-- Sponsor Me -->
         <iframe src="https://github.com/sponsors/busynest/button" title="Sponsor busynest" height="32" width="114" style="border: 0; border-radius: 6px;  margin: auto 0 auto 0;"></iframe>
       </div>
-
     </footer>
 
     <!-- Application Shell -->
-    <script type="module" src="pwa-auth.js" async></script>
-
+    <script src="/js/pwa-auth.js" async></script>
+    
   </body>
-
 </html>

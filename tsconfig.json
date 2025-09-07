@@ -21,7 +21,7 @@
     "allowSyntheticDefaultImports": true // Simplifies imports for Redux/Firebase
   },
   "include": [
-    "src/**/*.ts" ],
+    "source/**/*.ts" ],
   "exclude": [
     "demo/**/*.ts"
   ],

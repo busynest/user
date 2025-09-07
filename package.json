@@ -1,7 +1,7 @@
 {
   "name": "pwa-auth",
   "author": "Jacek Markiewicz <jack.solutionbox@gmail.com>(https://www.jackspublishing.com)",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "User Management Component with 3 HTML Tags, and 1 Boilerplate Function to display user icon, sign up, login, log out, change account details, delete account.",
   "homepage": "https://pwa-authentic.firebaseapp.com",
   "main": "pwa-auth.js",
@@ -22,7 +22,8 @@
   "license": "BSD-3-Clause",
   "flat": true,
   "scripts": {
-    "server": "web-dev-server --node-resolve --watch --open --app-index demo/index.html",
+    "demo": "web-dev-server --node-resolve --watch --open --app-index demo/index.html",
+    "website": "web-dev-server --node-resolve --watch --open --app-index website/index.html",
     "rollup": "rollup -c"
   },
   "dependencies": {
@@ -44,7 +45,7 @@
     "babel-plugin-template-html-minifier": "^4.1.0",
     "firebase": "^12.1.0",
     "rollup": "^4.46.3",
-    "rollup-plugin-html-literals": "^2.0.0",
+    "rollup-plugin-html-literals": "^2.0.1",
     "rollup-plugin-license": "^3.6.0",
     "rollup-plugin-summary": "^3.0.1"
   }

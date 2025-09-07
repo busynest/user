@@ -2,7 +2,7 @@ import { html, LitElement, css }          from 'lit';
 import { customElement, state }           from 'lit/decorators.js';
 
 import { EmailAuthProvider, signInWithCredential } from 'firebase/auth';
-import { auth }           from '../../../start';
+import { auth }           from '../../../firebase/start';
 
 import { buttonStyle }    from '../../../css/form/button';
 import { labelStyle }     from '../../../css/form/label';

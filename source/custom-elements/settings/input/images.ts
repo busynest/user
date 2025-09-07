@@ -1,5 +1,5 @@
 import { ref } from "@firebase/storage";
-import { storage } from "../../../start";
+import { storage } from "../../../firebase/start";
 /*
 export const uploadIcon = (uploader, file) => {
 

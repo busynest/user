@@ -6,7 +6,19 @@ All notable changes to pwa-auth.js will be documented in this file.
 - Social Login Flow
 - animated login and data
 
-# [2.0.4] - 2025-09-31
+# [2.0.4] - 2025-09-06
+
+# Changed
+- user-icon: login button - line-height configuration
+- (Public) Folder to (Website) Project Folder
+
+## Added
+- Firebase Functions: - well-rounded, all use.
+- Firebase Configuration Object Module
+- Partial-Dynamic - an individual export, for each property, of configuration object
+- window object
+
+# [2.0.4] - 2025-08-31
 
 ## Changed
 - updated readme file

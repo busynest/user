@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "pwa-auth",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "A User Management Component is designed with 3 HTML Tags, and 1 Boilerplate Function to sign up, sign in, log out, change account details, delete account.",
     "icons": [
     {
@@ -37,7 +37,7 @@
   ],
 
   "start_url": "/",
-  "homepage": "https://www.jackspublishing.com",
+  "homepage": "https://pwa-authentic.firebaseapp.com",
   "short_name": "pwa-auth",
   "display": "standalone",
   "orientation": "any",

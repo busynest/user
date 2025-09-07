@@ -3,7 +3,7 @@ import { state }              from "lit/decorators.js";
 import { connect }            from "pwa-helpers";
 import store, { AppState }    from "../../../store";
 import { buttonStyle }        from "../../../css/form/button";
-import { auth }               from '../../../start';
+import { auth }               from '../../../firebase/start';
 
 export class DeleteUser extends connect(store)(LitElement) {
    

@@ -1,0 +1,77 @@
+ /* CSS: Custom Variables: <head> tag */
+ 
+:root {
+
+  /* WebComponent 1 : User Icon
+  <user-icon>
+    <button> */
+  --pwa_icon_hover:               lightgrey;
+  --pwa_icon_background:          #6cc04a;
+  --pwa_icon_border:              2px solid black;
+
+  /* WebComponent 1: logged-out
+  <user-icon>
+    <button class="login"> */
+  --pwa_icon_height:              32px; /* sync to --pwa_icon_diameter */
+  --pwa_icon_padding:             0px 16px;
+  --pwa_icon_radius:              6px;
+  --pwa_icon_font:                'Arial', sans-serif;
+
+  /* WebComponent 1: logged-in
+  <user-icon>
+    <button class="icon"> */
+  --pwa_icon_diameter:            32px; /* sync to --pwa_icon_height */
+
+
+
+  /* WebComponent 2: Drop-down Drawer
+  <user-drawer>
+    <section>
+      <header></header>
+      <div class="spec"> */
+  --pwa_drawer_border:            3px #303030 solid;
+  --pwa_drawer_z-index:           2;
+  --pwa_drawer_border-radius:     20px;
+
+  /* WebComponent 2: Drop-down Drawer - logged-out
+  <div class="spec"> */
+  --pwa_drawer_text_color:        #303030;
+  --pwa_drawer_background_color:  #fff;
+
+  /* WebComponent 2: Drop-down Drawer - logged-in
+  <div class="spec" on> */
+
+
+
+  /* WebComponent 3: Settings Page
+  <user-settings>
+    <nav></nav>
+    <section></section> */
+  --pwa_settings_background:      white;
+  --pwa_divider:                  black;
+
+  /* Navigation */
+  --pwa_nav_button:               grey;
+  --pwa_nav_select:               black;
+
+  /* Section Header */
+  --pwa_section_header:    black;
+
+  /* Label */
+  --pwa_label_text_color:         black;
+
+  /* Input */
+  --pwa_input_background:         #E1E5EB;
+
+  /* Button */
+  --pwa_action_text_color:        #fff;
+  --pwa_action_background_color:  #6cc04a;
+  --pwa_action_border_color:      #60b23e;
+
+}
+
+/* Dark Theme */
+@media (prefers-color-scheme: dark) { }
+
+/* Light Theme */
+@media (prefers-color-scheme: light) { }

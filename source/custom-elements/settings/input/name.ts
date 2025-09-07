@@ -4,7 +4,7 @@ import { connect }            from "pwa-helpers";
 import { store, AppState }    from "../../../store";
 import { updateProfile }      from "firebase/auth";
 import { accName }            from "../../../redux/backend";
-import { auth }               from "../../../start";
+import { auth }               from "../../../firebase/start";
 import { labelStyle }         from "../../../css/form/label";
 import { inputStyle }         from "../../../css/form/input";
 import { buttonStyle }        from "../../../css/form/button";

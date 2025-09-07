@@ -39,7 +39,6 @@ export const iconStyles = css`
     width:                    auto;
     border-radius:            var(--pwa_icon_radius);
     height:                   var(--pwa_icon_height);
-    line-height:              var(--pwa_icon_height);
     padding:                  var(--pwa_icon_padding);
     font-family:              var(--pwa_icon_font);
     font-weight:              500;

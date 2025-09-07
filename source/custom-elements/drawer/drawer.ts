@@ -12,7 +12,7 @@ import { lineStyle }    from './css/paragraph';
 import { listStyle }    from '../../css/form/list';
 
 import { toggleSign }   from '../../redux/frontend'; 
-import { logOut }       from '../../start';
+import { logOut }       from '../../firebase/start';
 
 import './input/login';
 import './input/sign-up';

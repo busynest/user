@@ -1,15 +1,26 @@
 Progressive Website Application - Authentication
 ======================
-Hello, and welcome to Jack's Publishing of Custom HTML Elements.
+Jack's Publishing maintains Custom HTML Elements where developers can focus on UX rather than low-level API calls.
 
-pwa-auth.js is a bundle of 3 Custom HTML Elements for Firebase (IAM) Authenication using email and password, with the ability to change username, icon, email, password, or delete your own account and it's content all together. 
 
-You will learn how to reference, initialize, and place 3 Custom HTML Tags for use. By either <b>Standard</b> or <b>Modular</b> ECMA Script.
+pwa-auth.js is a bundle of 3 Custom HTML Elements for Firebase (IAM) Authenication using email and password, with the ability to change username, icon, email, password, or delete your own account and it's content all together.
 
 pwa-auth.js (Authentication Components) are for anyone who is looking for a quick and simple way to sign-up, log-in, log-out, modify, or delete a firebase account information from thier own personal domain.
 
-Jack's Publishing is dedicated to maintaining components for your projects. This specific project is designed to be simple, by meeting basic user needs with the interplay of an Icon Button, Drop-down Drawer, and a Settings Page.
+pwa-auth.js meets basic user needs with the interplay of:
+- Icon Button
+- Drop-down Drawer
+- Settings Page
 
+
+
+You will learn how to place 3 Custom HTML Tags, reference CSS, and How to Initialize an Firebase Instance. By either <b>Standard</b> or <b>Modular</b> ECMA Script.
+
+<!--
+Jack's Publishing is dedicated to maintaining components for this project.
+
+pwa-auth.js is designed to be simple, by meeting basic user needs with the interplay of an Icon Button, Drop-down Drawer, and a Settings Page.
+-->
 Continue reading to start installing the bundle:
 - Pick the JavaScript File Type to Reference
 - Understand the Library Features
@@ -18,7 +29,7 @@ Continue reading to start installing the bundle:
   - Color Scheme: CSS Custom Properties
   - Firebase Initialization
 
-## [Visit: Live Demo](https://pwa-authentic.firebaseapp.com)
+Visit: [Live Demo](https://pwa-authentic.firebaseapp.com)
 
 ## pwa-auth.js Features:
 - Register through Email and Password
@@ -33,6 +44,7 @@ Continue reading to start installing the bundle:
 ## Standard JavaScript
 - copy the bundle
   - node_modules/pwa-auth/npm/pwa-auth.js
+  - node_modules/pwa-auth/npm/pwa-styles.css
 
 ## Modular JavaScript
 ```javascript
@@ -49,11 +61,10 @@ import 'pwa-auth';
 
 ## HTML Custom Elements
 ```html
-<head>
 
+<head>
   <!-- CSS Custom Properties - Choice 1: Link Tag -->
   <link type="stylesheet" href="pwa-styles.css">
-
 </head>
 
 <body>
@@ -86,7 +97,7 @@ import 'pwa-auth';
     <user-settings></user-settings>
   </main>
 
-  <script>/* Initialize ECMA Script Properties */</script>
+  <script>/* Firebase Instance Configuration */</script>
   <style>/* CSS Custom Properties - Choice 2: Style Tag */</style>
   <script src="pwa-auth.js"></script>
 
@@ -119,10 +130,9 @@ import 'pwa-auth';
 | --pwa_action_background_color   | Button      | #6cc04a  | user-settings |
 | --pwa_action_border_color       | Button      | #60b23e  | user-settings |
 
-## CSS Setup
+## CSS Design
 ```html
 <!-- CSS: Custom Variables -->
-<!-- Place this txt into your document -->
 <style>
 
 :root {
@@ -194,46 +204,56 @@ import 'pwa-auth';
 
 </style>
 ```
-# JavaScript Setup
 
-## Google
+## Google Prerequisites
 - Google Analytics
 - Firebase Project
 
-## Firebase
+## Firebase Services
 - Authentication - email login
-- Cloud Storage - icon save location
+- Cloud Storage - storage bucket
 
-### Initialize Modular Firebase Instance Configuration
-```javascript
-// Initialize Firebase
-let connect = {
-    apiKey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    authDomain: "xxxxxxx.xxxxxxx.xxx",
-    databaseURL: "https://xxxxxxx.xxxxxxx.xxx",
-    projectId: "xxxxxxx",
-    storageBucket: "xxxxxxx.xxxxxxx.xxx",
-    messagingSenderId: "xxxxxxxxxxx",
-    appId: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    measurementId: "xxxxxxxxxxx"
-};
+## JavaScript, Firebase Instance Configuration
+```html
+<script>
+  // Firebase configuration Object
+  window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
+          apiKey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          authDomain: "xxxxxxx.xxxxxxx.xxx",
+          databaseURL: "https://xxxxxxx.xxxxxxx.xxx",
+          projectId: "xxxxxxx",
+          storageBucket: "xxxxxxx.xxxxxxx.xxx",
+          messagingSenderId: "xxxxxxxxxxx",
+          appId: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          measurementId: "xxxxxxxxxxx"
+      })
+    }
+  };
 
-if (lolalhost) { connect = { /* etc. */ } }
+  // Localhost - Firebase Configuratioon Object
+  if (lolalhost) { window.process = { env: { FIREBASE_CONFIG: 'etc.' } } }
+</script>
 ```
 
-### Global Namespaced Firebase Configuration
+## Global Namespaced Firebase Instance Configuration
 pwa-auth.js is built upon the Firebase SDK (Software Development Kit).
 The entire bundle is one instance of firebase that takes in the configuration information, internally.
 
 If you are looking for a Namespaced Firebase Configuration, please send it as feedback, and will make that version for you.
 
-# Technological Engineering
-- Development Environment: [Node JavaScript](https://nodejs.org)
+## Technological Engineering
+- Development (Server-side) Environment: [Node JavaScript](https://nodejs.org)
 - Backend: Google Cloud: [Firebase](https://firebase.google.com/)
 - Predicate State Behavior: [Redux](https://redux.js.org/)
-- Frontend: [Lit](https://lit.dev)
+- Frontend (Client-side): [Lit](https://lit.dev)
 
-# Feedback
+### Both - Client-side and Server-side - Object - Libraries
+- in browser: window
+- in node.js: global
+- in web workers: self
+- ECMA Script 2020+: globalThis
+
+## Feedback
 All feedback, comments, bugs, and requests are welcome.
 * [Jack's Publishing](https://www.jackspublishing.com)
 * [contractor's centre](https://www.contractorscentre.com)

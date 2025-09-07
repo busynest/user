@@ -3,7 +3,7 @@ import { html, css, LitElement, CSSResultArray }   from 'lit';
 import { property, state }          from 'lit/decorators.js';
 import { store, AppState }          from '../../../store';
 import { connect }                  from 'pwa-helpers';
-import { auth, storage }            from '../../../start';
+import { auth, storage, user }            from '../../../firebase/start';
 import { updateProfile }            from 'firebase/auth';
 import { accImage }                 from '../../../redux/backend';
 import { ref, updateMetadata, getDownloadURL, uploadBytesResumable } from "@firebase/storage";
@@ -20,7 +20,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
   //@state() private uploadComplete = false;
 
   @state() private progress: number = 0;
-  @state() private downloadURL: string = '';
+  // @state() private downloadURL: string = '';
   @state() private error: string = '';
   @state() private status: string = '';
 
@@ -28,7 +28,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
   constructor() {
     super();
     this.progress = 0;
-    this.downloadURL = '';
+    // this.downloadURL = '';
     this.error = '';
     this.status = '';
   }
@@ -134,7 +134,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
 
     </label>
 
-       <p style="text-align:center;">${this.status}</p>
+       <p style="text-align:center;">${this.status}${this.error}</p>
       `;
   }
 
@@ -142,7 +142,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
 
 
 
-
+/*
 
   private appendToFileLocation(filePath: string, appendString: string): string {
 
@@ -157,6 +157,9 @@ export class ContactPhoto extends connect(store)(LitElement) {
 
     return `${basePath}${appendString}${extension}`; // Append the string and add the extension back
   }
+
+*/
+
 
   // Save Image to Storage and Database - Update Profile Photo URL in Database and State 
   private async saveImage() {
@@ -264,7 +267,9 @@ export class ContactPhoto extends connect(store)(LitElement) {
              // const modifiedFilePath = this.appendToFileLocation(url, '_400x400');
              // console.log('modifiedFilePath', modifiedFilePath);
 
-              updateProfile(auth.currentUser, { photoURL: url })
+            if (user) {
+              
+              updateProfile(user, { photoURL: url })
                 .then(() => {
                   // console.log('Profile picture updated successfully');
                   uploader.value = 100;
@@ -273,10 +278,12 @@ export class ContactPhoto extends connect(store)(LitElement) {
 
                 this.status = 'User profile updated successfully!';
 
-            // const resizedLocation = ref(storage, 'images/article/' + file.name + '_400x400' ); // Path where the image will be stored in Firebase Storage
+              // const resizedLocation = ref(storage, 'images/article/' + file.name + '_400x400' ); // Path where the image will be stored in Firebase Storage
 
-            // Save URL
-            this.dispatchPhoto(url);
+              // Save URL
+              this.dispatchPhoto(url);
+
+            } // End If Statement
 
         }).catch( () => {} );
 

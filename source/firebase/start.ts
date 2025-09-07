@@ -1,19 +1,10 @@
-/*
-window.connect = {};
-
-declare global {
-  interface Window {
-    connect: any;
-  }
-}
-*/
 // Representational State Transfer - Application Programming Interface
 // Module Imports ---------------- ---------------- ----------------
 
 // Redux
-import { store } from './store';
-import { closeSign, iconAuth, nameAuth, userAuth } from './redux/frontend';
-import { accID, accEmail, accImage, accName } from './redux/backend';
+import { store } from '../store';
+import { closeSign, iconAuth, nameAuth, userAuth } from '../redux/frontend';
+import { accID, accEmail, accImage, accName } from '../redux/backend';
 
 // Firebase App 
 import { FirebaseApp, initializeApp } from 'firebase/app';
@@ -37,12 +28,12 @@ import { isSupported } from "firebase/messaging";
 
 // Module Exports ---------------- ---------------- ----------------
 
-//if (window.firebase) {
-//  window.firebase.initializeApp(connect);
-//}
+
+
+const firebaseConfig: any = JSON.parse(process.env.FIREBASE_CONFIG || "{}");
 
 // Memory Reference to Services - Object Type
-export const application    : FirebaseApp       = initializeApp(connect); // Initialize Application
+export const application    : FirebaseApp       = initializeApp(firebaseConfig); // Initialize Application
 export const db             : Firestore         = getFirestore(application);  // Initialize Database
 export const storage        : FirebaseStorage   = getStorage(application); // Reference:   Represents a reference to a file or directory in Storage, returned by ref(). // UploadTask:  Represents an ongoing upload operation, returned by upload methods. // ListResult:  Represents the result of listing files in a directory.
 export const auth           : Auth              = getAuth(application);
@@ -211,4 +202,15 @@ const admin: fire = {
   messagingSenderId:    connect.messagingSenderId,
   measurementId:        connect.measurementId
 };
+*/
+
+
+/*
+window.connect = {};
+
+declare global {
+  interface Window {
+    connect: any;
+  }
+}
 */
