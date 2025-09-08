@@ -12,7 +12,7 @@ export const inputStyle : CSSResult = css`
     text-align:               left;
     margin:                   0 16px 0 16px;
     padding:                  8px 16px;
-    background-color:         var(--pwa_input_background);
+    background-color:         var(--pwa_input_background, #E1E5EB);
     border:                   0;
     border-radius:            4px;
     -webkit-border-radius:    4px;

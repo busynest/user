@@ -5,7 +5,7 @@ export const labelStyle : CSSResult = css`
   label         { font-size: .9em; }
   label {
     display:              grid;
-    color:                var(--pwa_label_text_color);
+    color:                var(--pwa_label_text_color, black);
     box-sizing:           border-box;
     width:                100%;
     font-size:            smaller;

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "pwa-auth",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "A User Management Component is designed with 3 HTML Tags, and 1 Boilerplate Function to sign up, sign in, log out, change account details, delete account.",
     "icons": [
     {

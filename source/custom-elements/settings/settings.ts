@@ -65,7 +65,7 @@ export class UserSettings extends connect(store)(LitElement) {
       /* Button Padding for Border Outline */
       :host {
         display:          grid;
-        background-color: var(--pwa_settings_background);
+        background-color: var(--pwa_settings_background, white);
       }
 
       /* Page Form */
@@ -79,12 +79,12 @@ export class UserSettings extends connect(store)(LitElement) {
       .pageTitle { margin: 0; }
 
       h2 {
-        color:            var(--pwa_section_header);
+        color:            var(--pwa_section_header, black);
         text-align:       center;
         text-shadow:      1px 1px 2px black, 0 0 15px grey, 0 0 5px #fff;
         
-        border-top:       2px solid var(--pwa_divider);
-        border-bottom:    2px solid var(--pwa_divider);
+        border-top:       2px solid var(--pwa_divider, black);
+        border-bottom:    2px solid var(--pwa_divider, black);
 
         margin:           0;
         padding:          8px 0;

@@ -20,9 +20,9 @@ export const buttonStyle: CSSResult = css`
     line-height:          16px;
     padding:              10px 16px;
     border-radius:        6px;
-    color:                var(--pwa_action_text_color);
-    background-color:     var(--pwa_action_background_color);
-    border-color:         var(--pwa_action_border_color);
+    color:                var(--pwa_action_text_color, #fff);
+    background-color:     var(--pwa_action_background_color, #6cc04a);
+    border-color:         var(--pwa_action_border_color, #60b23e);
     box-shadow:           1px 1px 1px grey;
   }
 

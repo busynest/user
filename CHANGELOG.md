@@ -6,6 +6,18 @@ All notable changes to pwa-auth.js will be documented in this file.
 - Social Login Flow
 - animated login and data
 
+# [2.0.7] - 2025-09-07
+
+## Changed
+- CSS Custom Properties Default
+
+## Notes
+* Both - Client-side and Server-side - Object - Libraries
+- in browser: window
+- in node.js: global
+- in web workers: self
+- ECMA Script 2020+: globalThis
+
 # [2.0.6] - 2025-09-07
 
 ## Changed

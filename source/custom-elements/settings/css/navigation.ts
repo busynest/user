@@ -19,7 +19,7 @@ export const navigation = css`
   /* Navigation Button */
   nav > ul > li > button {
 
-    color:            var(--pwa_nav_button);
+    color:            var(--pwa_nav_button, grey);
     border:           0;
     width:            100%;
     height:           36px;
@@ -35,7 +35,7 @@ export const navigation = css`
   /* Navigation Button - Active */
   nav > ul > li > button[on] {
 
-    color: var(--pwa_nav_select);
+    color: var(--pwa_nav_select, black);
 
   }
 

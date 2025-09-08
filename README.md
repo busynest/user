@@ -2,7 +2,6 @@ Progressive Website Application - Authentication
 ======================
 Jack's Publishing maintains Custom HTML Elements where developers can focus on UX rather than low-level API calls.
 
-
 pwa-auth.js is a bundle of 3 Custom HTML Elements for Firebase (IAM) Authenication using email and password, with the ability to change username, icon, email, password, or delete your own account and it's content all together.
 
 pwa-auth.js (Authentication Components) are for anyone who is looking for a quick and simple way to sign-up, log-in, log-out, modify, or delete a firebase account information from thier own personal domain.
@@ -12,15 +11,8 @@ pwa-auth.js meets basic user needs with the interplay of:
 - Drop-down Drawer
 - Settings Page
 
-
-
 You will learn how to place 3 Custom HTML Tags, reference CSS, and How to Initialize an Firebase Instance. By either <b>Standard</b> or <b>Modular</b> ECMA Script.
 
-<!--
-Jack's Publishing is dedicated to maintaining components for this project.
-
-pwa-auth.js is designed to be simple, by meeting basic user needs with the interplay of an Icon Button, Drop-down Drawer, and a Settings Page.
--->
 Continue reading to start installing the bundle:
 - Pick the JavaScript File Type to Reference
 - Understand the Library Features
@@ -51,21 +43,27 @@ Visit: [Live Demo](https://pwa-authentic.firebaseapp.com)
 ```javascript
 import 'pwa-auth';
 ```
-
-## Boilerplate
-- 3 Tag Placements (HTML - Custom Elements)
+## HTML
+- Custom Elements
   - user-icon
   - user-drawer
   - user-settings
-- Cascading Style Sheets (CSS - Custom Properties)
-- ECMA Script (JavaScript)
-- <base> tag consideration: Hyperlinks without base tag 
 
-## HTML Custom Elements
+## CSS
+- Custom Properties
+
+## JavaScript
+- Google Prerequisites:
+  - Google Analytics
+  - Firebase Project
+- Firebase Services:
+  - Authentication - email login
+  - Cloud Storage - storage bucket
+
+## Boilerplate
 ```html
-
 <head>
-  <!-- CSS Custom Properties - Choice 1: Link Tag -->
+  <!-- pwa-auth.js - CSS Custom Properties - Choice 1: Link Tag -->
   <link type="stylesheet" href="pwa-styles.css">
 </head>
 
@@ -101,8 +99,35 @@ import 'pwa-auth';
     <user-settings emptyArtwork="images/empty.jpg"></user-settings>
   </main>
 
-  <script>/* Firebase Instance Configuration */</script>
-  <style>/* CSS Custom Properties - Choice 2: Style Tag */</style>
+  <!-- pwa-auth.js - CSS Custom Variables - Choice 2: Style Tag -->
+  <style>
+    :root {
+      --pwa_icon_diameter: 32px;
+      /* copy all properties from css/pwa-styles.css */
+    }
+  </style>
+
+  <!-- pwa-auth.js - Firebase Instance -->
+  <script>
+    // Firebase Configuration Object
+    window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
+            apiKey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            authDomain: "xxxxxxx.xxxxxxx.xxx",
+            databaseURL: "https://xxxxxxx.xxxxxxx.xxx",
+            projectId: "xxxxxxx",
+            storageBucket: "xxxxxxx.xxxxxxx.xxx",
+            messagingSenderId: "xxxxxxxxxxx",
+            appId: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            measurementId: "xxxxxxxxxxx"
+        })
+      }
+    };
+
+    // Localhost - Firebase Configuratioon Object
+    if (lolalhost) { window.process = { env: { FIREBASE_CONFIG: 'etc.' } } }
+  </script>
+
+  <!-- pwa-auth.js - Webcomponent Library -->
   <script src="pwa-auth.js"></script>
 
 </body>
@@ -134,111 +159,6 @@ import 'pwa-auth';
 | --pwa_action_background_color   | Button      | #6cc04a  | user-settings |
 | --pwa_action_border_color       | Button      | #60b23e  | user-settings |
 
-## CSS Design
-```html
-<!-- CSS: Custom Variables -->
-<style>
-
-:root {
-
-  /* WebComponent 1 : User Icon
-  <user-icon>
-    <button> */
-  --pwa_icon_hover:               lightgrey;
-  --pwa_icon_background:          #6cc04a;
-  --pwa_icon_border:              2px solid black;
-
-  /* WebComponent 1: logged-out
-  <user-icon>
-    <button class="login"> */
-  --pwa_icon_height:              32px; /* sync to --pwa_icon_diameter */
-  --pwa_icon_padding:             0px 16px;
-  --pwa_icon_radius:              6px;
-  --pwa_icon_font:                'Arial', sans-serif;
-
-  /* WebComponent 1: logged-in
-  <user-icon>
-    <button class="icon"> */
-  --pwa_icon_diameter:            32px; /* sync to --pwa_icon_height */
-
-
-
-  /* WebComponent 2: Drop-down Drawer
-  <user-drawer>
-    <section>
-      <header></header>
-      <div class="spec"> */
-  --pwa_drawer_border:            3px #303030 solid;
-  --pwa_drawer_z-index:           2;
-  --pwa_drawer_border-radius:     20px;
-
-  /* WebComponent 2: Drop-down Drawer - logged-out
-  <div class="spec"> */
-  --pwa_drawer_text_color:        #303030;
-  --pwa_drawer_background_color:  #fff;
-
-
-
-  /* WebComponent 3: Settings Page
-  <user-settings>
-    <nav></nav>
-    <section></section> */
-  --pwa_settings_background:      white;
-  --pwa_divider:                  black;
-
-  /* Navigation */
-  --pwa_nav_button:               grey;
-  --pwa_nav_select:               black;
-
-  /* Section Header */
-  --pwa_section_header:           black;
-
-  /* Label */
-  --pwa_label_text_color:         black;
-
-  /* Input */
-  --pwa_input_background:         #E1E5EB;
-
-  /* Button */
-  --pwa_action_text_color:        #fff;
-  --pwa_action_background_color:  #6cc04a;
-  --pwa_action_border_color:      #60b23e;
-
-}
-
-</style>
-```
-
-## Google Prerequisites
-- Google Analytics
-- Firebase Project
-
-## Firebase Services
-- Authentication - email login
-- Cloud Storage - storage bucket
-
-## JavaScript, Firebase Instance Configuration
-```html
-<script>
-  // Firebase configuration Object
-  window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
-          apiKey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-          authDomain: "xxxxxxx.xxxxxxx.xxx",
-          databaseURL: "https://xxxxxxx.xxxxxxx.xxx",
-          projectId: "xxxxxxx",
-          storageBucket: "xxxxxxx.xxxxxxx.xxx",
-          messagingSenderId: "xxxxxxxxxxx",
-          appId: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-          measurementId: "xxxxxxxxxxx"
-      })
-    }
-  };
-
-  // Localhost - Firebase Configuratioon Object
-  if (lolalhost) { window.process = { env: { FIREBASE_CONFIG: 'etc.' } } }
-</script>
-```
-
 ## Global Namespaced Firebase Instance Configuration
 pwa-auth.js is built upon the Firebase SDK (Software Development Kit).
 The entire bundle is one instance of firebase that takes in the configuration information, internally.
@@ -251,15 +171,9 @@ If you are looking for a Namespaced Firebase Configuration, please send it as fe
 - Predicate State Behavior: [Redux](https://redux.js.org/)
 - Frontend (Client-side): [Lit](https://lit.dev)
 
-### Both - Client-side and Server-side - Object - Libraries
-- in browser: window
-- in node.js: global
-- in web workers: self
-- ECMA Script 2020+: globalThis
-
 ## Feedback
 All feedback, comments, bugs, and requests are welcome.
 * [Jack's Publishing](https://www.jackspublishing.com)
 * [contractor's centre](https://www.contractorscentre.com)
 * [Node Package Manager](https://www.npmjs.com/package/pwa-auth)
-* [Sponsor Jacek Markiewicz](https://github.com/sponsors/busynest/button)
+* [Sponsor Jacek Markiewicz](https://github.com/sponsors/busynest/button) 
