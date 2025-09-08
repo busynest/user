@@ -1,5 +1,5 @@
 import { css, html, LitElement }          from 'lit';
-import { state, customElement }           from 'lit/decorators.js';
+import { state, customElement, property }           from 'lit/decorators.js';
 import { connect }                        from 'pwa-helpers/connect-mixin.js';
 import { store, AppState }                from '../../store';
 import { navigateAuth }                   from '../../redux/frontend';
@@ -13,6 +13,9 @@ import { listStyle } from '../../css/form/list';
 
 @customElement('user-settings')
 export class UserSettings extends connect(store)(LitElement) {
+
+  /** @attr emptyArtwork */
+  @property({type: String, reflect: true}) public emptyArtwork = '';
 
   @state() private profileTopic = '';
   @state() private name = '';
@@ -144,7 +147,7 @@ export class UserSettings extends connect(store)(LitElement) {
         <h2>${this.name}</h2>
 
         <!-- Custom Image Element - Display / Upload -->
-        <contact-photo></contact-photo>
+        <contact-photo emptyArtwork="${this.emptyArtwork}"></contact-photo>
 
       </section>
       

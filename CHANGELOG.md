@@ -6,9 +6,16 @@ All notable changes to pwa-auth.js will be documented in this file.
 - Social Login Flow
 - animated login and data
 
-# [2.0.4] - 2025-09-06
+# [2.0.6] - 2025-09-07
 
-# Changed
+## Changed
+- start.js: default no-image storage, default no-image hyperlink
+- default image changed to svg
+- user-icon, user-settings: Empty Artwork URL, Property
+
+# [2.0.5] - 2025-09-06
+
+## Changed
 - user-icon: login button - line-height configuration
 - (Public) Folder to (Website) Project Folder
 

@@ -16,8 +16,8 @@
     <link rel="preconnect"      href="https://firebasestorage.googleapis.com">
     <link rel="dns-prefetch"    href="https://firebasestorage.googleapis.com">
 
-    <link rel="stylesheet"      href="/css/styles.css">
-    <link rel="stylesheet"      href="/pwa-styles.css">
+    <link rel="stylesheet"      href="css/styles.css">
+    <link rel="stylesheet"      href="pwa-styles.css">
 
     <script>
       window.process = { env: { NODE_ENV: 'production' } };
@@ -39,15 +39,15 @@
 
     <header>
       <!-- Icon Tag -->
-      <user-icon subscribe></user-icon>
+      <user-icon subscribe emptyArtwork="images/empty.jpg"></user-icon>
     </header>
 
     <!-- Drawer Tag-->
-    <user-drawer subscribe settingsURL="/settings"></user-drawer>
+    <user-drawer subscribe settingsURL="settings"></user-drawer>
 
     <main>
       <!-- Settings Tag-->
-      <user-settings></user-settings>
+      <user-settings emptyArtwork="images/empty.jpg"></user-settings>
     </main>
 
     <footer>
@@ -58,7 +58,7 @@
     </footer>
 
     <!-- Application Shell -->
-    <script src="/js/pwa-auth.js" async></script>
+    <script src="js/pwa-auth.js" async></script>
     
   </body>
 </html>

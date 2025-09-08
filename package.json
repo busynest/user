@@ -1,7 +1,7 @@
 {
   "name": "pwa-auth",
   "author": "Jacek Markiewicz <jack.solutionbox@gmail.com>(https://www.jackspublishing.com)",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "User Management Component with 3 HTML Tags, and 1 Boilerplate Function to display user icon, sign up, login, log out, change account details, delete account.",
   "homepage": "https://pwa-authentic.firebaseapp.com",
   "main": "pwa-auth.js",

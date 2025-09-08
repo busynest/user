@@ -8,15 +8,15 @@
     
     <!-- Preconnect -->
     <link rel="preconnect"      href="https://firebasestorage.googleapis.com">
-    
+
     <!-- Pre-Fetch -->
     <link rel="dns-prefetch"    href="https://firebasestorage.googleapis.com">
 
     <!-- Cascading Style Sheets -->
-    <link rel="stylesheet"      href="styles.css">
+    <link rel="stylesheet"      href="css/styles.css">
 
     <!-- pwa-auth.js - CSS Custom Variables -->
-    <link rel="stylesheet"      href="pwa-styles.css">
+    <link rel="stylesheet"      href="css/pwa-styles.css">
 
     <!-- pwa-auth.js - Module Configuration Objects -->
     <script>
@@ -40,17 +40,17 @@
     <header>
 
       <!-- Icon Tag -->
-      <user-icon subscribe></user-icon>
+      <user-icon subscribe emptyArtwork="images/empty.jpg"></user-icon>
 
     </header>
 
     <!-- Drawer Tag-->
-    <user-drawer subscribe settingsURL="/demo/settings"></user-drawer>
+    <user-drawer subscribe settingsURL="settings"></user-drawer>
 
     <main>
 
       <!-- Settings Tag-->
-      <user-settings></user-settings>
+      <user-settings emptyArtwork="images/empty.jpg"></user-settings>
 
     </main>
 
@@ -64,7 +64,7 @@
     </footer>
 
     <!-- Application Shell -->
-    <script type="module" src="pwa-auth.js" async></script>
+    <script type="module" src="../pwa-auth.js" async></script>
 
   </body>
 

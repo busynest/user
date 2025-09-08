@@ -14,6 +14,9 @@ export class ContactPhoto extends connect(store)(LitElement) {
   /** @attr photo */
   @property() public photo : string | void | any = '';
 
+  /** @attr emptyArtwork */
+  @property({type: String, reflect: true}) public emptyArtwork = '';
+
   @state() private user : string | void = '';
   @state() private login : boolean = false;
   //@state() private uploadProgress = 0;
@@ -122,7 +125,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
           margin:                 auto;
           height:                 200px;
           width:                  100%;
-          background-image:       url(${this.photo});
+          background-image:       url(${this.photo ? this.photo : this.emptyArtwork});
           background-size:        contain;
           background-repeat:      no-repeat;
           background-position:    center;

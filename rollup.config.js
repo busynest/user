@@ -43,7 +43,7 @@ export default {
   output: {
     // dir: 'dist', // Outputs processed HTML and JS bundle (e.g., dist/
     // entryFileNames: 'bundle.js', // Names the JS bundle as dist/bundle.js
-    file: 'website/pwa-auth.js', // Single bundle for browser script tag
+    file: 'website/js/pwa-auth.js', // Single bundle for browser script tag
     // file: 'public/pwa-auth.js', // Single bundled output
     format: 'iife', // IIFE for direct browser script tag use worldwide
     name: 'PwaAuth', // Global namespace if needed
@@ -94,8 +94,8 @@ export default {
       banner: {
         commentStyle: 'regular', // Use /* */ comments
         content: `
-          My Package Name
-          Copyright (c) <%= moment().format('YYYY') %> Your Name
+          pwa-auth
+          Copyright (c) 2025 Jacek Markiewicz
           Licensed under MIT
         `
       },

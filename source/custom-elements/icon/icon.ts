@@ -9,8 +9,11 @@ import { toggleSign }                         from '../../redux/frontend';
 @customElement('user-icon')
 export class UserIcon extends connect(store)(LitElement) {
   
-  /** @attr url */
+  /** @attr subscribe */
   @property({type: Boolean, reflect: true}) public subscribe = false;
+
+  /** @attr emptyArtwork */
+  @property({type: String, reflect: true}) public emptyArtwork = '';
 
   @state() private _user = false;
   @state() private _photoURL = '';
@@ -50,7 +53,7 @@ export class UserIcon extends connect(store)(LitElement) {
               alt     = "Login"
               height  = "38px"
               width   = "38px"
-              src     = "${this._photoURL}">
+              src     = "${this._photoURL ? this._photoURL : this.emptyArtwork}">
        <!--   </div> -->
           ` : this.subscribe ? 'Subscribe' : 'Login' }
 

@@ -23,7 +23,7 @@ export const initialState: frontendAuth = {
   profileChoice:    'unChosen',           // Profile Initialization State
 
   name:             'Modern Business',    // Customer Name Loaded
-  photoURL:         'images/empty.jpg',   // User Photo Loaded
+  photoURL:         '',   // User Photo Loaded
   
   phone:            '(...) ... - ....',   // User Phone Loaded
   email:            ''                    // User E-mail Loaded

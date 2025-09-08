@@ -99,15 +99,15 @@ onAuthStateChanged(auth, (user) => {
     // Backend Data Redux - Firebase User Information - account redux
     store.dispatch( accID     ( user.uid ) );
     store.dispatch( accName   ( user.displayName || 'John Doe' ) );
-    store.dispatch( accEmail  ( user.email || 'Nothing' ) );
-    store.dispatch( accImage  ( user.photoURL || 'images/empty.jpg' ) );
+    store.dispatch( accEmail  ( user.email || '' ) );
+    store.dispatch( accImage  ( user.photoURL || '' ) );
 
     // store.dispatch( accPhone  ( user.phoneNumber || '(000) 000-0000' ) );
     // store.dispatch( accAnon   ( user.isAnonymous ) );
 
     // Frontend Data Redux - Firebase User Information - user redux
     store.dispatch( nameAuth   ( user.displayName || 'John Doe' ) );
-    store.dispatch( iconAuth   ( user.photoURL || 'images/empty.jpg' ) );
+    store.dispatch( iconAuth   ( user.photoURL || '' ) );
 
     // Email Change Listener - Custom Event
     if (pendingEmailVerification && !user.emailVerified) {
@@ -145,15 +145,15 @@ onAuthStateChanged(auth, (user) => {
     // Backend Data Redux - Firebase User Information - account redux
     store.dispatch( accID     ( '' ) );
     store.dispatch( accName   ( 'John Doe' ) );
-    store.dispatch( accEmail  ( 'Nothing' ) );
-    store.dispatch( accImage  ( 'images/empty.jpg' ) );
+    store.dispatch( accEmail  ( '' ) );
+    store.dispatch( accImage  ( '' ) );
 
     //  store.dispatch( accAnon   ( false ) );
     // store.dispatch( accPhone  ( '(000) 000-0000' ) );
 
     // Frontend Data Redux - Firebase User Information - user redux
     store.dispatch( nameAuth   ( 'John Doe' ) );
-    store.dispatch( iconAuth   ( 'images/empty.jpg' ) );
+    store.dispatch( iconAuth   ( '' ) );
 
     // Dispatch Information
 

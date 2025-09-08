@@ -31,7 +31,7 @@ Continue reading to start installing the bundle:
 
 Visit: [Live Demo](https://pwa-authentic.firebaseapp.com)
 
-## pwa-auth.js Features:
+## Features:
 - Register through Email and Password
   - Log-in
   - Log-out
@@ -45,6 +45,7 @@ Visit: [Live Demo](https://pwa-authentic.firebaseapp.com)
 - copy the bundle
   - node_modules/pwa-auth/npm/pwa-auth.js
   - node_modules/pwa-auth/npm/pwa-styles.css
+  - node_modules/pwa-auth/npm/images/empty.jpg
 
 ## Modular JavaScript
 ```javascript
@@ -58,6 +59,7 @@ import 'pwa-auth';
   - user-settings
 - Cascading Style Sheets (CSS - Custom Properties)
 - ECMA Script (JavaScript)
+- <base> tag consideration: Hyperlinks without base tag 
 
 ## HTML Custom Elements
 ```html
@@ -75,7 +77,8 @@ import 'pwa-auth';
     <!-- Logged-out (State): txt: Login Button -->
     <!-- Logged-out (State): txt: Subscribe Button -->
     <!-- Logged-in (State): photo: Icon Button -->
-    <user-icon subscribe></user-icon>
+    <!-- emptyArtwork property: location of empty image -->
+    <user-icon subscribe emptyArtwork="images/empty.jpg"></user-icon>
   </header>
 
   <!-- settingsURL property: location of <pwa-settings> Tag -->
@@ -94,7 +97,8 @@ import 'pwa-auth';
     <!-- Update Email / Verify -->
     <!-- Update Password -->
     <!-- Delete Account, Photos, Information -->
-    <user-settings></user-settings>
+    <!-- emptyArtwork property: location of empty image -->
+    <user-settings emptyArtwork="images/empty.jpg"></user-settings>
   </main>
 
   <script>/* Firebase Instance Configuration */</script>
