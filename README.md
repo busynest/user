@@ -23,7 +23,7 @@ Continue reading to start installing the bundle:
 
 Visit: [Live Demo](https://pwa-authentic.firebaseapp.com)
 
-## Features:
+## Features
 - Register through Email and Password
   - Log-in
   - Log-out
@@ -33,11 +33,12 @@ Visit: [Live Demo](https://pwa-authentic.firebaseapp.com)
 - Change Password
   - Delete Account
 
-## Standard JavaScript
-- copy the bundle
-  - node_modules/pwa-auth/npm/pwa-auth.js
-  - node_modules/pwa-auth/npm/pwa-styles.css
-  - node_modules/pwa-auth/npm/images/empty.jpg
+## Copy Project Files
+For simple projects, you can copy to disk
+- node_modules/pwa-auth/npm/
+  - pwa-auth.js
+  - pwa-styles.css
+  - empty.jpg
 
 ## Modular JavaScript
 ```javascript
@@ -63,53 +64,12 @@ import 'pwa-auth';
 ## Boilerplate
 ```html
 <head>
-  <!-- pwa-auth.js - CSS Custom Properties - Choice 1: Link Tag -->
-  <link type="stylesheet" href="pwa-styles.css">
-</head>
 
-<body>
+  <!-- EXAMPLE 1: CSS Custom Variables - Optional -->
+  <link type="stylesheet" href="./pwa-styles.css">
 
-  <header>
-    <!-- subscribe property: (Initial State): Subscribe -->
-    <!-- subscribe property: else (Initial State): Login -->
-    <!-- Logged-out (State): txt: Login Button -->
-    <!-- Logged-out (State): txt: Subscribe Button -->
-    <!-- Logged-in (State): photo: Icon Button -->
-    <!-- emptyArtwork property: location of empty image -->
-    <user-icon subscribe emptyArtwork="images/empty.jpg"></user-icon>
-  </header>
-
-  <!-- settingsURL property: location of <pwa-settings> Tag -->
-  <!-- subscribe property: (Initial State): Subscribe -->
-  <!-- subscribe property: else (Initial State): Login -->
-  <!-- Top-down, Drop-down Feature: height, 1.4 seconds -->
-  <!-- logged-out (State): Sign-up by Email Addresses and Password -->
-  <!-- logged-out (State): Sign-in by Email Addresses and Password -->
-  <!-- logged-in (State): Settings Page Link, Log-out Button -->
-  <user-drawer subscribe settingsURL="/settings"></user-drawer>
-
-  <main>
-    <!-- 1 Photo Upload Feature, view uploaded bucket of photos, photo ediotr -->
-    <!-- Unavailable Photo --> 
-    <!-- Update Username -->
-    <!-- Update Email / Verify -->
-    <!-- Update Password -->
-    <!-- Delete Account, Photos, Information -->
-    <!-- emptyArtwork property: location of empty image -->
-    <user-settings emptyArtwork="images/empty.jpg"></user-settings>
-  </main>
-
-  <!-- pwa-auth.js - CSS Custom Variables - Choice 2: Style Tag -->
-  <style>
-    :root {
-      --pwa_icon_diameter: 32px;
-      /* copy all properties from css/pwa-styles.css */
-    }
-  </style>
-
-  <!-- pwa-auth.js - Firebase Instance -->
+  <!-- EXAMPLE 2: Configure Firebase Instance -->
   <script>
-    // Firebase Configuration Object
     window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
             apiKey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             authDomain: "xxxxxxx.xxxxxxx.xxx",
@@ -123,12 +83,44 @@ import 'pwa-auth';
       }
     };
 
-    // Localhost - Firebase Configuratioon Object
     if (lolalhost) { window.process = { env: { FIREBASE_CONFIG: 'etc.' } } }
   </script>
 
-  <!-- pwa-auth.js - Webcomponent Library -->
-  <script src="pwa-auth.js"></script>
+  <!-- EXAMPLE 3: Load Webcomponents Library -->
+  <script src="./pwa-auth.js"></script>
+
+</head>
+<body>
+
+  <header>
+    <!-- subscribe property: (Initial State): Subscribe -->
+    <!-- subscribe property: else (Initial State): Login -->
+    <!-- Logged-out (State): txt: Login Button -->
+    <!-- Logged-out (State): txt: Subscribe Button -->
+    <!-- Logged-in (State): photo: Icon Button -->
+    <!-- emptyArtwork property: location of empty image -->
+    <user-icon subscribe emptyArtwork="./images/empty.jpg"></user-icon>
+  </header>
+
+  <!-- settingsURL property: location of <pwa-settings> Tag -->
+  <!-- subscribe property: (Initial State): Subscribe -->
+  <!-- subscribe property: else (Initial State): Login -->
+  <!-- Top-down, Drop-down Feature: height, 1.4 seconds -->
+  <!-- logged-out (State): Sign-up by Email Addresses and Password -->
+  <!-- logged-out (State): Sign-in by Email Addresses and Password -->
+  <!-- logged-in (State): Settings Page Link, Log-out Button -->
+  <user-drawer subscribe settingsURL="./settings"></user-drawer>
+
+  <main>
+    <!-- 1 Photo Upload Feature, view uploaded bucket of photos, photo ediotr -->
+    <!-- Unavailable Photo --> 
+    <!-- Update Username -->
+    <!-- Update Email / Verify -->
+    <!-- Update Password -->
+    <!-- Delete Account, Photos, Information -->
+    <!-- emptyArtwork property: location of empty image -->
+    <user-settings emptyArtwork="./images/empty.jpg"></user-settings>
+  </main>
 
 </body>
 ```

@@ -115,6 +115,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
         border: 2px dashed;
         border-radius: 6px;
         overflow: hidden;
+        margin: 0 16px;
         padding: 0 16px 16px 16px;
       "
       for ="photoURL">Photo:

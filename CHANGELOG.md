@@ -6,7 +6,16 @@ All notable changes to pwa-auth.js will be documented in this file.
 - Social Login Flow
 - animated login and data
 
+# [2.0.8] - 2025-09-08
+
+## Changed
+- Read Me Instructions Updated
+- photo-uploader : design
+
 # [2.0.7] - 2025-09-07
+
+## Added
+- Individual Custom Element Package Modules
 
 ## Changed
 - CSS Custom Properties Default
