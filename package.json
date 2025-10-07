@@ -1,7 +1,7 @@
 {
   "name": "pwa-auth",
   "author": "Jacek Markiewicz <jack.solutionbox@gmail.com>(https://www.jackspublishing.com)",
-  "version": "2.0.8",
+  "version": "3.0.2",
   "description": "User Management Component with 3 HTML Tags, and 1 Boilerplate Function to display user icon, sign up, login, log out, change account details, delete account.",
   "homepage": "https://pwa-authentic.firebaseapp.com",
   "main": "pwa-auth.js",
@@ -35,9 +35,9 @@
     "redux-thunk": "^3.1.0"
   },
   "devDependencies": {
-    "@lit-labs/rollup-plugin-minify-html-literals": "^0.1.0",
-    "@reduxjs/toolkit": "^2.5.0",
     "@babel/preset-env": "^7.28.3",
+    "@lit-labs/rollup-plugin-minify-html-literals": "^0.1.0",
+    "@reduxjs/toolkit": "^2.9.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-replace": "^6.0.2",
@@ -45,10 +45,10 @@
     "@web/dev-server": "^0.4.6",
     "@web/rollup-plugin-copy": "^0.5.1",
     "babel-plugin-template-html-minifier": "^4.1.0",
-    "rollup": "^4.46.3",
+    "firebase": "^12.3.0",
+    "rollup": "^4.52.4",
     "rollup-plugin-html-literals": "^2.0.1",
     "rollup-plugin-license": "^3.6.0",
-    "rollup-plugin-summary": "^3.0.1",
-    "firebase": "^12.1.0"
+    "rollup-plugin-summary": "^3.0.1"
   }
 }

@@ -70,7 +70,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       <!-- Exit Button -->
       <header class="exit">
         <div></div>
-        <h3>${this._log ? this._name : this._sign === this.subscribe ? "Subscribe" : "Login"} </h3>
+        <h3>${this._log ? this._name : this._sign === this.subscribe ? 'Subscribe' : 'Login'} </h3>
         <button class="close">${close}</button>
       </header>
 

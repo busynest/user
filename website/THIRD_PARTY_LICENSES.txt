@@ -24,22 +24,22 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 
 
 ---
-@firebase/app@0.14.1
+@firebase/app@0.14.3
 Apache-2.0
 No license text provided
 
 ---
-firebase@12.1.0
+firebase@12.3.0
 Apache-2.0
 No license text provided
 
 ---
-@firebase/webchannel-wrapper@1.0.4
+@firebase/webchannel-wrapper@1.0.5
 Apache-2.0
 No license text provided
 
 ---
-@firebase/firestore@4.9.0
+@firebase/firestore@4.9.2
 Apache-2.0
 No license text provided
 
@@ -262,7 +262,7 @@ SOFTWARE.
 
 
 ---
-@reduxjs/toolkit@2.8.2
+@reduxjs/toolkit@2.9.0
 MIT
 MIT License
 
