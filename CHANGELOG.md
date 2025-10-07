@@ -6,6 +6,12 @@ All notable changes to pwa-auth.js will be documented in this file.
 - Social Login Flow
 - animated login and data
 
+# [3.0.1] - 2025-10-06
+
+## Changed
+- Project Bundle set to ES Module 
+- Eport Redux state from main application package
+
 # [2.0.8] - 2025-09-08
 
 ## Changed

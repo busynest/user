@@ -1,4 +1,3 @@
-
 *.log
 *.cache
 
@@ -6,9 +5,10 @@
 npm-debug.log
 
 node_modules/
-junk/
-src/
-public/
+src-javascript/
+src-typescipt/
+website/
+images/manifest/
 
 *.firebase
 .firebaserc
@@ -22,12 +22,3 @@ rollup.config.js
 storage.rules
 tsconfig.json
 web-dev-server.config.js
-
-images/manifest/
-images/background.svg
-images/favicon.ico
-images/icon-48x48.png
-images/npm.svg
-images/npm007.png
-
-

@@ -11,9 +11,10 @@
   },
   "keywords": [
     "login",
-    "app",
-    "firebase",
+    "pwa",
+    "pwa-auth",
     "auth",
+    "firebase",
     "icon",
     "drawer",
     "settings",
@@ -23,7 +24,7 @@
   "license": "BSD-3-Clause",
   "flat": true,
   "scripts": {
-    "demo": "web-dev-server --node-resolve --watch --open --app-index demo/index.html",
+    "demo": "web-dev-server --node-resolve --watch --open --app-index demonstration/index.html",
     "website": "web-dev-server --node-resolve --watch --open --app-index website/index.html",
     "rollup": "rollup -c"
   },
@@ -34,9 +35,9 @@
     "redux-thunk": "^3.1.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.28.3",
     "@lit-labs/rollup-plugin-minify-html-literals": "^0.1.0",
     "@reduxjs/toolkit": "^2.5.0",
+    "@babel/preset-env": "^7.28.3",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-replace": "^6.0.2",
@@ -44,10 +45,10 @@
     "@web/dev-server": "^0.4.6",
     "@web/rollup-plugin-copy": "^0.5.1",
     "babel-plugin-template-html-minifier": "^4.1.0",
-    "firebase": "^12.1.0",
     "rollup": "^4.46.3",
     "rollup-plugin-html-literals": "^2.0.1",
     "rollup-plugin-license": "^3.6.0",
-    "rollup-plugin-summary": "^3.0.1"
+    "rollup-plugin-summary": "^3.0.1",
+    "firebase": "^12.1.0"
   }
 }

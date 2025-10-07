@@ -35,20 +35,15 @@ Visit: [Live Demo](https://pwa-authentic.firebaseapp.com)
 
 ## Copy Project Files
 For simple projects, you can copy to disk
-- node_modules/pwa-auth/npm/
+- src/compiled/pwa-auth/
   - pwa-auth.js
   - pwa-styles.css
   - empty.jpg
 
-## Modular JavaScript
-```javascript
-import 'pwa-auth';
-```
-## HTML
-- Custom Elements
-  - user-icon
-  - user-drawer
-  - user-settings
+## HTML Webcomponents
+- user-icon
+- user-drawer
+- user-settings
 
 ## CSS
 - Custom Properties
@@ -58,17 +53,24 @@ import 'pwa-auth';
   - Google Analytics
   - Firebase Project
 - Firebase Services:
-  - Authentication - email login
-  - Cloud Storage - storage bucket
+  - Authentication  - email login
+  - Cloud Storage   - storage bucket
 
-## Boilerplate
+## Firebase Objects
+- db           - firestore database reference
+- storage      - firebase storage reference
+- auth         - user object reference
+- user         - active user boolean reference
+
+
+## Boilerplate: ECMA Script Module
 ```html
 <head>
 
-  <!-- EXAMPLE 1: CSS Custom Variables - Optional -->
-  <link type="stylesheet" href="./pwa-styles.css">
+  <!-- Step 1 of 3: Optional - CSS Custom Variables-->
+  <link type="stylesheet" href="./path_to/pwa-styles.css">
 
-  <!-- EXAMPLE 2: Configure Firebase Instance -->
+  <!-- Step 2 of 3: Required - Configure Firebase Instance -->
   <script>
     window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
             apiKey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -86,10 +88,27 @@ import 'pwa-auth';
     if (lolalhost) { window.process = { env: { FIREBASE_CONFIG: 'etc.' } } }
   </script>
 
-  <!-- EXAMPLE 3: Load Webcomponents Library -->
-  <script src="./pwa-auth.js"></script>
+  <!-- Step 3 of 3: Required - Load Webcomponent Library -->
+  <script type="module" src="./path_to/pwa-auth.js"></script>
 
 </head>
+```
+
+## Boilerplate: TypeScript Library for Bundlers
+```javascript
+import 'pwa-auth';
+// <user-icon subscribe emptyArtwork="./images/empty.jpg"></user-icon>
+// <user-drawer subscribe settingsURL="./settings"></user-drawer>
+// <user-settings emptyArtwork="./images/empty.jpg"></user-settings>
+import { db, storage, auth, user } from './src-javascript/firebase/authentication.js';
+// db           - firestore database reference
+// storage      - firebase storage reference
+// auth         - user object reference
+// user         - active user boolean reference
+```
+
+## Boilerplate Implementation
+```html
 <body>
 
   <header>
