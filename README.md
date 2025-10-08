@@ -17,15 +17,23 @@ You will learn how to place 3 Custom HTML Tags, reference CSS, and How to Initia
 
 Continue reading to understand how to install the project:
 
-- (Import or Copy) the Project Files
+## Choose Project Type
 
-- Library Features
-- Library Modules
+ECMA Script Modules
+```javascript
+import 'pwa-auth';
+import { db, storage, auth, user } from 'pwa-helpers';
+```
 
-- Webcomponents
-  - 3 Tag Placement
-  - Color Scheme: CSS Custom Properties
-  - Firebase Initialization
+Global Scope Management
+```html
+<!-- Optional: Copy the Project Files from 'src' Folder -->
+<script type="module" src="./pwa-auth.js"></script>
+```
+## Library
+- 3 Tag Placement
+- Color Scheme: CSS Custom Properties
+- Firebase Initialization Object
 
 ## Features
 - Register through Email and Password
@@ -37,12 +45,15 @@ Continue reading to understand how to install the project:
 - Change Password
   - Delete Account
 
-## Copy Project Files
-For simple projects, you can copy to disk
-- src/compiled/pwa-auth/
-  - pwa-auth.js
-  - pwa-styles.css
-  - empty.jpg
+## Modules
+- db - firestore database reference
+  - getFirestore(pwa-env)
+- storage - firebase storage reference
+  - getStorage(pwa-env)
+- auth - user object reference
+  - getAuth(pwa-env)
+- user - active user boolean reference
+  - auth.currentUser
 
 ## HTML Webcomponents
 - user-icon
@@ -61,25 +72,22 @@ For simple projects, you can copy to disk
   - Authentication  - email login
   - Cloud Storage   - storage bucket
 
-## Modules
-- db - firestore database reference
-  - getFirestore(pwa-env)
-- storage - firebase storage reference
-  - getStorage(pwa-env)
-- auth - user object reference
-  - getAuth(pwa-env)
-- user - active user boolean reference
-  - auth.currentUser
+## Boilerplate
 
+For simple projects, you can copy to disk
+- src/compiled/
+  - pwa-auth.js
+  - pwa-styles.css
+  - empty.jpg
 
-## Boilerplate: ECMA Script Module
+### ECMA Script Modules
 ```html
 <head>
 
-  <!-- Step 1 of 3: Optional - CSS Custom Variables-->
+  <!-- Optional - CSS Custom Variables-->
   <link type="stylesheet" href="./path_to/pwa-styles.css">
 
-  <!-- Step 2 of 3: Required - Configure Firebase Instance -->
+  <!-- Required - Configure Firebase Instance -->
   <script>
     window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
             apiKey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -97,26 +105,27 @@ For simple projects, you can copy to disk
     if (lolalhost) { window.process = { env: { FIREBASE_CONFIG: 'etc.' } } }
   </script>
 
-  <!-- Step 3 of 3: Required - Load Webcomponent Library -->
+  <!--  Webcomponent Library -->
   <script type="module" src="./path_to/pwa-auth.js"></script>
 
 </head>
 ```
+## Boilerplate
 
-## Boilerplate: TypeScript Library for Bundlers
+### TypeScript Library for Bundlers
 ```javascript
 import 'pwa-auth';
 // <user-icon subscribe emptyArtwork="./images/empty.jpg"></user-icon>
 // <user-drawer subscribe settingsURL="./settings"></user-drawer>
 // <user-settings emptyArtwork="./images/empty.jpg"></user-settings>
-import { db, storage, auth, user } from 'pwa-auth';
+import { db, storage, auth, user } from 'pwa-helpers';
 // db           - firestore database reference
 // storage      - firebase storage reference
 // auth         - user object reference
 // user         - active user boolean reference
 ```
 
-## Boilerplate Implementation
+## Implementation
 ```html
 <body>
 

@@ -10,7 +10,8 @@ import license      from 'rollup-plugin-license';
 // import { copy }     from '@web/rollup-plugin-copy';
 
 const input = {
-  'pwa-auth' : 'src-javascript/pwa-auth.js'
+  'pwa-auth'      : 'transpiled/src-export/pwa-auth.js',
+  'pwa-helpers'   : 'transpiled/src-export/pwa-helpers.js'
 };
 
 // Plugins array: Sequential chain; resolve first for dep discovery, then transforms, then optimize last.
@@ -25,7 +26,7 @@ const plugins = [
 
   resolve({                                     // Resolve config: browser: true prioritizes web fields; extensions include .ts for TS support.
     browser: true,                              // Use 'browser' in package.json for conditional exports.
-    extensions: ['.js'/*, '.ts', '.json'*/]     // Explicit extensions: Ensures TS/JS resolution.
+    extensions: ['.js', '.ts', '.json']         // Explicit extensions: Ensures TS/JS resolution.
   }),
 
   commonjs({                                    // CommonJS config: Dynamic requires handled; extensions align with resolve.
@@ -126,7 +127,7 @@ const outputs = [
     chunkFileNames: 'compiled/[name]-[hash].js',
     format: 'es',                 // Format Specification: system // umd // cjs // amd // iife // es fallback.
     name: 'pwaAuth',              // Global var: For script tag; customize per input if needed (advanced: output.name via fn).
-    // sourcemap: true,
+    sourcemap: true,
     // preserveModules: false
 
     // Externals: Assume CDN; avoids bundling large libs.
@@ -146,7 +147,7 @@ const outputs = [
     chunkFileNames: 'compiled/[name]-[hash].js',
     format: 'es',                 // Format Specification: system // umd // cjs // amd // iife // es fallback.
     name: 'pwaAuth',              // Global var: For script tag; customize per input if needed (advanced: output.name via fn).
-    // sourcemap: true,
+    sourcemap: true,
     // preserveModules: false
 
     // Externals: Assume CDN; avoids bundling large libs.
@@ -161,12 +162,12 @@ const outputs = [
 
   },
   {
-    dir: 'src',
-    entryFileNames: 'compiled/[name].js',
-    chunkFileNames: 'compiled/[name]-[hash].js',
+    dir: 'src-compiled/',
+    entryFileNames: '[name].js',
+    chunkFileNames: '[name]-[hash].js',
     format: 'es',                 // Format Specification: system // umd // cjs // amd // iife // es fallback.
     name: 'pwaAuth',              // Global var: For script tag; customize per input if needed (advanced: output.name via fn).
-    // sourcemap: true,
+    sourcemap: true,
     // preserveModules: false
 
     // Externals: Assume CDN; avoids bundling large libs.
@@ -184,7 +185,10 @@ const outputs = [
 ];
 
 
-export default { input, output: outputs, plugins };
+export default { input, output: outputs, plugins, compilerOptions: {
+    declaration: true,
+    declarationMap: true
+  } };
 
 
 

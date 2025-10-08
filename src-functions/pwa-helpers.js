@@ -1,0 +1,1 @@
+export { firebaseConfig, application, db, storage, auth, user } from '../src-javascript/firebase/authentication.js';
