@@ -89,7 +89,16 @@ const e=function(e){const t=[];let n=0;for(let i=0;i<e.length;i++){let r=e.charC
     text-transform:         uppercase;
     opacity:                .6;
   }
-
+/*
+  .exit > .refresh {
+    background-color:       transparent;
+    border:                 0px;
+    fill:                   blue;
+    height:                 36px;
+    width:                  36px;
+    padding:                0px;
+  }
+*/
   .close {
     height:                 30px;
     width:                  42px;
@@ -850,7 +859,7 @@ const e=function(e){const t=[];let n=0;for(let i=0;i<e.length;i++){let r=e.charC
 
       <!-- two classes: icon / login -->
       <button
-        class="${this._user?'icon':'login'} toggles"
+        class="${this._user?"icon":"login"} toggles"
         aria-label="login">
         
         ${this._user?mc`

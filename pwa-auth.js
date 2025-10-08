@@ -1,4 +1,4 @@
-export { firebaseConfig, application, db, storage, auth, user } from './src-javascript/firebase/authentication.js';
-export { UserDrawer }           from './src-javascript/webcomponents/drawer/drawer.js';
-export { UserSettings }         from './src-javascript/webcomponents/settings/settings.js';
-export { UserIcon }             from './src-javascript/webcomponents/icon/icon.js';
+export { firebaseConfig, application, db, storage, auth, user } from './src-typescript/firebase/authentication.js';
+export { UserDrawer }           from './src-typescript/webcomponents/drawer/drawer.js';
+export { UserSettings }         from './src-typescript/webcomponents/settings/settings.js';
+export { UserIcon }             from './src-typescript/webcomponents/icon/icon.js';

@@ -2,9 +2,11 @@ Progressive Website Application - Authentication
 ======================
 Jack's Publishing maintains Custom HTML Elements where developers can focus on UX rather than low-level API calls.
 
+Visit the [Live Demo](https://pwa-authentic.firebaseapp.com)
+
 pwa-auth.js is a bundle of 3 Custom HTML Elements for Firebase (IAM) Authenication using email and password, with the ability to change username, icon, email, password, or delete your own account and it's content all together.
 
-pwa-auth.js (Authentication Components) are for anyone who is looking for a quick and simple way to sign-up, log-in, log-out, modify, or delete a firebase account information from thier own personal domain.
+pwa-auth.js (Authentication Webcomponents) are for anyone who is looking for a quick and simple way to sign-up, log-in, log-out, modify, or delete a firebase account information from thier own personal domain.
 
 pwa-auth.js meets basic user needs with the interplay of:
 - Icon Button
@@ -13,15 +15,17 @@ pwa-auth.js meets basic user needs with the interplay of:
 
 You will learn how to place 3 Custom HTML Tags, reference CSS, and How to Initialize an Firebase Instance. By either <b>Standard</b> or <b>Modular</b> ECMA Script.
 
-Continue reading to start installing the bundle:
-- Pick the JavaScript File Type to Reference
-- Understand the Library Features
-- Understand the Library Boilerplate
+Continue reading to understand how to install the project:
+
+- (Import or Copy) the Project Files
+
+- Library Features
+- Library Modules
+
+- Webcomponents
   - 3 Tag Placement
   - Color Scheme: CSS Custom Properties
   - Firebase Initialization
-
-Visit: [Live Demo](https://pwa-authentic.firebaseapp.com)
 
 ## Features
 - Register through Email and Password
@@ -48,19 +52,24 @@ For simple projects, you can copy to disk
 ## CSS
 - Custom Properties
 
-## JavaScript
-- Google Prerequisites:
+## Prerequisites
+- Google:
   - Google Analytics
   - Firebase Project
-- Firebase Services:
+
+- Firebase:
   - Authentication  - email login
   - Cloud Storage   - storage bucket
 
-## Firebase Objects
-- db           - firestore database reference
-- storage      - firebase storage reference
-- auth         - user object reference
-- user         - active user boolean reference
+## Modules
+- db - firestore database reference
+  - getFirestore(pwa-env)
+- storage - firebase storage reference
+  - getStorage(pwa-env)
+- auth - user object reference
+  - getAuth(pwa-env)
+- user - active user boolean reference
+  - auth.currentUser
 
 
 ## Boilerplate: ECMA Script Module
@@ -100,7 +109,7 @@ import 'pwa-auth';
 // <user-icon subscribe emptyArtwork="./images/empty.jpg"></user-icon>
 // <user-drawer subscribe settingsURL="./settings"></user-drawer>
 // <user-settings emptyArtwork="./images/empty.jpg"></user-settings>
-import { db, storage, auth, user } from './src-javascript/firebase/authentication.js';
+import { db, storage, auth, user } from 'pwa-auth';
 // db           - firestore database reference
 // storage      - firebase storage reference
 // auth         - user object reference

@@ -10,7 +10,7 @@ import license      from 'rollup-plugin-license';
 // import { copy }     from '@web/rollup-plugin-copy';
 
 const input = {
-  'pwa-auth' : 'pwa-auth.js'
+  'pwa-auth' : 'src-javascript/pwa-auth.js'
 };
 
 // Plugins array: Sequential chain; resolve first for dep discovery, then transforms, then optimize last.

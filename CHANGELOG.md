@@ -6,6 +6,11 @@ All notable changes to pwa-auth.js will be documented in this file.
 - Social Login Flow
 - animated login and data
 
+# [3.0.3] - 2025-10-07
+
+## Changed
+- NPM Package to publish from src-typescript with declaration files.
+
 # [3.0.1] - 2025-10-06
 
 ## Changed
