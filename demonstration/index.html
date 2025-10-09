@@ -16,7 +16,54 @@
     <link rel="stylesheet"      href="css/styles.css">
 
     <!-- pwa-auth.js - CSS Custom Variables - Option 1
-    <link rel="stylesheet"      href="css/pwa-styles.css"> -->
+    <link rel="stylesheet"      href="pwa-styles.css"> -->
+
+    <style>
+      html {
+        overflow:                 auto;
+        scroll-behavior:          smooth;
+        display:                  grid;
+        height:                   100%;
+        padding:                  16px;
+        box-sizing:               border-box;
+        transition-duration:      1s;
+      }
+
+      body {
+        overflow:                 hidden;
+        margin:                   0;
+        font-family:              Space Grotesk, system-ui, sans-serif;
+        -webkit-font-smoothing:   antialiased;
+        font-size:                .875rem;
+        line-height:              1.25rem;
+      }
+
+      body {
+        background-color:       #0a2840;
+        display:                  grid;
+        grid-gap:                 16px;
+        grid-template-areas:
+          "head"
+          "main"
+          "foot";
+        grid-template-rows:       auto 1fr auto;
+      }
+
+      header { grid-area:         head; }
+      main { grid-area:           main; }
+      footer { grid-area:         foot; }
+
+      header { display:           grid; }
+
+      main {
+        border:                   2px solid black;
+        border-radius:            6px;
+        overflow:                 hidden;
+        background-color:       cadetblue;
+      }
+
+      footer { display:           grid; }
+    </style>
 
     <!-- pwa-auth.js - Module Configuration Objects -->
     <script>
@@ -40,17 +87,17 @@
     <header>
 
       <!-- Icon Tag -->
-      <user-icon subscribe emptyArtwork="./images/empty.jpg"></user-icon>
+      <user-icon subscribe empty="../source/empty.jpg"></user-icon>
 
     </header>
 
     <!-- Drawer Tag-->
-    <user-drawer subscribe settingsURL="./settings"></user-drawer>
+    <user-drawer subscribe url="./settings"></user-drawer>
 
     <main>
 
       <!-- Settings Tag-->
-      <user-settings emptyArtwork="./images/empty.jpg"></user-settings>
+      <user-settings empty="../source/empty.jpg"></user-settings>
 
     </main>
 
@@ -67,7 +114,7 @@
     <style></style> -->
 
     <!-- Application Shell -->
-    <script type="module" src="./compiled/pwa-auth.js" async></script>
+    <script type="module" src="../base/export/pwa-auth.js" async></script>
 
   </body>
 

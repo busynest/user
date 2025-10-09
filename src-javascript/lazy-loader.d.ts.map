@@ -1,1 +1,0 @@
-{"version":3,"file":"lazy-loader.d.ts","sourceRoot":"","sources":["../src-typescript/lazy-loader.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,UAAU,EAAE,MAAM,KAAK,CAAC;AAGjC,qBAAa,UAAW,SAAQ,UAAU;IAGN,MAAM,EAAG,OAAO,CAAS;IAE3D,YAAY;CAIb;AAED,OAAO,CAAC,MAAM,CAAC;IACb,UAAU,qBAAqB;QAC7B,aAAa,EAAE,UAAU,CAAC;KAC3B;CACF"}

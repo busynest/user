@@ -2,18 +2,21 @@
 
   "$schema": "https://json.schemastore.org/tsconfig",
 
+  "type": "module",
+
   "include": [
-    "src-typescript/**/*.ts"
+    "./typescript/export/pwa-auth.ts",
+    "./typescript/export/auth-helpers.ts"
   ],
 
   "exclude": [
     "demonstration/**/*.ts",
-    "src-typescript/development/**/*.ts"
+    "typescript/development/**/*.ts"
   ],
 
   "compilerOptions": {
 
-    "outDir":                             "src-javascript",
+    "outDir":                             "base",
 
     "target":                             "ES2022",
     "module":                             "ESNext",
@@ -30,11 +33,23 @@
     "noFallthroughCasesInSwitch":         true,
 
     // Lit - Declaration
+    // "emitDeclarationOnly":                true,
     "declaration":                        true,
-    "declarationMap":                     true,
+
+   // "rootDir":                            "./typescript/export/pwa-auth.ts",
+    "strictFunctionTypes":                false,
+    "noImplicitThis":                     false,
+    "strictPropertyInitialization":       false, 
+    "useUnknownInCatchVariables":         true,
+    "isolatedModules":                    true,
+    // "verbatimModuleSyntax":               true,
+    // "types": ["mocha"],
+
+    // "declarationMap":                     true,
     "experimentalDecorators":             true,
     "emitDecoratorMetadata":              true,
 
+    // Lit
     "useDefineForClassFields":            false,
     // true: Object.defineProperty, false: constructor
     // true: Fields are initialized after the parent class constructor runs.
@@ -46,8 +61,12 @@
     "allowSyntheticDefaultImports":       true, // Simplifies imports for Redux/Firebase
     "forceConsistentCasingInFileNames":   true,
 
-    "pretty":                             true
+    "pretty":                             true,
 
-  }
+    "sourceMap": true,
+    "types": ["node"]
+  },
 
 }
+
+

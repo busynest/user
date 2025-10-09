@@ -1,1 +1,0 @@
-export { firebaseConfig, application, db, storage, auth, user } from './compiled/pwa-auth.js';

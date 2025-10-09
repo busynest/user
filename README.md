@@ -22,13 +22,14 @@ Continue reading to understand how to install the project:
 ECMA Script Modules
 ```javascript
 import 'pwa-auth';
-import { db, storage, auth, user } from 'pwa-helpers';
+import { db, storage, auth, user } from 'pwa-auth/auth-helpers';
 ```
 
 Global Scope Management
 ```html
 <!-- Optional: Copy the Project Files from 'src' Folder -->
 <script type="module" src="./pwa-auth.js"></script>
+<script type="module" src="./pwa-helpers.js"></script>
 ```
 ## Library
 - 3 Tag Placement
@@ -44,6 +45,8 @@ Global Scope Management
 - Change Email
 - Change Password
   - Delete Account
+- Global Functions
+- Redux State Connection
 
 ## Modules
 - db - firestore database reference
@@ -118,7 +121,7 @@ import 'pwa-auth';
 // <user-icon subscribe emptyArtwork="./images/empty.jpg"></user-icon>
 // <user-drawer subscribe settingsURL="./settings"></user-drawer>
 // <user-settings emptyArtwork="./images/empty.jpg"></user-settings>
-import { db, storage, auth, user } from 'pwa-helpers';
+import { db, storage, auth, user } from 'pwa-auth/auth-helpers';
 // db           - firestore database reference
 // storage      - firebase storage reference
 // auth         - user object reference
@@ -136,7 +139,7 @@ import { db, storage, auth, user } from 'pwa-helpers';
     <!-- Logged-out (State): txt: Subscribe Button -->
     <!-- Logged-in (State): photo: Icon Button -->
     <!-- emptyArtwork property: location of empty image -->
-    <user-icon subscribe emptyArtwork="./images/empty.jpg"></user-icon>
+    <user-icon subscribe empty="./images/empty.jpg"></user-icon>
   </header>
 
   <!-- settingsURL property: location of <pwa-settings> Tag -->
@@ -146,7 +149,7 @@ import { db, storage, auth, user } from 'pwa-helpers';
   <!-- logged-out (State): Sign-up by Email Addresses and Password -->
   <!-- logged-out (State): Sign-in by Email Addresses and Password -->
   <!-- logged-in (State): Settings Page Link, Log-out Button -->
-  <user-drawer subscribe settingsURL="./settings"></user-drawer>
+  <user-drawer subscribe url="./settings"></user-drawer>
 
   <main>
     <!-- 1 Photo Upload Feature, view uploaded bucket of photos, photo ediotr -->
@@ -156,7 +159,7 @@ import { db, storage, auth, user } from 'pwa-helpers';
     <!-- Update Password -->
     <!-- Delete Account, Photos, Information -->
     <!-- emptyArtwork property: location of empty image -->
-    <user-settings emptyArtwork="./images/empty.jpg"></user-settings>
+    <user-settings empty="./images/empty.jpg"></user-settings>
   </main>
 
 </body>

@@ -5,18 +5,115 @@ import terser       from '@rollup/plugin-terser';
 import replace      from '@rollup/plugin-replace';
 import summary      from 'rollup-plugin-summary';
 import license      from 'rollup-plugin-license';
+import typescript   from '@rollup/plugin-typescript';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import alias from '@rollup/plugin-alias';
+import dts from 'rollup-plugin-dts';
 
 // import minifyHTML   from '@lit-labs/rollup-plugin-minify-html-literals'; // Minifies Lit HTML templates, Rollup v4 compatible
 // import { copy }     from '@web/rollup-plugin-copy';
 
 const input = {
-  'pwa-auth'      : 'transpiled/src-export/pwa-auth.js',
-  'pwa-helpers'   : 'transpiled/src-export/pwa-helpers.js'
+  'pwa-auth'      : './base/export/pwa-auth.js'
+  // 'pwa-helpers'   : './base/export/auth-helpers.js'
 };
+
+//   'pwa-helpers'   : './javascript/transpiier/pwa-helpers.js'
+
+const outputs = [
+
+  {
+    dir:              'website/javascript',
+    entryFileNames:   '[name].js',
+    chunkFileNames:   '[name]-[hash].js',
+    format:           'es',                   // Format Specification: system // umd // cjs // amd // iife // es fallback.
+    name:             'pwaAuth',              // Global var: For script tag; customize per input if needed (advanced: output.name via fn).
+    sourcemap:        true,
+    // preserveModules: false
+
+    // Externals: Assume CDN; avoids bundling large libs.
+    globals: {
+
+      //  jquery: 'jQuery',       // jQuery: Global $ assumed loaded externally.
+      lodash: '_'                 // Lodash: Global _ for tree-shaking.
+
+    },
+
+    interop: 'compat'             // Interop: Handles mixed exports; safe for legacy.
+
+  },
+  {
+    dir:              'demonstration/javascript',
+    entryFileNames:   '[name].js',
+    chunkFileNames:   '[name]-[hash].js',
+    format:           'es',                   // Format Specification: system // umd // cjs // amd // iife // es fallback.
+    name:             'pwaAuth',              // Global var: For script tag; customize per input if needed (advanced: output.name via fn).
+    sourcemap:        true,
+    // preserveModules: false
+
+    // Externals: Assume CDN; avoids bundling large libs.
+    globals: {
+
+      //  jquery: 'jQuery',       // jQuery: Global $ assumed loaded externally.
+      lodash: '_'                 // Lodash: Global _ for tree-shaking.
+
+    },
+
+    interop: 'compat'             // Interop: Handles mixed exports; safe for legacy.
+
+  },
+  {
+    dir:              'project/esm',
+    entryFileNames:   '[name].js',
+    chunkFileNames:   '[name]-[hash].js',
+    format:           'es',                   // Format Specification: system // umd // cjs // amd // iife // es fallback.
+    name:             'pwaAuth',              // Global var: For script tag; customize per input if needed (advanced: output.name via fn).
+    sourcemap:        true,
+    // preserveModules: false
+
+    // Externals: Assume CDN; avoids bundling large libs.
+    globals: {
+
+      //  jquery: 'jQuery',       // jQuery: Global $ assumed loaded externally.
+      lodash: '_'                 // Lodash: Global _ for tree-shaking.
+
+    },
+
+    interop: 'compat'             // Interop: Handles mixed exports; safe for legacy.
+
+  },
+  {
+    dir:              'base/pwa-auth.d.ts',
+    entryFileNames:   'project/esm/[name].d.ts',
+    chunkFileNames:   'project/esm/[name]-[hash].d.ts',
+    format:           'es',
+    sourcemap:        true,
+    interop:          'compat'             // Interop: Handles mixed exports; safe for legacy.
+  }
+
+];
 
 // Plugins array: Sequential chain; resolve first for dep discovery, then transforms, then optimize last.
 const plugins = [
 
+  dts(),
+
+ // nodeResolve(), // Tell Rollup how to find modules in node_modules
+
+  alias({
+      entries: [
+        {
+          find: 'lit-html/lib/shady-render.js',
+          replacement: 'node_modules/lit-html/lit-html.js',
+        },
+      ],
+    }),
+/*
+  typescript({                                  // TS config: Inline tsconfig overrides; tsconfig.json primary.
+    tsconfig: './tsconfig.json',                 // Path to TS config: Defines compilerOptions like target: 'esnext'.
+    sourceMap: true
+  }),
+*/
   replace({
     'process.env.NODE_ENV': JSON.stringify('production'), // Fixes Redux/Firebase env issues, optimizes for prod
     'import.meta.env.MODE': JSON.stringify('production'), // Fallback for Lit’s env checks
@@ -33,33 +130,7 @@ const plugins = [
     include: /node_modules/,                    // Scope: Only transform node_modules to avoid double-work on src.
     extensions: ['.js', '.ts']                  // Match resolve for consistency.
   }),
-/*
-  typescript({                                  // TS config: Inline tsconfig overrides; tsconfig.json primary.
-    tsconfig: './tsconfig.json',                // Path to TS config: Defines compilerOptions like target: 'esnext'.
-  }),
-*/
-  babel({                                       // Babel config: Transpile after TS; .babelrc for presets/plugins.
-    babelHelpers: 'bundled',                    // Bundle helpers: Includes @babel/runtime in output to avoid external dep.
-    exclude: 'node_modules/**',                 // Scope: Only src code; node_modules handled by commonjs.
-    extensions: ['.js', '.ts'],                 // Process TS post-compilation.
-    sourceMaps: true,                           // Generate maps: Chains with TS for full source debugging.
-    presets: [
-      ['@babel/preset-env', {
-        targets: 'defaults',                    // >0.25% global usage, not dead browsers (Chrome 51+, Firefox 45+, etc.)
-        modules: false,                         // Preserve ESM for tree-shaking
-        bugfixes: true,                         // Fix browser-specific JS bugs
-        corejs: 3,                              // Use core-js for polyfills
-        useBuiltIns: 'usage'                    // Add polyfills only for used ES2024+ features
-      }]
-    ],  // Env preset for targets
-    plugins: [  // Array: Additional transforms
-      '@babel/plugin-transform-class-properties'  // Enables class fields; preserves this in props
-    ]
-  }),
 
-  // ...(isProduction ? [                          // Conditional terser: Array spread; only in prod to skip dev bloat.
-  // ] : []), // Ternary-like spread: Empty array in dev; short-circuit via conditional.
-  
   terser({                                      // Terser config: Uglify options; format for readability in dev (disabled).
     compress: {                                 // Compression: Dead-code removal, etc.; defaults aggressive.
       drop_console: true                        // Drop console.*: Reduces size; customize for warnings.
@@ -85,7 +156,7 @@ const plugins = [
     },
     thirdParty: {
       output: {
-        file: 'website/THIRD_PARTY_LICENSES.txt', // Output licenses to a separate file
+        file: 'website/javascript/THIRD_PARTY_LICENSES.txt', // Output licenses to a separate file
         template: dependencies => {
           // Deduplicate and format license information
           const uniqueLicenses = new Map();
@@ -116,102 +187,6 @@ const plugins = [
 
 ];
 
-const outputs = [
-
-  // ...(isProduction ? [ */                         // Conditional UMD: Only prod; spread for optional second output.
-  //] : []) // Short-circuit: No UMD in dev; reduces build time.
-
-  {
-    dir: 'website/js',
-    entryFileNames: 'compiled/[name].js',
-    chunkFileNames: 'compiled/[name]-[hash].js',
-    format: 'es',                 // Format Specification: system // umd // cjs // amd // iife // es fallback.
-    name: 'pwaAuth',              // Global var: For script tag; customize per input if needed (advanced: output.name via fn).
-    sourcemap: true,
-    // preserveModules: false
-
-    // Externals: Assume CDN; avoids bundling large libs.
-    globals: {
-
-      //  jquery: 'jQuery',       // jQuery: Global $ assumed loaded externally.
-      lodash: '_'                 // Lodash: Global _ for tree-shaking.
-
-    },
-
-    interop: 'compat'             // Interop: Handles mixed exports; safe for legacy.
-
-  },
-  {
-    dir: 'demonstration',
-    entryFileNames: 'compiled/[name].js',
-    chunkFileNames: 'compiled/[name]-[hash].js',
-    format: 'es',                 // Format Specification: system // umd // cjs // amd // iife // es fallback.
-    name: 'pwaAuth',              // Global var: For script tag; customize per input if needed (advanced: output.name via fn).
-    sourcemap: true,
-    // preserveModules: false
-
-    // Externals: Assume CDN; avoids bundling large libs.
-    globals: {
-
-      //  jquery: 'jQuery',       // jQuery: Global $ assumed loaded externally.
-      lodash: '_'                 // Lodash: Global _ for tree-shaking.
-
-    },
-
-    interop: 'compat'             // Interop: Handles mixed exports; safe for legacy.
-
-  },
-  {
-    dir: 'src-compiled/',
-    entryFileNames: '[name].js',
-    chunkFileNames: '[name]-[hash].js',
-    format: 'es',                 // Format Specification: system // umd // cjs // amd // iife // es fallback.
-    name: 'pwaAuth',              // Global var: For script tag; customize per input if needed (advanced: output.name via fn).
-    sourcemap: true,
-    // preserveModules: false
-
-    // Externals: Assume CDN; avoids bundling large libs.
-    globals: {
-
-      //  jquery: 'jQuery',       // jQuery: Global $ assumed loaded externally.
-      lodash: '_'                 // Lodash: Global _ for tree-shaking.
-
-    },
-
-    interop: 'compat'             // Interop: Handles mixed exports; safe for legacy.
-
-  }
-
-];
-
-
-export default { input, output: outputs, plugins, compilerOptions: {
-    declaration: true,
-    declarationMap: true
-  } };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -221,48 +196,70 @@ export default { input, output: outputs, plugins, compilerOptions: {
 
 
 /*
-    plugins: [terser({
-        format: {
-          comments: false // Explicitly remove all comments
-        }
-    })]
+  babel({                                       // Babel config: Transpile after TS; .babelrc for presets/plugins.
+    babelHelpers: 'bundled',                    // Bundle helpers: Includes @babel/runtime in output to avoid external dep.
+    exclude: 'node_modules/**',                 // Scope: Only src code; node_modules handled by commonjs.
+    extensions: ['.js', '.ts'],                 // Process TS post-compilation.
+    sourceMaps: true,                           // Generate maps: Chains with TS for full source debugging.
+    presets: [
+      ['@babel/preset-env', {
+        targets:{ browsers: ['last 2 versions', 'not dead'] } // 'defaults',                    // >0.25% global usage, not dead browsers (Chrome 51+, Firefox 45+, etc.)
+       // modules: false,                         // Preserve ESM for tree-shaking
+       // bugfixes: true,                         // Fix browser-specific JS bugs
+       // corejs: 3,                              // Use core-js for polyfills
+       // useBuiltIns: 'usage'                    // Add polyfills only for used ES2024+ features
+      }]
+    ],  // Env preset for targets
+    plugins: [  // Array: Additional transforms
+      // '@babel/plugin-transform-class-properties',  // Enables class fields; preserves this in props
+      ["@babel/plugin-proposal-decorators", { "version": "2023-11" }]
+    ]
+  }),
 */
 
 
-
-// import minifyHTML from 'rollup-plugin-minify-html-literals';
-// import htmlLiterals from 'rollup-plugin-html-literals'; // Fallback for Lit HTML minification
-
-
-
-
-
-
-// Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-//     typescript({ // Compiles TypeScript; adjust tsconfig.json if needed
-//      tsconfig: './tsconfig.json', // Assumes tsconfig.json exists; create if missing
-//    }),
-
 /*
-output: [
-    {
-      file: 'finish/index.cjs.js',
-      format: 'cjs',
-      sourcemap: true,
-      plugins: [terser()]
-    },
-    {
-      file: 'finish/index.esm.js',
-      format: 'esm',
-      sourcemap: true,
-      plugins: [terser()]
-    },
-    {
-      file: 'finish/index.umd.js',
-      format: 'umd',
-      name: 'MyPackage',
-      sourcemap: true,
-      plugins: [terser()]
-    }
+
+// Configuration for copying static assets (excluding @webcomponents)
+const copyConfig = {
+  targets: [
+    { src: 'images', dest: 'build-modern' },
+    { src: 'data', dest: 'build-modern' },
+    { src: 'index.html', dest: 'build-modern' },
   ],
-  */
+};
+
+// Modern ES6 build configuration for evergreen browsers
+const config = {
+  input: 'typescript/export/pwa-auth.ts',
+  output: {
+    dir: 'typescript/project',
+    format: 'es',
+    sourcemap: true,
+  },
+  plugins: [
+    alias({
+      entries: [
+        {
+          find: 'lit-html/lib/shady-render.js',
+          replacement: 'node_modules/lit-html/lit-html.js',
+        },
+      ],
+    }),
+    typescript({
+      tsconfig: './tsconfig.json',
+      sourceMap: true,
+    }),
+    minifyHTML(),
+    copy(copyConfig),
+    resolve(),
+    commonjs(),
+    terser(),
+  ],
+  preserveEntrySignatures: false,
+};
+*/
+// export default config;
+export default { input, output: outputs, plugins/*, preserveEntrySignatures: false */};
+
+

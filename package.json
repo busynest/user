@@ -1,10 +1,12 @@
 {
   "name": "pwa-auth",
+  "type": "module",
   "author": "Jacek Markiewicz <jack.solutionbox@gmail.com>(https://www.jackspublishing.com)",
-  "version": "3.0.6",
+  "version": "3.2.1",
   "description": "User Management Component with 3 HTML Tags, and 1 Boilerplate Function to display user icon, sign up, login, log out, change account details, delete account.",
   "homepage": "https://pwa-authentic.firebaseapp.com",
-  "main": "src-compiled/pwa-auth.js",
+  "main": "./project/esm/pwa-auth.js",
+  "types": "./project/esm/pwa-auth.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/busynest/user"
@@ -21,14 +23,10 @@
     "lit",
     "redux"
   ],
-  "exports":{
-    "pwa-auth": {
-      "default": "./src-transpiled/src-export/pwa-auth.d.ts",
-      "types": "./src-/compiled/pwa-auth.js"
-    },
-    "pwa-helpers": {
-      "default": "./src-transpiled/src-export/pwa-helpers.d.ts",
-      "types": "./src-/compiled/pwa-helpers.js"
+  "exports": {
+    ".": {
+      "default": "./base/export/pwa-auth.js",
+      "types": "./base/export/pwa-auth.d.ts"
     }
   },
   "license": "BSD-3-Clause",
@@ -37,31 +35,39 @@
     "demo": "web-dev-server --node-resolve --watch --open --app-index demonstration/index.html",
     "website": "web-dev-server --node-resolve --watch --open --app-index website/index.html",
     "rollup": "rollup -c",
-    "transpile": "tsc --project src-export/tsconfig.production.json",
-    "mono":"tsc app.ts util.ts --target esnext --outfile index.js",
-    "declair": "tsc index.js --declaration --emitDeclarationOnly"
+    "prod": "tsc --project tsconfig.prod.json",
+    "mono": "tsc app.ts util.ts --target esnext --outfile index.js",
+    "declair": "tsc index.js --declaration --emitDeclarationOnly",
+    "project": " tsc && rollup -c"
   },
   "dependencies": {
-    "lit": "^3.2.1",
     "pwa-helpers": "^0.9.1",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.21.0",
     "@babel/preset-env": "^7.28.3",
     "@lit-labs/rollup-plugin-minify-html-literals": "^0.1.0",
     "@reduxjs/toolkit": "^2.9.0",
+    "@rollup/plugin-alias": "^5.0.1",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.2",
     "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "@types/node": "^24.7.0",
     "@web/dev-server": "^0.4.6",
     "@web/rollup-plugin-copy": "^0.5.1",
     "babel-plugin-template-html-minifier": "^4.1.0",
     "firebase": "^12.3.0",
+    "lit": "^3.3.1",
     "rollup": "^4.52.4",
+    "rollup-plugin-dts": "^6.2.3",
     "rollup-plugin-html-literals": "^2.0.1",
     "rollup-plugin-license": "^3.6.0",
-    "rollup-plugin-summary": "^3.0.1"
+    "rollup-plugin-summary": "^3.0.1",
+    "tslib": "^2.8.1"
   }
 }
