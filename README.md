@@ -22,7 +22,7 @@ Continue reading to understand how to install the project:
 ECMA Script Modules
 ```javascript
 import 'pwa-auth';
-import { db, storage, auth, user } from 'pwa-auth';
+import { store, db, storage, auth, user } from 'pwa-auth';
 ```
 
 Global Scope Management
@@ -122,11 +122,18 @@ import 'pwa-auth';
 // <user-icon subscribe emptyArtwork="./images/empty.jpg"></user-icon>
 // <user-drawer subscribe settingsURL="./settings"></user-drawer>
 // <user-settings emptyArtwork="./images/empty.jpg"></user-settings>
-import { db, storage, auth, user } from 'pwa-auth';
+import { store, db, storage, auth, user } from 'pwa-auth';
 // db           - firestore database reference
 // storage      - firebase storage reference
 // auth         - user object reference
 // user         - active user boolean reference
+
+// store        - Redux States: 
+    // store.backend.verified     - verified email: true/false
+    // store.backend.userId       - user ID
+    // store.backend.name         - user name
+    // store.backend.email        - user email
+    // store.backend.photoURL     - user profile photo
 ```
 
 ## Implementation
@@ -136,14 +143,14 @@ import { db, storage, auth, user } from 'pwa-auth';
   <header>
     <!-- subscribe property: (Initial State): Subscribe -->
     <!-- subscribe property: else (Initial State): Login -->
+    <!-- empty property: location of empty image -->
     <!-- Logged-out (State): txt: Login Button -->
     <!-- Logged-out (State): txt: Subscribe Button -->
     <!-- Logged-in (State): photo: Icon Button -->
-    <!-- emptyArtwork property: location of empty image -->
     <user-icon subscribe empty="./images/empty.jpg"></user-icon>
   </header>
 
-  <!-- settingsURL property: location of <pwa-settings> Tag -->
+  <!-- url property: location of <pwa-settings> Tag -->
   <!-- subscribe property: (Initial State): Subscribe -->
   <!-- subscribe property: else (Initial State): Login -->
   <!-- Top-down, Drop-down Feature: height, 1.4 seconds -->
@@ -154,43 +161,59 @@ import { db, storage, auth, user } from 'pwa-auth';
 
   <main>
     <!-- 1 Photo Upload Feature, view uploaded bucket of photos, photo ediotr -->
+    <!-- empty property: location of empty image -->
     <!-- Unavailable Photo --> 
     <!-- Update Username -->
     <!-- Update Email / Verify -->
     <!-- Update Password -->
     <!-- Delete Account, Photos, Information -->
-    <!-- emptyArtwork property: location of empty image -->
     <user-settings empty="./images/empty.jpg"></user-settings>
   </main>
 
 </body>
 ```
+
 ## CSS Custom Properties
-| Custom Namespace | Description | Default | Custom Element |
-| :--- | ---: | :---: | :--- |
-| --pwa_icon_background           | Button  | #6cc04a; | user-icon |
-| --pwa_icon_hover                | Button      | lightgrey     | user-icon |
-| --pwa_icon_border               | Button      | 2px solid black | user-icon |
-| --pwa_icon_height (sync)        | Login State      | 32px      | user-icon |
-| --pwa_icon_padding              | Login State      | 0px 16px | user-icon |
-| --pwa_icon_radius               | Login State      | 6px      | user-icon |
-| --pwa_icon_font         | Login State   | 'Arial', sans-serif | user-icon |
-| --pwa_icon_diameter (sync)      | Icon State  | 32px        | user-icon |
-| --pwa_drawer_border             | Drawer      | 3px #303030 solid | user-drawer |
-| --pwa_drawer_z-index            | Drawer      | 2         | user-drawer |
-| --pwa_drawer_border-radius      | Drawer      | 20px        | user-drawer |
-| --pwa_drawer_text_color         | Input txt   | #303030    | user-drawer |
-| --pwa_drawer_background_color   | Input txt   | #fff       | user-drawer |
-| --pwa_settings_background       | Navigation  | grey       | user-settings |
-| --pwa_nav_button                | Navigation  | grey       | user-settings |
-| --pwa_nav_select                | Navigation  | black      | user-settings |
-| --pwa_divider                   | Divider     | grey       | user-settings |
-| --pwa_input_background          | Input       | #E1E5EB  | user-settings |
-| --pwa_label_text_color          | Input       | black      | user-settings |
-| --pwa_section_header            | Header      | black      | user-settings |
-| --pwa_action_text_color         | Button      | #fff     | user-settings |
-| --pwa_action_background_color   | Button      | #6cc04a  | user-settings |
-| --pwa_action_border_color       | Button      | #60b23e  | user-settings |
+```css
+:root {
+/* <user-icon> - Button Design */
+--pwa_icon_background:            #6cc04a;
+--pwa_icon_hover:                   lightgrey;
+--pwa_icon_border:                  2px solid black;
+--pwa_icon_padding:                 0px 16px;
+--pwa_icon_radius:                  6px;
+--pwa_icon_font:                    'Arial', sans-serif;
+
+/* <user-icon> (state) - login / logout */
+--pwa_icon_height:                  32px; /* Logged-out (sync) */
+--pwa_icon_diameter:                32px; /* Logged-in (sync) */
+
+/* <user-drawer> - Drawer Design */
+--pwa_drawer_border:                3px #303030 solid;
+--pwa_drawer_z-index:               2;
+--pwa_drawer_border-radius:         20px;
+
+/* <user-drawer> - Input Design */
+--pwa_drawer_text_color:          #303030;
+--pwa_drawer_background_color:    #fff;
+
+/* <user-settings> - Navigation Design */
+--pwa_settings_background:          grey;
+--pwa_nav_button:                   grey;
+--pwa_nav_select:                   black;
+--pwa_divider:                      grey;
+--pwa_section_header:               black;
+
+/* <user-settings> - Input Design */
+--pwa_input_background:           #E1E5EB;
+--pwa_label_text_color:             black;
+
+/* <user-settings> - Button Design */
+--pwa_action_text_color:          #fff;
+--pwa_action_background_color:    #6cc04a;
+--pwa_action_border_color:        #60b23e;
+}
+```
 
 ## Global Namespaced Firebase Instance Configuration
 pwa-auth.js is built upon the Firebase SDK (Software Development Kit).

@@ -5,7 +5,7 @@ import replace      from '@rollup/plugin-replace';
 import summary      from 'rollup-plugin-summary';
 import license      from 'rollup-plugin-license';
 import alias        from '@rollup/plugin-alias';
-import dts          from 'rollup-plugin-dts';
+// import dts          from 'rollup-plugin-dts';
 
 const input = { 'pwa-auth' : './bundle/base/export/pwa-auth.js' };
 
@@ -25,7 +25,7 @@ const outputs = [
     },
     interop: 'compat'             // Interop: Handles mixed exports; safe for legacy.
   },{
-    dir:              'bundle/esm',
+    dir:              './source/esm',
     entryFileNames:   '[name].js',
     chunkFileNames:   '[name]-[hash].js',
     format:           'es',

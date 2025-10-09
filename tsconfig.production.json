@@ -2,7 +2,7 @@
   "$schema"   : "https://json.schemastore.org/tsconfig",
   "type"      : "module",
   "include"   : [ "./typescript/export/pwa-auth.ts" ],
-  "exclude"   : [ "demonstration/**/*.ts", "typescript/development/**/*.ts" ],
+  "exclude"   : [ "demonstration/**/*.ts", "development/**/*.ts" ],
   "compilerOptions": {
     "outDir":                             "bundle/base",
     "target":                             "ES2022",

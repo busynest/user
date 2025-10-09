@@ -11,7 +11,7 @@
 
   "exclude": [
     "demonstration/**/*.ts",
-    "typescript/development/**/*.ts"
+    "development/**/*.ts"
   ],
 
   "compilerOptions": {

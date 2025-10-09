@@ -1,49 +1,19 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 // import { frontendAuth } from "./object";
-/*
-interface frontendAuth {
-  login:            boolean,        // Login State
-  drawer:           boolean,        // Drawer State
-  register:         boolean,        // Registration State
 
-  settings:         string,         // Page Navigation
-  userId:           string,         // Profile Name Holder
-  customer:         string,         // Customer Name Holder
-  
-  name:             string,         // Customer Name Loaded
-  photoURL:         string,         // User Photo Loaded
-  phone:            string,         // User Phone Loaded
-  email:            string,         // User E-mail Loaded
-  
-  profileChoice:    string          // Profile Initialization State
-}*/
 // Object Initializer Notation
 export const initialState/*: frontendAuth*/ = {
-
   settings:         'profile',            // Page Navigation
-
   login:            false,                // Login State
   drawer:           false,                // Drawer State
-  
   register:         true,                 // Registration State
-
-
-
-
   userId:           "user",               // User Name Holder
-
-  
-
   customer:         "John Doe",           // Customer Name Holder
-
   profileChoice:    'unChosen',           // Profile Initialization State
-
   name:             'Modern Business',    // Customer Name Loaded
-  photoURL:         '',   // User Photo Loaded
-  
+  photoURL:         '',                   // User Photo Loaded
   phone:            '(...) ... - ....',   // User Phone Loaded
   email:            ''                    // User E-mail Loaded
-
 }
 
 // Create a slice for the AppState
