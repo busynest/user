@@ -2,11 +2,11 @@
   "name": "pwa-auth",
   "type": "module",
   "author": "Jacek Markiewicz <jack.solutionbox@gmail.com>(https://www.jackspublishing.com)",
-  "version": "3.2.1",
+  "version": "3.2.3",
   "description": "User Management Component with 3 HTML Tags, and 1 Boilerplate Function to display user icon, sign up, login, log out, change account details, delete account.",
-  "homepage": "https://pwa-authentic.firebaseapp.com",
-  "main": "./project/esm/pwa-auth.js",
-  "types": "./project/esm/pwa-auth.d.ts",
+  "homepage"  : "https://pwa-authentic.firebaseapp.com",
+  "main"      : "./base/export/pwa-auth.js",
+  "types"     : "./base/export/pwa-auth.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/busynest/user"
@@ -25,20 +25,18 @@
   ],
   "exports": {
     ".": {
-      "default": "./base/export/pwa-auth.js",
-      "types": "./base/export/pwa-auth.d.ts"
+      "default"   : "./base/export/pwa-auth.js",
+      "types"     : "./base/export/pwa-auth.d.ts"
     }
   },
   "license": "BSD-3-Clause",
   "flat": true,
   "scripts": {
-    "demo": "web-dev-server --node-resolve --watch --open --app-index demonstration/index.html",
-    "website": "web-dev-server --node-resolve --watch --open --app-index website/index.html",
-    "rollup": "rollup -c",
-    "prod": "tsc --project tsconfig.prod.json",
-    "mono": "tsc app.ts util.ts --target esnext --outfile index.js",
-    "declair": "tsc index.js --declaration --emitDeclarationOnly",
-    "project": " tsc && rollup -c"
+    "demo"        : "web-dev-server --node-resolve --watch --open --app-index demonstration/index.html",
+    "website"     : "web-dev-server --node-resolve --watch --open --app-index website/index.html",
+    "rollup"      : "rollup rollup.config.js",
+    "build"       : "tsc && rollup rollup.config.js",
+    "production"  : "tsc --project tsconfig.production.json"
   },
   "dependencies": {
     "pwa-helpers": "^0.9.1",

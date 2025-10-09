@@ -6,6 +6,11 @@ All notable changes to pwa-auth.js will be documented in this file.
 - Social Login Flow
 - animated login and data
 
+# [3.2.3] - 2025-10-08
+
+## Changed
+- Rollup Project Bundle
+
 # [3.2.1] - 2025-10-07
 
 ## Changed

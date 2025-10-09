@@ -1,9 +1,9 @@
 
 import { createSlice, PayloadAction }    from "@reduxjs/toolkit";
-import { backendAuth } from "./object";
+// import { backendAuth } from "./object";
 
 // Object Initial State
-const initialState: backendAuth = {
+const initialState/*: backendAuth*/ = {
   verified:         false,
   anon:             false,
 

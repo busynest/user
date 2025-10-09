@@ -1,102 +1,53 @@
 import resolve      from '@rollup/plugin-node-resolve';
 import commonjs     from '@rollup/plugin-commonjs';
-import babel        from '@rollup/plugin-babel';
 import terser       from '@rollup/plugin-terser';
 import replace      from '@rollup/plugin-replace';
 import summary      from 'rollup-plugin-summary';
 import license      from 'rollup-plugin-license';
-import typescript   from '@rollup/plugin-typescript';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import alias from '@rollup/plugin-alias';
-import dts from 'rollup-plugin-dts';
+import alias        from '@rollup/plugin-alias';
+import dts          from 'rollup-plugin-dts';
 
-// import minifyHTML   from '@lit-labs/rollup-plugin-minify-html-literals'; // Minifies Lit HTML templates, Rollup v4 compatible
-// import { copy }     from '@web/rollup-plugin-copy';
-
-const input = {
-  'pwa-auth'      : './base/export/pwa-auth.js'
-  // 'pwa-helpers'   : './base/export/auth-helpers.js'
-};
-
-//   'pwa-helpers'   : './javascript/transpiier/pwa-helpers.js'
+const input = { 'pwa-auth' : './bundle/base/export/pwa-auth.js' };
 
 const outputs = [
-
   {
-    dir:              'website/javascript',
+    dir:              './website/javascript',
     entryFileNames:   '[name].js',
     chunkFileNames:   '[name]-[hash].js',
     format:           'es',                   // Format Specification: system // umd // cjs // amd // iife // es fallback.
     name:             'pwaAuth',              // Global var: For script tag; customize per input if needed (advanced: output.name via fn).
     sourcemap:        true,
     // preserveModules: false
-
     // Externals: Assume CDN; avoids bundling large libs.
     globals: {
-
       //  jquery: 'jQuery',       // jQuery: Global $ assumed loaded externally.
       lodash: '_'                 // Lodash: Global _ for tree-shaking.
-
     },
-
     interop: 'compat'             // Interop: Handles mixed exports; safe for legacy.
-
-  },
-  {
-    dir:              'demonstration/javascript',
+  },{
+    dir:              'bundle/esm',
     entryFileNames:   '[name].js',
     chunkFileNames:   '[name]-[hash].js',
-    format:           'es',                   // Format Specification: system // umd // cjs // amd // iife // es fallback.
-    name:             'pwaAuth',              // Global var: For script tag; customize per input if needed (advanced: output.name via fn).
+    format:           'es',
+    name:             'pwaAuth',
     sourcemap:        true,
-    // preserveModules: false
-
-    // Externals: Assume CDN; avoids bundling large libs.
-    globals: {
-
-      //  jquery: 'jQuery',       // jQuery: Global $ assumed loaded externally.
-      lodash: '_'                 // Lodash: Global _ for tree-shaking.
-
-    },
-
-    interop: 'compat'             // Interop: Handles mixed exports; safe for legacy.
-
-  },
-  {
-    dir:              'project/esm',
-    entryFileNames:   '[name].js',
-    chunkFileNames:   '[name]-[hash].js',
-    format:           'es',                   // Format Specification: system // umd // cjs // amd // iife // es fallback.
-    name:             'pwaAuth',              // Global var: For script tag; customize per input if needed (advanced: output.name via fn).
-    sourcemap:        true,
-    // preserveModules: false
-
-    // Externals: Assume CDN; avoids bundling large libs.
-    globals: {
-
-      //  jquery: 'jQuery',       // jQuery: Global $ assumed loaded externally.
-      lodash: '_'                 // Lodash: Global _ for tree-shaking.
-
-    },
-
-    interop: 'compat'             // Interop: Handles mixed exports; safe for legacy.
-
-  },
+    globals:          { lodash: '_' },
+    interop:          'compat'
+  }/*,
   {
     dir:              'base/pwa-auth.d.ts',
     entryFileNames:   'project/esm/[name].d.ts',
     chunkFileNames:   'project/esm/[name]-[hash].d.ts',
     format:           'es',
     sourcemap:        true,
-    interop:          'compat'             // Interop: Handles mixed exports; safe for legacy.
-  }
-
+    interop:          'compat'
+  }*/
 ];
 
 // Plugins array: Sequential chain; resolve first for dep discovery, then transforms, then optimize last.
 const plugins = [
 
-  dts(),
+  // dts(),
 
  // nodeResolve(), // Tell Rollup how to find modules in node_modules
 
@@ -187,13 +138,12 @@ const plugins = [
 
 ];
 
-
-
-
-
-
-
-
+export default {
+  input,
+  output: outputs,
+  plugins
+  /*, preserveEntrySignatures: false */
+};
 
 /*
   babel({                                       // Babel config: Transpile after TS; .babelrc for presets/plugins.
@@ -215,51 +165,12 @@ const plugins = [
       ["@babel/plugin-proposal-decorators", { "version": "2023-11" }]
     ]
   }),
+
+  // import { nodeResolve } from '@rollup/plugin-node-resolve';
+// import babel        from '@rollup/plugin-babel';
+// import typescript   from '@rollup/plugin-typescript';
+// import minifyHTML   from '@lit-labs/rollup-plugin-minify-html-literals'; // Minifies Lit HTML templates, Rollup v4 compatible
+// import { copy }     from '@web/rollup-plugin-copy';
+
 */
-
-
-/*
-
-// Configuration for copying static assets (excluding @webcomponents)
-const copyConfig = {
-  targets: [
-    { src: 'images', dest: 'build-modern' },
-    { src: 'data', dest: 'build-modern' },
-    { src: 'index.html', dest: 'build-modern' },
-  ],
-};
-
-// Modern ES6 build configuration for evergreen browsers
-const config = {
-  input: 'typescript/export/pwa-auth.ts',
-  output: {
-    dir: 'typescript/project',
-    format: 'es',
-    sourcemap: true,
-  },
-  plugins: [
-    alias({
-      entries: [
-        {
-          find: 'lit-html/lib/shady-render.js',
-          replacement: 'node_modules/lit-html/lit-html.js',
-        },
-      ],
-    }),
-    typescript({
-      tsconfig: './tsconfig.json',
-      sourceMap: true,
-    }),
-    minifyHTML(),
-    copy(copyConfig),
-    resolve(),
-    commonjs(),
-    terser(),
-  ],
-  preserveEntrySignatures: false,
-};
-*/
-// export default config;
-export default { input, output: outputs, plugins/*, preserveEntrySignatures: false */};
-
 

@@ -22,14 +22,13 @@ Continue reading to understand how to install the project:
 ECMA Script Modules
 ```javascript
 import 'pwa-auth';
-import { db, storage, auth, user } from 'pwa-auth/auth-helpers';
+import { db, storage, auth, user } from 'pwa-auth';
 ```
 
 Global Scope Management
 ```html
 <!-- Optional: Copy the Project Files from 'src' Folder -->
 <script type="module" src="./pwa-auth.js"></script>
-<script type="module" src="./pwa-helpers.js"></script>
 ```
 ## Library
 - 3 Tag Placement
@@ -77,9 +76,10 @@ Global Scope Management
 
 ## Boilerplate
 
-For simple projects, you can copy to disk
-- src/compiled/
+For simple projects, copy project bundle to disk
+- source/esm/
   - pwa-auth.js
+  - pwa-auth.js.map
   - pwa-styles.css
   - empty.jpg
 
@@ -116,12 +116,13 @@ For simple projects, you can copy to disk
 ## Boilerplate
 
 ### TypeScript Library for Bundlers
+The Start File exports: classes and objects
 ```javascript
 import 'pwa-auth';
 // <user-icon subscribe emptyArtwork="./images/empty.jpg"></user-icon>
 // <user-drawer subscribe settingsURL="./settings"></user-drawer>
 // <user-settings emptyArtwork="./images/empty.jpg"></user-settings>
-import { db, storage, auth, user } from 'pwa-auth/auth-helpers';
+import { db, storage, auth, user } from 'pwa-auth';
 // db           - firestore database reference
 // storage      - firebase storage reference
 // auth         - user object reference
