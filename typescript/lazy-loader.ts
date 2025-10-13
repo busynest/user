@@ -7,9 +7,12 @@ export class LazyLoader extends LitElement {
   /** @attr active */
   @property({type: Boolean}) public active : boolean = false;
 
-  shouldUpdate() {
-    return this.active;
-  } // Only render this page, if it is actually visible.
+  constructor() {
+    super();
+  }
+ 
+  // Only render this page, if it is actually visible.
+  shouldUpdate() { return this.active;  }
  
 }
 
@@ -18,3 +21,4 @@ declare global {
     'lazy-loader': LazyLoader;
   }
 }
+

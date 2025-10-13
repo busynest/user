@@ -1,26 +1,8 @@
 {
-  "$schema"   : "https://json.schemastore.org/tsconfig",
-  "type"      : "module",
-  "include"   : [ "./typescript/export/pwa-auth.ts" ],
-  "exclude"   : [ "demonstration/**/*.ts", "development/**/*.ts" ],
+  "extends": "./tsconfig",
   "compilerOptions": {
-    "outDir":                             "bundle/base",
-    "target":                             "ES2022",
-    "module":                             "ESNext",
-    "moduleResolution":                   "node",
-    "lib":                                ["ES2022", "DOM", "DOM.Iterable"],
-
-    "strict":                             true,
-    "esModuleInterop":                    true,
-    "declaration":                        true,
-    "experimentalDecorators":             true,
-    "emitDecoratorMetadata":              true,
-    "sourceMap":                          true,
-
+    
     "types":                              ["node"],
-
-    "useDefineForClassFields":            true,
-
     "skipLibCheck":                       true,
 
     "noUnusedLocals":                     true,
@@ -35,8 +17,6 @@
     "isolatedModules":                    true,
     "allowSyntheticDefaultImports":       true,
     "forceConsistentCasingInFileNames":   true,
-
-    "removeComments":                     true,
     "pretty":                             true
   }
 }

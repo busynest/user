@@ -7,7 +7,7 @@ import license      from 'rollup-plugin-license';
 import alias        from '@rollup/plugin-alias';
 // import dts          from 'rollup-plugin-dts';
 
-const input = { 'pwa-auth' : './bundle/base/export/pwa-auth.js' };
+const input = { 'pwa-auth' : './base/export/pwa-auth.js' };
 
 const outputs = [
   {
@@ -19,18 +19,23 @@ const outputs = [
     sourcemap:        true,
     // preserveModules: false
     // Externals: Assume CDN; avoids bundling large libs.
-    globals: {
-      //  jquery: 'jQuery',       // jQuery: Global $ assumed loaded externally.
-      lodash: '_'                 // Lodash: Global _ for tree-shaking.
-    },
+    globals: { lodash: '_' }, // Lodash: Global _ for tree-shaking. //  jquery: 'jQuery',       // jQuery: Global $ assumed loaded externally.
     interop: 'compat'             // Interop: Handles mixed exports; safe for legacy.
   },{
-    dir:              './source/esm',
+    dir:              './source/development',
     entryFileNames:   '[name].js',
     chunkFileNames:   '[name]-[hash].js',
     format:           'es',
     name:             'pwaAuth',
     sourcemap:        true,
+    globals:          { lodash: '_' },
+    interop:          'compat'
+  },{
+    dir:              './source/production',
+    entryFileNames:   '[name].js',
+    chunkFileNames:   '[name]-[hash].js',
+    format:           'es',
+    name:             'pwaAuth',
     globals:          { lodash: '_' },
     interop:          'compat'
   }/*,
@@ -54,8 +59,8 @@ const plugins = [
   alias({
       entries: [
         {
-          find: 'lit-html/lib/shady-render.js',
-          replacement: 'node_modules/lit-html/lit-html.js',
+          find:           './lit-html/lib/shady-render.js',
+          replacement:    './node_modules/lit-html/lit-html.js',
         },
       ],
     }),
@@ -107,7 +112,7 @@ const plugins = [
     },
     thirdParty: {
       output: {
-        file: 'website/javascript/THIRD_PARTY_LICENSES.txt', // Output licenses to a separate file
+        file: './LICENSES.txt', // Output licenses to a separate file
         template: dependencies => {
           // Deduplicate and format license information
           const uniqueLicenses = new Map();

@@ -3,9 +3,9 @@ import { property, state }  from "lit/decorators.js";
 import { connect }          from "pwa-helpers";
 import store, { AppState }  from "../../../store";
 import { auth }             from "../../../firebase/authentication";
-import { labelStyle }       from "../../../css/form/label";
-import { inputStyle }       from "../../../css/form/input";
-import { buttonStyle }      from "../../../css/form/button";
+import { labelStyle }       from "../../form/css/label";
+import { inputStyle }       from "../../form/css/input";
+import { buttonStyle }      from "../../form/css/button";
 import { updateEmail }      from "firebase/auth";
 
 export class ContactEmail extends connect(store)(LitElement) {
@@ -35,11 +35,7 @@ export class ContactEmail extends connect(store)(LitElement) {
     buttonStyle,
     css`
     
-      :host {
-        display:      grid;
-      }
-
-      form { display: grid; }
+      :host, form { display: grid; }
 
     `
     ]; }
@@ -51,16 +47,20 @@ export class ContactEmail extends connect(store)(LitElement) {
       autocomplete="off"
       @submit="${this.default}">
 
-      <label for="pwa-email" >E-mail:</label>
+      <label for="pwa-email" >E-mail:
 
-      <input
-        id            = "pwa-email"
-        name          = "email"
-        type          = "email"
-        class         = "email"
-        data-label    = "Account Email"
-        @input        = "${this.handleEmail}"
-        .value        = "${this.mail}"/>
+        <input
+          id            = "pwa-email"
+          name          = "email"
+          type          = "email"
+          class         = "email"
+          data-label    = "Account Email"
+          @input        = "${this.handleEmail}"
+          .value        = "${this.mail}"/>
+
+        <span class="verified"></span>
+
+      </label>
 
       <button
         class         = "action-button" 

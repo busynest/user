@@ -2,7 +2,6 @@ import { css, CSSResult } from "lit";
 
 export const drawerStyle: CSSResult = css`
 
-  /* <user-drawer> : parent container */
   :host {
     position:               absolute;
     max-height:             0px;
@@ -19,34 +18,32 @@ export const drawerStyle: CSSResult = css`
     transition:             max-height 1.4s ease-out;
   }
 
-  /* wrapper : child container*/
   .userDrawer {
     position:               fixed;
     top:                    0;
     left:                   0;
     right:                  0;
     transition-duration:    1.4s;
-    border:                 var(--pwa_drawer_border, 3px #303030 solid);
-    z-index:                var(--pwa_drawer_z-index, 2);
     overflow:               hidden;
-    background-color:       var(--pwa_drawer_background_color, #fff);
-    color:                  var(--pwa_drawer_text_color, #303030);
     box-sizing:             border-box;
-    border-radius:          var(--pwa_drawer_border-radius, 20px);
     height:                 auto;
     transition-property:    visibility, max-height;
+
+    border:                 var(--pwa_drawer_border, 3px #303030 solid);
+    z-index:                var(--pwa_drawer_z-index, 2);
+    background-color:       var(--pwa_drawer_background_color, #fff);
+    color:                  var(--pwa_drawer_text_color, #303030);
+    border-radius:          var(--pwa_drawer_border-radius, 20px);
   }
 
-  /* wrapper closed */
-  .closed {
+  .out {
     max-height:             0px;
     transition: max-height  1.4s ease-out;
     visibility:             hidden;
     transition-property:    visibility, max-height;
   }
 
-  /* wrapper opened */
-  .opened {
+  .in {
     max-height:             100%;
     transition: max-height  1.4s ease-out;
     visibility:             visible;

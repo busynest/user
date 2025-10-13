@@ -7,7 +7,6 @@ export const iconStyles = css`
     display:                  grid;
   }
 
-  /* Shared Styles */
   .icon, .login {
     cursor:                   pointer;
     margin:                   auto;
@@ -20,13 +19,11 @@ export const iconStyles = css`
     transition-duration:      2s; 
   }
 
-  /* Hover Styles */
   .icon:hover,
   .login:hover {
     background-color:         var(--pwa_icon_hover, lightgrey);
   }
 
-  /* Logged-in State: The Icon Button */
   .icon {
     height:                   var(--pwa_icon_diameter, 32px);
     width:                    var(--pwa_icon_diameter, 32px);
@@ -34,7 +31,6 @@ export const iconStyles = css`
     padding:                  0;
   }
 
-  /* The Login Button */
   .login {
     width:                    auto;
     border-radius:            var(--pwa_icon_radius, 6px);
@@ -45,7 +41,6 @@ export const iconStyles = css`
     text-align:               center;
   }
 
-  /* Icon Artwork */
   .userImage {
     object-fit:               cover; 
     transition-property:      all;

@@ -6,115 +6,91 @@
     <meta charset="UTF-8">
     <meta name="viewport"       content="width=device-width, minimum-scale=1, initial-scale=1" />
     
+    <!-- pwa-auth.js - CSS Custom Variables - Option 1
+    <link rel="stylesheet"      href="pwa-styles.css"> -->
+    
+    <!-- pwa-auth.js - CSS Custom Variables - Option 2
+    <style> :root {} </style> -->
+
+    <link rel="stylesheet"      href="styles.css">
+
     <!-- Preconnect -->
     <link rel="preconnect"      href="https://firebasestorage.googleapis.com">
 
     <!-- Pre-Fetch -->
     <link rel="dns-prefetch"    href="https://firebasestorage.googleapis.com">
 
-    <!-- Cascading Style Sheets -->
-    <link rel="stylesheet"      href="css/styles.css">
-
-    <!-- pwa-auth.js - CSS Custom Variables - Option 1
-    <link rel="stylesheet"      href="pwa-styles.css"> -->
-
-    <style>
-      html {
-        overflow:                 auto;
-        scroll-behavior:          smooth;
-        display:                  grid;
-        height:                   100%;
-        padding:                  16px;
-        box-sizing:               border-box;
-        transition-duration:      1s;
-      }
-
-      body {
-        overflow:                 hidden;
-        margin:                   0;
-        font-family:              Space Grotesk, system-ui, sans-serif;
-        -webkit-font-smoothing:   antialiased;
-        font-size:                .875rem;
-        line-height:              1.25rem;
-      }
-
-      body {
-        background-color:       #0a2840;
-        display:                  grid;
-        grid-gap:                 16px;
-        grid-template-areas:
-          "head"
-          "main"
-          "foot";
-        grid-template-rows:       auto 1fr auto;
-      }
-
-      header { grid-area:         head; }
-      main { grid-area:           main; }
-      footer { grid-area:         foot; }
-
-      header { display:           grid; }
-
-      main {
-        border:                   2px solid black;
-        border-radius:            6px;
-        overflow:                 hidden;
-        background-color:       cadetblue;
-      }
-
-      footer { display:           grid; }
-    </style>
-
     <!-- pwa-auth.js - Module Configuration Objects -->
     <script>
       window.process = { env: { NODE_ENV: 'production' } };
       window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
-            apiKey: "AIzaSyC1ZNYC9RAjSAE3syUBNi47AiqbAqkx99w",
-            authDomain: "pwa-authentic.firebaseapp.com",
-            projectId: "pwa-authentic",
-            storageBucket: "pwa-authentic.firebasestorage.app",
-            messagingSenderId: "749233996232",
-            appId: "1:749233996232:web:bbc410d53b7d39bdfb80fd",
-            measurementId: "G-G1GYM1HBJ4"
+            apiKey:             "AIzaSyC1ZNYC9RAjSAE3syUBNi47AiqbAqkx99w",
+            authDomain:         "pwa-authentic.firebaseapp.com",
+            projectId:          "pwa-authentic",
+            storageBucket:      "pwa-authentic.firebasestorage.app",
+            messagingSenderId:  "749233996232",
+            appId:              "1:749233996232:web:bbc410d53b7d39bdfb80fd",
+            measurementId:      "G-G1GYM1HBJ4"
           })
         }
       };
     </script>
+
+    <!-- Application Shell -->
+    <script type="module" src="../base/export/pwa-auth.js"></script>
 
   </head>
   <body>
 
     <header>
 
-      <!-- Icon Tag -->
-      <user-icon subscribe empty="../source/empty.jpg"></user-icon>
+      <div style="margin: auto">
+        
+        <!-- Sponsor Me -->
+        <iframe
+          src="https://github.com/sponsors/busynest/button"
+          title="Sponsor busynest"
+          height="32"
+          width="114"
+          style="border: 0; border-radius: 6px;  margin: auto 0 auto 0;"></iframe>
+
+      </div>
 
     </header>
 
-    <!-- Drawer Tag-->
-    <user-drawer subscribe url="./settings"></user-drawer>
+    <!-- Drop-down - Drawer-->
+    <user-drawer      url="./settings"     subscribe    ></user-drawer>
 
     <main>
 
-      <!-- Settings Tag-->
-      <user-settings empty="../source/empty.jpg"></user-settings>
+      <section>
+
+        <h2>Example: Button: Login or Subscribe / Icon Picture</h2>
+
+        <!-- Login / Subscribe - Button -->
+        <user-icon      empty="../source/empty.jpg"    subscribe    ></user-icon>
+
+      </section>
+
+      <section>
+
+        <h2>Example: Auth Page</h2>
+
+        <!-- Log-in - -Page-->
+        <user-login     login     ></user-login>
+
+      </section>
+
+      <section>
+
+        <h2>Example: Settings Page</h2>
+
+        <!-- Settings - Page-->
+        <user-settings  empty="../source/empty.jpg"></user-settings>
+
+      </section>
 
     </main>
-
-    <footer>
-
-      <div style="margin: auto">
-        <!-- Sponsor Me -->
-        <iframe src="https://github.com/sponsors/busynest/button" title="Sponsor busynest" height="32" width="114" style="border: 0; border-radius: 6px;  margin: auto 0 auto 0;"></iframe>
-      </div>
-
-    </footer>
-
-    <!-- pwa-auth.js - CSS Custom Variables - Option 2
-    <style></style> -->
-
-    <!-- Application Shell -->
-    <script type="module" src="../base/export/pwa-auth.js" async></script>
 
   </body>
 

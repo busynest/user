@@ -2,7 +2,7 @@ import { CSSResultArray, LitElement, css, html } from "lit";
 import { state }              from "lit/decorators.js";
 import { connect }            from "pwa-helpers";
 import store, { AppState }    from "../../../store";
-import { buttonStyle }        from "../../../css/form/button";
+import { buttonStyle }        from "../../form/css/button";
 import { auth }               from '../../../firebase/authentication';
 
 export class DeleteUser extends connect(store)(LitElement) {
@@ -31,7 +31,7 @@ export class DeleteUser extends connect(store)(LitElement) {
 
     :host {
       display:                  grid;
-      grid-template-rows:       auto auto;
+      grid-template-rows:       1fr auto;
     }
     
     p {

@@ -4,9 +4,9 @@ import { state }            from "lit/decorators.js";
 import { connect }          from "pwa-helpers";
 import store, { AppState }  from "../../../store";
 import { auth }             from "../../../firebase/authentication";
-import { labelStyle }       from "../../../css/form/label";
-import { inputStyle }       from "../../../css/form/input";
-import { buttonStyle  }     from "../../../css/form/button";
+import { labelStyle }       from "../../form/css/label";
+import { inputStyle }       from "../../form/css/input";
+import { buttonStyle  }     from "../../form/css/button";
 import { updatePassword }   from "firebase/auth";
 
 export class InputPassword extends connect(store)(LitElement) {
@@ -45,7 +45,7 @@ export class InputPassword extends connect(store)(LitElement) {
         display:        grid;
       }
 
-      form { display: grid; }
+      form { display: grid; grid-template-rows: 1fr 1fr auto;}
 
       p.error { color: red; }
     
@@ -59,30 +59,35 @@ export class InputPassword extends connect(store)(LitElement) {
         @submit="${this.default}">
 
         <!-- Input - 1 -->
-        <label for="pwa-new-password">New Password</label>
+        <div>
+          
+          <label for="pwa-new-password">New Password
 
-        <input
-          id      = "pwa-new-password"
-          name    = "new_password"
-          type    = "password"
-          .value  = "${this.password}"
-          @input  = "${this.handleInputChange}"
-          aria-describedby = "password-help">
+            <input
+              id      = "pwa-new-password"
+              name    = "new_password"
+              type    = "password"
+              .value  = "${this.password}"
+              @input  = "${this.handleInputChange}"
+              aria-describedby = "password-help">
+
+          </label>
+
+        </div>
 
         <!-- Input - 2 -->
-        <label for="pwa-verify-password">Verify Password</label>
+        <div>
 
-        <input
-          id      = "pwa-verify-password"
-          name    = "verify_password"
-          type    = "password">
+          <label for="pwa-verify-password">Verify Password
 
-        <!-- Submit -->
-        <button
-          class="action-button pass"
-          ?disabled="${this.login === false}">Update</button>
+            <input
+              id      = "pwa-verify-password"
+              name    = "verify_password"
+              type    = "password">
 
-        ${this.message ? html`
+          </label>
+
+          ${this.message ? html`
 
             <p
               class=${this.message.includes('Password entered') ? '' : 'error'}
@@ -92,8 +97,14 @@ export class InputPassword extends connect(store)(LitElement) {
 
             </p>
 
-          ` : ''
-        }
+          ` : '' }
+
+        </div>
+
+        <!-- Submit -->
+        <button
+          class="action-button pass"
+          ?disabled="${this.login === false}">Update</button>
 
       </form>
 

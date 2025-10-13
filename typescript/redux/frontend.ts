@@ -6,7 +6,8 @@ export const initialState/*: frontendAuth*/ = {
   settings:         'profile',            // Page Navigation
   login:            false,                // Login State
   drawer:           false,                // Drawer State
-  register:         true,                 // Registration State
+  registerOne:      false,                // Registration Drawer State
+  registerTwo:      false,                 // Registration Page State
   userId:           "user",               // User Name Holder
   customer:         "John Doe",           // Customer Name Holder
   profileChoice:    'unChosen',           // Profile Initialization State
@@ -50,8 +51,8 @@ export const userSlice = createSlice({
 
       // Drawer State - Alternative CSS Pattern to Show / Hide
       toggleSign: ( state ) => {
-        if ( state.drawer === true) { state.drawer = false; }
-        else                        { state.drawer = true; }
+        if ( state.drawer === true)       { state.drawer = false; }
+        else                              { state.drawer = true; }
        },
 
       closeSign: ( state ) => {  
@@ -61,8 +62,25 @@ export const userSlice = createSlice({
       // Sign-up State
       signUpAction: ( state ) => {
 
-         if ( state.register === false)   { state.register = true; }
-        else                              { state.register = false; }
+        if ( state.registerOne === false)   { state.registerOne = true; }
+        else                                { state.registerOne = false; }
+
+       },
+
+      // Sign-up State
+      universalToggle: ( state, action: PayloadAction<string> ) => {
+
+        if (action.payload === 'drawer') {
+
+          if ( state.registerOne === false)     { state.registerOne = true; }
+          else                                  { state.registerOne = false; }
+
+        } else {
+
+          if ( state.registerTwo === false)     { state.registerTwo = true; }
+          else                                  { state.registerTwo = false; }
+
+        }
 
        },
 
@@ -87,7 +105,7 @@ export const userSlice = createSlice({
        //},
 
       signUpClose: ( state, action: PayloadAction<boolean> ) => { 
-        state.register = action.payload;
+        state.registerOne = action.payload;
        }, 
         
       // Profile Image
@@ -103,7 +121,7 @@ export const userSlice = createSlice({
           }
 });
 
-export const { navigateAuth, iconAuth, nameAuth, userAuth, toggleSign, closeSign, signUpAction, signUpClose } = userSlice.actions;
+export const { universalToggle, navigateAuth, iconAuth, nameAuth, userAuth, toggleSign, closeSign, signUpAction, signUpClose } = userSlice.actions;
 
 export default userSlice.reducer;
 

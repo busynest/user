@@ -7,7 +7,7 @@ import { auth, storage, user }      from '../../../firebase/authentication';
 import { updateProfile }            from 'firebase/auth';
 import { accImage }                 from '../../../redux/backend';
 import { ref, updateMetadata, getDownloadURL, uploadBytesResumable } from "@firebase/storage";
-import { labelStyle } from '../../../css/form/label';
+import { labelStyle } from '../../form/css/label';
 
 export class ContactPhoto extends connect(store)(LitElement) {
 

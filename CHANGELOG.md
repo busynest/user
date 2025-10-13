@@ -6,6 +6,15 @@ All notable changes to pwa-auth.js will be documented in this file.
 - Social Login Flow
 - animated login and data
 
+# [3.2.6] - 2025-10-12
+
+## Added
+- webcomponent: `<user-auth>`: static login page
+
+## Changed
+- transition animation to page change
+- decouple login toggle from redux or duplicate
+
 # [3.2.4] - 2025-10-08
 
 ## Added
@@ -111,7 +120,7 @@ All notable changes to pwa-auth.js will be documented in this file.
 # [1.1.6] - 2025-08-25
 
 ## Changed
-- Drawer - should be the custome element itself, not internal wrapper
+- Drawer - should be the custom element itself, not internal wrapper
 
 # [1.0.8] - 2025-08-23
 

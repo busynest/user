@@ -5,9 +5,9 @@ import { store, AppState }    from "../../../store";
 import { updateProfile }      from "firebase/auth";
 import { accName }            from "../../../redux/backend";
 import { auth }               from "../../../firebase/authentication";
-import { labelStyle }         from "../../../css/form/label";
-import { inputStyle }         from "../../../css/form/input";
-import { buttonStyle }        from "../../../css/form/button";
+import { labelStyle }         from "../../form/css/label";
+import { inputStyle }         from "../../form/css/input";
+import { buttonStyle }        from "../../form/css/button";
 
 export class InputName extends connect(store)(LitElement) {
 
@@ -40,7 +40,7 @@ export class InputName extends connect(store)(LitElement) {
         @submit="${this.default}">
   
         <label
-          for="pwa-name"><span>Name:</span></label>
+          for="pwa-name">Name:
 
           <input
             id            = "pwa-name"
@@ -49,6 +49,8 @@ export class InputName extends connect(store)(LitElement) {
             data-label    = "Contact Name"
             @input        = "${ this.handleInput }"
             .value        = "${ this.value }" />
+
+          </label>
     
         <!-- Save to Database -->
         <button

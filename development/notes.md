@@ -24,3 +24,13 @@
 | --pwa_action_text_color         | Button      | #fff     | user-settings |
 | --pwa_action_background_color   | Button      | #6cc04a  | user-settings |
 | --pwa_action_border_color       | Button      | #60b23e  | user-settings |
+
+
+
+
+// store        - Redux States: 
+    // store.backend.verified     - verified email: true/false
+    // store.backend.userId       - user ID
+    // store.backend.name         - user name
+    // store.backend.email        - user email
+    // store.backend.photoURL     - user profile photo

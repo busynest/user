@@ -258,7 +258,7 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 
 
 ---
-@firebase/app@0.14.3
+@firebase/app@0.14.4
 Apache-2.0
 No license text provided
 
@@ -283,7 +283,7 @@ Apache-2.0
 No license text provided
 
 ---
-@firebase/analytics@0.10.18
+@firebase/analytics@0.10.19
 Apache-2.0
 No license text provided
 
@@ -293,7 +293,7 @@ Apache-2.0
 No license text provided
 
 ---
-firebase@12.3.0
+firebase@12.4.0
 Apache-2.0
 No license text provided
 

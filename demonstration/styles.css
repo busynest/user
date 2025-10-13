@@ -1,0 +1,76 @@
+ html {
+  overflow:                   auto;
+  scroll-behavior:            smooth;
+  display:                    grid;
+  height:                     100%;
+  padding:                    16px;
+  box-sizing:                 border-box;
+  transition-duration:        1s;
+}
+
+body {
+  margin:                     0;
+  font-family:                Space Grotesk, system-ui, sans-serif;
+  -webkit-font-smoothing:     antialiased;
+  font-size:                  .875rem;
+  line-height:                1.25rem;
+}
+
+body {
+  background-color:         #0a2840;
+  display:                    grid;
+  grid-gap:                   16px;
+  grid-template-areas:
+    "head"
+    "main"
+    "foot";
+  grid-template-rows:         auto 1fr auto;
+}
+
+header  { grid-area:          head; }
+main    { grid-area:          main; overflow: hidden; }
+footer  { grid-area:          foot; }
+
+header {
+  display:                    grid;
+}
+
+main {
+  display:                    grid;
+  grid-gap:                   16px;
+  padding:                    16px; 
+  border:                     2px solid black;
+  border-radius:              6px;
+  background-color:         cadetblue;
+}
+
+section {
+  padding:                    16px;
+  background-color:         darkorange;
+  border:                     2px solid black;
+  border-radius:              8px;
+  overflow:                   hidden;
+}
+
+h2 {
+  margin-top:                 0;
+  border-bottom:              2px solid black;
+  padding:                    0 16px 16px 16px;
+  white-space:                break-spaces;
+}
+
+footer {
+  display:                    grid;
+}
+
+user-login {
+  border-radius:              8px;
+  overflow:                   hidden;
+  border:                     2px solid black;
+}
+
+user-settings {
+  border-radius:              8px;
+  overflow:                   hidden;
+  border:                     2px solid black;
+}

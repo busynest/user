@@ -9,7 +9,8 @@ import './input/name';
 import './input/email';
 import './input/password';
 import './input/delete';
-import { listStyle } from '../../css/form/list';
+import { listStyle } from '../form/css/list';
+import { animation } from '../css/animation';
 
 @customElement('user-settings')
 export class UserSettings extends connect(store)(LitElement) {
@@ -60,22 +61,20 @@ export class UserSettings extends connect(store)(LitElement) {
   static get styles():CSSResultArray { return [
     navigation,
     listStyle,
+    animation,
     css`
 
-      /* Button Padding for Border Outline */
       :host {
         display:          grid;
         background-color: var(--pwa_settings_background, white);
       }
 
-      /* Page Form */
       form {
         box-sizing:       border-box;
         display:          grid;
         border:           0;
       }
 
-      /* Page Title  */
       .pageTitle { margin: 0; }
 
       h2 {
@@ -83,11 +82,10 @@ export class UserSettings extends connect(store)(LitElement) {
         text-align:       center;
         text-shadow:      1px 1px 2px black, 0 0 15px grey, 0 0 5px #fff;
         
-        border-top:       2px solid var(--pwa_divider, black);
         border-bottom:    2px solid var(--pwa_divider, black);
 
         margin:           0;
-        padding:          8px 0;
+        padding:          16px 0;
       }
 
       /* up to 576 pixels */
@@ -140,55 +138,64 @@ export class UserSettings extends connect(store)(LitElement) {
 
       </nav>
 
-      <!-- Page 1: Profile -->
-      <section ?on="${ this.profileTopic === 'profile' }">
-
-        <!-- Display Username -->
-        <h2>${this.name}</h2>
-
-        <!-- Custom Image Element - Display / Upload -->
-        <contact-photo emptyArtwork="${this.empty}"></contact-photo>
-
-      </section>
       
-      <!-- Page 2: Verification -->
-      <section ?on="${ this.profileTopic === 'verification' }">
+      <div class=     "wrapper">
+        <div class=   "inner">
 
-        <!-- Page Title -->
-        <h2>Contact Information</h2>
 
-        <!-- Custom - Username -->
-        <input-name></input-name>
+          <!-- Page 1: Profile -->
+          <section
+            class="content ${ this.profileTopic === 'profile' ? 'opened' : 'closed'}">
 
-        <!-- Custom - Email -->
-        <contact-email></contact-email>
-        
-        <!-- Indicator - Verified -->
-        <div class="verified"></div>
+            <!-- Display Username -->
+            <h2>${this.name}</h2>
 
-      </section>
+            <!-- Custom Image Element - Display / Upload -->
+            <contact-photo emptyArtwork="${this.empty}"></contact-photo>
 
-      <!-- Page 3: Password -->
-      <section ?on="${ this.profileTopic === 'password' }">
+          </section>
+          
+          <!-- Page 2: Verification -->
+          <section
+            class="content ${ this.profileTopic === 'verification' ? 'opened' : 'closed'}">
 
-        <!-- Page Title -->
-        <h2>Password</h2>
+            <!-- Page Title -->
+            <h2>Contact Information</h2>
 
-        <!-- Custom - Password -->
-        <input-password></input-password>
+            <!-- Custom - Username -->
+            <input-name></input-name>
 
-      </section>
+            <!-- Custom - Email -->
+            <contact-email></contact-email>
 
-      <!-- Page 4: Delete -->
-      <section ?on="${ this.profileTopic === 'delete' }">
+          </section>
 
-        <!-- Page Title -->
-        <h2>Delete Account</h2>
+          <!-- Page 3: Password -->
+          <section
+            class="content ${ this.profileTopic === 'password' ? 'opened' : 'closed'}">
 
-        <!-- Custom - Delete -->
-        <delete-user></delete-user>
+            <!-- Page Title -->
+            <h2>Password</h2>
 
-      </section>
+            <!-- Custom - Password -->
+            <input-password></input-password>
+
+          </section>
+
+          <!-- Page 4: Delete -->
+          <section
+            class="content ${ this.profileTopic === 'delete' ? 'opened' : 'closed'}">
+
+            <!-- Page Title -->
+            <h2>Delete Account</h2>
+
+            <!-- Custom - Delete -->
+            <delete-user></delete-user>
+
+          </section>
+
+        </div>
+      </div>
 
     `
   }

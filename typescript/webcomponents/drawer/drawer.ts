@@ -1,21 +1,25 @@
 import { CSSResultArray, html, LitElement }   from 'lit';
 import { customElement, property, state }     from 'lit/decorators.js';
 import { connect }                            from 'pwa-helpers/connect-mixin';
-import { store, AppState }                    from '../../store';
-import { close }                              from '../../css/svg';
-import { show }                               from '../../css/toggle';
 
-import { drawerStyle }  from './css/drawer';
-import { exitStyle }    from './css/exit';
-import { linkStyle }    from './css/link';
-import { lineStyle }    from './css/paragraph'; 
-import { listStyle }    from '../../css/form/list';
+import { store, AppState }  from '../../store';
 
-import { toggleSign }   from '../../redux/frontend'; 
-import { logOut }       from '../../firebase/interface';
+import { close }            from '../css/svg';
+import { show }             from '../css/toggle';
 
-import './input/login';
-import './input/sign-up';
+import { listStyle }        from '../form/css/list';
+
+import { drawerStyle }      from './css/drawer';
+import { exitStyle }        from './css/exit';
+import { linkStyle }        from './css/link';
+import { lineStyle }        from './css/paragraph';
+
+import { toggleSign }       from '../../redux/frontend'; 
+import { logOut }           from '../../firebase/interface';
+
+import '../form/login';
+import '../form/signup';
+import { animation } from '../css/animation';
 
 @customElement('user-drawer')
 export class UserDrawer extends connect(store)(LitElement) {
@@ -29,17 +33,17 @@ export class UserDrawer extends connect(store)(LitElement) {
  /** @attr subscribe */
   @property({type:Boolean, attribute: true, reflect: true}) public subscribe = false; // Drawer State
   
-  @state() private _name        = ""; // Drawer State
-  @state() private _log         = false; // Login State
-  @state() private _sign        = false; // Sign-up State
+  @state() private name         = "";     // String Username
+  @state() private user         = false;  // True user is logged-in, false, user is logged-out, state
+  @state() private signup       = false;  // True sign-up, false log-in, State
   
   constructor() { super(); }
 
   stateChanged(state: AppState) {
-    this._name        = state.backend!.name;        // User Name
-    this.drawer       = state.frontend!.drawer;     // Drawer State
-    this._log         = state.frontend!.login;      // Logged in-out State
-    this._sign        = state.frontend!.register;   // Sign-up State
+    this.name         = state.backend!.name;            // User Name
+    this.drawer       = state.frontend!.drawer;         // Drawer State
+    this.user         = state.frontend!.login;          // Logged in-out State
+    this.signup       = state.frontend!.registerOne;    // Sign-up State
   }
 
   protected firstUpdated() {
@@ -49,7 +53,7 @@ export class UserDrawer extends connect(store)(LitElement) {
       } );
 
     this.shadowRoot!.querySelector('.leave')!.addEventListener('click', () => {
-        if (this._log) { logOut() }
+        if (this.user) { logOut() }
         store.dispatch( toggleSign() );
       } );
       
@@ -57,6 +61,7 @@ export class UserDrawer extends connect(store)(LitElement) {
 
   static get styles(): CSSResultArray { return [
     show,
+    animation,
     drawerStyle,
     exitStyle,
     linkStyle,
@@ -69,36 +74,49 @@ export class UserDrawer extends connect(store)(LitElement) {
 
     <!-- Drawer Wrapper -->
     <section
-      class="userDrawer ${this.drawer ? 'opened' : 'closed'}">
+      class="userDrawer ${this.drawer ? 'in' : 'out'}">
 
       <!-- Exit Button -->
       <header class="exit">
         <div></div>
-        <h3>${this._log ? this._name : this._sign === this.subscribe ? 'Subscribe' : 'Login' } </h3>
+        <h3>${ this.user === false ? this.signup === this.subscribe ? `Login` : `Subscribe` : this.name }</h3>
         <button class="close">${close}</button>
       </header>
 
       <!-- Logged-out State -->
       <div
         class="spec"
-        ?on="${ this._log === false }">
+        ?on="${ this.user === false }">
 
-        <!-- Log-in State -->
-        <user-log-in
-          class="spec"
-          ?on="${ true === this._sign ? !this.subscribe : this.subscribe }"></user-log-in>
+        <div class=     "wrapper">
+          <div class=   "inner">
 
-        <!-- Sign-up State -->
-        <user-sign-up
-          class="spec"
-          ?on="${ false === this._sign ? !this.subscribe : this.subscribe }"></user-sign-up>
+            <!-- Log-in State -->
+            <form-login
+              source="drawer"
+              class="content ${
+                this.signup        ===     /* If true, sign-up state */
+                this.subscribe    ?       /* If true, subscribe state */
+                'opened'          :
+                'closed'
+              } ">
+            </form-login>
+
+            <!-- Sign-up State -->
+            <form-signup
+              source="drawer"
+              class="content ${ !this.signup === this.subscribe ? 'opened' : 'closed' } ">
+            </form-signup>
+
+          </div>
+        </div>
 
       </div>
 
       <!-- Logged-in State -->
       <div
         class="spec setLog"
-        ?on="${ this._log === true }">
+        ?on="${ this.user === true }">
 
           <p><a href="${this.url}">Settings</a></p>
 
@@ -118,3 +136,21 @@ declare global {
       'user-drawer': UserDrawer;
   }
 }
+
+/*
+
+\?on="\${ true === this._sign \? !this.subscribe \: this.subscribe }"
+\?on="${ false === this._sign \? !this.subscribe \: this.subscribe }"
+
+
+     <h3>\${
+          this._log       \?     /* If logged-in state is true 
+          this._name      \:     /* Show username 
+          true            \===    /* else logged-out, Show if true equals 
+          /* this._sign      \===    /*true sign-up state equals 
+          this.subscribe  \?     /* If subscribe state is true 
+          'Login'         \:     /* Show login txt, else 
+          'Subscribe'           /* Show subscribe txt 
+          }</h3>
+
+*/

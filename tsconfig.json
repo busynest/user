@@ -1,23 +1,10 @@
 {
-
-  "$schema": "https://json.schemastore.org/tsconfig",
-
-  "type": "module",
-
-  "include": [
-    "./typescript/export/pwa-auth.ts",
-    "./typescript/export/auth-helpers.ts"
-  ],
-
-  "exclude": [
-    "demonstration/**/*.ts",
-    "development/**/*.ts"
-  ],
-
+  "$schema"   : "https://json.schemastore.org/tsconfig",
+  "type"      : "module",
+  "include"   : [ "./typescript/export/pwa-auth.ts" ],
+  "exclude"   : [ "demonstration/**/*.ts", "development/**/*.ts" ],
   "compilerOptions": {
-
     "outDir":                             "base",
-
     "target":                             "ES2022",
     "module":                             "ESNext",
     "moduleResolution":                   "node",
@@ -25,48 +12,14 @@
 
     "strict":                             true,
     "esModuleInterop":                    true,
-    "skipLibCheck":                       true,
-
-    "noUnusedLocals":                     true,
-    "noUnusedParameters":                 true,
-    "noImplicitReturns":                  true,
-    "noFallthroughCasesInSwitch":         true,
-
-    // Lit - Declaration
-    // "emitDeclarationOnly":                true,
     "declaration":                        true,
-
-   // "rootDir":                            "./typescript/export/pwa-auth.ts",
-    "strictFunctionTypes":                false,
-    "noImplicitThis":                     false,
-    "strictPropertyInitialization":       false, 
-    "useUnknownInCatchVariables":         true,
-    "isolatedModules":                    true,
-    // "verbatimModuleSyntax":               true,
-    // "types": ["mocha"],
-
-    // "declarationMap":                     true,
-    "experimentalDecorators":             true,
     "emitDecoratorMetadata":              true,
+    
+    "sourceMap":                          true,
 
-    // Lit
+    "experimentalDecorators":             true,
     "useDefineForClassFields":            false,
-    // true: Object.defineProperty, false: constructor
-    // true: Fields are initialized after the parent class constructor runs.
-    // false: Fields are initialized as assignments within the constructor.
 
-    // Comments
-    "removeComments":                     true,
-
-    "allowSyntheticDefaultImports":       true, // Simplifies imports for Redux/Firebase
-    "forceConsistentCasingInFileNames":   true,
-
-    "pretty":                             true,
-
-    "sourceMap": true,
-    "types": ["node"]
-  },
-
+    "removeComments":                     true
+  }
 }
-
-

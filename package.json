@@ -1,15 +1,24 @@
 {
-  "name": "pwa-auth",
-  "type": "module",
-  "author": "Jacek Markiewicz <jack.solutionbox@gmail.com>(https://www.jackspublishing.com)",
-  "version": "3.2.4",
-  "description": "User Management Component with 3 HTML Tags, and 1 Boilerplate Function to display user icon, sign up, login, log out, change account details, delete account.",
-  "homepage"  : "https://pwa-authentic.firebaseapp.com",
-  "main"      : "./base/export/pwa-auth.js",
-  "types"     : "./base/export/pwa-auth.d.ts",
+  "name":           "pwa-auth",
+  "type":           "module",
+  "author": {
+    "name":         "Jacek Markiewicz",
+    "url":          "https://www.jackspublishing.com",
+    "email":        "jack.solutionbox@gmail.com"
+  },
+  "version":        "3.2.6",
+  "description":    "pwa-auth is a collection of four HTML webomponents for User Management to display a login button with icon picture state once logged in. Sign up and login within a drawer and optionally a static for a page. Being able to log out, change account details, and delete account.",
+  "homepage":       "https://pwa-authentic.firebaseapp.com",
   "repository": {
-    "type": "git",
-    "url": "https://github.com/busynest/user"
+    "type":         "git",
+    "url":          "https://github.com/busynest/user"
+  },
+  "bugs": {
+    "url":          "https://github.com/busynest/user/issues"
+  },
+  "funding": {
+    "type":         "individual",
+    "url":          "https://github.com/sponsors/busynest"
   },
   "keywords": [
     "login",
@@ -23,20 +32,20 @@
     "lit",
     "redux"
   ],
+  "main":           "./base/export/pwa-auth.js",
+  "types":          "./base/export/pwa-auth.d.ts",
   "exports": {
     ".": {
-      "default"   : "./base/export/pwa-auth.js",
-      "types"     : "./base/export/pwa-auth.d.ts"
+      "default":    "./base/export/pwa-auth.js",
+      "types":      "./base/export/pwa-auth.d.ts"
     }
   },
-  "license": "BSD-3-Clause",
-  "flat": true,
+  "license":        "SEE LICENSES.txt",
   "scripts": {
-    "demo"        : "web-dev-server --node-resolve --watch --open --app-index demonstration/index.html",
-    "website"     : "web-dev-server --node-resolve --watch --open --app-index website/index.html",
-    "rollup"      : "rollup rollup.config.js",
-    "build"       : "tsc && rollup rollup.config.js",
-    "production"  : "tsc --project tsconfig.production.json"
+    "server":       "web-dev-server --node-resolve --watch --open --app-index demonstration/index.html",
+    "website":      "web-dev-server --node-resolve --watch --open --app-index website/index.html",
+    "rollup":       "rollup rollup.config.js",
+    "build":        "tsc --project tsconfig.production.json"
   },
   "dependencies": {
     "pwa-helpers": "^0.9.1",
@@ -44,22 +53,22 @@
     "redux-thunk": "^3.1.0"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.21.0",
+    "@babel/plugin-proposal-decorators": "^7.28.0",
     "@babel/preset-env": "^7.28.3",
     "@lit-labs/rollup-plugin-minify-html-literals": "^0.1.0",
     "@reduxjs/toolkit": "^2.9.0",
-    "@rollup/plugin-alias": "^5.0.1",
+    "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-node-resolve": "^16.0.2",
     "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.4",
-    "@types/node": "^24.7.0",
+    "@types/node": "^24.7.2",
     "@web/dev-server": "^0.4.6",
     "@web/rollup-plugin-copy": "^0.5.1",
     "babel-plugin-template-html-minifier": "^4.1.0",
-    "firebase": "^12.3.0",
+    "firebase": "^12.4.0",
     "lit": "^3.3.1",
     "rollup": "^4.52.4",
     "rollup-plugin-dts": "^6.2.3",

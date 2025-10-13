@@ -8,21 +8,39 @@ pwa-auth.js is a bundle of 3 Custom HTML Elements for Firebase (IAM) Authenicati
 
 pwa-auth.js (Authentication Webcomponents) are for anyone who is looking for a quick and simple way to sign-up, log-in, log-out, modify, or delete a firebase account information from thier own personal domain.
 
-pwa-auth.js meets basic user needs with the interplay of:
-- Icon Button
-- Drop-down Drawer
-- Settings Page
-
-You will learn how to place 3 Custom HTML Tags, reference CSS, and How to Initialize an Firebase Instance. By either <b>Standard</b> or <b>Modular</b> ECMA Script.
+You will learn how to place 5 Custom HTML Tags, reference CSS, and How to Initialize an Firebase Instance. By either <b>Standard</b> or <b>Modular</b> ECMA Script.
 
 Continue reading to understand how to install the project:
+
+## Features
+- Register through Email and Password
+  - Log-in
+  - Log-out
+- Change Username
+- Change Email
+- Change Password
+- Upload Profile Picture
+- Delete Account
+- Global Functions
+- Redux State Connection
+
+# Elements
+- Button: Log-in / Subscribe / Icon
+- Drop-down Drawer: Email Log-in / Email Subscribe / Menu with Log-out
+- Pages:
+  - Account Settings
+  - Auth: Email Log-in / email Subscribe
+  - Password Reset
 
 ## Choose Project Type
 
 ECMA Script Modules
 ```javascript
+// Custom HTML Elements
 import 'pwa-auth';
-import { store, db, storage, auth, user } from 'pwa-auth';
+
+// Firebase Objects
+import { db, storage, auth, user } from 'pwa-auth';
 ```
 
 Global Scope Management
@@ -30,24 +48,48 @@ Global Scope Management
 <!-- Optional: Copy the Project Files from 'src' Folder -->
 <script type="module" src="./pwa-auth.js"></script>
 ```
+
 ## Library
-- 3 Tag Placement
+- 5 Tag Placement
 - Color Scheme: CSS Custom Properties
-- Firebase Initialization Object
+- Firebase Initialization `window` Object
 
-## Features
-- Register through Email and Password
-  - Log-in
-  - Log-out
-- Change Username
-- Change Profile Picture
-- Change Email
-- Change Password
-  - Delete Account
-- Global Functions
-- Redux State Connection
+## HTML Webcomponents
+- `<user-icon>`
+  - property: subscribe: (Initial State): Subscribe
+  - property: subscribe: else (Initial State): Login
+  - property; empty: location of empty image
+  - state: Logged-out: txt: Login Button
+  - state: Logged-out: txt: Subscribe Button
+  - state: Logged-in: photo: Icon Button
+- `<user-drawer>`
+  - feature: Top-down drawer: 1.4 seconds
+  - property: url: location of `<pwa-settings>` Tag
+  - property: subscribe: (Initial State): Subscribe
+  - property: subscribe: else (Initial State): Login
+  - state: logged-out: Sign-up by Email Addresses and Password
+  - state: logged-out: Sign-in by Email Addresses and Password
+  - state: logged-in: Settings Page Link, Log-out Button
+- `<user-login>`
+  - feature: regular visible page component
+  - state: logged-out: Sign-up by Email Addresses and Password
+  - state: logged-out: Sign-in by Email Addresses and Password
+  - state: logged-in: content: `<slot></slot>`
+- `<user-settings>`
+  - 1 Photo Upload Feature, view uploaded bucket of photos, photo ediotr
+  - empty property: location of empty image
+  - Unavailable Photo
+  - Update Username
+  - Update Email / Verify
+  - Update Password
+  - Delete Account, Photos, Information
+- `<email-reset>`
+  - Coming Soon  
+- Optional: Custom CSS Properties
 
-## Modules
+## Functional Modules
+- store - redux store state
+  - verified, userId, name, email, photoURL
 - db - firestore database reference
   - getFirestore(pwa-env)
 - storage - firebase storage reference
@@ -56,14 +98,6 @@ Global Scope Management
   - getAuth(pwa-env)
 - user - active user boolean reference
   - auth.currentUser
-
-## HTML Webcomponents
-- user-icon
-- user-drawer
-- user-settings
-
-## CSS
-- Custom Properties
 
 ## Prerequisites
 - Google:
@@ -74,16 +108,13 @@ Global Scope Management
   - Authentication  - email login
   - Cloud Storage   - storage bucket
 
-## Boilerplate
-
+## Boilerplate JavaScript
 For simple projects, copy project bundle to disk
 - source/esm/
   - pwa-auth.js
   - pwa-auth.js.map
   - pwa-styles.css
   - empty.jpg
-
-### ECMA Script Modules
 ```html
 <head>
 
@@ -113,61 +144,48 @@ For simple projects, copy project bundle to disk
 
 </head>
 ```
-## Boilerplate
-
-### TypeScript Library for Bundlers
-The Start File exports: classes and objects
+## Modular Library for Bundlers
+pwa-auth.js exports: classes and objects
 ```javascript
 import 'pwa-auth';
 // <user-icon subscribe emptyArtwork="./images/empty.jpg"></user-icon>
 // <user-drawer subscribe settingsURL="./settings"></user-drawer>
 // <user-settings emptyArtwork="./images/empty.jpg"></user-settings>
-import { store, db, storage, auth, user } from 'pwa-auth';
+import { db, storage, auth, user } from 'pwa-auth';
 // db           - firestore database reference
 // storage      - firebase storage reference
 // auth         - user object reference
 // user         - active user boolean reference
-
-// store        - Redux States: 
-    // store.backend.verified     - verified email: true/false
-    // store.backend.userId       - user ID
-    // store.backend.name         - user name
-    // store.backend.email        - user email
-    // store.backend.photoURL     - user profile photo
 ```
 
-## Implementation
+## Implementation - Drawer
 ```html
 <body>
 
   <header>
-    <!-- subscribe property: (Initial State): Subscribe -->
-    <!-- subscribe property: else (Initial State): Login -->
-    <!-- empty property: location of empty image -->
-    <!-- Logged-out (State): txt: Login Button -->
-    <!-- Logged-out (State): txt: Subscribe Button -->
-    <!-- Logged-in (State): photo: Icon Button -->
     <user-icon subscribe empty="./images/empty.jpg"></user-icon>
   </header>
 
-  <!-- url property: location of <pwa-settings> Tag -->
-  <!-- subscribe property: (Initial State): Subscribe -->
-  <!-- subscribe property: else (Initial State): Login -->
-  <!-- Top-down, Drop-down Feature: height, 1.4 seconds -->
-  <!-- logged-out (State): Sign-up by Email Addresses and Password -->
-  <!-- logged-out (State): Sign-in by Email Addresses and Password -->
-  <!-- logged-in (State): Settings Page Link, Log-out Button -->
   <user-drawer subscribe url="./settings"></user-drawer>
 
   <main>
-    <!-- 1 Photo Upload Feature, view uploaded bucket of photos, photo ediotr -->
-    <!-- empty property: location of empty image -->
-    <!-- Unavailable Photo --> 
-    <!-- Update Username -->
-    <!-- Update Email / Verify -->
-    <!-- Update Password -->
-    <!-- Delete Account, Photos, Information -->
     <user-settings empty="./images/empty.jpg"></user-settings>
+  </main>
+
+</body>
+```
+
+## Implementation - Page
+```html
+<body>
+
+  <header>
+    <user-icon        empty="./images/empty.jpg"     subscribe    ></user-icon>
+  </header>
+
+  <main>
+    <user-login       subscribe     ></user-login>
+    <user-settings    empty="./images/empty.jpg"></user-settings>
   </main>
 
 </body>
@@ -197,6 +215,9 @@ import { store, db, storage, auth, user } from 'pwa-auth';
 --pwa_drawer_text_color:          #303030;
 --pwa_drawer_background_color:    #fff;
 
+/* <user-settings> - Page Design */
+--section_background:            white;
+
 /* <user-settings> - Navigation Design */
 --pwa_settings_background:          grey;
 --pwa_nav_button:                   grey;
@@ -212,14 +233,15 @@ import { store, db, storage, auth, user } from 'pwa-auth';
 --pwa_action_text_color:          #fff;
 --pwa_action_background_color:    #6cc04a;
 --pwa_action_border_color:        #60b23e;
+
+/* Section */
+--section_background:               white;
 }
 ```
 
 ## Global Namespaced Firebase Instance Configuration
 pwa-auth.js is built upon the Firebase SDK (Software Development Kit).
 The entire bundle is one instance of firebase that takes in the configuration information, internally.
-
-If you are looking for a Namespaced Firebase Configuration, please send it as feedback, and will make that version for you.
 
 ## Technological Engineering
 - Development (Server-side) Environment: [Node JavaScript](https://nodejs.org)
