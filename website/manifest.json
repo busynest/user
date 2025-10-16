@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "pwa-auth",
-  "version": "2.0.8",
-  "description": "pwa-auth.js is a bundle of three HTML Tags, one JavaScript Script, and optionally CSS Custom Properties for Theme Customization. Sign up, login, log out, change account details, and delete the user's account..",
+  "version": "3.3.2",
+  "description": "pwa-auth is a collection of four HTML webomponents for User Management to display a login button with icon picture state once logged in. Sign up and login within a drawer and optionally a static for a page. Being able to log out, change account details, and delete account.",
     "icons": [
     {
       "src": "images/manifest/logo-48.png",

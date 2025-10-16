@@ -1,24 +1,22 @@
 *.log
 *.cache
 
+CHANGELOG.md
+
 .DS_Store
 npm-debug.log
 
-node_modules/
-typescript/
-website/
-development/
+/node_modules/
+/typescript/
+/website/
+/development/
+/export/
 
 *.firebase
 .firebaserc
 firebase.json
-manifest.json
-
 package-lock.json
-
-robots.txt
 rollup.config.js
-
 storage.rules
 tsconfig.json
 tsconfig.production.json

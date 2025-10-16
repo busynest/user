@@ -17,7 +17,7 @@ export const navigation = css`
 
   nav > ul > li > button {
 
-    color:            var(--pwa_nav_button, grey);
+    color:            var(--pwa_nav_button_color, grey);
     border:           0;
     width:            100%;
     height:           36px;
@@ -32,7 +32,7 @@ export const navigation = css`
 
   nav > ul > li > button[on] {
 
-    color: var(--pwa_nav_select, black);
+    color: var(--pwa_nav_highlight_color, black);
 
   }
 
@@ -45,7 +45,7 @@ export const navigation = css`
 
   section {
     grid-template-rows:     auto 1fr;
-    background-color:       var( --section_background, white);
+    background-color:       var( --section_background_color, white);
   }
 
 `;

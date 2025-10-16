@@ -18,7 +18,7 @@ export const authStyles = css `
   .service {
     overflow:               hidden;
     color:                  var(--pwa_drawer_text_color, #303030);
-    background-color:       var(--section_background, white);
+    background-color:       var(--section_background_color, white);
   }
 
   :host([animation]) {       

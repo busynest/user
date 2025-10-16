@@ -27,43 +27,74 @@
     <script>
       window.process = { env: { NODE_ENV: 'production' } };
       window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
-            apiKey: "AIzaSyC1ZNYC9RAjSAE3syUBNi47AiqbAqkx99w",
-            authDomain: "pwa-authentic.firebaseapp.com",
-            projectId: "pwa-authentic",
-            storageBucket: "pwa-authentic.firebasestorage.app",
-            messagingSenderId: "749233996232",
-            appId: "1:749233996232:web:bbc410d53b7d39bdfb80fd",
-            measurementId: "G-G1GYM1HBJ4"
+            apiKey:             "AIzaSyC1ZNYC9RAjSAE3syUBNi47AiqbAqkx99w",
+            authDomain:         "pwa-authentic.firebaseapp.com",
+            projectId:          "pwa-authentic",
+            storageBucket:      "pwa-authentic.firebasestorage.app",
+            messagingSenderId:  "749233996232",
+            appId:              "1:749233996232:web:bbc410d53b7d39bdfb80fd",
+            measurementId:      "G-G1GYM1HBJ4"
           })
         }
       };
     </script>
 
+    <!-- Application Shell -->
+    <script type="module" src="./javascript/pwa-auth.js" async></script>
+
   </head>
   <body>
 
     <header>
-      <!-- Icon Tag -->
-      <user-icon subscribe empty="./images/empty.jpg"></user-icon>
+
+      <div style="margin: auto">
+        
+        <!-- Sponsor Me -->
+        <iframe
+          src="https://github.com/sponsors/busynest/button"
+          title="Sponsor busynest"
+          height="32"
+          width="114"
+          style="border: 0; border-radius: 6px;  margin: auto 0 auto 0;"></iframe>
+
+      </div>
+
     </header>
 
-    <!-- Drawer Tag-->
-    <user-drawer subscribe url="./settings"></user-drawer>
+    <!-- Drop-down - Drawer-->
+    <user-drawer      url="./settings"     subscribe    ></user-drawer>
 
     <main>
-      <!-- Settings Tag-->
-      <user-settings empty="./images/empty.jpg"></user-settings>
+
+      <section>
+
+        <h2>Example: Button: Login or Subscribe / Icon Picture</h2>
+
+        <!-- Login / Subscribe - Button -->
+        <user-icon      empty="./images/empty.jpg"    subscribe    ></user-icon>
+
+      </section>
+
+      <section>
+
+        <h2>Example: Auth Page</h2>
+
+        <!-- Log-in - -Page-->
+        <user-login     login     ></user-login>
+
+      </section>
+
+      <section>
+
+        <h2>Example: Settings Page</h2>
+
+        <!-- Settings - Page-->
+        <user-settings  empty="./images/empty.jpg"></user-settings>
+
+      </section>
+
     </main>
 
-    <footer>
-      <div style="margin: auto">
-        <!-- Sponsor Me -->
-        <iframe src="https://github.com/sponsors/busynest/button" title="Sponsor busynest" height="32" width="114" style="border: 0; border-radius: 6px;  margin: auto 0 auto 0;"></iframe>
-      </div>
-    </footer>
-
-    <!-- Application Shell -->
-    <script type="module" src="./javascript/pwa-auth.js" async></script>
-    
   </body>
+
 </html>

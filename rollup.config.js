@@ -31,7 +31,7 @@ const outputs = [
     globals:          { lodash: '_' },
     interop:          'compat'
   },{
-    dir:              './source/production',
+    dir:              './source/esm',
     entryFileNames:   '[name].js',
     chunkFileNames:   '[name]-[hash].js',
     format:           'es',

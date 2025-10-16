@@ -23,7 +23,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
   .service {
     overflow:               hidden;
     color:                  var(--pwa_drawer_text_color, #303030);
-    background-color:       var(--section_background, white);
+    background-color:       var(--section_background_color, white);
   }
 
   :host([animation]) {       
@@ -222,7 +222,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     height:                   50px;
     text-align:               left;
     padding:                  8px 16px;
-    background-color:         var(--pwa_input_background, #E1E5EB);
+    background-color:         var(--pwa_input_background_color, #E1E5EB);
     border:                   0;
     border-radius:            4px;
     -webkit-border-radius:    4px;
@@ -618,7 +618,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
 
   nav > ul > li > button {
 
-    color:            var(--pwa_nav_button, grey);
+    color:            var(--pwa_nav_button_color, grey);
     border:           0;
     width:            100%;
     height:           36px;
@@ -633,7 +633,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
 
   nav > ul > li > button[on] {
 
-    color: var(--pwa_nav_select, black);
+    color: var(--pwa_nav_highlight_color, black);
 
   }
 
@@ -646,7 +646,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
 
   section {
     grid-template-rows:     auto 1fr;
-    background-color:       var( --section_background, white);
+    background-color:       var( --section_background_color, white);
   }
 
 `;var Xd=function(e,t,n,i){var r,s=arguments.length,o=s<3?t:null===i?i=Object.getOwnPropertyDescriptor(t,n):i;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(e,t,n,i);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(o=(s<3?r(o):s>3?r(t,n,o):r(t,n))||o);return s>3&&o&&Object.defineProperty(t,n,o),o},Yd=function(e,t){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(e,t)};class Zd extends(de(Xt)(se)){constructor(){super(),this.photo="",this.emptyArtwork="",this.user="",this.login=!1,this.progress=0,this.error="",this.status="",this.dispatchPhoto=async e=>{Rl.currentUser&&(await co(Rl.currentUser,{photoURL:e}).catch(e=>{}),Xt.dispatch(Kt(e)))},this.progress=0,this.error="",this.status=""}stateChanged(e){this.login=e.frontend.login,this.user=e.backend.userId,this.photo=e.backend.photoURL}static get styles(){return[Nl,s`
@@ -885,7 +885,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
 
       :host {
         display:          grid;
-        background-color: var(--pwa_settings_background, white);
+        background-color: var(--pwa_settings_background_color, white);
       }
 
       form {
@@ -897,11 +897,11 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       .pageTitle { margin: 0; }
 
       h2 {
-        color:            var(--pwa_section_header, black);
+        color:            var(--pwa_header_color, black);
         text-align:       center;
         text-shadow:      1px 1px 2px black, 0 0 15px grey, 0 0 5px #fff;
         
-        border-bottom:    2px solid var(--pwa_divider, black);
+        border-bottom:    2px solid var(--pwa_divider_color, black);
 
         margin:           0;
         padding:          16px 0;
@@ -1024,7 +1024,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     margin:                   auto;
     overflow:                 hidden;
     border:                   var(--pwa_icon_border, 2px solid black);
-    background-color:         var(--pwa_icon_background, #6cc04a);
+    background-color:         var(--pwa_icon_background_color, #6cc04a);
     color:                    white;
     font-size:                15px;
     text-decoration:          none;
@@ -1033,7 +1033,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
 
   .icon:hover,
   .login:hover {
-    background-color:         var(--pwa_icon_hover, lightgrey);
+    background-color:         var(--pwa_icon_hover_color, lightgrey);
   }
 
   .icon {

@@ -4,9 +4,14 @@ All notable changes to pwa-auth.js will be documented in this file.
 
 ## [Unreleased]
 - Social Login Flow
-- animated login and data
+- animated login mascot
 
-# [3.2.6] - 2025-10-12
+# [3.3.3] - 2025-10-16
+
+## Changed
+- Read Me - update
+
+# [3.3.1] - 2025-10-13
 
 ## Added
 - webcomponent: `<user-auth>`: static login page

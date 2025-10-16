@@ -58,7 +58,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
 
       :host {
         display:          grid;
-        background-color: var(--pwa_settings_background, white);
+        background-color: var(--pwa_settings_background_color, white);
       }
 
       form {
@@ -70,11 +70,11 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
       .pageTitle { margin: 0; }
 
       h2 {
-        color:            var(--pwa_section_header, black);
+        color:            var(--pwa_header_color, black);
         text-align:       center;
         text-shadow:      1px 1px 2px black, 0 0 15px grey, 0 0 5px #fff;
         
-        border-bottom:    2px solid var(--pwa_divider, black);
+        border-bottom:    2px solid var(--pwa_divider_color, black);
 
         margin:           0;
         padding:          16px 0;

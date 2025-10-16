@@ -10,7 +10,7 @@ export const inputStyle = css `
     height:                   50px;
     text-align:               left;
     padding:                  8px 16px;
-    background-color:         var(--pwa_input_background, #E1E5EB);
+    background-color:         var(--pwa_input_background_color, #E1E5EB);
     border:                   0;
     border-radius:            4px;
     -webkit-border-radius:    4px;

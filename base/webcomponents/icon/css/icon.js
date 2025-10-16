@@ -11,7 +11,7 @@ export const iconStyles = css `
     margin:                   auto;
     overflow:                 hidden;
     border:                   var(--pwa_icon_border, 2px solid black);
-    background-color:         var(--pwa_icon_background, #6cc04a);
+    background-color:         var(--pwa_icon_background_color, #6cc04a);
     color:                    white;
     font-size:                15px;
     text-decoration:          none;
@@ -20,7 +20,7 @@ export const iconStyles = css `
 
   .icon:hover,
   .login:hover {
-    background-color:         var(--pwa_icon_hover, lightgrey);
+    background-color:         var(--pwa_icon_hover_color, lightgrey);
   }
 
   .icon {
