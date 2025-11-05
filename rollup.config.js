@@ -15,38 +15,16 @@ const outputs = [
     entryFileNames:   '[name].js',
     chunkFileNames:   '[name]-[hash].js',
     format:           'es',                   // Format Specification: system // umd // cjs // amd // iife // es fallback.
-    name:             'pwaAuth',              // Global var: For script tag; customize per input if needed (advanced: output.name via fn).
-    sourcemap:        true,
-    // preserveModules: false
-    // Externals: Assume CDN; avoids bundling large libs.
-    globals: { lodash: '_' }, // Lodash: Global _ for tree-shaking. //  jquery: 'jQuery',       // jQuery: Global $ assumed loaded externally.
-    interop: 'compat'             // Interop: Handles mixed exports; safe for legacy.
+    globals:          { lodash: '_' },        // Lodash: Global _ for tree-shaking. //  jquery: 'jQuery',       // jQuery: Global $ assumed loaded externally.
+    interop:          'compat'                // Interop: Handles mixed exports; safe for legacy.
   },{
-    dir:              './source/development',
+    dir:              './source',
     entryFileNames:   '[name].js',
     chunkFileNames:   '[name]-[hash].js',
     format:           'es',
-    name:             'pwaAuth',
-    sourcemap:        true,
     globals:          { lodash: '_' },
     interop:          'compat'
-  },{
-    dir:              './source/esm',
-    entryFileNames:   '[name].js',
-    chunkFileNames:   '[name]-[hash].js',
-    format:           'es',
-    name:             'pwaAuth',
-    globals:          { lodash: '_' },
-    interop:          'compat'
-  }/*,
-  {
-    dir:              'base/pwa-auth.d.ts',
-    entryFileNames:   'project/esm/[name].d.ts',
-    chunkFileNames:   'project/esm/[name]-[hash].d.ts',
-    format:           'es',
-    sourcemap:        true,
-    interop:          'compat'
-  }*/
+  }
 ];
 
 // Plugins array: Sequential chain; resolve first for dep discovery, then transforms, then optimize last.

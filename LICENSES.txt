@@ -154,7 +154,7 @@ SOFTWARE.
 
 
 ---
-immer@10.1.1
+immer@10.2.0
 MIT
 MIT License
 
@@ -206,7 +206,7 @@ SOFTWARE.
 
 
 ---
-@reduxjs/toolkit@2.9.0
+@reduxjs/toolkit@2.10.1
 MIT
 MIT License
 
@@ -258,17 +258,17 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 
 
 ---
-@firebase/app@0.14.4
+@firebase/app@0.14.5
 Apache-2.0
 No license text provided
 
 ---
-@firebase/auth@1.11.0
+@firebase/auth@1.11.1
 Apache-2.0
 No license text provided
 
 ---
-firebase@12.4.0
+firebase@12.5.0
 Apache-2.0
 No license text provided
 

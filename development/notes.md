@@ -34,3 +34,44 @@
     // store.backend.name         - user name
     // store.backend.email        - user email
     // store.backend.photoURL     - user profile photo
+
+
+
+"main":           "./base/export/pwa-auth.js",
+"types":          "./base/export/pwa-auth.d.ts",
+
+
+
+"./development": {
+    "default":    "./source/development/pwa-auth.js",
+    "types":      "./source/development/pwa-auth.d.ts"
+},
+
+
+
+{
+    dir:              './source/development',
+    entryFileNames:   '[name].js',
+    chunkFileNames:   '[name]-[hash].js',
+    format:           'es',
+    name:             'pwaAuth',
+    sourcemap:        true,
+    globals:          { lodash: '_' },
+    interop:          'compat'
+  },
+
+
+  /*,
+  {
+    dir:              'base/pwa-auth.d.ts',
+    entryFileNames:   'project/esm/[name].d.ts',
+    chunkFileNames:   'project/esm/[name]-[hash].d.ts',
+    format:           'es',
+
+    // sourcemap:        true,
+    // preserveModules: false
+    // Externals: Assume CDN; avoids bundling large libs.
+
+    sourcemap:        true,
+    interop:          'compat'
+  }*/

@@ -20,19 +20,44 @@ Continue reading to understand how to install this project:
   - Authentication  - email login
   - Cloud Storage   - storage bucket
 
+## Enrichment
+- Development:
+  - Global Functions
+  - Redux State Connection
+- Optional:
+  - CSS Custom Properties
+
+## Atomic Design: - One Concept per Module
+- Unique Identifiers:
+- Links and Hashes:
+- Semantics:
+- Descriptions
+
 ## Technical Summary
 - Type Strong with [TypeScript](https://www.typescriptlang.org)
 - Stylable with [CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables/Using_CSS_custom_properties)
 - State Management with [ReduxJS](https://redux.js.org/)
-- Authentication Google's [Firebase](https://www.firebase.com)
+- Authentication with Google's [Firebase](https://www.firebase.com)
 - Firebase Initialization Object: `window.process = { env: { FIREBASE_CONFIG: `
 
-## Prototypes
-- `<user-icon>`
-- `<user-drawer>`
-- `<user-login>`
-- `<user-settings>`
-- `<email-reset>`
+## HTML Prototypes
+- Button:
+  - `<user-icon>` Email Log-in / Email Subscribe / Icon
+- Drop-down Drawer:
+  - `<user-drawer>` Email Log-in / Email Subscribe / Menu with Log-out
+- Pages:
+  - `<user-settings>` Account Settings
+  - `<user-login>` Auth: Email Log-in / email Subscribe
+  - `<email-reset>` Password Reset
+
+## Entry Point / Content
+
+## Abstraction Layer
+- The Observer Patterns:
+- Event emitters:
+- Custom Events
+
+## Navigation
 
 ## Features: Library Logical States
 - Register through Email and Password
@@ -43,19 +68,8 @@ Continue reading to understand how to install this project:
 - Change Password
 - Upload Profile Picture
 - Delete Account
-- Development:
-  - Global Functions
-  - Redux State Connection
 
-## Elements
-- Button:
-  - Email Log-in / Email Subscribe / Icon
-- Drop-down Drawer:
-  - Email Log-in / Email Subscribe / Menu with Log-out
-- Pages:
-  - Account Settings
-  - Auth: Email Log-in / email Subscribe
-  - Password Reset
+
 
 ## Project Type: ECMA Script Modules
 Eports: classes and objects
@@ -93,7 +107,7 @@ import { store } from 'pwa-auth';
 <user-icon>
 <!-- property: subscribe: (Initial State): Subscribe -->
 <!-- property: subscribe: else (Initial State): Login -->
-<!-- property; empty: location of empty image -->
+<!-- property: empty: location of empty image -->
 <!-- state: Logged-out: txt: Login Button -->
 <!-- state: Logged-out: txt: Subscribe Button -->
 <!-- state: Logged-in: photo: Icon Button -->

@@ -109,14 +109,5 @@ declare const _default: import("redux").Reducer<{
     photoURL: string;
     phone: string;
     msgToken: string;
-}, import("redux").UnknownAction, {
-    verified: boolean;
-    anon: boolean;
-    userId: string;
-    name: string;
-    email: string;
-    photoURL: string;
-    phone: string;
-    msgToken: string;
 }>;
 export default _default;

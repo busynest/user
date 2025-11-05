@@ -13,7 +13,5 @@ export declare const drawerSlice: import("@reduxjs/toolkit").Slice<{
 export declare const setDrawer: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"drawers/setDrawer">, closeDrawer: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"drawers/closeDrawer">;
 declare const _default: import("redux").Reducer<{
     drawer: boolean;
-}, import("redux").UnknownAction, {
-    drawer: boolean;
 }>;
 export default _default;
