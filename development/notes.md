@@ -37,8 +37,7 @@
 
 
 
-"main":           "./base/export/pwa-auth.js",
-"types":          "./base/export/pwa-auth.d.ts",
+
 
 
 
@@ -75,3 +74,56 @@
     sourcemap:        true,
     interop:          'compat'
   }*/
+
+
+
+
+
+
+
+  <user-icon>
+<!-- property: subscribe: (Initial State): Subscribe -->
+<!-- property: subscribe: else (Initial State): Login -->
+<!-- property: empty: location of empty image -->
+<!-- state: Logged-out: txt: Login Button -->
+<!-- state: Logged-out: txt: Subscribe Button -->
+<!-- state: Logged-in: photo: Icon Button -->
+<user-drawer>
+<!-- feature: Top-down drawer: 1.4 seconds -->
+<!-- property: url: location of <pwa-settings> Tag -->
+<!-- property: subscribe: (Initial State): Subscribe -->
+<!-- property: subscribe: else (Initial State): Login -->
+<!-- state: logged-out: Sign-up by Email Addresses and Password -->
+<!-- state: logged-out: Sign-in by Email Addresses and Password -->
+<!-- state: logged-in: Settings Page Link, Log-out Button -->
+<user-login>
+<!-- feature: regular visible page component -->
+<!-- state: logged-out: Sign-up by Email Addresses and Password -->
+<!-- state: logged-out: Sign-in by Email Addresses and Password -->
+<!-- state: logged-in: content: <slot></slot> -->
+<user-settings>
+<!-- 1 Photo Upload Feature, view uploaded bucket of photos, photo ediotr -->
+<!-- empty property: location of empty image -->
+<!-- Unavailable Photo -->
+<!-- Update Username -->
+<!-- Update Email / Verify -->
+<!-- Update Password -->
+<!-- Delete Account, Photos, Information -->
+<email-reset>
+<!-- Coming Soon -->
+
+
+
+
+<!--
+## Event emitters
+## Custom Events
+-->
+
+<!--
+- Modules:
+- Unique Identifiers: 
+- Links and Hashes:
+- Semantics:
+- Descriptions
+-->
