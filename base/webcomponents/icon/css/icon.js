@@ -2,8 +2,8 @@ import { css } from 'lit';
 export const iconStyles = css `
 
   :host {
-    margin:                   auto;
-    display:                  grid;
+    box-shadow: 4px 4px 4px 0px;
+    border-radius: 8px;
   }
 
   .icon, .login {

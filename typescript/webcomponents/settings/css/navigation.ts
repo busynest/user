@@ -2,7 +2,11 @@ import { css } from 'lit';
 
 export const navigation = css`
 
-  nav { overflow: hidden; padding-top: 16px; }
+  nav {
+    overflow:         hidden;
+    box-shadow:       0 0 6px 0;
+    z-index:          3;
+  }
 
   nav > ul {
     
@@ -25,7 +29,7 @@ export const navigation = css`
     padding:          0px;
     font-weight:      800;
     font-size:        .8em;
-    border-radius:    5px;
+    border-radius:    6px 6px 0 0;
     background-color: transparent;
 
   }
@@ -33,6 +37,7 @@ export const navigation = css`
   nav > ul > li > button[on] {
 
     color: var(--pwa_nav_highlight_color, black);
+    background-color: lightgrey;
 
   }
 
@@ -46,6 +51,21 @@ export const navigation = css`
   section {
     grid-template-rows:     auto 1fr;
     background-color:       var( --section_background_color, white);
+  }
+
+
+  h2 {
+    color:            var(--pwa_header_color, black);
+    text-align:       center;
+    text-shadow:      1px 1px 2px black, 0 0 15px grey, 0 0 5px #fff;
+    
+    /* border-bottom:    2px solid var(--pwa_divider_color, black); */
+    /* border-top:       2px solid var(--pwa_divider_color, black); */
+
+    margin:           6px 0 0 0;
+    padding:          16px 0;
+
+    box-shadow:       0px 6px 6px -6px;
   }
 
 `;

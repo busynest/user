@@ -69,17 +69,6 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
 
       .pageTitle { margin: 0; }
 
-      h2 {
-        color:            var(--pwa_header_color, black);
-        text-align:       center;
-        text-shadow:      1px 1px 2px black, 0 0 15px grey, 0 0 5px #fff;
-        
-        border-bottom:    2px solid var(--pwa_divider_color, black);
-
-        margin:           0;
-        padding:          16px 0;
-      }
-
       /* up to 576 pixels */
       @media only screen and (max-width: 576px) {
         h2 {

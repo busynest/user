@@ -1,9 +1,9 @@
  html {
-  overflow:                   auto;
+  /* overflow:                   auto; */
   scroll-behavior:            smooth;
   display:                    grid;
   height:                     100%;
-  padding:                    16px;
+  min-height: 100%;
   box-sizing:                 border-box;
   transition-duration:        1s;
 }
@@ -17,14 +17,13 @@ body {
 }
 
 body {
-  background-color:         #0a2840;
+  /*background-color:         #0a2840;*/
   display:                    grid;
-  grid-gap:                   16px;
+  /* grid-gap:                   16px;*/
   grid-template-areas:
     "head"
-    "main"
-    "foot";
-  grid-template-rows:         auto 1fr auto;
+    "main";
+  grid-template-rows:         auto 1fr;
 }
 
 header  { grid-area:          head; }
@@ -33,20 +32,23 @@ footer  { grid-area:          foot; }
 
 header {
   display:                    grid;
+  grid-template-columns:      auto 1fr auto;
+  padding:                    16px;
 }
 
 main {
   display:                    grid;
   grid-gap:                   16px;
-  padding:                    16px; 
-  border:                     2px solid black;
-  border-radius:              6px;
-  background-color:         cadetblue;
+  padding:                    16px;
+  border-top:                 2px solid black;
+  /* border:                     2px solid black;
+  border-radius:              6px; */
+  background-color:           cadetblue;
 }
 
 section {
   padding:                    16px;
-  background-color:         darkorange;
+  background-color:           white;
   border:                     2px solid black;
   border-radius:              8px;
   overflow:                   hidden;
@@ -55,22 +57,30 @@ section {
 h2 {
   margin-top:                 0;
   border-bottom:              2px solid black;
-  padding:                    0 16px 16px 16px;
+  padding:                    16px;
   white-space:                break-spaces;
+  text-align:                 center;
+  background-color:         black;
+  color:                    white;
+  border-radius:              8px;
 }
 
 footer {
   display:                    grid;
 }
 
+user-icon {
+  margin: auto;
+}
+
 user-login {
   border-radius:              8px;
   overflow:                   hidden;
-  border:                     2px solid black;
+ /* border:                     2px solid black;*/
 }
 
 user-settings {
   border-radius:              8px;
   overflow:                   hidden;
-  border:                     2px solid black;
+ /* border:                     2px solid black;*/
 }

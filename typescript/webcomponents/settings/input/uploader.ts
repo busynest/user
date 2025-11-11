@@ -55,8 +55,9 @@ export class ContactPhoto extends connect(store)(LitElement) {
         box-sizing:               border-box;
         -webkit-box-sizing:       border-box;
         display:                  grid;
+        grid-gap:                 16px;
+        grid-template-rows:       auto 1fr auto;
         grid-template-columns:    1fr;
-        grid-gap:                 4px;
         width:                    100%;
       }
 

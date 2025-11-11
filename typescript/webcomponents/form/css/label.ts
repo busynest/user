@@ -11,7 +11,8 @@ export const labelStyle : CSSResult = css`
     margin-bottom:        0;
     font-weight:          bold;
     line-height:          36px;
-    padding:              0 16px;
+    padding:              0 4px;
+    padding-bottom:       16px;
   }
 
   @media (max-width: 460px) {

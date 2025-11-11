@@ -5,6 +5,10 @@ export const exitStyle = css `
     display:                grid;
     grid-template-columns:  80px 1fr 80px;
     padding:                16px;
+    z-index:                2;
+    background-color:       white;
+    border-bottom:          2px solid black;
+    box-shadow:             0px 0px 6px;
   }
 
   .exit > h3 {
@@ -44,6 +48,8 @@ export const exitStyle = css `
     fill:                   red;
     opacity:                .8;
   }
+
+
 
 `;
 //# sourceMappingURL=exit.js.map

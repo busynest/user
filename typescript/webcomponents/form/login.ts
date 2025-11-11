@@ -52,6 +52,8 @@ export class FormLogin extends LitElement {
         grid-template-columns:      1fr auto;
       }
 
+      form { display: grid; }
+
     `
   ] };
 
@@ -99,18 +101,20 @@ export class FormLogin extends LitElement {
 
           </li>
     
-          <!-- Change State -->
+          <!-- Change State 
           <li>
 
             <p class=     "divider">Or</p>
 
-            <button
-              class=      "new"
-              @click=     "${ this.change }">create a new account</button>
 
-          </li>
+
+          </li> -->
 
         </ul>
+
+        <button
+          class="new"
+          @click="${ this.change }">create a new account</button>
 
       </form>
 
@@ -144,7 +148,6 @@ export class FormLogin extends LitElement {
     if (this.password.length < 4) { alert('Please enter a password.'); return; }
     this.signIn(this.email,this.password); // Sign in with email and password
   }
-
   
   // Firebase Authentication Function: Sign in using Email and Password
   private signIn = async (email:any, password:any) => {

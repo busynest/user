@@ -54,6 +54,8 @@ export class FormSignup extends LitElement {
         grid-template-columns: 1fr auto;
       }
 
+      form { display: grid; }
+
     `
   ] };
 
@@ -105,18 +107,20 @@ export class FormSignup extends LitElement {
 
           <!-- <label><input   id="veriftPassword"   type="password"   >Verify Password</label> -->
 
-          <!-- Change State -->
+          <!-- Change State 
           <li>
 
             <p class=       "divider">Or</p>
 
-            <button
-              class=        "new"
-              @click=       "${ this.change }">login with existing email</button>
 
-          </li>
+
+          </li> -->
 
         </ul>
+
+        <button
+          class="new"
+          @click="${ this.change }">login with existing email</button>
 
       </form>
 

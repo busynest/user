@@ -8,7 +8,7 @@
     <meta name="theme-color"    content="#272931" />
     <meta name="author"         content="Jacek Markiewicz" />
     <meta name="description"    content="pwa-auth.js is a bundle of three HTML Tags, one JavaScript Script, and optionally CSS Custom Properties for Theme Customization. Sign up, login, log out, change account details, and delete the user's account." />
-    <meta name="keywords"       content="login, pwa, pwa-auth, auth, firebase, icon, drawer, settings, lit, redux" />
+    <meta name="keywords"       content="login, pwa, pwa-auth, auth, firebase, icon, drawer, settings, lit, redux, web components" />
     <meta name="referrer"       content="origin" />
     <link rel="manifest"        href="./manifest.json" />
     <link rel="icon"            href="./images/favicon.ico">
@@ -41,13 +41,14 @@
 
     <!-- Application Shell -->
     <script type="module" src="./javascript/pwa-auth.js" defer></script>
+    <!-- <script type="module" src="../base/export/pwa-auth.js" defer></script> -->
 
   </head>
   <body>
 
     <header>
 
-      <div style="margin: auto">
+      <div style="display: grid;">
         
         <!-- Sponsor Me -->
         <iframe
@@ -59,6 +60,10 @@
 
       </div>
 
+      <span></span>
+
+      <user-icon      empty="./images/empty.jpg"></user-icon>
+
     </header>
 
     <!-- Drop-down - Drawer-->
@@ -66,9 +71,9 @@
 
     <main>
 
-      <section>
+      <section style="display: grid;">
 
-        <h2>Example: Button: Login or Subscribe / Icon Picture</h2>
+        <h2>Drawer Button</h2>
 
         <!-- Login / Subscribe - Button -->
         <user-icon      empty="./images/empty.jpg"    subscribe    ></user-icon>
@@ -77,7 +82,7 @@
 
       <section>
 
-        <h2>Example: Auth Page</h2>
+        <h2>Login Page</h2>
 
         <!-- Log-in - -Page-->
         <user-login     login     ></user-login>
@@ -86,7 +91,7 @@
 
       <section>
 
-        <h2>Example: Settings Page</h2>
+        <h2>Settings Page</h2>
 
         <!-- Settings - Page-->
         <user-settings  empty="./images/empty.jpg"></user-settings>

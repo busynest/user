@@ -44,7 +44,7 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
     render() {
         return html `
 
-    <section class=     "service">
+    <section class="service">
 
       <header>
         <h3>${this._log ? this._name : this._sign === this.subscribe ?

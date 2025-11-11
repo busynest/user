@@ -24,7 +24,7 @@ import { animation } from '../css/animation';
 @customElement('user-drawer')
 export class UserDrawer extends connect(store)(LitElement) {
 
-  /** @attr settingsURL */
+  /** @attr url */
   @property({type: String, reflect: true}) private url = '';
 
   /** @attr drawer */
@@ -74,7 +74,7 @@ export class UserDrawer extends connect(store)(LitElement) {
 
     <!-- Drawer Wrapper -->
     <section
-      class="userDrawer ${this.drawer ? 'in' : 'out'}">
+      class="userDrawer ${this.drawer ? 'out' : 'in'}">
 
       <!-- Exit Button -->
       <header class="exit">
@@ -85,7 +85,7 @@ export class UserDrawer extends connect(store)(LitElement) {
 
       <!-- Logged-out State -->
       <div
-        class="spec"
+        class="spec ${this.drawer ? 'spec-out' : 'spec-in'}"
         ?on="${ this.user === false }">
 
         <div class=     "wrapper">

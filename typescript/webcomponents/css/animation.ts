@@ -4,27 +4,29 @@ export const animation : CSSResult = css`
 
 .wrapper {
     display:                                grid;
-    margin:                                 16px;
     border-radius:                          8px;
-    border:                                 2px solid #0a2840;
-    overflow:                               hidden;
+    /* margin:                                 16px; */
+    /* overflow:                               hidden;*/
 }
 
 .inner {
     display:                                grid;
     grid-template-areas:                    'pages';
     overflow-y:                             auto;
+    box-shadow:                             0px 6px 6px -6px;
     border-bottom:                          6px solid #0a2840;
-    border-radius:                          6px;
+    border-radius:                          0 0 6px 6px;
     scrollbar-width:                        thin;
     z-index:                                1;
 }
 
 .content {
     display:                                grid;
+    grid-gap:                               16px;
     grid-area:                              pages;
 
     border-bottom:                          2px solid grey;
+    box-shadow:                             inset 0px -6px 6px -8px;
 
     box-sizing:                             border-box;
     -webkit-box-sizing:                     border-box;

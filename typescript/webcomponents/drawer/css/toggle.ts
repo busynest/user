@@ -1,7 +1,7 @@
 import { css, CSSResult } from "lit";
 
 export const toggleStyle: CSSResult = css`
-  
+  /*
   .new {
     padding:            12px;
     border-radius:      4px;
@@ -14,5 +14,5 @@ export const toggleStyle: CSSResult = css`
     font-size:          small;
     line-height:        42px;
   }
-
+*/
 `

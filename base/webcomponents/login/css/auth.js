@@ -16,6 +16,7 @@ export const authStyles = css `
   }
 
   .service {
+    display:                grid;
     overflow:               hidden;
     color:                  var(--pwa_drawer_text_color, #303030);
     background-color:       var(--section_background_color, white);
@@ -28,9 +29,10 @@ export const authStyles = css `
   }
 
   h3 {
-    margin:                 16px;
+    margin-top:             0;
     padding-bottom:         16px;
     border-bottom:          2px solid black;
+    box-shadow:             0px 6px 6px -6px;
   }
 
 `;

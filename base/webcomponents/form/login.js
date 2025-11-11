@@ -47,6 +47,8 @@ let FormLogin = class FormLogin extends LitElement {
         grid-template-columns:      1fr auto;
       }
 
+      form { display: grid; }
+
     `
         ];
     }
@@ -95,18 +97,20 @@ let FormLogin = class FormLogin extends LitElement {
 
           </li>
     
-          <!-- Change State -->
+          <!-- Change State 
           <li>
 
             <p class=     "divider">Or</p>
 
-            <button
-              class=      "new"
-              @click=     "${this.change}">create a new account</button>
 
-          </li>
+
+          </li> -->
 
         </ul>
+
+        <button
+          class="new"
+          @click="${this.change}">create a new account</button>
 
       </form>
 

@@ -12,7 +12,7 @@ export class UserIcon extends connect(store)(LitElement) {
   /** @attr subscribe */
   @property({type: Boolean, reflect: true}) public subscribe = false;
 
-  /** @attr emptyArtwork */
+  /** @attr empty */
   @property({type: String, reflect: true}) public empty = '';
 
   @state() private _user = false;

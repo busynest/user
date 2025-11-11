@@ -11,11 +11,11 @@ export const inputStyle = css `
     text-align:               left;
     padding:                  8px 16px;
     background-color:         var(--pwa_input_background_color, #E1E5EB);
-    border:                   0;
+    border:                   1px solid grey;
     border-radius:            4px;
     -webkit-border-radius:    4px;
     font-size:                smaller;
-    box-shadow:               1px 1px 1px grey;
+    box-shadow:               0px 6px 6px -6px;
   }
 
   input.invalid { background-color: #ffdddd; }

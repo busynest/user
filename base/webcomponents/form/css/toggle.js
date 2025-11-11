@@ -2,11 +2,13 @@ import { css } from "lit";
 export const toggleStyle = css `
   
   .new {
+    border:             0px;
+    border-top:         2px solid black;
+    box-shadow:         0px 0px 6px 0px;
     padding:            12px;
-    border-radius:      4px;
+  /*  border-radius:      4px; */
     appearance:         none;
     background-color:   transparent;
-    border:             0px;
     color:              inherit;
     cursor:             pointer;
     text-decoration:    underline;

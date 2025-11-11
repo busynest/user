@@ -1,12 +1,10 @@
 Progressive Website Application - Authentication
 ======================
-Jack's Publishing maintains Custom HTML Elements where developers can focus on UX rather than low-level API calls.
-
-Visit the [Live Demo](https://pwa-authentic.firebaseapp.com)
+Jack's Publishing maintains Website Authentication Components where developers can focus on their User interface, rather than low-level API calls. Visit the [Live Demo](https://pwa-authentic.firebaseapp.com)
 
 pwa-auth.js is a bundle of 5 Custom HTML Elements for Firebase (IAM) Authenication using email and password, with the ability to change username, icon, email, password, or delete your own account and it's content all together.
 
-pwa-auth.js (Website Authentication Components) is a quick and simple way to sign-up, log-in, log-out, modify, or delete a firebase account information from your own personal domain.
+Quickly sign-up, log-in, log-out, modify, or delete your firebase account.
 
 Place 5 Custom HTML Tags, reference CSS, and Initialize a Firebase Instance. By either <b>Standard</b> or <b>Modular</b> ECMA Script.
 
@@ -14,9 +12,10 @@ Continue reading to understand how to install this project:
 
 ## Library
 ```javascript
-// ES - Modules
+// ES - import Modules
 import './pwa-auth';
-// Optional - copy CoreJS Project Bundle
+
+// Optional - copy CoreJS
 'npm/pwa-auth/source/**/*'
 // - source/
 //   - pwa-auth.js
@@ -26,14 +25,12 @@ import './pwa-auth';
 ```
 
 ## Prerequisites
-Google:
-- Google Analytics
-- Firebase Project
-Firebase:
-- Authentication
-  - email login
-- Cloud Storage
-  - storage bucket
+- Google
+  - Analytics
+- Firebase Authentication
+  - Email Login
+- Firebase Cloud Storage
+  - Storage Bucket
 
 ## Technical Summary
 - Type Strong with [TypeScript](https://www.typescriptlang.org)
@@ -59,66 +56,66 @@ Outline:
 - Delete Account
 
 ## Enrichment
-Development:
-- Redux State Connection
-- Global Functions
-Optional:
-- CSS Custom Properties
+- Development
+  - Redux State Connection
+  - Global Functions
+- Optional
+  - Custom Properties
 
 ## Website Components
-Button:
-- `<user-icon>`
-  - Email Log-in
-  - Email Subscribe
-  - Icon
-Drop-down Drawer:
-- `<user-drawer>`
-  - Email Log-in
-  - Email Subscribe
-  - Menu with Log-out
-Pages:
-- `<user-settings>`
-  - Account Settings
-- `<user-login>`
-  - Email Log-in
-  - Email Subscribe
-- `<email-reset>`
-  - Password Reset
+- Button
+  - `<user-icon>`
+    - Email Log-in
+    - Email Subscribe
+    - Icon
+- Drop-down Drawer
+  - `<user-drawer>`
+    - Email Log-in
+    - Email Subscribe
+    - Menu with Log-out
+- Pages
+  - `<user-settings>`
+    - Account Settings Page
+  - `<user-login>`
+    - Email Log-in Page
+    - Email Subscribe Page
+  - `<email-reset>`
+    - Password Reset Page
 
 ## Observer Patterns
-`<user-icon>`
-- property: subscribe: (Initial State): Subscribe
-- property: subscribe: else (Initial State): Login
-- property: empty: location of empty image
-`<user-drawer>`
-- feature: Top-down drawer: 1.4 seconds
-- property: url: location of `<pwa-settings>` Tag
-- property: subscribe: (Initial State): Subscribe
-- property: subscribe: else (Initial State): Login
-`<user-login>`
-- feature: regular visible page component
-`<user-settings>`
-- 1 Photo Upload Feature, view uploaded bucket of photos, photo ediotr
-- empty property: location of empty image
-- Unavailable Photo
-- Update Username
-- Update Email / Verify
-- Update Password
-- Delete Account, Photos, Information
+- `<user-icon>`
+  - property: subscribe: (Initial State): Subscribe
+  - property: subscribe: else (Initial State): Login
+  - property: empty: location of empty image
+- `<user-drawer>`
+  - feature: Top-down drawer: 1.4 seconds
+  - property: url: location of `<pwa-settings>` Tag
+  - property: subscribe: (Initial State): Subscribe
+  - property: subscribe: else (Initial State): Login
+- `<user-login>`
+  - feature: regular visible page component
+- `<user-settings>`
+  - 1 Photo Upload Feature, view uploaded bucket of photos, photo ediotr
+  - empty property: location of empty image
+  - Unavailable Photo
+  - Update Username
+  - Update Email / Verify
+  - Update Password
+  - Delete Account, Photos, Information
 
 ## Logical States
-`<user-icon>`
-- state: Logged-out: txt: Login Button
-- state: Logged-out: txt: Subscribe Button
-- state: Logged-in: photo: Icon Button
-`<user-drawer>`
-- state: logged-out: Sign-up by Email Addresses and Password
-- state: logged-out: Sign-in by Email Addresses and Password
-- state: logged-in: Settings Page Link, Log-out Button
-`<user-login>`
-- state: logged-out: Sign-up by Email Addresses and Password
-- state: logged-out: Sign-in by Email Addresses and Password
-- state: logged-in: content: `<slot></slot>`
+- `<user-icon>`
+  - Logged-out: txt: Login Button
+  - Logged-out: txt: Subscribe Button
+  - Logged-in, photo: Icon Button
+- `<user-drawer>`
+  - logged-out: Sign-up by Email Addresses and Password
+  - logged-out: Sign-in by Email Addresses and Password
+  - logged-in: Settings Page Link, Log-out Button
+- `<user-login>`
+  - logged-out: Sign-up by Email Addresses and Password
+  - logged-out: Sign-in by Email Addresses and Password
+  - logged-in, content: `<slot></slot>`
 
 Implementation
 ===
@@ -155,7 +152,7 @@ The entire bundle is one instance of firebase that takes in the configuration in
   <!-- Optional: Copy the Project Files from 'source' Folder -->
   <script type="module" src="./path_to/pwa-auth.js"></script>
 
-<!-- Optional: Custom CSS Properties -->
+  <!-- Optional: Custom CSS Properties -->
   <style>
 
     /* <user-icon> */
@@ -173,7 +170,7 @@ The entire bundle is one instance of firebase that takes in the configuration in
     /* <user-drawer> */
     :root {
     --pwa_drawer_background_color:      #fff;
-    --pwa_drawer_border-radius:         20px;
+    --pwa_drawer_border-radius:         0px;
     --pwa_drawer_border:                3px #303030 solid;
     --pwa_drawer_z-index:               2;
     --pwa_drawer_text_color:            #303030;
@@ -182,12 +179,17 @@ The entire bundle is one instance of firebase that takes in the configuration in
     /* <user-settings> */
     :root {
     --pwa_settings_background_color:    grey;
+
     --pwa_nav_button_color:             grey;
     --pwa_nav_highlight_color:          black;
+
     --pwa_divider_color:                grey;
     --pwa_header_color:                 black;
+
     --pwa_input_background_color:       #E1E5EB;
+
     --pwa_label_text_color:             black;
+
     --pwa_button_text_color:            #fff;
     --pwa_button_background_color:      #6cc04a;
     --pwa_button_border_color:          #60b23e;
