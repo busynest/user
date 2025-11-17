@@ -2,10 +2,22 @@ import { css, CSSResult } from "lit";
 
 export const lineStyle: CSSResult = css`
   
-  .setLog > p {
-    margin:       12px;
-    box-sizing:   border-box;
-    text-align:   center;
+  .setLog > a {
+    padding:        16px;
+    margin:         16px;
+    border:         2px solid grey;
+    border-radius:  6px;
+    box-sizing:     border-box;
+    text-align:     center;
+    cursor:         pointer;
   }
+
+  .setLog > button {
+    cursor:         pointer;
+    padding:        16px;
+    margin:         16px;
+    border-radius:  6px;
+  }
+
 
 `;

@@ -3,11 +3,15 @@ import { css, CSSResult } from "lit";
 export const drawerStyle: CSSResult = css`
 
   :host {
-    position:               absolute;
+    position:               var(--pwa_drawer_position, fixed);
+    z-index:                4;
     max-height:             0px;
-    transition:             max-height 1.4s ease-out;
+    transition:             max-height 1.4s ease-in-out;
     overflow:               hidden;
     height:                 auto;
+    width:                  100%;
+    box-sizing:             border-box;
+    -webkit-box-sizing:     border-box;
     display:                grid;
     padding-top:            env(safe-area-inset-top);
   }
@@ -24,10 +28,10 @@ export const drawerStyle: CSSResult = css`
 
   .userDrawer {
     display:                grid;
-    position:               fixed;
-    top:                    0;
+    position:               relative;
+ /* top:                    0;
     left:                   0;
-    right:                  0;
+    right:                  0; */
     transition-duration:    1.4s;
     overflow:               hidden;
     box-sizing:             border-box;
@@ -47,26 +51,27 @@ export const drawerStyle: CSSResult = css`
   .in {
     max-height:             0px;
     visibility:             hidden;
-    transition:             max-height 1.4s ease-out, visibility 0s linear 1.4s, transform 1.4s; 
+    transition:             max-height 1.4s ease-in-out, visibility 0s linear 1.4s, transform 1.4s; 
   }
 
   .spec-in {
-    transform:              translate3d(0, -150%, 0);
-    transition:             transform 2.4s; 
+    transform:              translate3d(0, -100%, 0);
+    transition:             transform 1.5s; 
     z-index:                -1;
+    animation-timing-function: linear;
   }
 
   .out {
     max-height:             100%;
     visibility:             visible;
-    transition:             max-height 1.4s ease-out, visibility 0s, transform 1.4s; 
+    transition:             max-height 1.4s ease-in-out, visibility 0s, transform 1.4s; 
   }
   
   .spec-out {
     transform:              translate3d(0, 0, 0);
-    transition:             transform 1.6s;
+    transition:             transform 2.2s;
     z-index:                -1;
-    animation-timing-function: ease-out;
+    animation-timing-function: linear;
   }
 
 `;

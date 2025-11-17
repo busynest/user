@@ -2,11 +2,6 @@ import { css } from 'lit';
 
 export const iconStyles = css`
 
-  :host {
-    box-shadow: 4px 4px 4px 0px;
-    border-radius: 8px;
-  }
-
   .icon, .login {
     cursor:                   pointer;
     margin:                   auto;
@@ -16,7 +11,7 @@ export const iconStyles = css`
     color:                    white;
     font-size:                15px;
     text-decoration:          none;
-    transition-duration:      2s; 
+    transition-duration:      0s;
   }
 
   .icon:hover,
@@ -29,6 +24,7 @@ export const iconStyles = css`
     width:                    var(--pwa_icon_diameter, 32px);
     border-radius:            50%;
     padding:                  0;
+    box-shadow:               4px 4px 4px 0px;
   }
 
   .login {
@@ -39,6 +35,8 @@ export const iconStyles = css`
     font-family:              var(--pwa_icon_font, 'Arial', sans-serif);
     font-weight:              500;
     text-align:               center;
+    box-shadow:               4px 4px 4px 0px;
+    border-radius:            8px;
   }
 
   .userImage {

@@ -177,6 +177,11 @@ onAuthStateChanged(auth, (user) => {
 
 
 
+// To Do - Alert        
+
+export const alertEmail = (error:any) => { console.log( 'Problem: ' + error );/* if (this._user) { this.updateEmail(); } else { alert('Please Login'); } */ }
+
+
 export const logOut             = async () => { return signOut(auth); };
 export const logAccount         = async () => { logEvent(analytics, 'create_account'); };
 export const logAccountDelete   = async () => { logEvent(analytics, 'delete_account'); };

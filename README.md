@@ -1,6 +1,6 @@
 Progressive Website Application - Authentication
 ======================
-Jack's Publishing maintains Website Authentication Components where developers can focus on their User interface, rather than low-level API calls. Visit the [Live Demo](https://pwa-authentic.firebaseapp.com)
+Jack's Publishing maintains Website Authentication Components where developers can focus on their User interface, rather than low-level API calls. Visit the [Live Demo](https://pwa-authentic.firebaseapp.com).
 
 pwa-auth.js is a bundle of 5 Custom HTML Elements for Firebase (IAM) Authenication using email and password, with the ability to change username, icon, email, password, or delete your own account and it's content all together.
 
@@ -10,20 +10,6 @@ Place 5 Custom HTML Tags, reference CSS, and Initialize a Firebase Instance. By 
 
 Continue reading to understand how to install this project:
 
-## Library
-```javascript
-// ES - import Modules
-import './pwa-auth';
-
-// Optional - copy CoreJS
-'npm/pwa-auth/source/**/*'
-// - source/
-//   - pwa-auth.js
-//   - pwa-styles.css
-//   - empty.jpg
-//   - Third Party License .txt
-```
-
 ## Prerequisites
 - Google
   - Analytics
@@ -31,6 +17,25 @@ import './pwa-auth';
   - Email Login
 - Firebase Cloud Storage
   - Storage Bucket
+
+## Outline
+- Register through Email and Password
+  - Log-in
+  - Log-out
+- Change Username
+- Change Email
+- Change Password
+- Upload Profile Picture
+- Delete Account
+
+## Library
+```javascript
+// ES - import Modules
+import './pwa-auth';
+
+// Optional - copy CoreJS files
+'npm/pwa-auth/source/**/*'
+```
 
 ## Technical Summary
 - Type Strong with [TypeScript](https://www.typescriptlang.org)
@@ -44,16 +49,6 @@ import './pwa-auth';
 - Backend: Google Cloud: [Firebase](https://firebase.google.com/)
 - Predicate State Behavior: [Redux](https://redux.js.org/)
 - Frontend (Client-side): [Lit](https://lit.dev)
-
-Outline:
-- Register through Email and Password
-  - Log-in
-  - Log-out
-- Change Username
-- Change Email
-- Change Password
-- Upload Profile Picture
-- Delete Account
 
 ## Enrichment
 - Development
@@ -73,12 +68,17 @@ Outline:
     - Email Log-in
     - Email Subscribe
     - Menu with Log-out
+    - Logged-in Menu Content `<slot>`'s
+      - name: before
+      - name: within
 - Pages
   - `<user-settings>`
     - Account Settings Page
   - `<user-login>`
     - Email Log-in Page
     - Email Subscribe Page
+    - Logged-in Page Content `<slot>`'s
+      - name: content
   - `<email-reset>`
     - Password Reset Page
 
@@ -116,9 +116,6 @@ Outline:
   - logged-out: Sign-up by Email Addresses and Password
   - logged-out: Sign-in by Email Addresses and Password
   - logged-in, content: `<slot></slot>`
-
-Implementation
-===
 
 ## Firebase Instance Configuration
 pwa-auth.js is built upon the Firebase SDK (Software Development Kit).
@@ -174,6 +171,7 @@ The entire bundle is one instance of firebase that takes in the configuration in
     --pwa_drawer_border:                3px #303030 solid;
     --pwa_drawer_z-index:               2;
     --pwa_drawer_text_color:            #303030;
+    --pwa_drawer_position:              fixed;
     }
 
     /* <user-settings> */
@@ -203,14 +201,6 @@ The entire bundle is one instance of firebase that takes in the configuration in
   </style>
 
 </head>
-
-<body>
-  <user-icon>
-  <user-drawer>
-  <user-login>
-  <user-settings>
-  <email-reset>
-</body>
 ```
 
 ## Project Type: ECMA Script Modules
@@ -218,9 +208,10 @@ Eports: classes and objects
 ```javascript
 // Custom HTML Element Classes
 import 'pwa-auth';
-// <user-icon subscribe emptyArtwork="./images/empty.jpg"></user-icon>
-// <user-drawer subscribe settingsURL="./settings"></user-drawer>
-// <user-settings emptyArtwork="./images/empty.jpg"></user-settings>
+`<user-icon></user-icon>`             // subscribe  |  empty= "./images/empty.jpg"
+`<user-drawer></user-drawer>`         // subscribe  |  url=   "./settings"
+`<user-settings></user-settings>`     //               empty= "./images/empty.jpg"
+`<user-login></user-login>`           // subscribe  | 
 
 // Firebase Objects
 import { db, storage, auth, user } from 'pwa-auth';
@@ -236,9 +227,15 @@ import { store } from 'pwa-auth';
 // store.name
 // store.email
 // store.photoURL
+
+export { logOut, logAccount, logAccountDelete, deleteDocument } from "pwa-auth";
+// logOut()             - Firebase Authentication: log user out
+// logAccount()         - Google Analytics Signal: logEvent(analytics, 'create_account');
+// logAccountDelete()   - Firebase Authentication: delete account
+// deleteDocument()     - Firebase Storage and Firestore:
 ```
 
-## Implementation - Drawer
+## Drawer Implementation
 ```html
 <body>
 
@@ -246,7 +243,11 @@ import { store } from 'pwa-auth';
     <user-icon subscribe empty="./images/empty.jpg"></user-icon>
   </header>
 
-  <user-drawer subscribe url="./settings"></user-drawer>
+  <user-drawer subscribe url="./settings">
+    <div slot="before / within">
+      <a>Link Name</a>
+    </div>
+  </user-drawer>
 
   <main>
     <user-settings empty="./images/empty.jpg"></user-settings>
@@ -255,17 +256,24 @@ import { store } from 'pwa-auth';
 </body>
 ```
 
-## Implementation - Page
+## Page Implementation
 ```html
 <body>
 
   <header>
-    <user-icon        empty="./images/empty.jpg"     subscribe    ></user-icon>
+    <user-icon empty="./images/empty.jpg" subscribe ></user-icon>
   </header>
 
   <main>
-    <user-login       subscribe     ></user-login>
-    <user-settings    empty="./images/empty.jpg"></user-settings>
+
+    <user-login subscribe>
+      <div slot="content">
+        <p>Page Content</p>
+      </div>
+    </user-login>
+
+    <user-settings empty="./images/empty.jpg"></user-settings>
+
   </main>
 
 </body>

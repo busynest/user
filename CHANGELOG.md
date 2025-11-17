@@ -6,6 +6,12 @@ All notable changes to pwa-auth.js will be documented in this file.
 - Social Login Flow
 - animated login mascot
 
+# [3.3.9] - 2025-11-16
+
+## Changed
+- Export Function
+
+
 # [3.3.8] - 2025-11-09
 
 ## Changed

@@ -71,6 +71,7 @@ onAuthStateChanged(auth, (user) => {
         store.dispatch(iconAuth(''));
     }
 });
+export const alertEmail = (error) => { console.log('Problem: ' + error); };
 export const logOut = async () => { return signOut(auth); };
 export const logAccount = async () => { logEvent(analytics, 'create_account'); };
 export const logAccountDelete = async () => { logEvent(analytics, 'delete_account'); };

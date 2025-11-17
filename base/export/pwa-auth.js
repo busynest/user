@@ -4,4 +4,5 @@ export { UserSettings } from '../webcomponents/settings/settings';
 export { UserIcon } from '../webcomponents/icon/icon';
 export { EmailReset } from '../webcomponents/form/forgot';
 export { firebaseConfig, application, db, storage, auth, user } from '../firebase/authentication';
+export { logOut, logAccount, logAccountDelete, deleteDocument } from "../firebase/interface";
 //# sourceMappingURL=pwa-auth.js.map

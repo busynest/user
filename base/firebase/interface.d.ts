@@ -1,3 +1,4 @@
+export declare const alertEmail: (error: any) => void;
 export declare const logOut: () => Promise<void>;
 export declare const logAccount: () => Promise<void>;
 export declare const logAccountDelete: () => Promise<void>;

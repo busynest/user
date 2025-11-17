@@ -81,7 +81,7 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
         class=          "spec setLog"
         ?on=            "${this._log === true}">
 
-          <slot></slot>
+          <slot name="content"></slot>
           
       </div>
 

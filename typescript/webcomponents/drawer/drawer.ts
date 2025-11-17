@@ -118,9 +118,13 @@ export class UserDrawer extends connect(store)(LitElement) {
         class="spec setLog"
         ?on="${ this.user === true }">
 
-          <p><a href="${this.url}">Settings</a></p>
+          <slot name="before"></slot>
 
-          <p><a class="leave" aria-label="log out">log out</a></p>
+          <a href="${this.url}">Settings</a>
+
+          <slot name="within"></slot>
+
+          <button class="leave" aria-label="log out">log out</button>
           
       </div>
 
