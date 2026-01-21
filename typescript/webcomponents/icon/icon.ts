@@ -1,4 +1,4 @@
-import { CSSResultArray, html, LitElement }   from 'lit';
+import { css, CSSResultArray, html, LitElement }   from 'lit';
 import { customElement, property, state }     from 'lit/decorators.js';
 import { connect }                            from 'pwa-helpers/connect-mixin.js';
 import { store, AppState }                    from '../../store';
@@ -35,7 +35,7 @@ export class UserIcon extends connect(store)(LitElement) {
     // this._sign        = state.frontend!.register;
   }  
 
-  static get styles():CSSResultArray { return [ iconStyles ] }
+  static get styles():CSSResultArray { return [ iconStyles, css`:host {  border-radius: 8px; }` ] }
   
   protected render() {
     return html`

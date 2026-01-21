@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { html, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../store';
@@ -31,7 +31,7 @@ let UserIcon = class UserIcon extends connect(store)(LitElement) {
         this._user = state.frontend.login;
         this._photoURL = state.backend.photoURL;
     }
-    static get styles() { return [iconStyles]; }
+    static get styles() { return [iconStyles, css `:host {  border-radius: 8px; }`]; }
     render() {
         return html `
 

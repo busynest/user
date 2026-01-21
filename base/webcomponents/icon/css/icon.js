@@ -19,22 +19,21 @@ export const iconStyles = css `
   }
 
   .icon {
-    height:                   var(--pwa_icon_diameter, 32px);
-    width:                    var(--pwa_icon_diameter, 32px);
+    height:                   var(--pwa_icon_diameter, 40px);
+    width:                    var(--pwa_icon_diameter, 40px);
     border-radius:            50%;
     padding:                  0;
-    box-shadow:               4px 4px 4px 0px;
   }
 
   .login {
     width:                    auto;
     border-radius:            var(--pwa_icon_radius, 6px);
-    height:                   var(--pwa_icon_height, 32px);
+    height:                   var(--pwa_icon_height, 40px);
     padding:                  var(--pwa_icon_padding, 0px 16px);
     font-family:              var(--pwa_icon_font, 'Arial', sans-serif);
     font-weight:              500;
     text-align:               center;
-    box-shadow:               4px 4px 4px 0px;
+    /* box-shadow:               4px 4px 4px 0px;*/
     border-radius:            8px;
   }
 
@@ -44,8 +43,8 @@ export const iconStyles = css `
     transition-duration:      2s;
     clip-path:                circle(50%);
     overflow:                 hidden;
-    width:                    calc(var(--pwa_icon_diameter, 32px) - 2px);
-    height:                   calc(var(--pwa_icon_diameter, 32px) - 2px);
+    width:                    calc(var(--pwa_icon_diameter, 40px) - 2px);
+    height:                   calc(var(--pwa_icon_diameter, 40px) - 2px);
     margin:                   auto;
   }  
   

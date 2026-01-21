@@ -29,12 +29,29 @@ Continue reading to understand how to install this project:
 - Delete Account
 
 ## Library
+- script-context
+- module-context
 ```javascript
 // ES - import Modules
-import './pwa-auth';
+import 'pwa-auth';
+import { auth, db, user, storage, application, firebaseConfig } from "pwa-auth";
+
+window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
+    apiKey:             "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    authDomain:         "xxxxxxx.xxxxxxx.xxx",
+    databaseURL:        "https://xxxxxxx.xxxxxxx.xxx",
+    projectId:          "xxxxxxx",
+    storageBucket:      "xxxxxxx.xxxxxxx.xxx",
+    messagingSenderId:  "xxxxxxxxxxx",
+    appId:              "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    measurementId:      "xxxxxxxxxxx"
+  })
+}};
+
+if (localhost) { window.process = { env: { FIREBASE_CONFIG: 'etc.' } } }
 
 // Optional - copy CoreJS files
-'npm/pwa-auth/source/**/*'
+'./npm/pwa-auth/source/**/*'
 ```
 
 ## Technical Summary
@@ -208,10 +225,10 @@ Eports: classes and objects
 ```javascript
 // Custom HTML Element Classes
 import 'pwa-auth';
-`<user-icon></user-icon>`             // subscribe  |  empty= "./images/empty.jpg"
-`<user-drawer></user-drawer>`         // subscribe  |  url=   "./settings"
-`<user-settings></user-settings>`     //               empty= "./images/empty.jpg"
-`<user-login></user-login>`           // subscribe  | 
+`<user-icon>`             // subscribe  |  empty= "./images/empty.jpg"
+`<user-drawer>`           // subscribe  |  url=   "./settings"
+`<user-settings>`         //               empty= "./images/empty.jpg"
+`<user-login>`            // subscribe  | 
 
 // Firebase Objects
 import { db, storage, auth, user } from 'pwa-auth';

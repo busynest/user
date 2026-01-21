@@ -9,6 +9,14 @@ All notable changes to pwa-auth.js will be documented in this file.
 # [3.3.9] - 2025-11-16
 
 ## Changed
+- Button Height set to 40px
+
+## Removed
+- Box shading
+
+# [3.3.9] - 2025-11-16
+
+## Changed
 - Export Function
 
 

@@ -3,7 +3,7 @@ import { css, CSSResult } from "lit";
 export const drawerStyle: CSSResult = css`
 
   :host {
-    position:               var(--pwa_drawer_position, fixed);
+    position:               var(--pwa_drawer_position, absolute);
     z-index:                4;
     max-height:             0px;
     transition:             max-height 1.4s ease-in-out;
