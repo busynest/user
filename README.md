@@ -32,10 +32,17 @@ Continue reading to understand how to install this project:
 - script-context
 - module-context
 ```javascript
-// ES - import Modules
+// Import ES Modules
 import 'pwa-auth';
+// Import Firebase Objects
 import { auth, db, user, storage, application, firebaseConfig } from "pwa-auth";
+// Import Functions
+import { logOut, logAccount, logAccountDelete, deleteDocument, pwaDrawerToggle } from "pwa-auth";
 
+// Optional - copy CoreJS files
+'./npm/pwa-auth/source/**/*'
+
+// Global Login Object
 window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
     apiKey:             "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     authDomain:         "xxxxxxx.xxxxxxx.xxx",
@@ -50,8 +57,6 @@ window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
 
 if (localhost) { window.process = { env: { FIREBASE_CONFIG: 'etc.' } } }
 
-// Optional - copy CoreJS files
-'./npm/pwa-auth/source/**/*'
 ```
 
 ## Technical Summary
@@ -106,7 +111,7 @@ if (localhost) { window.process = { env: { FIREBASE_CONFIG: 'etc.' } } }
   - property: empty: location of empty image
 - `<user-drawer>`
   - feature: Top-down drawer: 1.4 seconds
-  - property: url: location of `<pwa-settings>` Tag
+  - property: **url**: location of `<pwa-settings>` Tag
   - property: subscribe: (Initial State): Subscribe
   - property: subscribe: else (Initial State): Login
 - `<user-login>`
@@ -261,9 +266,11 @@ export { logOut, logAccount, logAccountDelete, deleteDocument } from "pwa-auth";
   </header>
 
   <user-drawer subscribe url="./settings">
-    <div slot="before / within">
+    <!-- before content slot -->
+    <div slot="before">
       <a>Link Name</a>
     </div>
+    <!-- default slot -->
   </user-drawer>
 
   <main>

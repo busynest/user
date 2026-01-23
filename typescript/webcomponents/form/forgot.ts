@@ -2,7 +2,7 @@
 
 import { html, TemplateResult,  }     from 'lit';
 import { customElement, state }       from "lit/decorators.js"
-import { LazyLoader }                 from '../../lazy-loader';
+import { LazyLoader }                 from '../../lazyLoader';
 import { auth }                       from '../../firebase/authentication';
 
 import { sendPasswordResetEmail/*, verifyPasswordResetCode*/ }     from 'firebase/auth';

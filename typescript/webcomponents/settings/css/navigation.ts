@@ -4,7 +4,7 @@ export const navigation = css`
 
   nav {
     overflow:         hidden;
-    box-shadow:       0 0 6px 0;
+   /* box-shadow:       0 0 6px 0;*/
     z-index:          3;
   }
 

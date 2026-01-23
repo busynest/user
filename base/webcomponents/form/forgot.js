@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { html, } from 'lit';
 import { customElement, state } from "lit/decorators.js";
-import { LazyLoader } from '../../lazy-loader';
+import { LazyLoader } from '../../lazyLoader';
 import { auth } from '../../firebase/authentication';
 import { sendPasswordResetEmail } from 'firebase/auth';
 let EmailReset = class EmailReset extends LazyLoader {

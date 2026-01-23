@@ -6,7 +6,26 @@ All notable changes to pwa-auth.js will be documented in this file.
 - Social Login Flow
 - animated login mascot
 
-# [3.3.9] - 2025-11-16
+# [3.4.8] - 2026-01-21
+
+## Changed
+- user-drawer: style anchor tags for before/within slots
+
+## Removed
+- user-settings, Box shading
+
+# [3.4.7] - 2026-01-21
+
+## Changed
+- public pwaDrawerToggle function
+- drawer anchor tags close drawer once clicked
+
+# [3.4.6] - 2026-01-21
+
+## Changed
+- user-drawer : public url attribute
+
+# [3.4.5] - 2026-01-21
 
 ## Changed
 - Button Height set to 40px

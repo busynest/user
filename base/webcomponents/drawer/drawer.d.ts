@@ -38,7 +38,7 @@ declare const UserDrawer_base: (new (...args: any[]) => {
     readonly isConnected: boolean;
 }) & typeof LitElement;
 export declare class UserDrawer extends UserDrawer_base {
-    private url;
+    url: string;
     drawer: boolean;
     subscribe: boolean;
     private name;

@@ -6,7 +6,7 @@
     "url": "https://www.jackspublishing.com",
     "email": "jack.solutionbox@gmail.com"
   },
-  "version": "3.4.5",
+  "version": "3.4.7",
   "description": "pwa-auth is a collection of four HTML webomponents for User Management to display a login button with icon picture state once logged in. Sign up and login within a drawer and optionally a static for a page. Being able to log out, change account details, and delete account.",
   "homepage": "https://pwa-authentic.firebaseapp.com",
   "repository": {
@@ -46,7 +46,8 @@
   },
   "license": "SEE LICENSES.txt",
   "scripts": {
-    "server": "web-dev-server --node-resolve --watch --open --app-index demonstration/index.html",
+    "server": "web-dev-server --node-resolve --watch --open",
+    "demo": "web-dev-server --node-resolve --watch --open --app-index demonstration/index.html",
     "website": "web-dev-server --node-resolve --watch --open --app-index website/index.html",
     "rollup": "rollup rollup.config.js",
     "build": "tsc --project tsconfig.production.json"

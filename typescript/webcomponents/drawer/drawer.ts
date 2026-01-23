@@ -1,4 +1,4 @@
-import { CSSResultArray, html, LitElement }   from 'lit';
+import { css, CSSResultArray, html, LitElement }   from 'lit';
 import { customElement, property, state }     from 'lit/decorators.js';
 import { connect }                            from 'pwa-helpers/connect-mixin';
 
@@ -25,7 +25,7 @@ import { animation } from '../css/animation';
 export class UserDrawer extends connect(store)(LitElement) {
 
   /** @attr url */
-  @property({type: String, reflect: true}) private url = '';
+  @property({type: String, reflect: true}) public url = '';
 
   /** @attr drawer */
   @property({type:Boolean, attribute: true, reflect: true}) public drawer = false; // Drawer State
@@ -45,7 +45,7 @@ export class UserDrawer extends connect(store)(LitElement) {
     this.user         = state.frontend!.login;          // Logged in-out State
     this.signup       = state.frontend!.registerOne;    // Sign-up State
   }
-
+  
   protected firstUpdated() {
 
     this.shadowRoot!.querySelector('.close')!.addEventListener('click', () => {
@@ -56,6 +56,13 @@ export class UserDrawer extends connect(store)(LitElement) {
         if (this.user) { logOut() }
         store.dispatch( toggleSign() );
       } );
+
+      const link = this.shadowRoot!.querySelectorAll('a');
+      link.forEach( item => {
+        item.addEventListener('click', () => {
+          store.dispatch( toggleSign() );
+        });
+      });
       
   }
 
@@ -66,7 +73,23 @@ export class UserDrawer extends connect(store)(LitElement) {
     exitStyle,
     linkStyle,
     lineStyle,
-    listStyle
+    listStyle,
+    css`
+    ::slotted(a) {
+      text-transform:           uppercase;
+      font-size:                .6em;
+      color:                    rgb(105,105,105);
+      font-weight:              800;
+      text-decoration:          none;
+      padding:                  16px;
+      margin:                   16px;
+      border:                   2px solid grey;
+      border-radius:            6px;
+      box-sizing:               border-box;
+      text-align:               center;
+      cursor:                   pointer;
+    }
+    `
   ] };
 
   protected render() {
@@ -122,9 +145,9 @@ export class UserDrawer extends connect(store)(LitElement) {
 
           <a href="${this.url}">Settings</a>
 
-          <slot name="within"></slot>
+          <slot></slot>
 
-          <button class="leave" aria-label="log out">log out</button>
+          <button class="leave" aria-label="log out">Log out</button>
           
       </div>
 

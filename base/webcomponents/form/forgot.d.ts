@@ -1,5 +1,5 @@
 import { TemplateResult } from 'lit';
-import { LazyLoader } from '../../lazy-loader';
+import { LazyLoader } from '../../lazyLoader';
 export declare class EmailReset extends LazyLoader {
     private userEmail;
     constructor();

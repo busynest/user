@@ -33,6 +33,9 @@ let pendingEmailVerification = false;
 window.addEventListener("userEmailChanged", () => {
     pendingEmailVerification = true;
 });
+export const pwaDrawerToggle = () => {
+    store.dispatch(closeSign());
+};
 onAuthStateChanged(auth, (user) => {
     if (user) {
         store.dispatch(userAuth(true));

@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { html, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store } from '../../store';
@@ -49,6 +49,12 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             }
             store.dispatch(toggleSign());
         });
+        const link = this.shadowRoot.querySelectorAll('a');
+        link.forEach(item => {
+            item.addEventListener('click', () => {
+                store.dispatch(toggleSign());
+            });
+        });
     }
     static get styles() {
         return [
@@ -58,7 +64,23 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             exitStyle,
             linkStyle,
             lineStyle,
-            listStyle
+            listStyle,
+            css `
+    ::slotted(a) {
+      text-transform:           uppercase;
+      font-size:                .6em;
+      color:                    rgb(105,105,105);
+      font-weight:              800;
+      text-decoration:          none;
+      padding:        16px;
+      margin:         16px;
+      border:         2px solid grey;
+      border-radius:  6px;
+      box-sizing:     border-box;
+      text-align:     center;
+      cursor:         pointer;
+    }
+    `
         ];
     }
     ;
@@ -113,9 +135,9 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
 
           <a href="${this.url}">Settings</a>
 
-          <slot name="within"></slot>
+          <slot></slot>
 
-          <button class="leave" aria-label="log out">log out</button>
+          <button class="leave" aria-label="log out">Log out</button>
           
       </div>
 

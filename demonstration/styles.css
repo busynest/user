@@ -25,6 +25,7 @@ body {
     "main"
     "foot";
   grid-template-rows:         auto 1fr auto;
+  position:                   relative;
 }
 
 header  { grid-area:          head; }

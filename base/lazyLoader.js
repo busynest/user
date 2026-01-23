@@ -20,4 +20,4 @@ __decorate([
     property({ type: Boolean }),
     __metadata("design:type", Boolean)
 ], LazyLoader.prototype, "active", void 0);
-//# sourceMappingURL=lazy-loader.js.map
+//# sourceMappingURL=lazyLoader.js.map

@@ -86,6 +86,11 @@ else { console.log('Push API is not supported'); }
       pendingEmailVerification = true; // Set flag to trigger verification
     });
 
+export const pwaDrawerToggle = () => {
+    // Close Drawer State
+    store.dispatch( closeSign() );
+}
+    
 
 // Firebase State Change Function
 onAuthStateChanged(auth, (user) => {
