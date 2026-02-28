@@ -75,7 +75,7 @@
     "babel-plugin-template-html-minifier": "^4.1.0",
     "firebase": "^12.7.0",
     "lit": "^3.3.2",
-    "rollup": "^4.54.0",
+    "rollup": "^4.59.0",
     "rollup-plugin-dts": "^6.3.0",
     "rollup-plugin-html-literals": "^2.0.1",
     "rollup-plugin-license": "^3.6.0",
