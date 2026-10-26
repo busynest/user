@@ -7,4 +7,5 @@ export declare const application: FirebaseApp;
 export declare const db: Firestore;
 export declare const storage: FirebaseStorage;
 export declare const auth: Auth;
+/** @deprecated Optional - load-time snapshot. Required - read auth.currentUser at call time. */
 export declare const user: User | null;

@@ -21,9 +21,6 @@ declare const UserDrawer_base: (new (...args: any[]) => {
             phone: string;
             email: string;
         };
-        drawer: {
-            drawer: boolean;
-        };
         backend: {
             verified: boolean;
             anon: boolean;

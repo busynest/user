@@ -18,6 +18,7 @@ import { animation } from '../css/animation';
 import { listStyle } from '../form/css/list';
 import '../form/login';
 import '../form/signup';
+import { tapStyle } from '../css/tap';
 let UserLogin = class UserLogin extends connect(store)(LitElement) {
     constructor() {
         super();
@@ -37,7 +38,8 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
             linkStyle,
             lineStyle,
             listStyle,
-            animation
+            animation,
+            tapStyle
         ];
     }
     ;
@@ -47,10 +49,7 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
     <section class="service">
 
       <header>
-        <h3>${this._log ? this._name : this._sign === this.subscribe ?
-            'Subscribe'
-            :
-                'Login'} </h3>
+        <h3>${this._log ? this._name : this._sign === this.subscribe ? 'Login' : 'Subscribe'}</h3>
       </header>
 
       <!-- Logged-out State -->
@@ -61,15 +60,15 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
         <div class=     "wrapper">
           <div class=   "inner">
 
-            <!-- Log-in State -->
+            <!-- Required - subscribe chooses the open form -->
             <form-login
               source=       "page"
-              class=        "content ${true === this._sign ? 'opened' : 'closed'} "></form-login>
+              class=        "content ${this._sign === this.subscribe ? 'opened' : 'closed'} "></form-login>
 
             <!-- Sign-up State -->
             <form-signup
               source=       "page"
-              class=        "content ${false === this._sign ? 'opened' : 'closed'}"></form-signup>
+              class=        "content ${!this._sign === this.subscribe ? 'opened' : 'closed'}"></form-signup>
 
           </div>
         </div>

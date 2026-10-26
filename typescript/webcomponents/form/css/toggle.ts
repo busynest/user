@@ -15,6 +15,7 @@ export const toggleStyle: CSSResult = css`
     text-decoration:    underline;
     font-size:          small;
     line-height:        42px;
+    min-height:         var(--pwa_tap, 44px); /* Required - minimum tap target */
   }
 
 `

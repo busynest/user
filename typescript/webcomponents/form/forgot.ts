@@ -15,14 +15,6 @@ export class EmailReset extends LazyLoader {
 
   constructor() { super(); }
 
-  protected firstUpdated() {
-
-    this.shadowRoot!.querySelector(".reset")!.addEventListener("click", () => { 
-      this.restPassword();
-    } );
-
-  }
-
   // Handle input changes to keep the password property in sync
   private handleEmail(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -32,7 +24,9 @@ export class EmailReset extends LazyLoader {
     protected render():TemplateResult {
       return html`
 
-        <form class="resetPass">
+        <form
+          class="resetPass"
+          @submit="${this.resetPassword}">
 
           <input
             class       ="email"
@@ -54,11 +48,16 @@ export class EmailReset extends LazyLoader {
   }
 
 
-  // Reset Password Email
-  private restPassword = async () => {
+  // Required - cancel native submit, then send the reset
+  private resetPassword = async (event: Event) => {
+
+    event.preventDefault();
+
+    const input = this.renderRoot.querySelector('.email') as HTMLInputElement | null;
+    this.userEmail = input?.value ?? '';
 
     await sendPasswordResetEmail( auth, this.userEmail )
-    .catch( (error:any) => { console.log(error); } );
+    .catch( (error: Error) => { console.log(error); } );
 
   }
 /*

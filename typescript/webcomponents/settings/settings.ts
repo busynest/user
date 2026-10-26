@@ -11,6 +11,7 @@ import './input/password';
 import './input/delete';
 import { listStyle } from '../form/css/list';
 import { animation } from '../css/animation';
+import { tapStyle } from '../css/tap';
 
 @customElement('user-settings')
 export class UserSettings extends connect(store)(LitElement) {
@@ -25,10 +26,9 @@ export class UserSettings extends connect(store)(LitElement) {
 
   protected firstUpdated() {
 
-    /* Form Default */
-    const forms = this.querySelectorAll('form')!
-    forms.forEach( item => {
-      item.preventDefault();
+    /* Required - cancel native form submit */
+    this.addEventListener('submit', (event: Event) => {
+      event.preventDefault();
     });
 
     /* 1 */
@@ -62,6 +62,7 @@ export class UserSettings extends connect(store)(LitElement) {
     navigation,
     listStyle,
     animation,
+    tapStyle,
     css`
 
       :host {

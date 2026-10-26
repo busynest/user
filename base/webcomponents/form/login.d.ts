@@ -9,6 +9,7 @@ export declare class FormLogin extends LitElement {
     private change;
     private handleEmail;
     private handlePassword;
+    private readFields;
     private _handleSubmit;
     private login;
     private signIn;

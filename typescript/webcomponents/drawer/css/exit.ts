@@ -4,7 +4,7 @@ export const exitStyle: CSSResult = css`
 
   .exit {
     display:                grid;
-    grid-template-columns:  80px 1fr 80px;
+    grid-template-columns:  minmax(var(--pwa_tap, 44px), 80px) minmax(0, 1fr) minmax(var(--pwa_tap, 44px), 80px); /* Required - fit 320px */
     padding:                16px;
     z-index:                2;
     background-color:       white;
@@ -41,13 +41,21 @@ export const exitStyle: CSSResult = css`
   }
 */
   .close {
-    height:                 30px;
-    width:                  42px;
+    min-height:             var(--pwa_tap, 44px); /* Required - minimum tap target */
+    min-width:              var(--pwa_tap, 44px);
+    height:                 auto;
+    width:                  auto;
     margin:                 auto;
     background-color:       transparent;
     border:                 0px;
     fill:                   red;
     opacity:                .8;
+  }
+
+  .close svg {
+    width:                  24px;
+    height:                 24px;
+    display:                block;
   }
 
 

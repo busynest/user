@@ -11,7 +11,7 @@ import { html, css, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { store } from '../../../store';
 import { connect } from 'pwa-helpers';
-import { auth, storage, user } from '../../../firebase/authentication';
+import { auth, storage } from '../../../firebase/authentication';
 import { updateProfile } from 'firebase/auth';
 import { accImage } from '../../../redux/backend';
 import { ref, updateMetadata, getDownloadURL, uploadBytesResumable } from "@firebase/storage";
@@ -70,40 +70,34 @@ export class ContactPhoto extends connect(store)(LitElement) {
     render() {
         return html `
 <label
-    for="pwa-uploader"
-    style="
-      grid-template-columns: auto 1fr;
-      grid-gap:16px;
-      padding: 0 16px;
-    ">Upload:
-    <progress
-      id      ="pwa-uploader"
-      class   ="uploader"
-      value   ="0"
-      max     ="100"
+      for="pwa-uploader"
       style="
-        height:       24px;
-        width:        100%;
-        margin:       auto;
-      "></label>
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-gap: 16px;
+        padding: 0 16px;
+      ">Upload:
+      <progress
+        id="pwa-uploader"
+        class="uploader"
+        value="0"
+        max="100"
+        style="
+          height: 24px;
+          width: 100%;
+          margin: auto;
+        "></progress>
+    </label>
 
-  
-
-    <!-- Input - Upload Image -->
     <input
-      id      ="photoURL"
-      type    ="file"
-      name    ="photoURL"
-      class   ="contractorPhoto"
-      accept  ="image/*"
-      @change ="${this.saveImage}"
+      id="photoURL"
+      type="file"
+      name="photoURL"
+      class="contractorPhoto"
+      accept="image/*"
+      @change="${this.saveImage}"
       ?disabled="${this.login === false}"
-      style   ="
-        display:        none;
-        cursor:         pointer;
-        position:       absolute;
-        z-index:        -1;
-      "/></progress>
+      style="display: none;" />
 
     <label
       style="
@@ -191,8 +185,9 @@ export class ContactPhoto extends connect(store)(LitElement) {
                     .then((url) => {
                     updateMetadata(location, newMetadata)
                         .then(() => { }).catch((error) => { console.log("error: ", error); });
-                    if (user) {
-                        updateProfile(user, { photoURL: url })
+                    const current = auth.currentUser;
+                    if (current) {
+                        updateProfile(current, { photoURL: url })
                             .then(() => {
                             uploader.value = 100;
                             uploader.textContent = 'Complete';

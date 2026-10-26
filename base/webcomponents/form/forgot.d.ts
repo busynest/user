@@ -3,10 +3,9 @@ import { LazyLoader } from '../../lazyLoader';
 export declare class EmailReset extends LazyLoader {
     private userEmail;
     constructor();
-    protected firstUpdated(): void;
     private handleEmail;
     protected render(): TemplateResult;
-    private restPassword;
+    private resetPassword;
 }
 declare global {
     interface HTMLElementTagNameMap {

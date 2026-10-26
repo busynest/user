@@ -8,4 +8,6 @@ export const application : FirebaseApp          = initializeApp(firebaseConfig);
 export const db : Firestore                     = getFirestore(application);
 export const storage : FirebaseStorage          = getStorage(application);
 export const auth : Auth                        = getAuth(application);
+
+/** @deprecated Optional - load-time snapshot. Required - read auth.currentUser at call time. */
 export const user : User | null                 = auth.currentUser;

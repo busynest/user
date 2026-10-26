@@ -6,6 +6,24 @@ All notable changes to pwa-auth.js will be documented in this file.
 - Social Login Flow
 - animated login mascot
 
+# [3.4.10] - 2026-10-26
+
+## Added
+- --pwa_tap 44px on drawer, sign-in, settings, and delete controls
+- 320px fit for those controls
+
+## Changed
+- dependencies aligned with published 3.4.9 (lit, @reduxjs/toolkit; firebase ^12.15.0)
+- account delete removes pwa-auth/{uid} files, then logAccountDelete, then the auth user
+- sign-in and sign-up read fields on submit
+- email change uses verifyBeforeUpdateEmail
+- user-login subscribe opens the matching form
+- pwa-styles.css uses the variable names the components read
+
+## Removed
+- redux-thunk
+- drawer slice and images list, retired to typescript/deprecated
+
 # [3.4.8] - 2026-01-21
 
 ## Changed

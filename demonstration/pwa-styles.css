@@ -2,11 +2,14 @@
  
 :root {
 
+  /* Required - minimum tap target */
+  --pwa_tap:                      44px;
+
   /* WebComponent 1 : User Icon
   <user-icon>
     <button> */
-  --pwa_icon_hover:               lightgrey;
-  --pwa_icon_background:          #6cc04a;
+  --pwa_icon_hover_color:         lightgrey;
+  --pwa_icon_background_color:    #6cc04a;
   --pwa_icon_border:              2px solid black;
 
   /* WebComponent 1: logged-out
@@ -47,26 +50,29 @@
   <user-settings>
     <nav></nav>
     <section></section> */
-  --pwa_settings_background:      white;
-  --pwa_divider:                  black;
+  --pwa_settings_background_color: white;
+  --pwa_divider_color:            black;
 
   /* Navigation */
-  --pwa_nav_button:               grey;
-  --pwa_nav_select:               black;
+  --pwa_nav_button_color:         grey;
+  --pwa_nav_highlight_color:      black;
 
   /* Section Header */
-  --pwa_section_header:           black;
+  --pwa_header_color:             black;
 
   /* Label */
   --pwa_label_text_color:         black;
 
   /* Input */
-  --pwa_input_background:         #E1E5EB;
+  --pwa_input_background_color:   #E1E5EB;
 
   /* Button */
   --pwa_action_text_color:        #fff;
   --pwa_action_background_color:  #6cc04a;
   --pwa_action_border_color:      #60b23e;
+
+  /* Optional - <user-login> */
+  --section_background_color:     white;
 
 }
 

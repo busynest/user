@@ -6,7 +6,7 @@ import { auth }             from "../../../firebase/authentication";
 import { labelStyle }       from "../../form/css/label";
 import { inputStyle }       from "../../form/css/input";
 import { buttonStyle }      from "../../form/css/button";
-import { updateEmail }      from "firebase/auth";
+import { verifyBeforeUpdateEmail } from "firebase/auth";
 
 export class ContactEmail extends connect(store)(LitElement) {
 
@@ -79,22 +79,27 @@ export class ContactEmail extends connect(store)(LitElement) {
 
   // Save Email
   private saveEmail = async () => {
-    if ( auth.currentUser ) {
-      
-      let contactMail :any = this.shadowRoot?.querySelector('#pwa-email')!;
-    
-      // Change Email Firebase Function
-      await updateEmail( auth.currentUser, contactMail.value ).catch((error:Error) => { console.log(error); });
 
-      // Verify Email Custom Event
-      const emailChangedEvent = new CustomEvent("userEmailChanged", {
+    const current = auth.currentUser;
+    if (!current) { return; }
+
+    const contactMail = this.shadowRoot?.querySelector('#pwa-email') as HTMLInputElement | null;
+    if (!contactMail) { return; }
+
+    try {
+
+      // Required - verify the new address before it replaces the current one
+      await verifyBeforeUpdateEmail(current, contactMail.value);
+
+      window.dispatchEvent(new CustomEvent("userEmailChanged", {
         detail: { email: contactMail.value }
-      });
-
-      // Dispatch Custom Event
-      window.dispatchEvent(emailChangedEvent);
+      }));
 
       alert('Email Updated');
+
+    } catch (error) {
+
+      console.log(error);
 
     }
 

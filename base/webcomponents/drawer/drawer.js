@@ -23,6 +23,7 @@ import { logOut } from '../../firebase/interface';
 import '../form/login';
 import '../form/signup';
 import { animation } from '../css/animation';
+import { tapStyle } from '../css/tap';
 let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
     constructor() {
         super();
@@ -65,6 +66,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             linkStyle,
             lineStyle,
             listStyle,
+            tapStyle,
             css `
     ::slotted(a) {
       text-transform:           uppercase;
@@ -72,13 +74,15 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       color:                    rgb(105,105,105);
       font-weight:              800;
       text-decoration:          none;
-      padding:        16px;
-      margin:         16px;
-      border:         2px solid grey;
-      border-radius:  6px;
-      box-sizing:     border-box;
-      text-align:     center;
-      cursor:         pointer;
+      padding:                  16px;
+      margin:                   16px;
+      border:                   2px solid grey;
+      border-radius:            6px;
+      box-sizing:               border-box;
+      text-align:               center;
+      cursor:                   pointer;
+      display:                  block;
+      min-height:               var(--pwa_tap, 44px); /* Required - minimum tap target */
     }
     `
         ];

@@ -16,6 +16,7 @@ import { labelStyle } from './css/label';
 import { inputStyle } from './css/input';
 import { listStyle } from './css/list';
 import { toggleStyle } from './css/toggle';
+import { tapStyle } from '../css/tap';
 import store from '../../store';
 import { universalToggle } from '../../redux/frontend';
 let FormLogin = class FormLogin extends LitElement {
@@ -25,8 +26,13 @@ let FormLogin = class FormLogin extends LitElement {
         this.email = '';
         this.password = '';
         this.signIn = async (email, password) => {
-            const authCredential = EmailAuthProvider.credential(email, password);
-            await signInWithCredential(auth, authCredential).catch((error) => { console.log(error); });
+            try {
+                const authCredential = EmailAuthProvider.credential(email, password);
+                await signInWithCredential(auth, authCredential);
+            }
+            catch (error) {
+                alert(error instanceof Error ? error.message : 'Sign in failed');
+            }
         };
     }
     static get styles() {
@@ -36,6 +42,7 @@ let FormLogin = class FormLogin extends LitElement {
             inputStyle,
             buttonStyle,
             toggleStyle,
+            tapStyle,
             css `
     
       :host {
@@ -92,8 +99,8 @@ let FormLogin = class FormLogin extends LitElement {
           <li>
 
             <button
-              class=      "login action-button"
-              @click=     "${this.login}">Sign in</button>
+              type=       "submit"
+              class=      "login action-button">Sign in</button>
 
           </li>
     
@@ -109,6 +116,7 @@ let FormLogin = class FormLogin extends LitElement {
         </ul>
 
         <button
+          type="button"
           class="new"
           @click="${this.change}">create a new account</button>
 
@@ -127,10 +135,18 @@ let FormLogin = class FormLogin extends LitElement {
         const input = event.target;
         this.password = input.value;
     }
+    readFields() {
+        const email = this.renderRoot.querySelector('input[type="email"]');
+        const password = this.renderRoot.querySelector('input[type="password"]');
+        this.email = email?.value ?? '';
+        this.password = password?.value ?? '';
+    }
     _handleSubmit(event) {
         event.preventDefault();
+        this.login();
     }
     login() {
+        this.readFields();
         if (this.email.length < 4) {
             alert('Please enter an email address.');
             return;

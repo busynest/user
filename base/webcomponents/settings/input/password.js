@@ -24,22 +24,18 @@ export class InputPassword extends connect(store)(LitElement) {
         this.login = false;
         this.default = (e) => {
             e.preventDefault();
+            this.alertPassword();
         };
         this.updatePass = async (newPassword) => {
             if (auth.currentUser) {
                 await updatePassword(auth.currentUser, newPassword)
                     .then(() => { console.log("Password successful!"); })
-                    .catch((error) => { console.log("Problem: " + error.messge); });
+                    .catch((error) => { console.log("Problem: " + error.message); });
             }
             else {
                 alert('Please Login');
             }
         };
-    }
-    firstUpdated() {
-        this.shadowRoot.querySelector('.pass').addEventListener('click', () => {
-            this.alertPassword();
-        });
     }
     stateChanged(state) {
         this.login = state.frontend.login;
@@ -118,6 +114,7 @@ export class InputPassword extends connect(store)(LitElement) {
 
         <!-- Submit -->
         <button
+          type="submit"
           class="action-button pass"
           ?disabled="${this.login === false}">Update</button>
 
@@ -126,8 +123,14 @@ export class InputPassword extends connect(store)(LitElement) {
     `;
     }
     alertPassword() {
+        const entered = this.shadowRoot.querySelector('#pwa-new-password').value;
+        const verify = this.shadowRoot.querySelector('#pwa-verify-password').value;
+        this.password = entered;
         if (!this.password) {
             this.message = 'Please enter a password';
+        }
+        else if (this.password !== verify) {
+            this.message = 'Passwords do not match';
         }
         else if (this.password.length < 8) {
             this.message = 'Password must be at least 8 characters long';

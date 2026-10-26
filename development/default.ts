@@ -9,8 +9,8 @@ export const iconRoot = css`
   /* WebComponent 1 : User Icon
   <user-icon>
     <button> */
-  --pwa_icon_hover:               lightgrey;        /* custom-elements Folder > icon Folder > CSS Folder > icon.ts */
-  --pwa_icon_background:          #6cc04a;        /* custom-elements Folder > icon Folder > CSS Folder > icon.ts */
+  --pwa_icon_hover_color:         lightgrey;        /* custom-elements Folder > icon Folder > CSS Folder > icon.ts */
+  --pwa_icon_background_color:    #6cc04a;        /* custom-elements Folder > icon Folder > CSS Folder > icon.ts */
   --pwa_icon_border:              2px solid black;  /* custom-elements Folder > icon Folder > CSS Folder > icon.ts */
 
   /* WebComponent 1: logged-out
@@ -67,21 +67,21 @@ export const settingsRoot = css`
   <user-settings>
     <nav></nav>
     <section></section> */
-  --pwa_settings_background:      white;      /* custom-elements Folder > settings Folder > settings.ts */
-  --pwa_divider:                  black;      /* custom-elements Folder > settings Folder > settings.ts */
+  --pwa_settings_background_color: white;      /* custom-elements Folder > settings Folder > settings.ts */
+  --pwa_divider_color:            black;      /* custom-elements Folder > settings Folder > settings.ts */
 
   /* Navigation */
-  --pwa_nav_button:               grey;       /* custom-elements Folder > settings Folder > CSS Folder > navigation.ts */
-  --pwa_nav_select:               black;      /* custom-elements Folder > settings Folder > CSS Folder > navigation.ts */
+  --pwa_nav_button_color:         grey;       /* custom-elements Folder > settings Folder > CSS Folder > navigation.ts */
+  --pwa_nav_highlight_color:      black;      /* custom-elements Folder > settings Folder > CSS Folder > navigation.ts */
 
   /* Section Header */
-  --pwa_section_header:           black;      /* custom-elements Folder > settings Folder > settings.ts */
+  --pwa_header_color:             black;      /* custom-elements Folder > settings Folder > settings.ts */
 
   /* Label */
   --pwa_label_text_color:         black;      /* Form Folder > label.ts */
 
   /* Input */
-  --pwa_input_background:         #E1E5EB;  /* Form Folder > input.ts */
+  --pwa_input_background_color:   #E1E5EB;  /* Form Folder > input.ts */
 
   /* Button */
   --pwa_action_text_color:        #fff;     /* Form Folder > button.ts */
@@ -89,7 +89,8 @@ export const settingsRoot = css`
   --pwa_action_border_color:      #60b23e;  /* Form Folder > button.ts */
 
   /* Section */
-  --section_background:            white;
+  --pwa_tap:                      44px;     /* Required - minimum tap target */
+  --section_background_color:     white;
 }
 
 `;

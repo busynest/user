@@ -24,7 +24,6 @@ let UserIcon = class UserIcon extends connect(store)(LitElement) {
     firstUpdated() {
         this.shadowRoot.querySelector('.toggles').addEventListener('click', () => {
             store.dispatch(toggleSign());
-            console.log('here');
         });
     }
     stateChanged(state) {
@@ -37,20 +36,15 @@ let UserIcon = class UserIcon extends connect(store)(LitElement) {
 
       <!-- two classes: icon / login -->
       <button
+        type="button"
         class="${this._user ? 'icon' : 'login'} toggles"
-        aria-label="login">
+        aria-label="${this._user ? 'account' : this.subscribe ? 'subscribe' : 'login'}">
         
         ${this._user ? html `
-       <!--   <div
-            class   = "iconArea"> -->
-            <input
-              type    = "image"
-              class   = "userImage"
-              alt     = "Login"
-              height  = "38px"
-              width   = "38px"
-              src     = "${this._photoURL ? this._photoURL : this.empty}">
-       <!--   </div> -->
+            <img
+              class="userImage"
+              alt=""
+              src="${this._photoURL ? this._photoURL : this.empty}">
           ` : this.subscribe ? 'Subscribe' : 'Login'}
 
       </button>

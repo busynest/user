@@ -17,14 +17,6 @@ export class InputPassword extends connect(store)(LitElement) {
 
   constructor() { super(); }
 
-  protected firstUpdated() {
-
-    this.shadowRoot!.querySelector('.pass')!.addEventListener('click',() => {
-      this.alertPassword();
-    } );
-
-  }
-
    stateChanged(state: AppState) {
       this.login = state.frontend!.login;
     }
@@ -103,6 +95,7 @@ export class InputPassword extends connect(store)(LitElement) {
 
         <!-- Submit -->
         <button
+          type="submit"
           class="action-button pass"
           ?disabled="${this.login === false}">Update</button>
 
@@ -111,16 +104,23 @@ export class InputPassword extends connect(store)(LitElement) {
     `;
   }
 
-  /* Form Default */
+  /* Required - read both passwords on submit */
   private default = (e:Event) => {
     e.preventDefault();
+    this.alertPassword();
   }
 
   /* Update Password */
   private alertPassword() {
 
+    const entered = (this.shadowRoot!.querySelector('#pwa-new-password') as HTMLInputElement).value;
+    const verify = (this.shadowRoot!.querySelector('#pwa-verify-password') as HTMLInputElement).value;
+    this.password = entered;
+
     if (!this.password) {
       this.message = 'Please enter a password';
+    } else if (this.password !== verify) {
+      this.message = 'Passwords do not match';
     } else if (this.password.length < 8) {
       this.message = 'Password must be at least 8 characters long';
     } else {
@@ -147,7 +147,7 @@ export class InputPassword extends connect(store)(LitElement) {
       // Update new password
       await updatePassword ( auth.currentUser, newPassword )
         .then ( () => { console.log("Password successful!"); })
-        .catch ( (error) => { console.log("Problem: "+ error.messge) }); //alertPassword(error); });
+        .catch ( (error: Error) => { console.log("Problem: " + error.message); });
 
     } else { alert('Please Login'); }
 

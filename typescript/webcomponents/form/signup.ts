@@ -23,6 +23,7 @@ import { labelStyle }     from './css/label';
 import { inputStyle }     from './css/input';
 import { listStyle }      from './css/list';
 import { toggleStyle }    from './css/toggle';
+import { tapStyle }       from '../css/tap';
 
 import store                  from '../../store';
 import { universalToggle }    from '../../redux/frontend';
@@ -43,6 +44,7 @@ export class FormSignup extends LitElement {
     inputStyle,
     buttonStyle,
     toggleStyle,
+    tapStyle,
     css`
 
       :host {
@@ -100,8 +102,8 @@ export class FormSignup extends LitElement {
           <li>
 
             <button
-              class=        "newUser action-button"
-              @click=       "${this.signUp}">Sign up</button>
+              type=         "submit"
+              class=        "newUser action-button">Sign up</button>
 
           </li>
 
@@ -119,6 +121,7 @@ export class FormSignup extends LitElement {
         </ul>
 
         <button
+          type="button"
           class="new"
           @click="${ this.change }">login with existing email</button>
 
@@ -131,9 +134,18 @@ export class FormSignup extends LitElement {
     store.dispatch(universalToggle(this.source));
   }
 
+  // Required - read the fields on submit
+  private readFields() {
+    const email     = this.renderRoot.querySelector('input[type="email"]') as HTMLInputElement | null;
+    const password  = this.renderRoot.querySelector('input[type="password"]') as HTMLInputElement | null;
+    this.email      = email?.value ?? '';
+    this.password   = password?.value ?? '';
+  }
+
   // Form Default Behavior
   private _handleSubmit(event: Event) {
     event.preventDefault();
+    this.signUp();
   }
 
   // Sync Email
@@ -150,28 +162,26 @@ export class FormSignup extends LitElement {
 
   // Sign Up Action
   private signUp() {
+    this.readFields();
     if (this.email.length < 4) { alert('Please enter an email address.'); return; }
     if (this.password.length < 4)  { alert('Please enter a password.'); return; }
     this.newAccount(this.email, this.password);  // Sign UP with email and password.
 }
 
   // Create New Account using Email and Password
-  private newAccount = async (email:any, password:any) => {
-      
-    await createUserWithEmailAndPassword(auth, email, password)
-    
-    .then((userCredential) => {
+  private newAccount = async (email:string, password:string) => {
 
-      // User created
-      const user = userCredential.user;
-      // Send email verification
-      sendEmailVerification(user)
-        .then(() => {
-          // Email verification sent
-          console.log("Verification email sent.");
-        });
-      
-    }).then( () => { logAccount(); }  );
+    try {
+
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await sendEmailVerification(userCredential.user);
+      await logAccount();
+
+    } catch (error) {
+
+      alert(error instanceof Error ? error.message : 'Sign up failed');
+
+    }
 
   }
 

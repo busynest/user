@@ -14,6 +14,8 @@ export const drawerStyle: CSSResult = css`
     -webkit-box-sizing:     border-box;
     display:                grid;
     padding-top:            env(safe-area-inset-top);
+    max-width:              100%; /* Required - fit 320px */
+    min-width:              0;
   }
 
   :host([drawer]) {       
@@ -24,6 +26,14 @@ export const drawerStyle: CSSResult = css`
 
   .userDrawer > .spec > .wrapper {
     margin: 16px;
+  }
+
+  .userDrawer,
+  .userDrawer > .spec,
+  .wrapper,
+  .inner {
+    min-width:              0; /* Required - fit 320px */
+    max-width:              100%;
   }
 
   .userDrawer {

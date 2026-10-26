@@ -16,15 +16,13 @@ let EmailReset = class EmailReset extends LazyLoader {
     constructor() {
         super();
         this.userEmail = '';
-        this.restPassword = async () => {
+        this.resetPassword = async (event) => {
+            event.preventDefault();
+            const input = this.renderRoot.querySelector('.email');
+            this.userEmail = input?.value ?? '';
             await sendPasswordResetEmail(auth, this.userEmail)
                 .catch((error) => { console.log(error); });
         };
-    }
-    firstUpdated() {
-        this.shadowRoot.querySelector(".reset").addEventListener("click", () => {
-            this.restPassword();
-        });
     }
     handleEmail(event) {
         const input = event.target;
@@ -33,7 +31,9 @@ let EmailReset = class EmailReset extends LazyLoader {
     render() {
         return html `
 
-        <form class="resetPass">
+        <form
+          class="resetPass"
+          @submit="${this.resetPassword}">
 
           <input
             class       ="email"

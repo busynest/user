@@ -17,6 +17,7 @@ import { labelStyle } from './css/label';
 import { inputStyle } from './css/input';
 import { listStyle } from './css/list';
 import { toggleStyle } from './css/toggle';
+import { tapStyle } from '../css/tap';
 import store from '../../store';
 import { universalToggle } from '../../redux/frontend';
 let FormSignup = class FormSignup extends LitElement {
@@ -26,14 +27,14 @@ let FormSignup = class FormSignup extends LitElement {
         this.email = '';
         this.password = '';
         this.newAccount = async (email, password) => {
-            await createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                const user = userCredential.user;
-                sendEmailVerification(user)
-                    .then(() => {
-                    console.log("Verification email sent.");
-                });
-            }).then(() => { logAccount(); });
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await sendEmailVerification(userCredential.user);
+                await logAccount();
+            }
+            catch (error) {
+                alert(error instanceof Error ? error.message : 'Sign up failed');
+            }
         };
     }
     static get styles() {
@@ -43,6 +44,7 @@ let FormSignup = class FormSignup extends LitElement {
             inputStyle,
             buttonStyle,
             toggleStyle,
+            tapStyle,
             css `
 
       :host {
@@ -101,8 +103,8 @@ let FormSignup = class FormSignup extends LitElement {
           <li>
 
             <button
-              class=        "newUser action-button"
-              @click=       "${this.signUp}">Sign up</button>
+              type=         "submit"
+              class=        "newUser action-button">Sign up</button>
 
           </li>
 
@@ -120,6 +122,7 @@ let FormSignup = class FormSignup extends LitElement {
         </ul>
 
         <button
+          type="button"
           class="new"
           @click="${this.change}">login with existing email</button>
 
@@ -130,8 +133,15 @@ let FormSignup = class FormSignup extends LitElement {
     change() {
         store.dispatch(universalToggle(this.source));
     }
+    readFields() {
+        const email = this.renderRoot.querySelector('input[type="email"]');
+        const password = this.renderRoot.querySelector('input[type="password"]');
+        this.email = email?.value ?? '';
+        this.password = password?.value ?? '';
+    }
     _handleSubmit(event) {
         event.preventDefault();
+        this.signUp();
     }
     handleEmail(event) {
         const input = event.target;
@@ -142,6 +152,7 @@ let FormSignup = class FormSignup extends LitElement {
         this.password = input.value;
     }
     signUp() {
+        this.readFields();
         if (this.email.length < 4) {
             alert('Please enter an email address.');
             return;

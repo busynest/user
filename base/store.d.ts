@@ -13,9 +13,6 @@ export declare const store: import("@reduxjs/toolkit").EnhancedStore<{
         phone: string;
         email: string;
     };
-    drawer: {
-        drawer: boolean;
-    };
     backend: {
         verified: boolean;
         anon: boolean;
@@ -42,9 +39,6 @@ export declare const store: import("@reduxjs/toolkit").EnhancedStore<{
             phone: string;
             email: string;
         };
-        drawer: {
-            drawer: boolean;
-        };
         backend: {
             verified: boolean;
             anon: boolean;
@@ -56,7 +50,7 @@ export declare const store: import("@reduxjs/toolkit").EnhancedStore<{
             msgToken: string;
         };
     }, undefined, import("redux").UnknownAction>;
-}>, import("redux").StoreEnhancer]>>;
+}, {}>, import("redux").StoreEnhancer<{}, {}>]>>;
 export type AppState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 export default store;
