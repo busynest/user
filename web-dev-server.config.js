@@ -1,7 +1,7 @@
 export default {
   open: true,
   watch: true,
-  appIndex: 'demo/index.html',
+  appIndex: 'demonstration/index.html',
   nodeResolve: {
     exportConditions: ['production'],
   },

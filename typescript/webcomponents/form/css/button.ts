@@ -16,7 +16,9 @@ export const buttonStyle: CSSResult = css`
     -webkit-appearance:   button;
     cursor:               pointer;
     font-size:            16px;
-    height:               38px;
+    min-height:           var(--pwa_tap, 44px); /* Required - minimum tap target */
+    height:               auto;
+    max-width:            calc(100% - 32px); /* Required - fit 320px */
     line-height:          16px;
     padding:              10px 16px;
     border-radius:        6px;

@@ -19,9 +19,6 @@ declare const InputPassword_base: (new (...args: any[]) => {
             phone: string;
             email: string;
         };
-        drawer: {
-            drawer: boolean;
-        };
         backend: {
             verified: boolean;
             anon: boolean;
@@ -40,7 +37,6 @@ export declare class InputPassword extends InputPassword_base {
     private password;
     private login;
     constructor();
-    protected firstUpdated(): void;
     stateChanged(state: AppState): void;
     private handleInputChange;
     static get styles(): CSSResultArray;

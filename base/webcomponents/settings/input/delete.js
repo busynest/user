@@ -13,17 +13,25 @@ import { connect } from "pwa-helpers";
 import store from "../../../store";
 import { buttonStyle } from "../../form/css/button";
 import { auth } from '../../../firebase/authentication';
+import { deleteUserFiles, logAccountDelete } from '../../../firebase/interface';
 export class DeleteUser extends connect(store)(LitElement) {
     constructor() {
         super();
         this.login = false;
         this.email = '';
         this.officialDelete = async () => {
-            if (auth.currentUser) {
-                return auth.currentUser.delete().then(() => { }).catch(() => { });
-            }
-            else {
+            const current = auth.currentUser;
+            if (!current) {
                 alert('Please Sign-in');
+                return;
+            }
+            try {
+                await deleteUserFiles(current.uid);
+                await logAccountDelete();
+                await current.delete();
+            }
+            catch (error) {
+                alert('Problem: ' + (error instanceof Error ? error.message : 'Delete failed'));
             }
         };
     }

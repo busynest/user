@@ -7,6 +7,7 @@ export declare class FormSignup extends LitElement {
     static get styles(): import("lit").CSSResult[];
     protected render(): import("lit-html").TemplateResult<1>;
     private change;
+    private readFields;
     private _handleSubmit;
     private handleEmail;
     private handlePassword;

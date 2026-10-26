@@ -20,6 +20,7 @@ import { logOut }           from '../../firebase/interface';
 import '../form/login';
 import '../form/signup';
 import { animation } from '../css/animation';
+import { tapStyle } from '../css/tap';
 
 @customElement('user-drawer')
 export class UserDrawer extends connect(store)(LitElement) {
@@ -74,6 +75,7 @@ export class UserDrawer extends connect(store)(LitElement) {
     linkStyle,
     lineStyle,
     listStyle,
+    tapStyle,
     css`
     ::slotted(a) {
       text-transform:           uppercase;
@@ -88,6 +90,8 @@ export class UserDrawer extends connect(store)(LitElement) {
       box-sizing:               border-box;
       text-align:               center;
       cursor:                   pointer;
+      display:                  block;
+      min-height:               var(--pwa_tap, 44px); /* Required - minimum tap target */
     }
     `
   ] };

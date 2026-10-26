@@ -210,13 +210,14 @@ The entire bundle is one instance of firebase that takes in the configuration in
 
     --pwa_label_text_color:             black;
 
-    --pwa_button_text_color:            #fff;
-    --pwa_button_background_color:      #6cc04a;
-    --pwa_button_border_color:          #60b23e;
+    --pwa_action_text_color:            #fff;
+    --pwa_action_background_color:      #6cc04a;
+    --pwa_action_border_color:          #60b23e;
     }
 
     /* shared core elements */
     :root {
+    --pwa_tap:                          44px; /* Required - minimum tap target */
     --section_background_color:         white;
     }
     
@@ -240,7 +241,7 @@ import { db, storage, auth, user } from 'pwa-auth';
 // db           - firestore database reference
 // storage      - firebase storage reference
 // auth         - user object reference
-// user         - active user boolean reference
+// user         - deprecated load-time snapshot. Read auth.currentUser at call time.
 
 // Firebase-Redux States
 import { store } from 'pwa-auth';

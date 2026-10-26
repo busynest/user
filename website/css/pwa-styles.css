@@ -1,7 +1,10 @@
  /* CSS: Custom Variables: <head> tag */
 :root {
-  --pwa_icon_hover:               lightgrey;
-  --pwa_icon_background:          #6cc04a;
+  /* Required - minimum tap target */
+  --pwa_tap:                      44px;
+
+  --pwa_icon_hover_color:         lightgrey;
+  --pwa_icon_background_color:    #6cc04a;
   --pwa_icon_border:              2px solid black;
 
   --pwa_icon_height:              32px;
@@ -18,17 +21,19 @@
   --pwa_drawer_text_color:        #303030;
   --pwa_drawer_background_color:  #fff;
 
-  --pwa_settings_background:      white;
-  --pwa_divider:                  black;
+  --pwa_settings_background_color: white;
+  --pwa_divider_color:            black;
 
-  --pwa_nav_button:               grey;
-  --pwa_nav_select:               black;
+  --pwa_nav_button_color:         grey;
+  --pwa_nav_highlight_color:      black;
 
-  --pwa_section_header:           black;
+  --pwa_header_color:             black;
 
   --pwa_label_text_color:         black;
 
-  --pwa_input_background:         #E1E5EB;
+  --pwa_input_background_color:   #E1E5EB;
+
+  --section_background_color:     white;
 
   --pwa_action_text_color:        #fff;
   --pwa_action_background_color:  #6cc04a;

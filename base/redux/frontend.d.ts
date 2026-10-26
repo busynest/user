@@ -181,5 +181,18 @@ declare const _default: import("redux").Reducer<{
     photoURL: string;
     phone: string;
     email: string;
+}, import("redux").UnknownAction, {
+    settings: string;
+    login: boolean;
+    drawer: boolean;
+    registerOne: boolean;
+    registerTwo: boolean;
+    userId: string;
+    customer: string;
+    profileChoice: string;
+    name: string;
+    photoURL: string;
+    phone: string;
+    email: string;
 }>;
 export default _default;

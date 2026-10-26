@@ -15,7 +15,7 @@ import { auth } from "../../../firebase/authentication";
 import { labelStyle } from "../../form/css/label";
 import { inputStyle } from "../../form/css/input";
 import { buttonStyle } from "../../form/css/button";
-import { updateEmail } from "firebase/auth";
+import { verifyBeforeUpdateEmail } from "firebase/auth";
 export class ContactEmail extends connect(store)(LitElement) {
     constructor() {
         super();
@@ -26,14 +26,23 @@ export class ContactEmail extends connect(store)(LitElement) {
             e.preventDefault();
         };
         this.saveEmail = async () => {
-            if (auth.currentUser) {
-                let contactMail = this.shadowRoot?.querySelector('#pwa-email');
-                await updateEmail(auth.currentUser, contactMail.value).catch((error) => { console.log(error); });
-                const emailChangedEvent = new CustomEvent("userEmailChanged", {
+            const current = auth.currentUser;
+            if (!current) {
+                return;
+            }
+            const contactMail = this.shadowRoot?.querySelector('#pwa-email');
+            if (!contactMail) {
+                return;
+            }
+            try {
+                await verifyBeforeUpdateEmail(current, contactMail.value);
+                window.dispatchEvent(new CustomEvent("userEmailChanged", {
                     detail: { email: contactMail.value }
-                });
-                window.dispatchEvent(emailChangedEvent);
+                }));
                 alert('Email Updated');
+            }
+            catch (error) {
+                console.log(error);
             }
         };
     }

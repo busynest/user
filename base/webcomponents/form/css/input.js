@@ -7,6 +7,8 @@ export const inputStyle = css `
   select {
     box-sizing:               border-box;
     -webkit-box-sizing:       border-box;
+    width:                    100%; /* Required - fit 320px */
+    max-width:                100%;
     height:                   50px;
     text-align:               left;
     padding:                  8px 16px;

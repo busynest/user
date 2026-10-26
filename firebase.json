@@ -52,7 +52,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "public, max-age=3600"
+          "value": "*"
         }
       ]
     },
@@ -79,7 +79,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "max-age=3600"
+          "value": "*"
         }
       ]
     },
@@ -88,7 +88,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "max-age=3600"
+          "value": "*"
         }
       ]
     },
@@ -97,7 +97,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "max-age=3600"
+          "value": "*"
         }
       ]
     },
@@ -106,7 +106,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "max-age=3600"
+          "value": "*"
         }
       ]
     },
@@ -115,7 +115,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "max-age=3600"
+          "value": "*"
         }
       ]
     },
@@ -124,7 +124,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "max-age=3600"
+          "value": "*"
         }
       ]
     },
@@ -133,7 +133,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "max-age=3600"
+          "value": "*"
         }
       ]
     },
@@ -142,7 +142,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "max-age=3600"
+          "value": "*"
         }
       ]
     }

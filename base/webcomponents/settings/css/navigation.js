@@ -13,7 +13,7 @@ export const navigation = css `
     margin:           0px;
     padding:          0px;
     display:          grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     grid-gap:         8px;
 
   }
@@ -23,11 +23,12 @@ export const navigation = css `
     color:            var(--pwa_nav_button_color, grey);
     border:           0;
     width:            100%;
-    height:           36px;
     margin:           auto;
     padding:          0px;
     font-weight:      800;
     font-size:        .8em;
+    min-height:       var(--pwa_tap, 44px); /* Required - minimum tap target */
+    height:           auto;
     border-radius:    6px 6px 0 0;
     background-color: transparent;
 
@@ -44,6 +45,20 @@ export const navigation = css `
   nav > ul > li > button:hover {
 
     cursor:           pointer;
+
+  }
+
+  /* Required - fit 320px */
+  @media (max-width: 320px) {
+
+    nav > ul {
+      grid-gap:       4px;
+    }
+
+    nav > ul > li > button {
+      white-space:    normal;
+      font-size:      .7em;
+    }
 
   }
 

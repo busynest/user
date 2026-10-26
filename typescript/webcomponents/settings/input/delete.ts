@@ -4,6 +4,7 @@ import { connect }            from "pwa-helpers";
 import store, { AppState }    from "../../../store";
 import { buttonStyle }        from "../../form/css/button";
 import { auth }               from '../../../firebase/authentication';
+import { deleteUserFiles, logAccountDelete } from '../../../firebase/interface';
 
 export class DeleteUser extends connect(store)(LitElement) {
    
@@ -60,15 +61,25 @@ export class DeleteUser extends connect(store)(LitElement) {
     else  { console.log("user here"); }
   }
 
-  // Delete Declaration
+  // Required - storage files, then the analytics signal, then the auth user
   private officialDelete = async () => {
 
-    if(auth.currentUser) {
-  
-      return auth.currentUser.delete().then( () => { }).catch( () => { });
+    const current = auth.currentUser;
 
-    } else { alert('Please Sign-in') }
-    
+    if (!current) { alert('Please Sign-in'); return; }
+
+    try {
+
+      await deleteUserFiles(current.uid);
+      await logAccountDelete();
+      await current.delete();
+
+    } catch (error) {
+
+      alert('Problem: ' + (error instanceof Error ? error.message : 'Delete failed'));
+
+    }
+
   };
 
 }

@@ -20,6 +20,7 @@ import './input/password';
 import './input/delete';
 import { listStyle } from '../form/css/list';
 import { animation } from '../css/animation';
+import { tapStyle } from '../css/tap';
 let UserSettings = class UserSettings extends connect(store)(LitElement) {
     constructor() {
         super();
@@ -28,9 +29,8 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         this.name = '';
     }
     firstUpdated() {
-        const forms = this.querySelectorAll('form');
-        forms.forEach(item => {
-            item.preventDefault();
+        this.addEventListener('submit', (event) => {
+            event.preventDefault();
         });
         this.shadowRoot.querySelector('button[value=profile]').addEventListener('click', () => {
             store.dispatch(navigateAuth('profile'));
@@ -54,6 +54,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             navigation,
             listStyle,
             animation,
+            tapStyle,
             css `
 
       :host {

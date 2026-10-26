@@ -12,19 +12,19 @@ import { closeSign, iconAuth, nameAuth, userAuth } from '../redux/frontend';
 import { accID, accEmail, accImage, accName } from '../redux/backend';
 
 // Firebase Auth
-import { getAuth, onAuthStateChanged, sendEmailVerification, signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 
 // Firebase Firestore
 import { doc, deleteDoc } from "firebase/firestore";
 
-//Firebase Analytics
-import { Analytics, getAnalytics, logEvent } from "firebase/analytics";
+// Firebase Analytics
+import { Analytics, getAnalytics, isSupported, logEvent } from "firebase/analytics";
 
-// Firebse Messaginmg
-import { isSupported } from "firebase/messaging";
+// Firebase Storage
+import { deleteObject, listAll, ref } from "firebase/storage";
 
 // Start Authentication
-import { application, auth, db } from './authentication'
+import { application, auth, db, storage } from './authentication'
 
 // LANGUAGE
 getAuth().useDeviceLanguage();
@@ -35,17 +35,12 @@ getAuth().useDeviceLanguage();
 
 
 
-// const analytics : Analytics = getAnalytics();
-let analytics: Analytics;
+// Required - analytics, only when this browser supports it
+let analytics: Analytics | undefined;
 
-(async () => {
+const analyticsReady: Promise<void> = (async () => {
   if (await isSupported()) {
-    console.log('Firebase Analytics Supported');
-    // Initialize Firebase Analytics
     analytics = getAnalytics(application);
-    // Additional analytics setup code here
-  } else {
-    console.log("Firebase Analytics is not supported in this environment.");
   }
 })();
 
@@ -76,15 +71,6 @@ else { console.log('Push API is not supported'); }
 // Start Distribute Information ---------------- ----------------
 
 
-
-    // Flag to track if an email change is pending verification
-    let pendingEmailVerification = false;
-
-    // Listen for the custom email change event
-    window.addEventListener("userEmailChanged", (/*event*/) => {
-      // console.log("Custom event received: Email changed to", event.detail.email);
-      pendingEmailVerification = true; // Set flag to trigger verification
-    });
 
 export const pwaDrawerToggle = () => {
     // Close Drawer State
@@ -117,27 +103,6 @@ onAuthStateChanged(auth, (user) => {
     store.dispatch( nameAuth   ( user.displayName || 'John Doe' ) );
     store.dispatch( iconAuth   ( user.photoURL || '' ) );
 
-    // Email Change Listener - Custom Event
-    if (pendingEmailVerification && !user.emailVerified) {
-
-      // Send verification email for the updated email
-      sendEmailVerification(user)
-        .then(() => {
-          console.log("Verification email sent to:"/*, user.email*/);
-          pendingEmailVerification = false; // Reset flag after sending
-        })
-        .catch((error) => {
-          console.error("Error sending verification email:", error.message);
-          pendingEmailVerification = false; // Reset flag on error
-        });
-
-    } else if (user.emailVerified) {
-      console.log("User's email is already verified:"/*, user.email*/);
-      
-    } else {
-      console.log("User signed in, no email verification pending:"/*, user.email*/);
-    }
-    
     // Existing Redux Profile Object
     // const profile = store.getState().account;
 
@@ -188,8 +153,34 @@ export const alertEmail = (error:any) => { console.log( 'Problem: ' + error );/*
 
 
 export const logOut             = async () => { return signOut(auth); };
-export const logAccount         = async () => { logEvent(analytics, 'create_account'); };
-export const logAccountDelete   = async () => { logEvent(analytics, 'delete_account'); };
+
+export const logAccount         = async () => {
+  await analyticsReady;
+  if (!analytics) { return; }
+  logEvent(analytics, 'create_account');
+};
+
+export const logAccountDelete   = async () => {
+  await analyticsReady;
+  if (!analytics) { return; }
+  logEvent(analytics, 'delete_account');
+};
+
+// Required - delete this user's files under pwa-auth/{uid}
+export const deleteUserFiles    = async (uid: string) => {
+
+  const folder = ref(storage, 'pwa-auth/' + uid);
+  const listed = await listAll(folder);
+
+  await Promise.all(listed.items.map((item) => deleteObject(item)));
+
+  for (const prefix of listed.prefixes) {
+    const nested = await listAll(prefix);
+    await Promise.all(nested.items.map((item) => deleteObject(item)));
+  }
+
+};
+
 export const deleteDocument     = async (collect:string, item:string) => {
 
   await deleteDoc(doc(db, collect, item));
