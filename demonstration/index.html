@@ -4,92 +4,83 @@
   <head>
     <title>pwa-auth</title>
     <meta charset="UTF-8">
-    <meta name="viewport"       content="width=device-width, minimum-scale=1, initial-scale=1" />
-    
-    <!-- pwa-auth.js - CSS Custom Variables - Option 1
-    <link rel="stylesheet"      href="pwa-styles.css"> -->
-    
-    <!-- pwa-auth.js - CSS Custom Variables - Option 2
-    <style> :root {} </style> -->
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1">
 
-    <link rel="stylesheet"      href="styles.css">
+    <link rel="stylesheet" href="pwa-styles.css">
+    <link rel="stylesheet" href="styles.css">
 
-    <!-- Preconnect -->
-    <link rel="preconnect"      href="https://firebasestorage.googleapis.com">
+    <link rel="preconnect" href="https://firebasestorage.googleapis.com">
+    <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com">
 
-    <!-- Pre-Fetch -->
-    <link rel="dns-prefetch"    href="https://firebasestorage.googleapis.com">
-
-    <!-- pwa-auth.js - Module Configuration Objects -->
+    <!-- Required - configure the Firebase instance before the module loads -->
     <script>
-      window.process = { env: { NODE_ENV: 'production' } };
-      window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
-            apiKey:             "AIzaSyC1ZNYC9RAjSAE3syUBNi47AiqbAqkx99w",
-            authDomain:         "pwa-authentic.firebaseapp.com",
-            projectId:          "pwa-authentic",
-            storageBucket:      "pwa-authentic.firebasestorage.app",
-            messagingSenderId:  "749233996232",
-            appId:              "1:749233996232:web:bbc410d53b7d39bdfb80fd",
-            measurementId:      "G-G1GYM1HBJ4"
-          })
-        }
-      };
+      window.process = { env: {
+        NODE_ENV: 'production',
+        FIREBASE_CONFIG: JSON.stringify({
+          apiKey:             "AIzaSyC1ZNYC9RAjSAE3syUBNi47AiqbAqkx99w",
+          authDomain:         "pwa-authentic.firebaseapp.com",
+          projectId:          "pwa-authentic",
+          storageBucket:      "pwa-authentic.firebasestorage.app",
+          messagingSenderId:  "749233996232",
+          appId:              "1:749233996232:web:bbc410d53b7d39bdfb80fd",
+          measurementId:      "G-G1GYM1HBJ4"
+        })
+      } };
     </script>
 
-    <!-- Application Shell -->
     <script type="module" src="../base/export/pwa-auth.js"></script>
 
   </head>
   <body>
 
-    <header>
-
-      <div style="margin: auto">
-        
-        <!-- Sponsor Me -->
+    <header class="top">
+      <div class="bar">
+        <div>
+          <p class="mark">pwa-auth</p>
+          <h1>Account controls for a small site</h1>
+          <p class="lede">A login button, a drawer, and a settings page. Each one reads the same Firebase session.</p>
+        </div>
         <iframe
+          class="sponsor"
           src="https://github.com/sponsors/busynest/button"
           title="Sponsor busynest"
           height="32"
-          width="114"
-          style="border: 0; border-radius: 6px;  margin: auto 0 auto 0;"></iframe>
-
+          width="114"></iframe>
       </div>
-
     </header>
 
-    <!-- Drop-down - Drawer-->
-    <user-drawer      url="./settings"     subscribe    >
-      <a slot="before" href="/settings">settings</a>
+    <!-- Drop-down drawer. subscribe starts on the sign-up form. -->
+    <user-drawer url="./settings" subscribe>
+      <a slot="before" href="./settings">settings</a>
     </user-drawer>
 
-    <main>
+    <main class="wrap">
 
-      <section>
-
-        <h2>Example: Button: Login or Subscribe / Icon Picture</h2>
-
-        <!-- Login / Subscribe - Button -->
-        <user-icon      empty="../source/empty.jpg"    subscribe    ></user-icon>
-
+      <section class="card">
+        <p class="kicker">Button</p>
+        <h2>Subscribe, then a photo</h2>
+        <p class="note">Signed out, this is the subscribe button. Signed in, it shows the account photo. Either state opens the drawer.</p>
+        <div class="stage">
+          <user-icon empty="../source/empty.jpg" subscribe></user-icon>
+        </div>
       </section>
 
-      <section>
-
-        <h2>Example: Auth Page</h2>
-
-        <!-- Log-in - -Page-->
-        <user-login     login     ></user-login>
-
+      <section class="card">
+        <p class="kicker">Page</p>
+        <h2>Sign in on the page</h2>
+        <p class="note">A static form for a route of its own. After sign-in, the content slot replaces the form.</p>
+        <div class="panel">
+          <user-login></user-login>
+        </div>
       </section>
 
-      <section>
-
-        <h2>Example: Settings Page</h2>
-
-        <!-- Settings - Page-->
-        <user-settings  empty="../source/empty.jpg"></user-settings>
-
+      <section class="card">
+        <p class="kicker">Settings</p>
+        <h2>Photo, profile, password, delete</h2>
+        <p class="note">Four tabs. The photo falls back to the empty image until an upload lands in storage.</p>
+        <div class="panel">
+          <user-settings empty="../source/empty.jpg"></user-settings>
+        </div>
       </section>
 
     </main>
