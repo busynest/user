@@ -30,7 +30,7 @@ import 'pwa-auth';
 import 'pwa-auth/production';
 ```
 
-`pwa-auth` resolves to `base/export/pwa-auth.js`. `pwa-auth/production` resolves to `source/pwa-auth.js`.
+`pwa-auth` and `pwa-auth/production` both resolve to `source/pwa-auth.js`, the Rollup bundle. Types resolve to `base/export/pwa-auth.d.ts`.
 
 A plain script tag uses the bundle:
 
@@ -119,7 +119,7 @@ Four tabs: Icon, Profile, Password, Delete.
 |---|---|
 | `empty` | Fallback photo, passed through to the uploader as `emptyArtwork`. |
 
-Profile updates the display name and starts an email change with `verifyBeforeUpdateEmail`. On success the page dispatches `userEmailChanged` on `window` with `detail.email`. Password requires the verify field to match. Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user.
+Profile updates the display name. Email and password changes, and delete, ask for the current password and reauthenticate first. Email then calls `verifyBeforeUpdateEmail`. On success the page dispatches `userEmailChanged` on `window` with `detail.email`. Password requires the verify field to match. Delete removes this user's files under `pwa-auth/{uid}`, deletes the Firestore document `users/{uid}` when that delete is allowed, calls `logAccountDelete`, then deletes the auth user.
 
 ### `<email-reset>`
 
@@ -199,6 +199,7 @@ import {
 | `logAccountDelete()` | Analytics event `delete_account`. It does not delete the account. |
 | `deleteDocument(collect, item)` | Deletes one Firestore document. |
 | `pwaDrawerToggle()` | Closes the drawer. It does not toggle. |
+| `reauthenticate(password)` | Confirms the current password before email, password, and delete. |
 
 The store is not exported. Account fields (`userId`, `name`, `email`, `photoURL`) stay inside the package.
 
@@ -261,6 +262,8 @@ Edit `typescript/` only.
 npm run build    # tsc writes base/
 npm run rollup   # writes source/pwa-auth.js and website/javascript/pwa-auth.js
 ```
+
+`npm publish` runs both before it uploads.
 
 `base/` is the TypeScript emit. Rollup reads that emit and writes the npm bundle to `source/` and the site bundle to `website/javascript/`. Do not hand-edit those outputs.
 

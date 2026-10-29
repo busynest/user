@@ -164,7 +164,7 @@ export class FormSignup extends LitElement {
   private signUp() {
     this.readFields();
     if (this.email.length < 4) { alert('Please enter an email address.'); return; }
-    if (this.password.length < 4)  { alert('Please enter a password.'); return; }
+    if (this.password.length < 6)  { alert('Password must be at least 6 characters.'); return; }
     this.newAccount(this.email, this.password);  // Sign UP with email and password.
 }
 

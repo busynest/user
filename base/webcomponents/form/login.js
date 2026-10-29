@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { html, LitElement, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { EmailAuthProvider, signInWithCredential } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase/authentication';
 import { buttonStyle } from './css/button';
 import { labelStyle } from './css/label';
@@ -27,8 +27,7 @@ let FormLogin = class FormLogin extends LitElement {
         this.password = '';
         this.signIn = async (email, password) => {
             try {
-                const authCredential = EmailAuthProvider.credential(email, password);
-                await signInWithCredential(auth, authCredential);
+                await signInWithEmailAndPassword(auth, email, password);
             }
             catch (error) {
                 alert(error instanceof Error ? error.message : 'Sign in failed');
@@ -151,8 +150,8 @@ let FormLogin = class FormLogin extends LitElement {
             alert('Please enter an email address.');
             return;
         }
-        if (this.password.length < 4) {
-            alert('Please enter a password.');
+        if (this.password.length < 6) {
+            alert('Password must be at least 6 characters.');
             return;
         }
         this.signIn(this.email, this.password);

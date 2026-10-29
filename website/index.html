@@ -25,8 +25,9 @@
     </script>
 
     <script>
-      window.process = { env: { NODE_ENV: 'production' } };
-      window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
+      window.process = { env: {
+        NODE_ENV: 'production',
+        FIREBASE_CONFIG: JSON.stringify({
             apiKey:             "AIzaSyC1ZNYC9RAjSAE3syUBNi47AiqbAqkx99w",
             authDomain:         "pwa-authentic.firebaseapp.com",
             projectId:          "pwa-authentic",
@@ -35,8 +36,7 @@
             appId:              "1:749233996232:web:bbc410d53b7d39bdfb80fd",
             measurementId:      "G-G1GYM1HBJ4"
           })
-        }
-      };
+      } };
     </script>
 
     <!-- Application Shell 

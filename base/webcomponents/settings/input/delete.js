@@ -13,13 +13,19 @@ import { connect } from "pwa-helpers";
 import store from "../../../store";
 import { buttonStyle } from "../../form/css/button";
 import { auth } from '../../../firebase/authentication';
-import { deleteUserFiles, logAccountDelete } from '../../../firebase/interface';
+import { deleteDocument, deleteUserFiles, logAccountDelete, reauthenticate } from '../../../firebase/interface';
+import { labelStyle } from "../../form/css/label";
+import { inputStyle } from "../../form/css/input";
 export class DeleteUser extends connect(store)(LitElement) {
     constructor() {
         super();
         this.login = false;
         this.email = '';
-        this.officialDelete = async () => {
+        this.officialDelete = async (password) => {
+            const ok = await reauthenticate(password);
+            if (!ok) {
+                return;
+            }
             const current = auth.currentUser;
             if (!current) {
                 alert('Please Sign-in');
@@ -27,6 +33,10 @@ export class DeleteUser extends connect(store)(LitElement) {
             }
             try {
                 await deleteUserFiles(current.uid);
+                try {
+                    await deleteDocument('users', current.uid);
+                }
+                catch { }
                 await logAccountDelete();
                 await current.delete();
             }
@@ -47,6 +57,8 @@ export class DeleteUser extends connect(store)(LitElement) {
     static get styles() {
         return [
             buttonStyle,
+            labelStyle,
+            inputStyle,
             css `
 
     :host {
@@ -69,26 +81,36 @@ export class DeleteUser extends connect(store)(LitElement) {
 
       <p>Permanently delete the user account and data related to: ${this.email}</p>
 
+      <label for="pwa-delete-password">Current password
+
+        <input
+          id="pwa-delete-password"
+          type="password"
+          autocomplete="current-password"/>
+
+      </label>
+
       <button
+        type="button"
         class="action-button deleteUser"
         ?disabled="${this.login === false}">Delete</button>
 
     `;
     }
-    alertDelete() { if (auth.currentUser) {
-        this.deleteUser();
-    }
-    else {
-        alert('Please Login');
-    } }
-    deleteUser() {
+    alertDelete() {
+        const current = auth.currentUser;
+        if (!current) {
+            alert('Please Login');
+            return;
+        }
+        const password = this.shadowRoot.querySelector('#pwa-delete-password').value;
+        if (password.length < 6) {
+            alert('Enter your current password.');
+            return;
+        }
         const d = confirm("Delete Account?");
         if (d == true) {
-            this.officialDelete();
-            console.log("user gone");
-        }
-        else {
-            console.log("user here");
+            this.officialDelete(password);
         }
     }
 }

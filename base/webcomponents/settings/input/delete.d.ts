@@ -41,7 +41,6 @@ export declare class DeleteUser extends DeleteUser_base {
     static get styles(): CSSResultArray;
     render(): import("lit-html").TemplateResult<1>;
     private alertDelete;
-    private deleteUser;
     private officialDelete;
 }
 declare global {

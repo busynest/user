@@ -41,7 +41,6 @@ export declare class ContactEmail extends ContactEmail_base {
     private handleEmail;
     static get styles(): CSSResultArray;
     render(): import("lit-html").TemplateResult<1>;
-    private default;
     private saveEmail;
 }
 declare global {
