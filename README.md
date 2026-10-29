@@ -2,9 +2,9 @@
 
 Jack's Publishing maintains sign-in and account components so a site can stay on its own interface. [Live demo](https://pwa-authentic.firebaseapp.com).
 
-Five custom elements sign a person up, sign them in, and let them change their name, email, password, and photo, or delete the account. Email and password only. One Firebase app, one Redux store, shared by every tag on the page.
+Five elements: `user-icon`, `user-drawer`, `user-login`, `user-settings`, and `email-reset`. They sign a person up, sign them in, and let them change name, email, password, and photo, or delete the account. Email and password only. One Firebase session, shared by every tag on the page.
 
-Place the tags, set the Firebase config before the module loads or call `initialize`, and optionally restyle with `--pwa_` variables. Host pages listen for `pwa-` events instead of reading the Redux store.
+Place the tags. Set Firebase with the script or `initialize()`. Listen for `pwa-` events, or call the small API (`getCurrentUser`, `onUserChanged`, `openDrawer`, `closeDrawer`, `toggleDrawer`). Restyle with `--pwa_` variables.
 
 ## Prerequisites
 
