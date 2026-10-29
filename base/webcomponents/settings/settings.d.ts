@@ -5,6 +5,7 @@ import './input/name';
 import './input/email';
 import './input/password';
 import './input/delete';
+import './input/verify';
 declare const UserSettings_base: (new (...args: any[]) => {
     _storeUnsubscribe: import("redux").Unsubscribe;
     connectedCallback(): void;

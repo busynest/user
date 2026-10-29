@@ -3,21 +3,23 @@ import type { PwaAuthErrorDetail, PwaUser } from './types';
 /** Required - cross the shadow root and bubble. */
 const travel = { bubbles: true, composed: true };
 
-/** Required - copy the four fields a host is allowed to read. */
+/** Required - copy the fields a host is allowed to read. */
 export function toPwaUser(user: {
-  uid:          string;
-  displayName:  string | null;
-  email:        string | null;
-  photoURL:     string | null;
+  uid:            string;
+  displayName:    string | null;
+  email:          string | null;
+  photoURL:       string | null;
+  emailVerified?: boolean;
 } | null): PwaUser | null {
 
   if (!user) return null;
 
   return {
-    uid:          user.uid,
-    displayName:  user.displayName,
-    email:        user.email,
-    photoURL:     user.photoURL
+    uid:            user.uid,
+    displayName:    user.displayName,
+    email:          user.email,
+    photoURL:       user.photoURL,
+    emailVerified:  user.emailVerified === true
   };
 
 }

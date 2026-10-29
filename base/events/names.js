@@ -8,6 +8,8 @@ export const pwaEmailChanged = 'pwa-email-changed';
 export const pwaPasswordChanged = 'pwa-password-changed';
 export const pwaDrawerToggleName = 'pwa-drawer-toggle';
 export const pwaAuthError = 'pwa-auth-error';
+export const pwaVerificationSent = 'pwa-verification-sent';
+export const pwaEmailVerified = 'pwa-email-verified';
 export const eventName = {
     authChanged: pwaAuthChanged,
     login: pwaLogin,
@@ -18,6 +20,8 @@ export const eventName = {
     emailChanged: pwaEmailChanged,
     passwordChanged: pwaPasswordChanged,
     drawerToggle: pwaDrawerToggleName,
-    authError: pwaAuthError
+    authError: pwaAuthError,
+    verificationSent: pwaVerificationSent,
+    emailVerified: pwaEmailVerified
 };
 //# sourceMappingURL=names.js.map

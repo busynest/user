@@ -9,7 +9,7 @@
 // Redux
 import { store } from '../store';
 import { closeSign, iconAuth, nameAuth, userAuth } from '../redux/frontend';
-import { accID, accEmail, accImage, accName } from '../redux/backend';
+import { accID, accEmail, accImage, accName, accVerified } from '../redux/backend';
 
 // Firebase Auth
 import { EmailAuthProvider, getAuth, onAuthStateChanged, reauthenticateWithCredential, signOut } from 'firebase/auth';
@@ -87,6 +87,7 @@ onReady(() => {
     store.dispatch( accName   ( user.displayName || 'John Doe' ) );
     store.dispatch( accEmail  ( user.email || '' ) );
     store.dispatch( accImage  ( user.photoURL || '' ) );
+    store.dispatch( accVerified( user.emailVerified === true ) );
 
     // store.dispatch( accPhone  ( user.phoneNumber || '(000) 000-0000' ) );
     // store.dispatch( accAnon   ( user.isAnonymous ) );
@@ -115,6 +116,7 @@ onReady(() => {
     store.dispatch( accName   ( 'John Doe' ) );
     store.dispatch( accEmail  ( '' ) );
     store.dispatch( accImage  ( '' ) );
+    store.dispatch( accVerified( false ) );
 
     //  store.dispatch( accAnon   ( false ) );
     // store.dispatch( accPhone  ( '(000) 000-0000' ) );

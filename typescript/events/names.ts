@@ -28,6 +28,12 @@ export const pwaDrawerToggleName = 'pwa-drawer-toggle';
 /** Required - window. An account action failed. */
 export const pwaAuthError = 'pwa-auth-error';
 
+/** Required - window. sendEmailVerification accepted the message. */
+export const pwaVerificationSent = 'pwa-verification-sent';
+
+/** Required - window. A reload saw emailVerified become true. */
+export const pwaEmailVerified = 'pwa-email-verified';
+
 /** Required - one object so emitters share these strings. */
 export const eventName = {
   authChanged:      pwaAuthChanged,
@@ -39,5 +45,7 @@ export const eventName = {
   emailChanged:     pwaEmailChanged,
   passwordChanged:  pwaPasswordChanged,
   drawerToggle:     pwaDrawerToggleName,
-  authError:        pwaAuthError
+  authError:        pwaAuthError,
+  verificationSent: pwaVerificationSent,
+  emailVerified:    pwaEmailVerified
 } as const;

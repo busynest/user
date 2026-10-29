@@ -9,6 +9,7 @@ import './input/name';
 import './input/email';
 import './input/password';
 import './input/delete';
+import './input/verify';
 import { listStyle } from '../form/css/list';
 import { animation } from '../css/animation';
 import { tapStyle } from '../css/tap';
@@ -194,6 +195,9 @@ export class UserSettings extends connect(store)(LitElement) {
 
             <!-- Page Title -->
             <h2>Contact Information</h2>
+
+            <!-- Required - unverified notice. Sign-in stays open. -->
+            <email-verify exportparts="notice, status: verify-status, submit: verify-submit"></email-verify>
 
             <!-- Custom - Username -->
             <input-name exportparts="name, submit: name-submit"></input-name>

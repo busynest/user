@@ -1,9 +1,10 @@
 /** Required - public user. No Firebase class leaks out. */
 export interface PwaUser {
-  uid:          string;
-  displayName:  string | null;
-  email:        string | null;
-  photoURL:     string | null;
+  uid:            string;
+  displayName:    string | null;
+  email:          string | null;
+  photoURL:       string | null;
+  emailVerified:  boolean;
 }
 
 /** Required - pwa-auth-changed. user is null when signed out. */
@@ -71,4 +72,20 @@ export interface PwaEventMap {
   'pwa-password-changed': CustomEvent<PwaPasswordChangedDetail>;
   'pwa-drawer-toggle':    CustomEvent<PwaDrawerToggleDetail>;
   'pwa-auth-error':       CustomEvent<PwaAuthErrorDetail>;
+}
+
+/** Required - pwa-verification-sent. */
+export interface PwaVerificationSentDetail {
+  email: string;
+}
+
+/** Required - pwa-email-verified. user.emailVerified is true. */
+export interface PwaEmailVerifiedDetail {
+  user: PwaUser;
+}
+
+/** Required - merged onto PwaEventMap. Keeps the first block free for other events. */
+export interface PwaEventMap {
+  'pwa-verification-sent':  CustomEvent<PwaVerificationSentDetail>;
+  'pwa-email-verified':     CustomEvent<PwaEmailVerifiedDetail>;
 }

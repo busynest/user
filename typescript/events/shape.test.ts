@@ -11,7 +11,9 @@ import {
   pwaLogin,
   pwaLogout,
   pwaProfileUpdated,
-  pwaSignup
+  pwaSignup,
+  pwaVerificationSent,
+  pwaEmailVerified
 } from './names';
 import { emitElement, emitWindow } from './emit';
 import { userEmailChanged } from '../deprecated/email-changed';
@@ -32,6 +34,10 @@ describe('event names', () => {
     expect(pwaAuthError).toBe('pwa-auth-error');
     expect(eventName.drawerToggle).toBe(pwaDrawerToggleName);
     expect(userEmailChanged).toBe('userEmailChanged');
+    expect(pwaVerificationSent).toBe('pwa-verification-sent');
+    expect(pwaEmailVerified).toBe('pwa-email-verified');
+    expect(eventName.verificationSent).toBe(pwaVerificationSent);
+    expect(eventName.emailVerified).toBe(pwaEmailVerified);
   });
 
 });
@@ -97,6 +103,42 @@ describe('event shape', () => {
 
     expect(seen[0].detail).toEqual({ uid: 'u1' });
     expect(seen[0].detail.password).toBeUndefined();
+    expect(seen[0].bubbles).toBe(true);
+    expect(seen[0].composed).toBe(true);
+  });
+
+  it('dispatches pwa-verification-sent with the address', () => {
+    const seen: CustomEvent[] = [];
+    const hear = (event: Event) => { seen.push(event as CustomEvent); };
+    window.addEventListener(pwaVerificationSent, hear);
+
+    emitWindow(pwaVerificationSent, { email: 'ada@example.com' });
+
+    window.removeEventListener(pwaVerificationSent, hear);
+
+    expect(seen[0].detail).toEqual({ email: 'ada@example.com' });
+    expect(seen[0].bubbles).toBe(true);
+    expect(seen[0].composed).toBe(true);
+  });
+
+  it('dispatches pwa-email-verified with the user', () => {
+    const seen: CustomEvent[] = [];
+    const hear = (event: Event) => { seen.push(event as CustomEvent); };
+    window.addEventListener(pwaEmailVerified, hear);
+
+    const user = {
+      uid: 'u1',
+      displayName: 'Ada',
+      email: 'ada@example.com',
+      photoURL: null,
+      emailVerified: true
+    };
+    emitWindow(pwaEmailVerified, { user });
+
+    window.removeEventListener(pwaEmailVerified, hear);
+
+    expect(seen[0].detail).toEqual({ user });
+    expect(seen[0].detail.user.emailVerified).toBe(true);
     expect(seen[0].bubbles).toBe(true);
     expect(seen[0].composed).toBe(true);
   });
