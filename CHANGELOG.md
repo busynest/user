@@ -26,6 +26,8 @@ All notable changes to pwa-auth.js will be documented in this file.
 - hosting headers sit inside hosting; Firestore rules allow only the signed-in owner
 - lit and firebase are peers plus devDependencies, not both a dependency and a peer
 - storage imports use firebase/storage
+- sign-in forms use novalidate so a short email reaches pwa-auth-error
+- delete account also removes users/{uid} when rules allow it
 
 # [3.4.10] - 2026-10-28
 

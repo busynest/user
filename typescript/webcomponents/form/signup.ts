@@ -71,7 +71,8 @@ export class FormSignup extends LitElement {
       <!-- Sign Up State-->
       <form
         @submit=            ${this._handleSubmit}
-        autocomplete=       "on">
+        autocomplete=       "on"
+        novalidate>
         
         <ul>
 

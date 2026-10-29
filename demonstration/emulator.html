@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>pwa-auth emulator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1">
+    <link rel="stylesheet" href="pwa-styles.css">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+      window.process = { env: {
+        NODE_ENV: 'production',
+        FIREBASE_CONFIG: JSON.stringify({
+          apiKey: 'demo-key',
+          authDomain: 'pwa-authentic.firebaseapp.com',
+          projectId: 'pwa-authentic',
+          storageBucket: 'pwa-authentic.appspot.com',
+          messagingSenderId: '1',
+          appId: '1:1:web:demo'
+        })
+      } };
+      window.__alerts = [];
+      window.alert = (message) => { window.__alerts.push(String(message)); };
+      window.confirm = () => true;
+    </script>
+  </head>
+  <body>
+    <header class="top">
+      <div class="bar">
+        <div>
+          <p class="mark">pwa-auth</p>
+          <h1>Account controls for a small site</h1>
+        </div>
+      </div>
+    </header>
+
+    <user-drawer url="./settings" subscribe></user-drawer>
+
+    <main class="wrap">
+      <section class="card">
+        <p class="kicker">Button</p>
+        <div class="stage">
+          <user-icon empty="../source/empty.jpg" subscribe></user-icon>
+        </div>
+      </section>
+
+      <section class="card">
+        <p class="kicker">Page</p>
+        <div class="panel">
+          <user-login subscribe></user-login>
+        </div>
+      </section>
+
+      <section class="card">
+        <p class="kicker">Reset</p>
+        <div class="panel">
+          <email-reset active></email-reset>
+        </div>
+      </section>
+
+      <section class="card">
+        <p class="kicker">Settings</p>
+        <div class="panel">
+          <user-settings empty="../source/empty.jpg"></user-settings>
+        </div>
+      </section>
+
+      <section class="card">
+        <p class="kicker">Events</p>
+        <ol id="event-log" class="log">
+          <li class="quiet">Waiting for an account event.</li>
+        </ol>
+      </section>
+    </main>
+
+    <script type="module" src="emulator-boot.js"></script>
+  </body>
+</html>
