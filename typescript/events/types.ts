@@ -48,6 +48,11 @@ export interface PwaPasswordChangedDetail {
   uid: string;
 }
 
+/** Required - pwa-reset-sent. Same detail whether or not the account exists. */
+export interface PwaResetSentDetail {
+  email: string;
+}
+
 /** Required - pwa-drawer-toggle. */
 export interface PwaDrawerToggleDetail {
   open: boolean;
@@ -69,6 +74,7 @@ export interface PwaEventMap {
   'pwa-profile-updated':  CustomEvent<PwaProfileUpdatedDetail>;
   'pwa-email-changed':    CustomEvent<PwaEmailChangedDetail>;
   'pwa-password-changed': CustomEvent<PwaPasswordChangedDetail>;
+  'pwa-reset-sent':       CustomEvent<PwaResetSentDetail>;
   'pwa-drawer-toggle':    CustomEvent<PwaDrawerToggleDetail>;
   'pwa-auth-error':       CustomEvent<PwaAuthErrorDetail>;
 }

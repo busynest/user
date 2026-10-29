@@ -13,6 +13,7 @@ const known: Record<string, string> = {
   'auth/requires-recent-login':   'Sign in again, then retry.',
   'auth/user-disabled':           'This account is disabled.',
   'pwa/missing-email':            'Enter an email address.',
+  'pwa/invalid-email':            'Enter a valid email address.',
   'pwa/missing-password':         'Enter a password.',
   'pwa/short-password':           'Password must be at least 6 characters.',
   'pwa/current-password':         'Enter your current password.',
