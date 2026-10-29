@@ -7,6 +7,10 @@ export function isHidden(el) {
             if (current.classList.contains('spec') && !current.hasAttribute('on'))
                 return true;
         }
+        if (current instanceof Element && current.assignedSlot && current.assignedSlot !== current) {
+            current = current.assignedSlot;
+            continue;
+        }
         if (current.parentElement) {
             current = current.parentElement;
             continue;

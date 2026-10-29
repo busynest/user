@@ -13,7 +13,7 @@ import { connect } from "pwa-helpers";
 import store from "../../../store";
 import { buttonStyle } from "../../form/css/button";
 import { auth } from '../../../firebase/authentication';
-import { deleteDocument, deleteUserFiles, logAccountDelete } from '../../../firebase/interface';
+import { deleteUserFiles, logAccountDelete } from '../../../firebase/interface';
 import { pwaAccountDeleted, pwaAuthError } from '../../../events/names';
 import { emitWindow, toAuthError } from '../../../events/emit';
 import { userMessage } from '../../../firebase/message';
@@ -31,14 +31,6 @@ export class DeleteUser extends connect(store)(LitElement) {
             try {
                 const uid = current.uid;
                 await deleteUserFiles(uid);
-                try {
-                    await deleteDocument('users', uid);
-                }
-                catch (error) {
-                    const code = error && typeof error === 'object' && 'code' in error ? String(error.code) : '';
-                    if (!code.includes('permission-denied'))
-                        throw error;
-                }
                 await logAccountDelete();
                 await current.delete();
                 emitWindow(pwaAccountDeleted, { uid });
