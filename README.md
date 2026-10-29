@@ -265,6 +265,8 @@ npm run rollup   # writes source/pwa-auth.js and website/javascript/pwa-auth.js
 
 `npm publish` runs both before it uploads.
 
+Pushing `master` runs `.github/workflows/publish.yml`. The action builds, then publishes when `package.json` has a version that is not already on npm. The repository secret `NPM_TOKEN` must be an npm automation token. A push that does not change the version is skipped.
+
 `base/` is the TypeScript emit. Rollup reads that emit and writes the npm bundle to `source/` and the site bundle to `website/javascript/`. Do not hand-edit those outputs.
 
 `npm run demo` serves `demonstration/index.html`. `npm run website` serves `website/index.html`.
