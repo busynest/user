@@ -10,10 +10,7 @@ import {
   state
 }                         from 'lit/decorators.js';
 
-import {
-  EmailAuthProvider,
-  signInWithCredential
-}                         from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 import { auth }           from '../../firebase/authentication';
 
@@ -158,7 +155,7 @@ export class FormLogin extends LitElement {
   private login() {
     this.readFields();
     if (this.email.length < 4) { alert('Please enter an email address.'); return; }
-    if (this.password.length < 4) { alert('Please enter a password.'); return; }
+    if (this.password.length < 6) { alert('Password must be at least 6 characters.'); return; }
     this.signIn(this.email,this.password); // Sign in with email and password
   }
   
@@ -166,8 +163,7 @@ export class FormLogin extends LitElement {
   private signIn = async (email:string, password:string) => {
   
     try {
-      const authCredential = EmailAuthProvider.credential(email, password);
-      await signInWithCredential(auth, authCredential);
+      await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       alert(error instanceof Error ? error.message : 'Sign in failed');
     }

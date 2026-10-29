@@ -6,6 +6,16 @@ All notable changes to pwa-auth.js will be documented in this file.
 - Social Login Flow
 - animated login mascot
 
+# [3.4.11] - 2026-10-28
+
+## Changed
+- sign-in uses signInWithEmailAndPassword and requires 6 character passwords
+- email, password, and delete ask for the current password and reauthenticate
+- delete also removes the Firestore users/{uid} document when it exists
+- closed settings sections are not painted
+- website config is one window.process assignment
+- default npm entry is the Rollup bundle, and publish runs tsc then rollup
+
 # [3.4.10] - 2026-10-28
 
 ## Added

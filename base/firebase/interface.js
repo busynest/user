@@ -1,7 +1,7 @@
 import { store } from '../store';
 import { closeSign, iconAuth, nameAuth, userAuth } from '../redux/frontend';
 import { accID, accEmail, accImage, accName } from '../redux/backend';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { EmailAuthProvider, getAuth, onAuthStateChanged, reauthenticateWithCredential, signOut } from 'firebase/auth';
 import { doc, deleteDoc } from "firebase/firestore";
 import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
 import { deleteObject, listAll, ref } from "firebase/storage";
@@ -50,6 +50,22 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 export const alertEmail = (error) => { console.log('Problem: ' + error); };
+export const reauthenticate = async (password) => {
+    const current = auth.currentUser;
+    if (!current || !current.email) {
+        alert('Please Login');
+        return false;
+    }
+    try {
+        const credential = EmailAuthProvider.credential(current.email, password);
+        await reauthenticateWithCredential(current, credential);
+        return true;
+    }
+    catch (error) {
+        alert(error instanceof Error ? error.message : 'Current password is incorrect');
+        return false;
+    }
+};
 export const logOut = async () => { return signOut(auth); };
 export const logAccount = async () => {
     await analyticsReady;

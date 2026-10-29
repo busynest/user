@@ -157,8 +157,8 @@ let FormSignup = class FormSignup extends LitElement {
             alert('Please enter an email address.');
             return;
         }
-        if (this.password.length < 4) {
-            alert('Please enter a password.');
+        if (this.password.length < 6) {
+            alert('Password must be at least 6 characters.');
             return;
         }
         this.newAccount(this.email, this.password);

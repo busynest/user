@@ -8,6 +8,7 @@ import { labelStyle }       from "../../form/css/label";
 import { inputStyle }       from "../../form/css/input";
 import { buttonStyle  }     from "../../form/css/button";
 import { updatePassword }   from "firebase/auth";
+import { reauthenticate }   from "../../../firebase/interface";
 
 export class InputPassword extends connect(store)(LitElement) {
 
@@ -37,7 +38,7 @@ export class InputPassword extends connect(store)(LitElement) {
         display:        grid;
       }
 
-      form { display: grid; grid-template-rows: 1fr 1fr auto;}
+      form { display: grid; }
 
       p.error { color: red; }
     
@@ -49,6 +50,21 @@ export class InputPassword extends connect(store)(LitElement) {
       <form
         autocomplete="off"
         @submit="${this.default}">
+
+        <!-- Required - recent login -->
+        <div>
+
+          <label for="pwa-current-password">Current Password
+
+            <input
+              id      = "pwa-current-password"
+              name    = "current_password"
+              type    = "password"
+              autocomplete = "current-password">
+
+          </label>
+
+        </div>
 
         <!-- Input - 1 -->
         <div>
@@ -113,9 +129,15 @@ export class InputPassword extends connect(store)(LitElement) {
   /* Update Password */
   private alertPassword() {
 
+    const currentPassword = (this.shadowRoot!.querySelector('#pwa-current-password') as HTMLInputElement).value;
     const entered = (this.shadowRoot!.querySelector('#pwa-new-password') as HTMLInputElement).value;
     const verify = (this.shadowRoot!.querySelector('#pwa-verify-password') as HTMLInputElement).value;
     this.password = entered;
+
+    if (currentPassword.length < 6) {
+      this.message = 'Enter your current password';
+      return;
+    }
 
     if (!this.password) {
       this.message = 'Please enter a password';
@@ -130,7 +152,7 @@ export class InputPassword extends connect(store)(LitElement) {
         this.message = 'Password must include letters, numbers, and be 8+ characters';
       } else {
 
-        if (auth.currentUser)     { this.updatePass(this.password); }
+        if (auth.currentUser)     { this.updatePass(currentPassword, this.password); }
         else                      { alert('Please Login'); }
         
       }
@@ -140,16 +162,20 @@ export class InputPassword extends connect(store)(LitElement) {
   }
 
   // Firebase Password Function
-  private updatePass = async (newPassword:any) => {
+  private updatePass = async (currentPassword: string, newPassword: string) => {
 
-    if (auth.currentUser) {
+    const current = auth.currentUser;
+    if (!current) { alert('Please Login'); return; }
 
-      // Update new password
-      await updatePassword ( auth.currentUser, newPassword )
-        .then ( () => { console.log("Password successful!"); })
-        .catch ( (error: Error) => { console.log("Problem: " + error.message); });
+    const ok = await reauthenticate(currentPassword);
+    if (!ok) { return; }
 
-    } else { alert('Please Login'); }
+    try {
+      await updatePassword(current, newPassword);
+      alert('Password updated');
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Password was not updated');
+    }
 
   }
 

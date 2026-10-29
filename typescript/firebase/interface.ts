@@ -12,7 +12,7 @@ import { closeSign, iconAuth, nameAuth, userAuth } from '../redux/frontend';
 import { accID, accEmail, accImage, accName } from '../redux/backend';
 
 // Firebase Auth
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { EmailAuthProvider, getAuth, onAuthStateChanged, reauthenticateWithCredential, signOut } from 'firebase/auth';
 
 // Firebase Firestore
 import { doc, deleteDoc } from "firebase/firestore";
@@ -151,6 +151,27 @@ onAuthStateChanged(auth, (user) => {
 
 export const alertEmail = (error:any) => { console.log( 'Problem: ' + error );/* if (this._user) { this.updateEmail(); } else { alert('Please Login'); } */ }
 
+
+// Required - recent login before email, password, or delete
+export const reauthenticate = async (password: string) => {
+
+  const current = auth.currentUser;
+
+  if (!current || !current.email) {
+    alert('Please Login');
+    return false;
+  }
+
+  try {
+    const credential = EmailAuthProvider.credential(current.email, password);
+    await reauthenticateWithCredential(current, credential);
+    return true;
+  } catch (error) {
+    alert(error instanceof Error ? error.message : 'Current password is incorrect');
+    return false;
+  }
+
+};
 
 export const logOut             = async () => { return signOut(auth); };
 
