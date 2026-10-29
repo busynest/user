@@ -322,6 +322,15 @@ user-drawer::part(login-submit) { letter-spacing: 0.02em; }
 
 The drawer is a dialog. Escape closes it, Tab stays inside while it is open, and focus returns to the control that opened it. Off-screen forms are `inert`.
 
+`--pwa_slide_time` is the master beat. These durations are multiples of it:
+
+- drawer max-height, and the close visibility delay: 1x (`1.4s`)
+- `.spec-in`: about `1.5s` (`1.071x`)
+- `.spec-out`: about `2.2s` (`1.571x`). The forms follow the drawer down
+- form swap, and the closed-form visibility delay: about `2s` (`1.429x`)
+
+Set `--pwa_slide_time: 0.7s` to halve every one of those. `--pwa_slide_ease` is the shared curve. `prefers-reduced-motion: reduce` sets the beat to `0s`.
+
 ## Theme
 
 Optional. Link the sheet or set the variables on `:root`. Names below are the ones the components read.
@@ -344,6 +353,11 @@ Optional. Link the sheet or set the variables on `:root`. Names below are the on
   --pwa_icon_font:             "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --pwa_icon_height:           44px; /* logged out, sync to diameter */
   --pwa_icon_diameter:         44px; /* logged in, sync to height */
+
+  /* Optional - master beat. Drawer max-height is 1x. Form swap is about 2s. */
+  --pwa_slide_time: 1.4s;
+  /* Optional - shared ease for the drawer and the form swap */
+  --pwa_slide_ease: ease-in-out;
 
   /* <user-drawer> */
   --pwa_drawer_position:         absolute;

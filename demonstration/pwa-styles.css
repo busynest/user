@@ -5,6 +5,10 @@
   /* Required - minimum tap target */
   --pwa_tap:                      44px;
 
+  /* Optional - master beat. Optional - shared ease. */
+  --pwa_slide_time:               1.4s;
+  --pwa_slide_ease:               ease-in-out;
+
   /* <user-icon> */
   --pwa_icon_hover_color:         #214f34;
   --pwa_icon_background_color:    #2a6b45;

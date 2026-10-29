@@ -27,7 +27,7 @@ All notable changes to pwa-auth.js will be documented in this file.
 - lit and firebase are peers plus devDependencies, not both a dependency and a peer
 - storage imports use firebase/storage
 - sign-in forms use novalidate so a short email reaches pwa-auth-error
-- form-login and form-signup slide over 0.8s; the closed form does not stretch the row
+- drawer and form durations follow --pwa_slide_time, keeping the 1.4s / 1.5s / 2.2s / 2s ratios
 - delete account also removes users/{uid} when rules allow it
 
 # [3.4.10] - 2026-10-28
