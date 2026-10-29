@@ -18,8 +18,8 @@ export const authStyles = css `
   .service {
     display:                grid;
     overflow:               hidden;
-    color:                  var(--pwa_drawer_text_color, #1c2430);
-    background-color:       var(--section_background_color, #fffdf8);
+    color:                  var(--pwa_drawer_text_color, #303030);
+    background-color:       var(--section_background_color, white);
   }
 
   :host([animation]) {       
@@ -29,11 +29,10 @@ export const authStyles = css `
   }
 
   h3 {
-    margin:                 0;
-    padding:                18px 16px 14px;
-    font-size:              1.15rem;
-    font-weight:            600;
-    border-bottom:          1px solid var(--pwa_line_color, #e3daca);
+    margin-top:             0;
+    padding-bottom:         16px;
+    border-bottom:          2px solid black;
+    box-shadow:             0px 6px 6px -6px;
   }
 
 `;

@@ -69,14 +69,15 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             tapStyle,
             css `
     ::slotted(a) {
-      font-size:                0.95rem;
-      color:                    var(--pwa_label_text_color, #1c2430);
-      font-weight:              600;
+      text-transform:           uppercase;
+      font-size:                .6em;
+      color:                    rgb(105,105,105);
+      font-weight:              800;
       text-decoration:          none;
-      padding:                  12px 16px;
-      margin:                   12px 16px;
-      border:                   1px solid var(--pwa_line_color, #e3daca);
-      border-radius:            10px;
+      padding:                  16px;
+      margin:                   16px;
+      border:                   2px solid grey;
+      border-radius:            6px;
       box-sizing:               border-box;
       text-align:               center;
       cursor:                   pointer;

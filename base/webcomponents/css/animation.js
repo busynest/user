@@ -12,17 +12,20 @@ export const animation = css `
     display:                                grid;
     grid-template-areas:                    'pages';
     overflow-y:                             auto;
-    border-bottom:                          1px solid var(--pwa_line_color, #e3daca);
-    border-radius:                          0 0 14px 14px;
+    box-shadow:                             0px 6px 6px -6px;
+    border-bottom:                          6px solid #0a2840;
+    border-radius:                          0 0 6px 6px;
     scrollbar-width:                        thin;
     z-index:                                1;
 }
 
 .content {
     display:                                grid;
-    grid-gap:                               20px;
+    grid-gap:                               16px;
     grid-area:                              pages;
-    padding:                                8px 0 20px; /* Required - room under the heading */
+
+    border-bottom:                          2px solid grey;
+    box-shadow:                             inset 0px -6px 6px -8px;
 
     box-sizing:                             border-box;
     -webkit-box-sizing:                     border-box;

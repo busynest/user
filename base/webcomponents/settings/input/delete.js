@@ -55,10 +55,7 @@ export class DeleteUser extends connect(store)(LitElement) {
     }
     
     p {
-      margin:               0;
-      padding:              4px 20px 0;
-      line-height:          1.5;
-      color:                var(--pwa_label_text_color, #1c2430);
+      padding:              0 16px;
     }
 
     `
