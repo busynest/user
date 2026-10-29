@@ -6,7 +6,38 @@ Five elements: `user-icon`, `user-drawer`, `user-login`, `user-settings`, and `e
 
 Place the tags. Set Firebase with the script or `initialize()`. Listen for `pwa-` events, or call the small API (`getCurrentUser`, `onUserChanged`, `openDrawer`, `closeDrawer`, `toggleDrawer`). Restyle with `--pwa_` variables.
 
-## Prerequisites
+## Contents
+
+- [Project layout](#project-layout)
+- [Prerequisites & Firebase setup](#prerequisites--firebase-setup)
+- [Install & entries](#install--entries)
+- [Elements](#elements)
+- [Drawer behaviour](#drawer-behaviour)
+- [Page examples](#page-examples)
+- [Events](#events)
+- [API](#api)
+- [Exports](#exports)
+- [Parts](#parts)
+- [Theme](#theme)
+- [Data ownership](#data-ownership)
+- [Build & test](#build--test)
+- [Feedback](#feedback)
+
+## Project layout
+
+Edit `typescript/` only. That folder is the source.
+
+`npm run build` runs tsc. The emit lands in `base/`. `base/export/pwa-auth.js` is the default package entry. Do not hand-edit `base/`.
+
+Rollup reads that emit. `npm run rollup` writes `source/pwa-auth.js` (the npm production bundle) and `website/javascript/pwa-auth.js` (the site bundle). Do not hand-edit those files.
+
+`demonstration/` is the dev demo. It imports `../base/export/pwa-auth.js`. `npm run demo` serves `demonstration/index.html`.
+
+`website/` is the hosted site at [pwa-authentic.firebaseapp.com](https://pwa-authentic.firebaseapp.com). It loads `website/javascript/pwa-auth.js`. `npm run website` serves `website/index.html`.
+
+Retired code lives in `typescript/deprecated/`. It is not called.
+
+## Prerequisites & Firebase setup
 
 - Firebase Authentication with email and password
 - Cloud Storage bucket
@@ -14,33 +45,7 @@ Place the tags. Set Firebase with the script or `initialize()`. Listen for `pwa-
 
 Storage rules must allow the signed-in user to read and write only `pwa-auth/{uid}/**`.
 
-Firestore rules allow `users/{uid}` and `contractors/{uid}`, and any other document `deleteDocument` removes, only when the signed-in uid is the document id or the `owner` field. Everything else is denied.
-
-## Install
-
-```bash
-npm install pwa-auth
-```
-
-Two entries:
-
-```javascript
-// Required - dev graph. tsc output. Install the lit and firebase peers.
-import 'pwa-auth';
-
-// Optional - one file. Rollup bundle for a page or for npm production.
-import 'pwa-auth/production';
-```
-
-`pwa-auth` resolves to `base/export/pwa-auth.js`. `pwa-auth/production` resolves to `source/pwa-auth.js`.
-
-A plain script tag uses the bundle:
-
-```html
-<script type="module" src="./path_to/pwa-auth.js"></script>
-```
-
-## Firebase
+Firestore rules allow `users/{uid}` and `contractors/{uid}`, and any other document `deleteDocument` removes, only when the signed-in uid is the document id or the `owner` field. Everything else is denied. The host owns those documents. See [Data ownership](#data-ownership).
 
 Required. Either set this in a classic script before the module runs, or call `initialize` from the host. One assignment. A second `window.process = …` replaces the first and drops keys you already set.
 
@@ -89,6 +94,30 @@ Optional. A tag can carry the same JSON. The first element to connect wins, and 
 
 The first `initialize` wins. A later call with a different app throws.
 
+## Install & entries
+
+```bash
+npm install pwa-auth
+```
+
+Two entries:
+
+```javascript
+// Required - dev graph. tsc output. Install the lit and firebase peers.
+import 'pwa-auth';
+
+// Optional - one file. Rollup bundle for a page or for npm production.
+import 'pwa-auth/production';
+```
+
+`pwa-auth` resolves to `base/export/pwa-auth.js`. `pwa-auth/production` resolves to `source/pwa-auth.js`.
+
+A plain script tag uses the bundle:
+
+```html
+<script type="module" src="./path_to/pwa-auth.js"></script>
+```
+
 ## Elements
 
 Importing the package defines all five.
@@ -106,7 +135,7 @@ Logged in, the button shows the photo. The click opens or closes the drawer. Sty
 
 ### `<user-drawer>`
 
-Drops open from the top in 1.4 seconds.
+Drops open from the top. Timing is in [Drawer behaviour](#drawer-behaviour).
 
 | Attribute | |
 |---|---|
@@ -149,7 +178,7 @@ Four tabs: Icon, Profile, Password, Delete.
 |---|---|
 | `empty` | Fallback photo, passed through to the uploader as `emptyArtwork`. |
 
-Profile updates the display name and starts an email change with `verifyBeforeUpdateEmail`. On success the page dispatches `pwa-email-changed` on `window` with `{ email }`. The old `userEmailChanged` event still fires and is deprecated. Password requires the verify field to match. On success the page dispatches `pwa-password-changed` on `window` with `{ uid }`. Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user. It does not delete `users/{uid}`. The host owns that document and should delete it when it hears `pwa-account-deleted`. A failed action alerts a short sentence and dispatches `pwa-auth-error`.
+Profile updates the display name and starts an email change with `verifyBeforeUpdateEmail`. On success the page dispatches `pwa-email-changed` on `window` with `{ email }`. The old `userEmailChanged` event still fires and is deprecated. Password requires the verify field to match. On success the page dispatches `pwa-password-changed` on `window` with `{ uid }`. Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user. It does not delete `users/{uid}`. See [Data ownership](#data-ownership). A failed action alerts a short sentence and dispatches `pwa-auth-error`.
 
 ### `<email-reset>`
 
@@ -163,7 +192,33 @@ Sends a password reset for the address in the field.
 <email-reset active></email-reset>
 ```
 
-## Drawer page
+## Drawer behaviour
+
+The drawer loads hidden at the top (`max-height: 0`). A press on `user-icon` slides it down.
+
+Sign-in and sign-up share one grid area, `pages`. They slide past each other. The closed form is translated `translate3d(0, -100%, 0)`, `visibility: hidden`, and `inert`.
+
+`--pwa_slide_time` is the master beat. Default `1.4s`. `--pwa_slide_ease` is the shared curve. Default `ease-in-out`. Durations are multiples of the beat:
+
+- drawer max-height, and the close visibility delay: 1x (`1.4s`)
+- `.spec-in`: 1.071x (about `1.5s`)
+- `.spec-out`: 1.571x (about `2.2s`). The forms follow the drawer down
+- form swap, and the closed-form visibility delay: 1.429x (about `2s`)
+
+Set `--pwa_slide_time: 0.7s` to halve every one of those. `prefers-reduced-motion: reduce` sets the beat to `0s`.
+
+While the drawer is open it covers `user-icon`. Close it with the ✕ button or Escape. The drawer is a dialog. Tab stays inside while it is open, and focus returns to the control that opened it. Off-screen forms are `inert`. The panel is `inert` while it is closed.
+
+Slotted links can flash before the element upgrades. Hide them:
+
+```css
+/* Optional - hide slotted links until user-drawer upgrades */
+user-drawer:not(:defined) { display: none; }
+```
+
+## Page examples
+
+### Drawer page
 
 ```html
 <style>
@@ -187,7 +242,7 @@ Sends a password reset for the address in the field.
 </body>
 ```
 
-## Sign-in page
+### Sign-in page
 
 ```html
 <body>
@@ -326,17 +381,6 @@ user-drawer::part(panel) { background: #fff; }
 user-drawer::part(login-submit) { letter-spacing: 0.02em; }
 ```
 
-The drawer is a dialog. Escape closes it, Tab stays inside while it is open, and focus returns to the control that opened it. Off-screen forms are `inert`.
-
-`--pwa_slide_time` is the master beat. These durations are multiples of it:
-
-- drawer max-height, and the close visibility delay: 1x (`1.4s`)
-- `.spec-in`: about `1.5s` (`1.071x`)
-- `.spec-out`: about `2.2s` (`1.571x`). The forms follow the drawer down
-- form swap, and the closed-form visibility delay: about `2s` (`1.429x`)
-
-Set `--pwa_slide_time: 0.7s` to halve every one of those. `--pwa_slide_ease` is the shared curve. `prefers-reduced-motion: reduce` sets the beat to `0s`.
-
 ## Theme
 
 Optional. Link the sheet or set the variables on `:root`. Names below are the ones the components read.
@@ -360,7 +404,7 @@ Optional. Link the sheet or set the variables on `:root`. Names below are the on
   --pwa_icon_height:           44px; /* logged out, sync to diameter */
   --pwa_icon_diameter:         44px; /* logged in, sync to height */
 
-  /* Optional - master beat. Drawer max-height is 1x. Form swap is about 2s. */
+  /* Optional - master beat. See Drawer behaviour for the ratios. */
   --pwa_slide_time: 1.4s;
   /* Optional - shared ease for the drawer and the form swap */
   --pwa_slide_ease: ease-in-out;
@@ -393,18 +437,26 @@ Optional. Link the sheet or set the variables on `:root`. Names below are the on
 
 `--pwa_tap` is the minimum size of the drawer close control, the sign-in and sign-up buttons, the settings tabs, and the delete control.
 
-## Build
+## Data ownership
 
-Edit `typescript/` only.
+The host app owns its Firestore documents. Contractors Centre creates `users/{uid}` on signup and deletes that document when it hears `pwa-account-deleted`.
+
+pwa-auth does not write `users/{uid}`. Account deletion removes this user's Storage files under `pwa-auth/{uid}`, calls `logAccountDelete`, deletes the Auth user, and fires `pwa-account-deleted` with `{ uid }`.
+
+`deleteDocument(collect, item)` is still exported. The host can call it. The package does not call it for `users/{uid}`.
+
+## Build & test
 
 ```bash
-npm run build    # tsc writes base/
-npm run rollup   # writes source/pwa-auth.js and website/javascript/pwa-auth.js
+npm run build          # tsc writes base/, then restores @deprecated notes tsc drops
+npm run rollup         # writes source/pwa-auth.js and website/javascript/pwa-auth.js
+npm run demo           # serves demonstration/index.html
+npm run website        # serves website/index.html
+npm test               # vitest
+npm run test:emulator  # Auth, Firestore, and Storage emulators, then the browser checks
 ```
 
-`base/` is the TypeScript emit. Rollup reads that emit and writes the npm bundle to `source/` and the site bundle to `website/javascript/`. Do not hand-edit those outputs.
-
-`npm run demo` serves `demonstration/index.html`. `npm run website` serves `website/index.html`.
+`npm run test:emulator` uses `firebase-tools` 14.24.0. Firestore and Storage need Java 21 or newer on `PATH`.
 
 ## Feedback
 
