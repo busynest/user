@@ -293,9 +293,9 @@ window.__criticalPromise = (async () => {
       const fileResponse = await fetch('http://127.0.0.1:9199/v0/b/pwa-authentic.appspot.com/o/pwa-auth%2F' + uid + '%2Fnote.txt', {
         headers: { Authorization: 'Bearer owner' }
       });
-      if (docResponse.status !== 404) throw new Error('users doc status ' + docResponse.status);
+      if (docResponse.status === 404) throw new Error('host users doc was removed');
       if (fileResponse.status !== 404) throw new Error('storage file status ' + fileResponse.status);
-      record('delete account', true, 'auth user, users doc, and files removed');
+      record('delete account', true, 'auth user and files removed; users doc left for the host');
     } catch (error) {
       record('delete account', false, error.message);
     }

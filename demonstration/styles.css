@@ -1,3 +1,8 @@
+/* Optional - hide slotted links until user-drawer upgrades */
+user-drawer:not(:defined) {
+  display:                      none;
+}
+
 :root {
   --ink:        #1c2430;
   --muted:      #4e5b6a;

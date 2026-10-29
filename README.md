@@ -149,7 +149,7 @@ Four tabs: Icon, Profile, Password, Delete.
 |---|---|
 | `empty` | Fallback photo, passed through to the uploader as `emptyArtwork`. |
 
-Profile updates the display name and starts an email change with `verifyBeforeUpdateEmail`. On success the page dispatches `pwa-email-changed` on `window` with `{ email }`. The old `userEmailChanged` event still fires and is deprecated. Password requires the verify field to match. On success the page dispatches `pwa-password-changed` on `window` with `{ uid }`. Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user. A failed action alerts a short sentence and dispatches `pwa-auth-error`.
+Profile updates the display name and starts an email change with `verifyBeforeUpdateEmail`. On success the page dispatches `pwa-email-changed` on `window` with `{ email }`. The old `userEmailChanged` event still fires and is deprecated. Password requires the verify field to match. On success the page dispatches `pwa-password-changed` on `window` with `{ uid }`. Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user. It does not delete `users/{uid}`. The host owns that document and should delete it when it hears `pwa-account-deleted`. A failed action alerts a short sentence and dispatches `pwa-auth-error`.
 
 ### `<email-reset>`
 
@@ -166,6 +166,11 @@ Sends a password reset for the address in the field.
 ## Drawer page
 
 ```html
+<style>
+  /* Optional - hide slotted links until user-drawer upgrades */
+  user-drawer:not(:defined) { display: none; }
+</style>
+
 <body>
   <header>
     <user-icon subscribe empty="./images/empty.jpg"></user-icon>
@@ -210,7 +215,7 @@ Global events fire on `window`. `pwa-drawer-toggle` fires on `<user-drawer>`, bu
 - `pwa-login` — email sign-in succeeded. Detail: `{ user: { uid, displayName, email, photoURL } }`
 - `pwa-logout` — `logOut()` finished. Detail: `{ user: null }`
 - `pwa-signup` — `createUserWithEmailAndPassword` succeeded. Detail: `{ user: { uid, displayName, email, photoURL } }`
-- `pwa-account-deleted` — the auth user was deleted. Detail: `{ uid }`
+- `pwa-account-deleted` — the auth user was deleted. Detail: `{ uid }`. The host deletes its own `users/{uid}` document.
 - `pwa-profile-updated` — display name or photo saved. Detail: `{ uid, displayName, photoURL }`
 - `pwa-email-changed` — `verifyBeforeUpdateEmail` accepted the address. Detail: `{ email }`
 - `pwa-password-changed` — `updatePassword` succeeded. Detail: `{ uid }`. The new password is not included.

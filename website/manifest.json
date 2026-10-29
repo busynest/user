@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "pwa-auth",
   "version": "3.5.0",
-  "description": "Five elements: user-icon, user-drawer, user-login, user-settings, and email-reset. pwa- events, a small API, and --pwa_ theme variables.",
+  "description": "Five web components: user-icon, user-drawer, user-login, user-settings, and email-reset. pwa- events, a small API, and --pwa_ theme variables.",
     "icons": [
     {
       "src": "images/manifest/logo-48.png",

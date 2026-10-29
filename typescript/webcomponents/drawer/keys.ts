@@ -10,6 +10,12 @@ export function isHidden(el: HTMLElement): boolean {
       if (current.classList.contains('spec') && !current.hasAttribute('on')) return true;
     }
 
+    // Required - a slotted link lives in light DOM. Cross at the slot into the shadow tree.
+    if (current instanceof Element && current.assignedSlot && current.assignedSlot !== current) {
+      current = current.assignedSlot;
+      continue;
+    }
+
     if (current.parentElement) {
       current = current.parentElement;
       continue;
