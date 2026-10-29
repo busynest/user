@@ -3,6 +3,16 @@ Change Log
 All notable changes to pwa-auth.js will be documented in this file.
 
 ## [Unreleased]
+
+### Added
+- `sendEmailVerification` after sign-up, then `pwa-verification-sent` `{ email }`
+- `emailVerified` on the public user, and `pwa-email-verified` when a reload sees it become true
+- unverified notice on the Profile tab, with Resend verification email, a busy state, and a 45s cooldown
+- `sendVerification()` and `isEmailVerified()`
+- optional `actionCodeSettings` on `initialize()`, including a continue URL
+
+Sign-in is not blocked when the email is unverified. The host gates on `emailVerified`.
+
 - Social Login Flow
 - animated login mascot
 

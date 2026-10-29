@@ -10,6 +10,10 @@ export let auth;
 export let user = null;
 let started = false;
 const waiters = [];
+let actionCodeSettings;
+export function emailActionCodeSettings() {
+    return actionCodeSettings;
+}
 export function isReady() {
     return started;
 }
@@ -30,6 +34,9 @@ function legacyConfig() {
     return parsed;
 }
 export function initialize(options) {
+    if (options && Object.prototype.hasOwnProperty.call(options, 'actionCodeSettings')) {
+        actionCodeSettings = options.actionCodeSettings;
+    }
     if (started) {
         if (options?.app && options.app !== application) {
             throw new Error('pwa-auth: Firebase app is already set');

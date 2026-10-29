@@ -1,13 +1,15 @@
 import { initializeApp, FirebaseApp, FirebaseOptions }  from 'firebase/app';
 import { getFirestore, Firestore }                      from 'firebase/firestore';
 import { getStorage, FirebaseStorage }                  from 'firebase/storage';
-import { getAuth, User, Auth }                          from 'firebase/auth';
+import { getAuth, User, Auth, type ActionCodeSettings } from 'firebase/auth';
 
 export interface InitializeOptions {
   /** Optional - an app the host already created. */
   app?:     FirebaseApp;
   /** Optional - config used when the host has no app yet. */
   config?:  FirebaseOptions;
+  /** Optional - passed to sendEmailVerification. url is the continue URL. */
+  actionCodeSettings?: ActionCodeSettings;
 }
 
 export let firebaseConfig: FirebaseOptions = {};
@@ -21,6 +23,12 @@ export let user: User | null = null;
 
 let started = false;
 const waiters: Array<() => void> = [];
+let actionCodeSettings: ActionCodeSettings | undefined;
+
+/** Required - continue URL and other email action settings. Undefined until set. */
+export function emailActionCodeSettings(): ActionCodeSettings | undefined {
+  return actionCodeSettings;
+}
 
 /** Required - true after initialize() has an app. */
 export function isReady(): boolean {
@@ -51,6 +59,10 @@ function legacyConfig(): FirebaseOptions | null {
 
 /** Required - host app, host config, or the legacy FIREBASE_CONFIG. First call wins. */
 export function initialize(options?: InitializeOptions): FirebaseApp {
+
+  if (options && Object.prototype.hasOwnProperty.call(options, 'actionCodeSettings')) {
+    actionCodeSettings = options.actionCodeSettings;
+  }
 
   if (started) {
     if (options?.app && options.app !== application) {

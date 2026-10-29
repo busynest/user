@@ -19,6 +19,8 @@ const names = [
   'pwa-reset-sent',
   'pwa-drawer-toggle',
   'pwa-auth-error',
+  'pwa-verification-sent',
+  'pwa-email-verified',
   'userEmailChanged'
 ];
 

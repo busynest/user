@@ -11,12 +11,12 @@ import {
 }                         from 'lit/decorators.js';
 
 import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification
+  createUserWithEmailAndPassword
 }                         from 'firebase/auth';
 
 import { auth }           from '../../firebase/authentication';
 import { logAccount }     from '../../firebase/interface';
+import { sendVerification } from '../../api/verify';
 
 import { pwaAuthError, pwaSignup } from '../../events/names';
 import { emitWindow, toAuthError, toPwaUser } from '../../events/emit';
@@ -195,10 +195,16 @@ export class FormSignup extends LitElement {
     try {
 
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      await sendEmailVerification(userCredential.user);
       await logAccount();
       const person = toPwaUser(userCredential.user);
       if (person) emitWindow(pwaSignup, { user: person });
+
+      // Required - the account exists even when the verification mail fails
+      try {
+        await sendVerification();
+      } catch (error) {
+        alert(userMessage(error));
+      }
 
     } catch (error) {
 

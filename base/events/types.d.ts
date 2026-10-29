@@ -3,6 +3,7 @@ export interface PwaUser {
     displayName: string | null;
     email: string | null;
     photoURL: string | null;
+    emailVerified: boolean;
 }
 export interface PwaAuthChangedDetail {
     user: PwaUser | null;
@@ -52,4 +53,14 @@ export interface PwaEventMap {
     'pwa-reset-sent': CustomEvent<PwaResetSentDetail>;
     'pwa-drawer-toggle': CustomEvent<PwaDrawerToggleDetail>;
     'pwa-auth-error': CustomEvent<PwaAuthErrorDetail>;
+}
+export interface PwaVerificationSentDetail {
+    email: string;
+}
+export interface PwaEmailVerifiedDetail {
+    user: PwaUser;
+}
+export interface PwaEventMap {
+    'pwa-verification-sent': CustomEvent<PwaVerificationSentDetail>;
+    'pwa-email-verified': CustomEvent<PwaEmailVerifiedDetail>;
 }

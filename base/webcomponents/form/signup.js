@@ -9,9 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase/authentication';
 import { logAccount } from '../../firebase/interface';
+import { sendVerification } from '../../api/verify';
 import { pwaAuthError, pwaSignup } from '../../events/names';
 import { emitWindow, toAuthError, toPwaUser } from '../../events/emit';
 import { userMessage } from '../../firebase/message';
@@ -32,11 +33,16 @@ let FormSignup = class FormSignup extends LitElement {
         this.newAccount = async (email, password) => {
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                await sendEmailVerification(userCredential.user);
                 await logAccount();
                 const person = toPwaUser(userCredential.user);
                 if (person)
                     emitWindow(pwaSignup, { user: person });
+                try {
+                    await sendVerification();
+                }
+                catch (error) {
+                    alert(userMessage(error));
+                }
             }
             catch (error) {
                 emitWindow(pwaAuthError, toAuthError(error));

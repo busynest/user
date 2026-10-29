@@ -6,7 +6,8 @@ export function toPwaUser(user) {
         uid: user.uid,
         displayName: user.displayName,
         email: user.email,
-        photoURL: user.photoURL
+        photoURL: user.photoURL,
+        emailVerified: user.emailVerified === true
     };
 }
 export function emitWindow(name, detail) {

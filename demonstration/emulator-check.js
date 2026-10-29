@@ -5,7 +5,7 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { getBytes, ref, uploadBytes } from 'firebase/storage';
-import { auth, db, getCurrentUser, logOut, onUserChanged, storage } from '../base/export/pwa-auth.js';
+import { auth, db, getCurrentUser, isEmailVerified, logOut, onUserChanged, storage } from '../base/export/pwa-auth.js';
 
 const password = 'secret12';
 const email = 'slim-' + Date.now() + '@example.com';
@@ -146,9 +146,35 @@ window.__criticalPromise = (async () => {
       await until('login', () => events('pwa-login').length > before && auth.currentUser);
       const detail = events('pwa-login').at(-1).detail;
       if (!detail.user || detail.user.uid !== uid) throw new Error(JSON.stringify(detail));
+      if (detail.user.emailVerified !== false) throw new Error('sign-in waited on emailVerified ' + JSON.stringify(detail.user));
       record('log in', true, detail.user.email);
     } catch (error) {
       record('log in', false, error.message);
+    }
+
+    try {
+      await until('verification sent', () => events('pwa-verification-sent').some((item) => item.detail && item.detail.email === email));
+      const listed = await fetch('http://127.0.0.1:9099/emulator/v1/projects/pwa-authentic/oobCodes');
+      const body = await listed.json();
+      const codes = body.oobCodes || [];
+      const code = codes.find((item) => item.email === email && String(item.requestType || '').toUpperCase().includes('VERIFY'));
+      if (!code || !code.oobCode) throw new Error('no verification code ' + JSON.stringify(codes));
+      if (!auth.currentUser || auth.currentUser.emailVerified) throw new Error('verified before the code was applied');
+      const before = events('pwa-email-verified').length;
+      const applied = await fetch('http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/accounts:update?key=demo-key', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ oobCode: code.oobCode })
+      });
+      if (!applied.ok) throw new Error('apply ' + applied.status + ' ' + await applied.text());
+      const verified = await isEmailVerified();
+      await until('email verified', () => events('pwa-email-verified').length > before);
+      const detail = events('pwa-email-verified').at(-1).detail;
+      if (!verified || !auth.currentUser || !auth.currentUser.emailVerified) throw new Error('emailVerified still false');
+      if (!detail.user || detail.user.emailVerified !== true || detail.user.email !== email) throw new Error(JSON.stringify(detail));
+      record('email verification', true, 'oob code applied, emailVerified true');
+    } catch (error) {
+      record('email verification', false, error.message);
     }
 
     try {

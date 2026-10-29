@@ -121,7 +121,8 @@ describe('sign-in and sign-out', () => {
       uid: '1',
       displayName: 'Ada',
       email: 'ada@example.com',
-      photoURL: null
+      photoURL: null,
+      emailVerified: false
     });
     logins.stop();
   });

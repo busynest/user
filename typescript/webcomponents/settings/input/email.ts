@@ -145,27 +145,3 @@ declare global {
     'contact-email': ContactEmail;
   }
 }
-
-
-
-
-    // this.emailVerification();
-      // let document    :any = doc( db, 'users', auth.currentUser.uid );
-      // .then(() => updateDoc( document, { "contractorEmail":contactMail.email } ).catch(e=>console.log(e)) )
-      // store.dispatch( businessEmail(contactMail.email) ); // Redux Account Update
-      // console.log('good');
-/*
-// Email Verification  
-private emailVerification() {
-
-  // const auth : any = getAuth();
-  console.log( 'auth.currentUser: ', auth.currentUser);
-
-  // Todo: Find Soruce of Dependency
-  sendEmailVerification(auth.currentUser)
-    .then(() => { console.log('success')
-      // Email verification sent!
-    }).catch( e => console.log(e) );
-
-}
-*/

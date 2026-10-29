@@ -9,6 +9,8 @@ export declare const pwaPasswordChanged = "pwa-password-changed";
 export declare const pwaResetSent = "pwa-reset-sent";
 export declare const pwaDrawerToggleName = "pwa-drawer-toggle";
 export declare const pwaAuthError = "pwa-auth-error";
+export declare const pwaVerificationSent = "pwa-verification-sent";
+export declare const pwaEmailVerified = "pwa-email-verified";
 export declare const eventName: {
     readonly authChanged: "pwa-auth-changed";
     readonly login: "pwa-login";
@@ -21,4 +23,6 @@ export declare const eventName: {
     readonly resetSent: "pwa-reset-sent";
     readonly drawerToggle: "pwa-drawer-toggle";
     readonly authError: "pwa-auth-error";
+    readonly verificationSent: "pwa-verification-sent";
+    readonly emailVerified: "pwa-email-verified";
 };
