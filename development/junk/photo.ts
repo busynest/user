@@ -7,7 +7,7 @@ import { application, auth, db, storage }        from '../../firebase/authentica
 import { iconAuth }                 from '../../redux/frontend';
 import { updateProfile }            from 'firebase/auth';
 import { doc, updateDoc }           from 'firebase/firestore';
-import { getStorage, ref, uploadBytes, updateMetadata, getDownloadURL, StorageReference } from "@firebase/storage";
+import { getStorage, ref, uploadBytes, updateMetadata, getDownloadURL, StorageReference } from "firebase/storage";
 import { accImage } from '../../redux/backend';
 
 

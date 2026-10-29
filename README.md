@@ -14,6 +14,8 @@ Place the tags, set the Firebase config before the module loads or call `initial
 
 Storage rules must allow the signed-in user to read and write only `pwa-auth/{uid}/**`.
 
+Firestore rules allow `users/{uid}` and `contractors/{uid}`, and any other document `deleteDocument` removes, only when the signed-in uid is the document id or the `owner` field. Everything else is denied.
+
 ## Install
 
 ```bash

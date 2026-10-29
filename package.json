@@ -75,7 +75,6 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.12.0",
-    "lit": "^3.3.3",
     "pwa-helpers": "^0.9.1",
     "redux": "^5.0.1"
   },
@@ -98,7 +97,8 @@
     "@web/dev-server": "^0.4.6",
     "@web/rollup-plugin-copy": "^0.5.1",
     "babel-plugin-template-html-minifier": "^4.1.0",
-    "firebase": "^12.15.0",
+    "firebase": "12.19.0",
+    "lit": "3.3.3",
     "happy-dom": "^21.0.4",
     "rollup": "^4.54.0",
     "rollup-plugin-dts": "^6.3.0",

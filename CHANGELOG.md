@@ -23,6 +23,9 @@ All notable changes to pwa-auth.js will be documented in this file.
 - drawer traps focus, closes on Escape, and exposes ::part
 - 320px action buttons wrap
 - unused font, face icon, settings icon, alertEmail, and the reset phone field are retired
+- hosting headers sit inside hosting; Firestore rules allow only the signed-in owner
+- lit and firebase are peers plus devDependencies, not both a dependency and a peer
+- storage imports use firebase/storage
 
 # [3.4.10] - 2026-10-28
 

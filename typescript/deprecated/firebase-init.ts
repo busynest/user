@@ -2,7 +2,7 @@
 
 import { initializeApp }    from 'firebase/app';
 import { getFirestore }     from 'firebase/firestore';
-import { getStorage }       from '@firebase/storage';
+import { getStorage }       from 'firebase/storage';
 import { getAuth }          from 'firebase/auth';
 
 /** @deprecated Optional - threw when FIREBASE_CONFIG was empty. */

@@ -42,13 +42,10 @@ vi.mock('firebase/firestore', () => ({
 }));
 
 vi.mock('firebase/storage', () => ({
+  getStorage: vi.fn(() => ({})),
   deleteObject: vi.fn(),
   listAll: vi.fn(async () => ({ items: [], prefixes: [] })),
   ref: vi.fn()
-}));
-
-vi.mock('@firebase/storage', () => ({
-  getStorage: vi.fn(() => ({}))
 }));
 
 vi.mock('firebase/analytics', () => ({

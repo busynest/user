@@ -40,7 +40,7 @@ vi.mock('firebase/firestore', () => ({
   getFirestore: vi.fn(() => ({}))
 }));
 
-vi.mock('@firebase/storage', () => ({
+vi.mock('firebase/storage', () => ({
   getStorage: vi.fn(() => ({}))
 }));
 

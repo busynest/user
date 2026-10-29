@@ -46,24 +46,6 @@ let analyticsReady: Promise<void> = Promise.resolve();
 
 
 
-// Start Support Checks
-
-
-
-// Check for Service Worker support
-if ('serviceWorker' in navigator) { console.log('Service Worker is supported'); }
-else { console.log('Service Worker is not supported'); }
-
-// Check for Push API support
-if ('PushManager' in window) { console.log('Push API is supported'); }
-else { console.log('Push API is not supported'); }
-
-
-
-// End Support Checks
-
-
-
 // Start Distribute Information ---------------- ----------------
 
 
