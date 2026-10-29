@@ -6,8 +6,8 @@
     "url": "https://www.jackspublishing.com",
     "email": "jack.solutionbox@gmail.com"
   },
-  "version": "3.4.11",
-  "description": "pwa-auth is a collection of four HTML webomponents for User Management to display a login button with icon picture state once logged in. Sign up and login within a drawer and optionally a static for a page. Being able to log out, change account details, and delete account.",
+  "version": "3.5.0",
+  "description": "Five elements: user-icon, user-drawer, user-login, user-settings, and email-reset. pwa- events, a small API, and --pwa_ theme variables.",
   "homepage": "https://pwa-authentic.firebaseapp.com",
   "repository": {
     "type": "git",
@@ -26,22 +26,42 @@
     "pwa-auth",
     "auth",
     "firebase",
-    "icon",
-    "drawer",
-    "settings",
-    "lit",
-    "redux",
+    "user-icon",
+    "user-drawer",
+    "user-login",
+    "user-settings",
+    "email-reset",
     "web components"
   ],
-  "main": "./source/pwa-auth.js",
+  "main": "./base/export/pwa-auth.js",
   "types": "./base/export/pwa-auth.d.ts",
   "exports": {
     ".": {
       "types": "./base/export/pwa-auth.d.ts",
-      "default": "./source/pwa-auth.js"
+      "import": "./base/export/pwa-auth.js",
+      "default": "./base/export/pwa-auth.js"
     },
     "./production": {
+      "types": "./base/export/pwa-auth.d.ts",
+      "import": "./source/pwa-auth.js",
       "default": "./source/pwa-auth.js"
+    }
+  },
+  "sideEffects": true,
+  "files": [
+    "base",
+    "source/pwa-auth.js",
+    "source/pwa-styles.css",
+    "source/empty.jpg",
+    "README.md",
+    "license",
+    "LICENSES.txt"
+  ],
+  "typesVersions": {
+    "*": {
+      "production": [
+        "./base/export/pwa-auth.d.ts"
+      ]
     }
   },
   "license": "SEE LICENSES.txt",
@@ -51,14 +71,18 @@
     "website": "web-dev-server --node-resolve --watch --open --app-index website/index.html",
     "rollup": "rollup -c rollup.config.js",
     "build": "tsc --project tsconfig.production.json && node typescript/keep-deprecated.js",
-    "prepublishOnly": "npm run build && npm run rollup"
+    "prepublishOnly": "npm run build && npm run rollup",
+    "test": "vitest run",
+    "test:emulator": "npx --yes firebase-tools@14.24.0 emulators:exec --only auth,firestore,storage --project pwa-authentic \"node typescript/emulator/run.mjs\""
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.12.0",
-    "firebase": "^12.15.0",
-    "lit": "^3.3.3",
     "pwa-helpers": "^0.9.1",
     "redux": "^5.0.1"
+  },
+  "peerDependencies": {
+    "firebase": "^12.0.0",
+    "lit": "^3.3.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.28.0",
@@ -75,11 +99,15 @@
     "@web/dev-server": "^0.4.6",
     "@web/rollup-plugin-copy": "^0.5.1",
     "babel-plugin-template-html-minifier": "^4.1.0",
+    "firebase": "12.19.0",
+    "lit": "3.3.3",
+    "happy-dom": "^21.0.4",
     "rollup": "^4.54.0",
     "rollup-plugin-dts": "^6.3.0",
     "rollup-plugin-html-literals": "^2.0.1",
     "rollup-plugin-license": "^3.6.0",
     "rollup-plugin-summary": "^3.0.1",
-    "tslib": "^2.8.1"
+    "tslib": "^2.8.1",
+    "vitest": "^5.0.5"
   }
 }

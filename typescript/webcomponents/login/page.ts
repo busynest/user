@@ -13,6 +13,7 @@ import { listStyle }    from '../form/css/list';
 import '../form/login';
 import '../form/signup';
 import { tapStyle } from '../css/tap';
+import { applyFirebaseConfig } from '../../firebase/attribute';
 
 @customElement('user-login')
 export class UserLogin extends connect(store)(LitElement) {
@@ -25,6 +26,11 @@ export class UserLogin extends connect(store)(LitElement) {
   @state() private _sign        = false; // Sign-up State
   
   constructor() { super(); }
+
+  override connectedCallback(): void {
+    applyFirebaseConfig(this);
+    super.connectedCallback();
+  }
 
   stateChanged(state: AppState) {
     this._name        = state.backend!.name;        // User Name
@@ -46,10 +52,10 @@ export class UserLogin extends connect(store)(LitElement) {
   protected render() {
     return html`
 
-    <section class="service">
+    <section class="service" part="panel">
 
-      <header>
-        <h3>${this._log ? this._name : this._sign === this.subscribe ? 'Login' : 'Subscribe'}</h3>
+      <header part="header">
+        <h3 part="title">${this._log ? this._name : this._sign === this.subscribe ? 'Login' : 'Subscribe'}</h3>
       </header>
 
       <!-- Logged-out State -->
@@ -63,11 +69,15 @@ export class UserLogin extends connect(store)(LitElement) {
             <!-- Required - subscribe chooses the open form -->
             <form-login
               source=       "page"
+              exportparts=  "email: login-email, password: login-password, submit: login-submit, switch: login-switch"
+              ?inert=       "${this._sign !== this.subscribe}"
               class=        "content ${ this._sign === this.subscribe ? 'opened' : 'closed' } "></form-login>
 
             <!-- Sign-up State -->
             <form-signup
               source=       "page"
+              exportparts=  "email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch"
+              ?inert=       "${this._sign === this.subscribe}"
               class=        "content ${ !this._sign === this.subscribe ? 'opened' : 'closed' }"></form-signup>
 
           </div>

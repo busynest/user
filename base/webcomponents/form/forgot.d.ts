@@ -3,6 +3,7 @@ import { LazyLoader } from '../../lazyLoader';
 export declare class EmailReset extends LazyLoader {
     private userEmail;
     constructor();
+    static styles: import("lit").CSSResult[];
     private handleEmail;
     protected render(): TemplateResult;
     private resetPassword;

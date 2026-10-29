@@ -14,7 +14,8 @@ export const exitStyle = css `
     font-weight:            600;
     font-size:              1rem;
     margin:                 0 auto;
-    line-height:            44px; /* Required - match the tap target */
+    line-height:            1.2;
+    padding:                12px 0; /* Required - keep the title inside 320px */
   }
 
   .exit > .remove {

@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // Required - document id is the auth uid
+    function idMatch(docId) {
+      return signedIn() && request.auth.uid == docId;
+    }
+
+    // users/{uid} and contractors/{uid} use the uid as the document id.
+    // deleteDocument(collect, item) may name any other top-level collection.
+    // Separate allows so a missing document does not fail the id check.
+
+    match /users/{docId} {
+      allow read: if idMatch(docId);
+      allow read: if signedIn() && resource.data.owner == request.auth.uid;
+      allow create: if idMatch(docId);
+      allow create: if signedIn() && request.resource.data.owner == request.auth.uid;
+      allow update, delete: if idMatch(docId);
+      allow update, delete: if signedIn() && resource.data.owner == request.auth.uid;
+    }
+
+    match /contractors/{docId} {
+      allow read: if idMatch(docId);
+      allow read: if signedIn() && resource.data.owner == request.auth.uid;
+      allow create: if idMatch(docId);
+      allow create: if signedIn() && request.resource.data.owner == request.auth.uid;
+      allow update, delete: if idMatch(docId);
+      allow update, delete: if signedIn() && resource.data.owner == request.auth.uid;
+    }
+
+    match /{collection}/{docId} {
+      allow read: if idMatch(docId);
+      allow read: if signedIn() && resource.data.owner == request.auth.uid;
+      allow create: if idMatch(docId);
+      allow create: if signedIn() && request.resource.data.owner == request.auth.uid;
+      allow update, delete: if idMatch(docId);
+      allow update, delete: if signedIn() && resource.data.owner == request.auth.uid;
+    }
+  }
+}

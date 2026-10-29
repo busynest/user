@@ -1,3 +1,8 @@
+/* Optional - hide slotted links until user-drawer upgrades */
+user-drawer:not(:defined) {
+  display:                      none;
+}
+
 :root {
   --ink:        #1c2430;
   --muted:      #4e5b6a;
@@ -137,6 +142,34 @@ h2 {
   margin-top:                 28px;
 }
 
+.log {
+  list-style:                 none;
+  margin:                     28px 0 0;
+  padding:                    0;
+  max-height:                 16rem;
+  overflow:                   auto;
+  background:                 var(--paper);
+  border-radius:              14px;
+}
+
+.log li {
+  margin:                     0;
+  padding:                    10px 14px;
+  border-bottom:              1px solid var(--line);
+  font-family:                ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size:                  0.82rem;
+  line-height:                1.4;
+  word-break:                 break-word;
+}
+
+.log li:last-child {
+  border-bottom:              0;
+}
+
+.log .quiet {
+  color:                      var(--muted);
+}
+
 user-login,
 user-settings {
   display:                    block;
@@ -144,6 +177,20 @@ user-settings {
   overflow:                   hidden;
   border:                     1px solid var(--line);
   background:                 #fff;
+}
+
+@media (max-width: 320px) {
+  h1 {
+    font-size:                  1.7rem;
+  }
+
+  .card {
+    padding:                    16px 12px 18px;
+  }
+
+  .log {
+    max-height:                 12rem;
+  }
 }
 
 @media (max-width: 640px) {

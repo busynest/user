@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "pwa-auth",
-  "version": "3.3.2",
-  "description": "pwa-auth is a collection of four HTML webomponents for User Management to display a login button with icon picture state once logged in. Sign up and login within a drawer and optionally a static for a page. Being able to log out, change account details, and delete account.",
+  "version": "3.5.0",
+  "description": "Five web components: user-icon, user-drawer, user-login, user-settings, and email-reset. pwa- events, a small API, and --pwa_ theme variables.",
     "icons": [
     {
       "src": "images/manifest/logo-48.png",

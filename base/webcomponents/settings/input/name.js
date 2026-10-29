@@ -17,6 +17,9 @@ import { auth } from "../../../firebase/authentication";
 import { labelStyle } from "../../form/css/label";
 import { inputStyle } from "../../form/css/input";
 import { buttonStyle } from "../../form/css/button";
+import { pwaAuthError, pwaProfileUpdated } from "../../../events/names";
+import { emitWindow, toAuthError } from "../../../events/emit";
+import { userMessage } from "../../../firebase/message";
 export class InputName extends connect(store)(LitElement) {
     constructor() {
         super();
@@ -26,13 +29,27 @@ export class InputName extends connect(store)(LitElement) {
             e.preventDefault();
         };
         this.alertProfile = async () => {
-            if (auth.currentUser) {
-                await updateProfile(auth.currentUser, { displayName: this.value })
+            const current = auth.currentUser;
+            if (current) {
+                await updateProfile(current, { displayName: this.value })
                     .then(() => { store.dispatch(accName(this.value)); })
-                    .then(() => { alert('updated name:' + this.value); });
+                    .then(() => {
+                    emitWindow(pwaProfileUpdated, {
+                        uid: current.uid,
+                        displayName: this.value,
+                        photoURL: current.photoURL
+                    });
+                    alert('Name saved: ' + this.value);
+                })
+                    .catch((error) => {
+                    emitWindow(pwaAuthError, toAuthError(error));
+                    alert(userMessage(error));
+                });
             }
             else {
-                alert('Please Login');
+                const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
+                emitWindow(pwaAuthError, detail);
+                alert(userMessage(detail));
             }
         };
     }
@@ -64,7 +81,9 @@ export class InputName extends connect(store)(LitElement) {
           <input
             id            = "pwa-name"
             name          = "username"
+            part          = "name"
             type          = "text"
+            autocomplete  = "name"
             data-label    = "Contact Name"
             @input        = "${this.handleInput}"
             .value        = "${this.value}" />
@@ -74,6 +93,8 @@ export class InputName extends connect(store)(LitElement) {
         <!-- Save to Database -->
         <button
           class="action-button save"
+          part="submit"
+          type="button"
           @click="${this.alertProfile}"
           ?disabled="${this.login === false}">Update</button>
 

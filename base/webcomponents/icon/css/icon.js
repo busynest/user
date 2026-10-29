@@ -18,6 +18,12 @@ export const iconStyles = css `
     background-color:         var(--pwa_icon_hover_color, #214f34);
   }
 
+  .icon:focus-visible,
+  .login:focus-visible {
+    outline:                  2px solid var(--pwa_action_border_color, #214f34);
+    outline-offset:           2px;
+  }
+
   .icon {
     height:                   var(--pwa_icon_diameter, 44px);
     width:                    var(--pwa_icon_diameter, 44px);

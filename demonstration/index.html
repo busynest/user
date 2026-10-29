@@ -28,8 +28,6 @@
       } };
     </script>
 
-    <script type="module" src="../base/export/pwa-auth.js"></script>
-
   </head>
   <body>
 
@@ -38,7 +36,7 @@
         <div>
           <p class="mark">pwa-auth</p>
           <h1>Account controls for a small site</h1>
-          <p class="lede">A login button, a drawer, and a settings page. Each one reads the same Firebase session.</p>
+          <p class="lede">Five elements share one session: user-icon, user-drawer, user-login, user-settings, and email-reset. Listen for pwa- events, call the small API, restyle with --pwa_ variables.</p>
         </div>
         <iframe
           class="sponsor"
@@ -75,6 +73,15 @@
       </section>
 
       <section class="card">
+        <p class="kicker">Reset</p>
+        <h2>Send a reset email</h2>
+        <p class="note">email-reset renders once active is set.</p>
+        <div class="panel">
+          <email-reset active></email-reset>
+        </div>
+      </section>
+
+      <section class="card">
         <p class="kicker">Settings</p>
         <h2>Photo, profile, password, delete</h2>
         <p class="note">Four tabs. The photo falls back to the empty image until an upload lands in storage.</p>
@@ -83,7 +90,60 @@
         </div>
       </section>
 
+      <section class="card">
+        <p class="kicker">Events</p>
+        <h2>What this page hears</h2>
+        <p class="note">Each pwa- event lands here as it fires, including the drawer toggle.</p>
+        <ol id="event-log" class="log">
+          <li class="quiet">Waiting for an account event.</li>
+        </ol>
+      </section>
+
     </main>
+
+    <script type="module">
+      import {
+        pwaAuthChanged,
+        pwaLogin,
+        pwaLogout,
+        pwaSignup,
+        pwaAccountDeleted,
+        pwaProfileUpdated,
+        pwaEmailChanged,
+        pwaPasswordChanged,
+        pwaDrawerToggleName,
+        pwaAuthError,
+        userEmailChanged
+      } from '../base/export/pwa-auth.js';
+
+      const names = [
+        pwaAuthChanged,
+        pwaLogin,
+        pwaLogout,
+        pwaSignup,
+        pwaAccountDeleted,
+        pwaProfileUpdated,
+        pwaEmailChanged,
+        pwaPasswordChanged,
+        pwaDrawerToggleName,
+        pwaAuthError,
+        userEmailChanged
+      ];
+
+      const log = document.querySelector('#event-log');
+      const waiting = log.querySelector('.quiet');
+
+      for (const name of names) {
+        window.addEventListener(name, (event) => {
+          if (waiting) waiting.remove();
+          const item = document.createElement('li');
+          const detail = event instanceof CustomEvent ? event.detail : undefined;
+          item.textContent = name + ' ' + JSON.stringify(detail);
+          log.prepend(item);
+          while (log.children.length > 12) log.lastElementChild.remove();
+        });
+      }
+    </script>
 
   </body>
 

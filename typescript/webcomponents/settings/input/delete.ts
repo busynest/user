@@ -3,10 +3,13 @@ import { state }              from "lit/decorators.js";
 import { connect }            from "pwa-helpers";
 import store, { AppState }    from "../../../store";
 import { buttonStyle }        from "../../form/css/button";
-import { auth }               from '../../../firebase/authentication';
-import { deleteDocument, deleteUserFiles, logAccountDelete, reauthenticate } from '../../../firebase/interface';
 import { labelStyle }         from "../../form/css/label";
 import { inputStyle }         from "../../form/css/input";
+import { auth }               from '../../../firebase/authentication';
+import { deleteUserFiles, logAccountDelete, reauthenticate } from '../../../firebase/interface';
+import { pwaAccountDeleted, pwaAuthError } from '../../../events/names';
+import { emitWindow, toAuthError } from '../../../events/emit';
+import { userMessage } from '../../../firebase/message';
 
 export class DeleteUser extends connect(store)(LitElement) {
    
@@ -36,7 +39,7 @@ export class DeleteUser extends connect(store)(LitElement) {
 
     :host {
       display:                  grid;
-      grid-template-rows:       1fr auto;
+      grid-template-rows:       auto auto auto;
     }
     
     p {
@@ -64,6 +67,7 @@ export class DeleteUser extends connect(store)(LitElement) {
 
       <button
         type="button"
+        part="submit"
         class="action-button deleteUser"
         ?disabled="${this.login === false}">Delete</button>
 
@@ -73,16 +77,27 @@ export class DeleteUser extends connect(store)(LitElement) {
   /* Delete Account */
   private alertDelete() {
     const current = auth.currentUser;
-    if (!current) { alert('Please Login'); return; }
+    if (!current) {
+      const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
+      emitWindow(pwaAuthError, detail);
+      alert(userMessage(detail));
+      return;
+    }
 
     const password = (this.shadowRoot!.querySelector('#pwa-delete-password') as HTMLInputElement).value;
-    if (password.length < 6) { alert('Enter your current password.'); return; }
+    if (password.length < 6) {
+      const detail = { code: 'pwa/current-password', message: 'Enter your current password.' };
+      emitWindow(pwaAuthError, detail);
+      alert(userMessage(detail));
+      return;
+    }
 
     const d = confirm("Delete Account?");
-    if (d == true) { this.officialDelete(password); }
+    if (d == true) { this.officialDelete(password); console.log("user gone"); }
+    else { console.log("user here"); }
   }
 
-  // Required - storage files, the users document, the analytics signal, then the auth user
+  // Required - storage files, then the analytics signal, then the auth user. The host owns users/{uid}.
   private officialDelete = async (password: string) => {
 
     const ok = await reauthenticate(password);
@@ -93,14 +108,16 @@ export class DeleteUser extends connect(store)(LitElement) {
 
     try {
 
-      await deleteUserFiles(current.uid);
-      try { await deleteDocument('users', current.uid); } catch { /* host may not have this document */ }
+      const uid = current.uid;
+      await deleteUserFiles(uid);
       await logAccountDelete();
       await current.delete();
+      emitWindow(pwaAccountDeleted, { uid });
 
     } catch (error) {
 
-      alert('Problem: ' + (error instanceof Error ? error.message : 'Delete failed'));
+      emitWindow(pwaAuthError, toAuthError(error));
+      alert(userMessage(error));
 
     }
 
@@ -115,4 +132,3 @@ declare global {
     'delete-user': DeleteUser;
   }
 }
-

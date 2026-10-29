@@ -1,3 +1,8 @@
+/* Optional - hide slotted links until user-drawer upgrades */
+user-drawer:not(:defined) {
+  display:                      none;
+}
+
  html {
   /* overflow:                   auto; */
   scroll-behavior:            smooth;

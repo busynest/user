@@ -1,5 +1,4 @@
 export declare const pwaDrawerToggle: () => void;
-export declare const alertEmail: (error: any) => void;
 export declare const reauthenticate: (password: string) => Promise<boolean>;
 export declare const logOut: () => Promise<void>;
 export declare const logAccount: () => Promise<void>;

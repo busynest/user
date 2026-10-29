@@ -17,6 +17,9 @@ import { inputStyle } from "../../form/css/input";
 import { buttonStyle } from "../../form/css/button";
 import { updatePassword } from "firebase/auth";
 import { reauthenticate } from "../../../firebase/interface";
+import { pwaAuthError, pwaPasswordChanged } from "../../../events/names";
+import { emitWindow, toAuthError } from "../../../events/emit";
+import { userMessage } from "../../../firebase/message";
 export class InputPassword extends connect(store)(LitElement) {
     constructor() {
         super();
@@ -30,7 +33,9 @@ export class InputPassword extends connect(store)(LitElement) {
         this.updatePass = async (currentPassword, newPassword) => {
             const current = auth.currentUser;
             if (!current) {
-                alert('Please Login');
+                const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
+                emitWindow(pwaAuthError, detail);
+                alert(userMessage(detail));
                 return;
             }
             const ok = await reauthenticate(currentPassword);
@@ -39,10 +44,11 @@ export class InputPassword extends connect(store)(LitElement) {
             }
             try {
                 await updatePassword(current, newPassword);
-                alert('Password updated');
+                emitWindow(pwaPasswordChanged, { uid: current.uid });
             }
             catch (error) {
-                alert(error instanceof Error ? error.message : 'Password was not updated');
+                emitWindow(pwaAuthError, toAuthError(error));
+                alert(userMessage(error));
             }
         };
     }
@@ -101,7 +107,9 @@ export class InputPassword extends connect(store)(LitElement) {
             <input
               id      = "pwa-new-password"
               name    = "new_password"
+              part    = "password"
               type    = "password"
+              autocomplete = "new-password"
               .value  = "${this.password}"
               @input  = "${this.handleInputChange}"
               aria-describedby = "password-help">
@@ -118,7 +126,9 @@ export class InputPassword extends connect(store)(LitElement) {
             <input
               id      = "pwa-verify-password"
               name    = "verify_password"
-              type    = "password">
+              part    = "verify"
+              type    = "password"
+              autocomplete = "new-password">
 
           </label>
 
@@ -139,6 +149,7 @@ export class InputPassword extends connect(store)(LitElement) {
         <!-- Submit -->
         <button
           type="submit"
+          part="submit"
           class="action-button pass"
           ?disabled="${this.login === false}">Update</button>
 
@@ -153,28 +164,35 @@ export class InputPassword extends connect(store)(LitElement) {
         this.password = entered;
         if (currentPassword.length < 6) {
             this.message = 'Enter your current password';
+            emitWindow(pwaAuthError, { code: 'pwa/current-password', message: 'Enter your current password.' });
             return;
         }
         if (!this.password) {
             this.message = 'Please enter a password';
+            emitWindow(pwaAuthError, { code: 'pwa/missing-password', message: this.message });
         }
         else if (this.password !== verify) {
             this.message = 'Passwords do not match';
+            emitWindow(pwaAuthError, { code: 'pwa/password-mismatch', message: this.message });
         }
         else if (this.password.length < 8) {
             this.message = 'Password must be at least 8 characters long';
+            emitWindow(pwaAuthError, { code: 'pwa/weak-password', message: this.message });
         }
         else {
             this.message = `Password entered:`;
             if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(this.password)) {
                 this.message = 'Password must include letters, numbers, and be 8+ characters';
+                emitWindow(pwaAuthError, { code: 'pwa/weak-password', message: this.message });
             }
             else {
                 if (auth.currentUser) {
                     this.updatePass(currentPassword, this.password);
                 }
                 else {
-                    alert('Please Login');
+                    const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
+                    emitWindow(pwaAuthError, detail);
+                    alert(userMessage(detail));
                 }
             }
         }

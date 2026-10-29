@@ -7,8 +7,8 @@
     <meta name="viewport"       content="width=device-width, minimum-scale=1, initial-scale=1" />
     <meta name="theme-color"    content="#272931" />
     <meta name="author"         content="Jacek Markiewicz" />
-    <meta name="description"    content="pwa-auth.js is a bundle of three HTML Tags, one JavaScript Script, and optionally CSS Custom Properties for Theme Customization. Sign up, login, log out, change account details, and delete the user's account." />
-    <meta name="keywords"       content="login, pwa, pwa-auth, auth, firebase, icon, drawer, settings, lit, redux, web components" />
+    <meta name="description"    content="Five elements: user-icon, user-drawer, user-login, user-settings, and email-reset. pwa- events, a small API, and --pwa_ theme variables." />
+    <meta name="keywords"       content="login, pwa, pwa-auth, auth, firebase, user-icon, user-drawer, user-login, user-settings, email-reset, web components" />
     <meta name="referrer"       content="origin" />
     <link rel="manifest"        href="./manifest.json" />
     <link rel="icon"            href="./images/favicon.ico">
@@ -71,9 +71,11 @@
 
     <main>
 
+      <p>Five elements share one session: user-icon, user-drawer, user-login, user-settings, and email-reset. Listen for pwa- events, call the small API, restyle with --pwa_ variables.</p>
+
       <section style="display: grid;">
 
-        <h2>Drawer Button</h2>
+        <h2>user-icon</h2>
 
         <!-- Login / Subscribe - Button -->
         <user-icon      empty="./images/empty.jpg"    subscribe    ></user-icon>
@@ -82,7 +84,7 @@
 
       <section>
 
-        <h2>Login Page</h2>
+        <h2>user-login</h2>
 
         <!-- Log-in - -Page-->
         <user-login     login     ></user-login>
@@ -91,7 +93,15 @@
 
       <section>
 
-        <h2>Settings Page</h2>
+        <h2>email-reset</h2>
+
+        <email-reset active></email-reset>
+
+      </section>
+
+      <section>
+
+        <h2>user-settings</h2>
 
         <!-- Settings - Page-->
         <user-settings  empty="./images/empty.jpg"></user-settings>

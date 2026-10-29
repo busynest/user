@@ -4,6 +4,7 @@ import { connect }                            from 'pwa-helpers/connect-mixin.js
 import { store, AppState }                    from '../../store';
 import { iconStyles }                         from './css/icon';
 import { toggleSign }                         from '../../redux/frontend';
+import { applyFirebaseConfig }                from '../../firebase/attribute';
 // import { faceIcon }                           from '../../css/svg';
 
 @customElement('user-icon')
@@ -20,6 +21,11 @@ export class UserIcon extends connect(store)(LitElement) {
   // @state() private _sign = false;
 
   constructor() { super(); }
+
+  override connectedCallback(): void {
+    applyFirebaseConfig(this);
+    super.connectedCallback();
+  }
 
   protected firstUpdated() {
     this.shadowRoot!.querySelector('.toggles')!.addEventListener('click', () => {
@@ -41,12 +47,14 @@ export class UserIcon extends connect(store)(LitElement) {
       <!-- two classes: icon / login -->
       <button
         type="button"
+        part="button"
         class="${this._user ? 'icon' : 'login'} toggles"
-        aria-label="${this._user ? 'account' : this.subscribe ? 'subscribe' : 'login'}">
+        aria-label="${this._user ? 'Account' : this.subscribe ? 'Subscribe' : 'Login'}">
         
         ${ this._user ? html`
             <img
               class="userImage"
+              part="photo"
               alt=""
               src="${this._photoURL ? this._photoURL : this.empty}">
           ` : this.subscribe ? 'Subscribe' : 'Login' }

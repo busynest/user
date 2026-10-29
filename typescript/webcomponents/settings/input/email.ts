@@ -8,6 +8,10 @@ import { inputStyle }       from "../../form/css/input";
 import { buttonStyle }      from "../../form/css/button";
 import { verifyBeforeUpdateEmail } from "firebase/auth";
 import { reauthenticate }   from "../../../firebase/interface";
+import { pwaAuthError, pwaEmailChanged } from "../../../events/names";
+import { emitWindow, toAuthError } from "../../../events/emit";
+import { emitLegacyEmailChanged } from "../../../deprecated/email-changed";
+import { userMessage } from "../../../firebase/message";
 
 export class ContactEmail extends connect(store)(LitElement) {
 
@@ -63,7 +67,9 @@ export class ContactEmail extends connect(store)(LitElement) {
         <input
           id            = "pwa-email"
           name          = "email"
+          part          = "email"
           type          = "email"
+          autocomplete  = "email"
           class         = "email"
           data-label    = "Account Email"
           @input        = "${this.handleEmail}"
@@ -76,6 +82,7 @@ export class ContactEmail extends connect(store)(LitElement) {
       <button
         type          = "submit"
         class         = "action-button"
+        part          = "submit"
         ?disabled     = "${this.login === false}">Update</button>
 
     </form>
@@ -89,12 +96,22 @@ export class ContactEmail extends connect(store)(LitElement) {
     event.preventDefault();
 
     const current = auth.currentUser;
-    if (!current) { alert('Please Login'); return; }
+    if (!current) {
+      const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
+      emitWindow(pwaAuthError, detail);
+      alert(userMessage(detail));
+      return;
+    }
 
     const currentPassword = (this.shadowRoot?.querySelector('#pwa-current-email-password') as HTMLInputElement | null)?.value ?? '';
     const contactMail = this.shadowRoot?.querySelector('#pwa-email') as HTMLInputElement | null;
     if (!contactMail) { return; }
-    if (currentPassword.length < 6) { alert('Enter your current password.'); return; }
+    if (currentPassword.length < 6) {
+      const detail = { code: 'pwa/current-password', message: 'Enter your current password.' };
+      emitWindow(pwaAuthError, detail);
+      alert(userMessage(detail));
+      return;
+    }
 
     const ok = await reauthenticate(currentPassword);
     if (!ok) { return; }
@@ -104,15 +121,16 @@ export class ContactEmail extends connect(store)(LitElement) {
       // Required - verify the new address before it replaces the current one
       await verifyBeforeUpdateEmail(current, contactMail.value);
 
-      window.dispatchEvent(new CustomEvent("userEmailChanged", {
-        detail: { email: contactMail.value }
-      }));
+      const detail = { email: contactMail.value };
+      emitWindow(pwaEmailChanged, detail);
+      emitLegacyEmailChanged(detail);
 
-      alert('Verification email sent');
+      alert('Check your inbox to confirm the new address.');
 
     } catch (error) {
 
-      alert(error instanceof Error ? error.message : 'Email was not updated');
+      emitWindow(pwaAuthError, toAuthError(error));
+      alert(userMessage(error));
 
     }
 

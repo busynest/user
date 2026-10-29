@@ -1,52 +1,62 @@
-
-
-import { html, TemplateResult,  }     from 'lit';
+import { html, TemplateResult, css } from 'lit';
 import { customElement, state }       from "lit/decorators.js"
 import { LazyLoader }                 from '../../lazyLoader';
 import { auth }                       from '../../firebase/authentication';
-
-import { sendPasswordResetEmail/*, verifyPasswordResetCode*/ }     from 'firebase/auth';
+import { sendPasswordResetEmail }     from 'firebase/auth';
+import { pwaAuthError }               from '../../events/names';
+import { emitWindow, toAuthError }    from '../../events/emit';
+import { userMessage }                from '../../firebase/message';
+import { labelStyle }                 from './css/label';
+import { inputStyle }                 from './css/input';
+import { buttonStyle }                from './css/button';
 
 @customElement('email-reset')
 export class EmailReset extends LazyLoader {
 
   @state() private userEmail :string = '';
-  // @state() private code :string = '';
 
   constructor() { super(); }
 
-  // Handle input changes to keep the password property in sync
+  static styles = [
+    labelStyle,
+    inputStyle,
+    buttonStyle,
+    css`:host { display: block; }`
+  ];
+
   private handleEmail(event: Event) {
     const input = event.target as HTMLInputElement;
-    this.userEmail = input.value; // Update the property with the input value
+    this.userEmail = input.value;
   }
 
-    protected render():TemplateResult {
-      return html`
+  protected render(): TemplateResult {
+    return html`
 
-        <form
-          class="resetPass"
-          @submit="${this.resetPassword}">
+      <form
+        class="resetPass"
+        novalidate
+        @submit="${this.resetPassword}">
+
+        <label>Email
 
           <input
-            class       ="email"
-            type        ="text"
-            placeholder ="email"
-            @change     ="${this.handleEmail}">
+            class         = "email"
+            part          = "email"
+            type          = "email"
+            autocomplete  = "email"
+            @change       = "${this.handleEmail}">
 
-          <button
-            type        ="submit"
-            class       ="reset">Forgot Password</button>
+        </label>
 
-        </form>
+        <button
+          type          = "submit"
+          part          = "submit"
+          class         = "reset action-button">Send reset email</button>
 
-        <input
-          class ="phoneVerify"
-          type  ="text" />
+      </form>
 
-    `
+    `;
   }
-
 
   // Required - cancel native submit, then send the reset
   private resetPassword = async (event: Event) => {
@@ -56,66 +66,27 @@ export class EmailReset extends LazyLoader {
     const input = this.renderRoot.querySelector('.email') as HTMLInputElement | null;
     this.userEmail = input?.value ?? '';
 
-    await sendPasswordResetEmail( auth, this.userEmail )
-    .catch( (error: Error) => { console.log(error); } );
+    if (this.userEmail.length < 4) {
+      const detail = { code: 'pwa/missing-email', message: 'Enter an email address.' };
+      emitWindow(pwaAuthError, detail);
+      alert(userMessage(detail));
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, this.userEmail);
+      alert('Check your inbox for the reset email.');
+    } catch (error) {
+      emitWindow(pwaAuthError, toAuthError(error));
+      alert(userMessage(error));
+    }
 
   }
-/*
-  private async restCode () {
-
-    await verifyPasswordResetCode(auth, this.code);
-    
-  }
-*/
 
 }
 
-declare global { 
+declare global {
   interface HTMLElementTagNameMap {
     'email-reset': EmailReset;
   }
 }
-
-
-/*
-    let actionCodeSettings = {
-        url: 'https://www.contractorscentre.com/?email=user@example.com',
-        iOS: {
-          bundleId: 'com.contracotors.ios'
-        },
-        android: {
-          packageName: 'com.contracotors.android',
-          installApp: true,
-          minimumVersion: '12'
-        },
-        handleCodeInApp: true
-      };
-*/
-
-/**
- * 
-private _restCode() {
-    let x:any = this.shadowRoot!.querySelector('.email')!
-    let email = x.target.value
-    // @ts-ignore
-    firebase
-        .auth()
-        .sendPasswordResetEmail( email )
-        // @ts-ignore
-        .then( () => { firebase.auth().confirmPasswordReset( code, newPassword )})
-      .catch( (error:any) => { console.log("Password Reset Error: ", error); });
-
-    // @ts-ignore
-    firebase
-     .auth()
-     // @ts-ignore
-     .verifyPasswordResetCode( code )
-     .then()
-     .catch()
-
- // firebase.auth().confirmPasswordReset( code, newPassword )
- // firebase.auth().verifyPasswordResetCode( code )
-}
-
-
- */

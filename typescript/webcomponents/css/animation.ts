@@ -11,9 +11,9 @@ export const animation : CSSResult = css`
 
 .inner {
     display:                                grid;
-    grid-template-areas:                    'pages';
     position:                               relative;
-    overflow-y:                             auto;
+    grid-template-areas:                    'pages';
+    overflow:                               hidden; /* Required - clip the slide under the header */
     border-bottom:                          1px solid var(--pwa_line_color, #e3daca);
     border-radius:                          0 0 14px 14px;
     scrollbar-width:                        thin;
@@ -31,19 +31,17 @@ export const animation : CSSResult = css`
 
     will-change:                            transform;
 
-    transition-property:                    transform, transition;
-    -webkit-transition-property:            transform, transition;
-
     backface-visibility:                    hidden;
 
-    transition-timing-function:             ease-in-out;
-    -webkit-transition-timing-function:     ease-in-out;
-
-    transition-duration:                    2s;
-    -webkit-transition-duration:            2s;
+    /* Optional - --pwa_slide_time: 1.4s. Optional - --pwa_slide_ease: ease-in-out. */
+    /* Required - form swap is 1.4s * 1.429, about 2s. Hide after the slide. */
+    transition:
+      transform calc(var(--pwa_slide_time, 1.4s) * 1.429) var(--pwa_slide_ease, ease-in-out),
+      visibility 0s linear calc(var(--pwa_slide_time, 1.4s) * 1.429);
 
     position:relative;
     z-index: 1;
+    width:                                  100%;
 }
 
 @keyframes slide-out {
@@ -52,20 +50,29 @@ export const animation : CSSResult = css`
 }
 
 .opened {
-    transform:                              translate3d(0, 0, 0);/*rotateY(0deg);*/
-    position:relative;
+    transform:                              translate3d(0, 0, 0);
     visibility:                             visible;
-    z-index: 3;
+    position:                               relative; /* Required - this form sets the panel height */
+    z-index:                                3;
+    transition:
+      transform calc(var(--pwa_slide_time, 1.4s) * 1.429) var(--pwa_slide_ease, ease-in-out),
+      visibility 0s linear 0s;
 }
 
 .closed {
-    position:                               absolute; /* Required - hidden sections do not stretch the panel */
-    width:                                  100%;
-    height:                                 0;
-    overflow:                               hidden;
+    /* Required - same cell, full width, slid up. Absolute so it does not stretch the row. */
+    transform:                              translate3d(0, -100%, 0);
     visibility:                             hidden;
     pointer-events:                         none;
+    position:                               absolute;
+    top:                                    0;
+    left:                                   0;
+    width:                                  100%;
     z-index:                                2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :host { --pwa_slide_time: 0s; }
 }
 
 `;

@@ -42,7 +42,9 @@ export declare class UserSettings extends UserSettings_base {
     private profileTopic;
     private name;
     constructor();
+    connectedCallback(): void;
     protected firstUpdated(): void;
+    private onTabKey;
     stateChanged(state: AppState): void;
     static get styles(): CSSResultArray;
     protected render(): import("lit-html").TemplateResult<1>;

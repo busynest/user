@@ -5,21 +5,8 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ]
-  },
-  "storage": {
-    "rules": "storage.rules"
-  },
-  "headers": [
-    {
-      "source": "/**/*.@(jpg|jpeg|gif|png)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, immutable"
-        }
-      ]
-    },
+    ],
+    "headers": [
       {
         "source": "**/*.@(html)",
         "headers": [
@@ -29,122 +16,65 @@
           }
         ]
       },
-    {
-      "source": "/**/*.@(css)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/**/*.@(js)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, immutable"
-        }
-      ]
-    },
-    {
-      "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
-    },
-    {
-      "source": "**/*.@(jpg|jpeg|gif|png)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600"
-        }
-      ]
-    },
-    {
-      "source": "**",
-      "headers": [
-        {
-          "key": "Service-Worker-Allowed",
-          "value": "/"
-        }
-      ]
-    },
-    {
-      "source": "https://storage.googleapis.com",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
-    },
-    {
-      "source": "https://www.google.com",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
-    },
-    {
-      "source": "https://www.google.ca",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
-    },
-    {
-      "source": "https://cse.google.com",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
-    },
-    {
-      "source": "https://www.gstatic.com",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
-    },
-    {
-      "source": "https://fonts.googleapis.com",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
-    },
-    {
-      "source": "https://firebasestorage.googleapis.com",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
-    },
-    {
-      "source": "maps.googleapis.com",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
-    }
-  ]
+      {
+        "source": "/**/*.@(js)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=3600"
+          }
+        ]
+      },
+      {
+        "source": "/**/*.@(css)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=3600"
+          }
+        ]
+      },
+      {
+        "source": "/**/*.@(jpg|jpeg|gif|png)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=3600"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          }
+        ]
+      },
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "Service-Worker-Allowed",
+            "value": "/"
+          }
+        ]
+      }
+    ]
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "emulators": {
+    "auth": { "host": "127.0.0.1", "port": 9099 },
+    "firestore": { "host": "127.0.0.1", "port": 8181 },
+    "storage": { "host": "127.0.0.1", "port": 9199 },
+    "ui": { "enabled": false },
+    "singleProjectMode": true
+  }
 }

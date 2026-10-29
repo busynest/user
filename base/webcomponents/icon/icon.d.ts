@@ -38,6 +38,7 @@ export declare class UserIcon extends UserIcon_base {
     private _user;
     private _photoURL;
     constructor();
+    connectedCallback(): void;
     protected firstUpdated(): void;
     stateChanged(state: AppState): void;
     static get styles(): CSSResultArray;

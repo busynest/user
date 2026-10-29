@@ -11,6 +11,9 @@ import { html, LitElement, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase/authentication';
+import { pwaAuthError, pwaLogin } from '../../events/names';
+import { emitWindow, toAuthError, toPwaUser } from '../../events/emit';
+import { userMessage } from '../../firebase/message';
 import { buttonStyle } from './css/button';
 import { labelStyle } from './css/label';
 import { inputStyle } from './css/input';
@@ -27,10 +30,14 @@ let FormLogin = class FormLogin extends LitElement {
         this.password = '';
         this.signIn = async (email, password) => {
             try {
-                await signInWithEmailAndPassword(auth, email, password);
+                const signed = await signInWithEmailAndPassword(auth, email, password);
+                const person = toPwaUser(signed.user);
+                if (person)
+                    emitWindow(pwaLogin, { user: person });
             }
             catch (error) {
-                alert(error instanceof Error ? error.message : 'Sign in failed');
+                emitWindow(pwaAuthError, toAuthError(error));
+                alert(userMessage(error));
             }
         };
     }
@@ -65,7 +72,8 @@ let FormLogin = class FormLogin extends LitElement {
       <!-- Log-in State -->
       <form
         @submit=          ${this._handleSubmit}
-        autocomplete=     "on">
+        autocomplete=     "on"
+        novalidate>
 
         <ul>
 
@@ -74,9 +82,11 @@ let FormLogin = class FormLogin extends LitElement {
             <label>Email
 
               <input
-                id=       "${this.source}-login-email"
-                type=     "email"
-                @change=  "${this.handleEmail}">
+                id=             "${this.source}-login-email"
+                part=           "email"
+                type=           "email"
+                autocomplete=   "email"
+                @change=        "${this.handleEmail}">
 
             </label>
 
@@ -87,9 +97,11 @@ let FormLogin = class FormLogin extends LitElement {
             <label>Password
 
               <input
-                id=       "${this.source}-login-pass"
-                type=     "password"
-                @change=  "${this.handlePassword}">
+                id=             "${this.source}-login-pass"
+                part=           "password"
+                type=           "password"
+                autocomplete=   "current-password"
+                @change=        "${this.handlePassword}">
 
             </label>
 
@@ -99,6 +111,7 @@ let FormLogin = class FormLogin extends LitElement {
 
             <button
               type=       "submit"
+              part=       "submit"
               class=      "login action-button">Sign in</button>
 
           </li>
@@ -116,6 +129,7 @@ let FormLogin = class FormLogin extends LitElement {
 
         <button
           type="button"
+          part="switch"
           class="new"
           @click="${this.change}">create a new account</button>
 
@@ -147,11 +161,15 @@ let FormLogin = class FormLogin extends LitElement {
     login() {
         this.readFields();
         if (this.email.length < 4) {
-            alert('Please enter an email address.');
+            const detail = { code: 'pwa/missing-email', message: 'Enter an email address.' };
+            emitWindow(pwaAuthError, detail);
+            alert(userMessage(detail));
             return;
         }
         if (this.password.length < 6) {
-            alert('Password must be at least 6 characters.');
+            const detail = { code: 'pwa/short-password', message: 'Password must be at least 6 characters.' };
+            emitWindow(pwaAuthError, detail);
+            alert(userMessage(detail));
             return;
         }
         this.signIn(this.email, this.password);

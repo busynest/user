@@ -42,6 +42,9 @@ export const userSlice = createSlice({
                 state.drawer = true;
             }
         },
+        openSign: (state) => {
+            state.drawer = true;
+        },
         closeSign: (state) => {
             state.drawer = false;
         },
@@ -82,6 +85,6 @@ export const userSlice = createSlice({
         }
     }
 });
-export const { universalToggle, navigateAuth, iconAuth, nameAuth, userAuth, toggleSign, closeSign, signUpAction, signUpClose } = userSlice.actions;
+export const { universalToggle, navigateAuth, iconAuth, nameAuth, userAuth, toggleSign, openSign, closeSign, signUpAction, signUpClose } = userSlice.actions;
 export default userSlice.reducer;
 //# sourceMappingURL=frontend.js.map

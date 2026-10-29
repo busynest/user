@@ -24,10 +24,11 @@ import { Analytics, getAnalytics, isSupported, logEvent } from "firebase/analyti
 import { deleteObject, listAll, ref } from "firebase/storage";
 
 // Start Authentication
-import { application, auth, db, storage } from './authentication'
+import { application, auth, db, isReady, onReady, storage } from './authentication'
 
-// LANGUAGE
-getAuth().useDeviceLanguage();
+import { pwaAuthChanged, pwaAuthError, pwaLogout } from '../events/names';
+import { emitWindow, toAuthError, toPwaUser } from '../events/emit';
+import { userMessage } from './message';
 
 
 
@@ -38,33 +39,11 @@ getAuth().useDeviceLanguage();
 // Required - analytics, only when this browser supports it
 let analytics: Analytics | undefined;
 
-const analyticsReady: Promise<void> = (async () => {
-  if (await isSupported()) {
-    analytics = getAnalytics(application);
-  }
-})();
+let analyticsReady: Promise<void> = Promise.resolve();
 
 
 
 // END ANALYTICS ----------------
-
-
-
-// Start Support Checks
-
-
-
-// Check for Service Worker support
-if ('serviceWorker' in navigator) { console.log('Service Worker is supported'); }
-else { console.log('Service Worker is not supported'); }
-
-// Check for Push API support
-if ('PushManager' in window) { console.log('Push API is supported'); }
-else { console.log('Push API is not supported'); }
-
-
-
-// End Support Checks
 
 
 
@@ -76,10 +55,23 @@ export const pwaDrawerToggle = () => {
     // Close Drawer State
     store.dispatch( closeSign() );
 }
-    
 
-// Firebase State Change Function
-onAuthStateChanged(auth, (user) => {
+
+// Required - redux, analytics, and pwa-auth-changed once the app exists
+onReady(() => {
+
+  getAuth(application).useDeviceLanguage();
+
+  analyticsReady = (async () => {
+    if (await isSupported()) {
+      analytics = getAnalytics(application);
+    }
+  })();
+
+  onAuthStateChanged(auth, (user) => {
+
+  // Required - every auth state, including the first
+  emitWindow(pwaAuthChanged, { user: toPwaUser(user) });
 
   // Account Login
   if (user) {
@@ -135,6 +127,8 @@ onAuthStateChanged(auth, (user) => {
 
   }
 
+  });
+
 });
 
 
@@ -147,18 +141,15 @@ onAuthStateChanged(auth, (user) => {
 
 
 
-// To Do - Alert        
-
-export const alertEmail = (error:any) => { console.log( 'Problem: ' + error );/* if (this._user) { this.updateEmail(); } else { alert('Please Login'); } */ }
-
-
 // Required - recent login before email, password, or delete
 export const reauthenticate = async (password: string) => {
 
   const current = auth.currentUser;
 
   if (!current || !current.email) {
-    alert('Please Login');
+    const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
+    emitWindow(pwaAuthError, detail);
+    alert(userMessage(detail));
     return false;
   }
 
@@ -167,13 +158,27 @@ export const reauthenticate = async (password: string) => {
     await reauthenticateWithCredential(current, credential);
     return true;
   } catch (error) {
-    alert(error instanceof Error ? error.message : 'Current password is incorrect');
+    emitWindow(pwaAuthError, toAuthError(error));
+    alert(userMessage(error));
     return false;
   }
 
 };
 
-export const logOut             = async () => { return signOut(auth); };
+export const logOut             = async () => {
+  if (!isReady()) {
+    const detail = { code: 'pwa/not-ready', message: 'Sign-in is not ready yet.' };
+    emitWindow(pwaAuthError, detail);
+    throw new Error(detail.message);
+  }
+  try {
+    await signOut(auth);
+    emitWindow(pwaLogout, { user: null });
+  } catch (error) {
+    emitWindow(pwaAuthError, toAuthError(error));
+    throw error;
+  }
+};
 
 export const logAccount         = async () => {
   await analyticsReady;

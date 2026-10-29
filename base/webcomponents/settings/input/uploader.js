@@ -14,8 +14,10 @@ import { connect } from 'pwa-helpers';
 import { auth, storage } from '../../../firebase/authentication';
 import { updateProfile } from 'firebase/auth';
 import { accImage } from '../../../redux/backend';
-import { ref, updateMetadata, getDownloadURL, uploadBytesResumable } from "@firebase/storage";
+import { ref, updateMetadata, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { labelStyle } from '../../form/css/label';
+import { pwaAuthError, pwaProfileUpdated } from '../../../events/names';
+import { emitWindow, toAuthError } from '../../../events/emit';
 export class ContactPhoto extends connect(store)(LitElement) {
     constructor() {
         super();
@@ -27,9 +29,22 @@ export class ContactPhoto extends connect(store)(LitElement) {
         this.error = '';
         this.status = '';
         this.dispatchPhoto = async (url) => {
-            if (auth.currentUser) {
-                await updateProfile(auth.currentUser, { photoURL: url }).catch((error) => { console.log(error); });
+            const current = auth.currentUser;
+            if (current) {
+                let saved = true;
+                await updateProfile(current, { photoURL: url }).catch((error) => {
+                    saved = false;
+                    emitWindow(pwaAuthError, toAuthError(error));
+                    console.log(error);
+                });
                 store.dispatch(accImage(url));
+                if (saved) {
+                    emitWindow(pwaProfileUpdated, {
+                        uid: current.uid,
+                        displayName: current.displayName,
+                        photoURL: url
+                    });
+                }
             }
         };
         this.progress = 0;
@@ -70,18 +85,19 @@ export class ContactPhoto extends connect(store)(LitElement) {
     render() {
         return html `
 <label
-      for="pwa-uploader"
       style="
         display: grid;
         grid-template-columns: auto 1fr;
         grid-gap: 16px;
         padding: 0 16px;
-      ">Upload:
+      ">Upload
       <progress
         id="pwa-uploader"
         class="uploader"
+        part="progress"
         value="0"
         max="100"
+        aria-label="Upload progress"
         style="
           height: 24px;
           width: 100%;
@@ -93,8 +109,10 @@ export class ContactPhoto extends connect(store)(LitElement) {
       id="photoURL"
       type="file"
       name="photoURL"
+      part="file"
       class="contractorPhoto"
       accept="image/*"
+      aria-label="Choose a photo"
       @change="${this.saveImage}"
       ?disabled="${this.login === false}"
       style="display: none;" />
@@ -107,7 +125,8 @@ export class ContactPhoto extends connect(store)(LitElement) {
         margin: 0 16px;
         padding: 0 16px 16px 16px;
       "
-      for ="photoURL">Photo:
+      for ="photoURL"
+      part="preview">Photo:
     
       <!-- Output - Retrieved Image -->
       <canvas
@@ -136,7 +155,8 @@ export class ContactPhoto extends connect(store)(LitElement) {
             this.error = '';
             this.status = 'Uploading...';
             const file = this.shadowRoot.querySelector('#photoURL');
-            if (!file) {
+            if (!file || !file.files?.[0]) {
+                emitWindow(pwaAuthError, { code: 'pwa/missing-file', message: 'No file selected' });
                 console.error('No file selected');
                 return;
             }
@@ -177,6 +197,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
             }, (error) => {
                 this.error = `Upload failed: ${error.message}`;
                 this.status = '';
+                emitWindow(pwaAuthError, toAuthError(error));
                 console.error('Upload failed:', error);
                 uploader.value = 0;
                 uploader.textContent = 'Error';

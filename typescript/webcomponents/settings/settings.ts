@@ -12,6 +12,7 @@ import './input/delete';
 import { listStyle } from '../form/css/list';
 import { animation } from '../css/animation';
 import { tapStyle } from '../css/tap';
+import { applyFirebaseConfig } from '../../firebase/attribute';
 
 @customElement('user-settings')
 export class UserSettings extends connect(store)(LitElement) {
@@ -23,6 +24,11 @@ export class UserSettings extends connect(store)(LitElement) {
   @state() private name = '';
 
   constructor() { super(); }
+
+  override connectedCallback(): void {
+    applyFirebaseConfig(this);
+    super.connectedCallback();
+  }
 
   protected firstUpdated() {
 
@@ -51,6 +57,19 @@ export class UserSettings extends connect(store)(LitElement) {
       store.dispatch(navigateAuth('delete'));
     } );
 
+  }
+
+  // Required - move across the four tabs from the keyboard
+  private onTabKey(event: KeyboardEvent) {
+    if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+    const order = ['profile', 'verification', 'password', 'delete'];
+    const index = order.indexOf(this.profileTopic);
+    const step = event.key === 'ArrowRight' ? 1 : -1;
+    const next = order[(index + step + order.length) % order.length];
+    store.dispatch(navigateAuth(next));
+    this.updateComplete.then(() => {
+      this.shadowRoot?.querySelector<HTMLButtonElement>(`button[value="${next}"]`)?.focus();
+    });
   }
 
   stateChanged(state: AppState) {
@@ -92,34 +111,50 @@ export class UserSettings extends connect(store)(LitElement) {
     return html`
     
       <!-- Page Menu -->
-      <nav>
+      <nav aria-label="Account" @keydown="${this.onTabKey}">
 
-        <ul>
+        <ul role="tablist">
 
           <li>
             <button
+              type="button"
+              role="tab"
+              part="tab"
               value="profile"
+              aria-selected="${this.profileTopic === 'profile'}"
               ?on="${ this.profileTopic === 'profile'}">Icon
             </button>
           </li>
 
           <li>
             <button
+              type="button"
+              role="tab"
+              part="tab"
               value="verification"
+              aria-selected="${this.profileTopic === 'verification'}"
               ?on="${ this.profileTopic === 'verification'}">Profile
             </button>
           </li>
 
           <li>
-            <button 
+            <button
+              type="button"
+              role="tab"
+              part="tab"
               value="password"
+              aria-selected="${this.profileTopic === 'password'}"
               ?on="${ this.profileTopic === 'password'}">Password
             </button>
           </li>
 
           <li>
             <button
+              type="button"
+              role="tab"
+              part="tab"
               value="delete"
+              aria-selected="${this.profileTopic === 'delete'}"
               ?on="${ this.profileTopic === 'delete'}">Delete
             </button>
           </li>
@@ -135,52 +170,68 @@ export class UserSettings extends connect(store)(LitElement) {
 
           <!-- Page 1: Profile -->
           <section
+            part="panel"
+            role="tabpanel"
+            aria-hidden="${this.profileTopic === 'profile' ? 'false' : 'true'}"
+            ?inert="${this.profileTopic !== 'profile'}"
             class="content ${ this.profileTopic === 'profile' ? 'opened' : 'closed'}">
 
             <!-- Display Username -->
             <h2>${this.name}</h2>
 
             <!-- Custom Image Element - Display / Upload -->
-            <contact-photo emptyArtwork="${this.empty}"></contact-photo>
+            <contact-photo emptyArtwork="${this.empty}" exportparts="progress, file, preview"></contact-photo>
 
           </section>
           
           <!-- Page 2: Verification -->
           <section
+            part="panel"
+            role="tabpanel"
+            aria-hidden="${this.profileTopic === 'verification' ? 'false' : 'true'}"
+            ?inert="${this.profileTopic !== 'verification'}"
             class="content ${ this.profileTopic === 'verification' ? 'opened' : 'closed'}">
 
             <!-- Page Title -->
             <h2>Contact Information</h2>
 
             <!-- Custom - Username -->
-            <input-name></input-name>
+            <input-name exportparts="name, submit: name-submit"></input-name>
 
             <!-- Custom - Email -->
-            <contact-email></contact-email>
+            <contact-email exportparts="email, submit: email-submit"></contact-email>
 
           </section>
 
           <!-- Page 3: Password -->
           <section
+            part="panel"
+            role="tabpanel"
+            aria-hidden="${this.profileTopic === 'password' ? 'false' : 'true'}"
+            ?inert="${this.profileTopic !== 'password'}"
             class="content ${ this.profileTopic === 'password' ? 'opened' : 'closed'}">
 
             <!-- Page Title -->
             <h2>Password</h2>
 
             <!-- Custom - Password -->
-            <input-password></input-password>
+            <input-password exportparts="password, verify, submit: password-submit"></input-password>
 
           </section>
 
           <!-- Page 4: Delete -->
           <section
+            part="panel"
+            role="tabpanel"
+            aria-hidden="${this.profileTopic === 'delete' ? 'false' : 'true'}"
+            ?inert="${this.profileTopic !== 'delete'}"
             class="content ${ this.profileTopic === 'delete' ? 'opened' : 'closed'}">
 
             <!-- Page Title -->
             <h2>Delete Account</h2>
 
             <!-- Custom - Delete -->
-            <delete-user></delete-user>
+            <delete-user exportparts="submit: delete"></delete-user>
 
           </section>
 
