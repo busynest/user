@@ -14,10 +14,12 @@ All notable changes to pwa-auth.js will be documented in this file.
 - getCurrentUser(), onUserChanged(), openDrawer(), closeDrawer(), toggleDrawer()
 - initialize({ app, config }) and the firebase-config attribute
 - vitest for event shape and onUserChanged unsubscribe
+- reauthenticate(password) before email, password, and delete
 
 ## Changed
 - userEmailChanged still fires on window and is deprecated
 - types resolve for pwa-auth and pwa-auth/production
+- the default entry stays base/export/pwa-auth.js. pwa-auth/production is the Rollup bundle
 - lit and firebase are peer dependencies, sideEffects is true, and files lists the publish set
 - alerts use short sentences; pwa-auth-error still carries the code
 - drawer traps focus, closes on Escape, and exposes ::part
@@ -27,8 +29,20 @@ All notable changes to pwa-auth.js will be documented in this file.
 - lit and firebase are peers plus devDependencies, not both a dependency and a peer
 - storage imports use firebase/storage
 - sign-in forms use novalidate so a short email reaches pwa-auth-error
+- sign-in uses signInWithEmailAndPassword. Sign-in and sign-up require 6 characters
 - drawer and form durations follow --pwa_slide_time, keeping the 1.4s / 1.5s / 2.2s / 2s ratios
-- delete account also removes users/{uid} when rules allow it
+- delete removes Storage files and the auth user. The host deletes users/{uid}
+- prepublishOnly runs the build. Pushing master runs the publish workflow
+
+# [3.4.11] - 2026-10-28
+
+## Changed
+- sign-in uses signInWithEmailAndPassword and requires 6 character passwords
+- email, password, and delete ask for the current password and reauthenticate
+- delete also removes the Firestore users/{uid} document when it exists
+- closed settings sections are not painted
+- website config is one window.process assignment
+- default npm entry is the Rollup bundle, and publish runs tsc then rollup
 
 # [3.4.10] - 2026-10-28
 

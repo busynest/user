@@ -180,8 +180,8 @@ export class FormSignup extends LitElement {
       alert(userMessage(detail));
       return;
     }
-    if (this.password.length < 4) {
-      const detail = { code: 'pwa/missing-password', message: 'Enter a password.' };
+    if (this.password.length < 6) {
+      const detail = { code: 'pwa/short-password', message: 'Password must be at least 6 characters.' };
       emitWindow(pwaAuthError, detail);
       alert(userMessage(detail));
       return;

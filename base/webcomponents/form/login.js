@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { html, LitElement, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { EmailAuthProvider, signInWithCredential } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase/authentication';
 import { pwaAuthError, pwaLogin } from '../../events/names';
 import { emitWindow, toAuthError, toPwaUser } from '../../events/emit';
@@ -30,8 +30,7 @@ let FormLogin = class FormLogin extends LitElement {
         this.password = '';
         this.signIn = async (email, password) => {
             try {
-                const authCredential = EmailAuthProvider.credential(email, password);
-                const signed = await signInWithCredential(auth, authCredential);
+                const signed = await signInWithEmailAndPassword(auth, email, password);
                 const person = toPwaUser(signed.user);
                 if (person)
                     emitWindow(pwaLogin, { user: person });
@@ -167,8 +166,8 @@ let FormLogin = class FormLogin extends LitElement {
             alert(userMessage(detail));
             return;
         }
-        if (this.password.length < 4) {
-            const detail = { code: 'pwa/missing-password', message: 'Enter a password.' };
+        if (this.password.length < 6) {
+            const detail = { code: 'pwa/short-password', message: 'Password must be at least 6 characters.' };
             emitWindow(pwaAuthError, detail);
             alert(userMessage(detail));
             return;

@@ -12,7 +12,7 @@ import { closeSign, iconAuth, nameAuth, userAuth } from '../redux/frontend';
 import { accID, accEmail, accImage, accName } from '../redux/backend';
 
 // Firebase Auth
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { EmailAuthProvider, getAuth, onAuthStateChanged, reauthenticateWithCredential, signOut } from 'firebase/auth';
 
 // Firebase Firestore
 import { doc, deleteDoc } from "firebase/firestore";
@@ -28,6 +28,7 @@ import { application, auth, db, isReady, onReady, storage } from './authenticati
 
 import { pwaAuthChanged, pwaAuthError, pwaLogout } from '../events/names';
 import { emitWindow, toAuthError, toPwaUser } from '../events/emit';
+import { userMessage } from './message';
 
 
 
@@ -139,6 +140,30 @@ onReady(() => {
 // Module Exports ---------------- Exact Name Reference ---------------- Firebase Action 
 
 
+
+// Required - recent login before email, password, or delete
+export const reauthenticate = async (password: string) => {
+
+  const current = auth.currentUser;
+
+  if (!current || !current.email) {
+    const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
+    emitWindow(pwaAuthError, detail);
+    alert(userMessage(detail));
+    return false;
+  }
+
+  try {
+    const credential = EmailAuthProvider.credential(current.email, password);
+    await reauthenticateWithCredential(current, credential);
+    return true;
+  } catch (error) {
+    emitWindow(pwaAuthError, toAuthError(error));
+    alert(userMessage(error));
+    return false;
+  }
+
+};
 
 export const logOut             = async () => {
   if (!isReady()) {

@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const firebase = vi.hoisted(() => {
   return {
-    signInWithCredential: vi.fn(async () => ({
+    signInWithEmailAndPassword: vi.fn(async () => ({
       user: {
         uid: '1',
         displayName: 'Ada',
@@ -28,10 +28,7 @@ vi.mock('firebase/auth', () => ({
     callback(firebase.currentUser);
     return () => undefined;
   }),
-  EmailAuthProvider: {
-    credential: (email: string, password: string) => ({ email, password })
-  },
-  signInWithCredential: firebase.signInWithCredential,
+  signInWithEmailAndPassword: firebase.signInWithEmailAndPassword,
   signOut: firebase.signOut
 }));
 
@@ -75,7 +72,7 @@ function heard(name: string) {
 describe('sign-in and sign-out', () => {
 
   beforeEach(() => {
-    firebase.signInWithCredential.mockClear();
+    firebase.signInWithEmailAndPassword.mockClear();
     firebase.signOut.mockClear();
     window.alert = vi.fn();
     document.body.replaceChildren();
@@ -100,7 +97,7 @@ describe('sign-in and sign-out', () => {
     password.value = 'secret';
     el.shadowRoot!.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
 
-    expect(firebase.signInWithCredential).not.toHaveBeenCalled();
+    expect(firebase.signInWithEmailAndPassword).not.toHaveBeenCalled();
     expect(errors.seen[0].detail).toEqual({ code: 'pwa/missing-email', message: 'Enter an email address.' });
     expect(window.alert).toHaveBeenCalledWith('Enter an email address.');
     errors.stop();
@@ -119,7 +116,7 @@ describe('sign-in and sign-out', () => {
     el.shadowRoot!.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    expect(firebase.signInWithCredential).toHaveBeenCalledOnce();
+    expect(firebase.signInWithEmailAndPassword).toHaveBeenCalledOnce();
     expect(logins.seen[0].detail.user).toEqual({
       uid: '1',
       displayName: 'Ada',

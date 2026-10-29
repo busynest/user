@@ -16,6 +16,7 @@ import { labelStyle } from "../../form/css/label";
 import { inputStyle } from "../../form/css/input";
 import { buttonStyle } from "../../form/css/button";
 import { updatePassword } from "firebase/auth";
+import { reauthenticate } from "../../../firebase/interface";
 import { pwaAuthError, pwaPasswordChanged } from "../../../events/names";
 import { emitWindow, toAuthError } from "../../../events/emit";
 import { userMessage } from "../../../firebase/message";
@@ -29,20 +30,25 @@ export class InputPassword extends connect(store)(LitElement) {
             e.preventDefault();
             this.alertPassword();
         };
-        this.updatePass = async (newPassword) => {
-            if (auth.currentUser) {
-                const current = auth.currentUser;
-                await updatePassword(current, newPassword)
-                    .then(() => { emitWindow(pwaPasswordChanged, { uid: current.uid }); })
-                    .catch((error) => {
-                    emitWindow(pwaAuthError, toAuthError(error));
-                    alert(userMessage(error));
-                });
-            }
-            else {
+        this.updatePass = async (currentPassword, newPassword) => {
+            const current = auth.currentUser;
+            if (!current) {
                 const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
                 emitWindow(pwaAuthError, detail);
                 alert(userMessage(detail));
+                return;
+            }
+            const ok = await reauthenticate(currentPassword);
+            if (!ok) {
+                return;
+            }
+            try {
+                await updatePassword(current, newPassword);
+                emitWindow(pwaPasswordChanged, { uid: current.uid });
+            }
+            catch (error) {
+                emitWindow(pwaAuthError, toAuthError(error));
+                alert(userMessage(error));
             }
         };
     }
@@ -64,7 +70,7 @@ export class InputPassword extends connect(store)(LitElement) {
         display:        grid;
       }
 
-      form { display: grid; grid-template-rows: 1fr 1fr auto;}
+      form { display: grid; }
 
       p.error { color: red; }
     
@@ -77,6 +83,21 @@ export class InputPassword extends connect(store)(LitElement) {
       <form
         autocomplete="off"
         @submit="${this.default}">
+
+        <!-- Required - recent login -->
+        <div>
+
+          <label for="pwa-current-password">Current Password
+
+            <input
+              id      = "pwa-current-password"
+              name    = "current_password"
+              type    = "password"
+              autocomplete = "current-password">
+
+          </label>
+
+        </div>
 
         <!-- Input - 1 -->
         <div>
@@ -137,9 +158,15 @@ export class InputPassword extends connect(store)(LitElement) {
     `;
     }
     alertPassword() {
+        const currentPassword = this.shadowRoot.querySelector('#pwa-current-password').value;
         const entered = this.shadowRoot.querySelector('#pwa-new-password').value;
         const verify = this.shadowRoot.querySelector('#pwa-verify-password').value;
         this.password = entered;
+        if (currentPassword.length < 6) {
+            this.message = 'Enter your current password';
+            emitWindow(pwaAuthError, { code: 'pwa/current-password', message: 'Enter your current password.' });
+            return;
+        }
         if (!this.password) {
             this.message = 'Please enter a password';
             emitWindow(pwaAuthError, { code: 'pwa/missing-password', message: this.message });
@@ -160,7 +187,7 @@ export class InputPassword extends connect(store)(LitElement) {
             }
             else {
                 if (auth.currentUser) {
-                    this.updatePass(this.password);
+                    this.updatePass(currentPassword, this.password);
                 }
                 else {
                     const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };

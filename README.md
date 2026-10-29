@@ -160,7 +160,7 @@ The same forms, in the page instead of the drawer.
 |---|---|
 | `subscribe` | Starts on sign-up. Without it, starts on sign-in. |
 
-Logged in, the forms are replaced by slot `content`.
+Sign-in calls `signInWithEmailAndPassword`. Sign-in and sign-up reject a password shorter than 6 characters. Logged in, the forms are replaced by slot `content`.
 
 ```html
 <user-login>
@@ -178,7 +178,7 @@ Four tabs: Icon, Profile, Password, Delete.
 |---|---|
 | `empty` | Fallback photo, passed through to the uploader as `emptyArtwork`. |
 
-Profile updates the display name and starts an email change with `verifyBeforeUpdateEmail`. On success the page dispatches `pwa-email-changed` on `window` with `{ email }`. The old `userEmailChanged` event still fires and is deprecated. Password requires the verify field to match. On success the page dispatches `pwa-password-changed` on `window` with `{ uid }`. Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user. It does not delete `users/{uid}`. See [Data ownership](#data-ownership). A failed action alerts a short sentence and dispatches `pwa-auth-error`.
+Profile updates the display name. Email and password changes, and delete, ask for the current password and call `reauthenticate` first. Email then calls `verifyBeforeUpdateEmail`. On success the page dispatches `pwa-email-changed` on `window` with `{ email }`. The old `userEmailChanged` event still fires and is deprecated. Password requires the verify field to match. On success the page dispatches `pwa-password-changed` on `window` with `{ uid }`. Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user. It does not delete `users/{uid}`. See [Data ownership](#data-ownership). A failed action alerts a short sentence and dispatches `pwa-auth-error`.
 
 ### `<email-reset>`
 
@@ -345,7 +345,7 @@ import {
 } from 'pwa-auth';
 
 import {
-  logOut, logAccount, logAccountDelete, deleteDocument, pwaDrawerToggle
+  logOut, logAccount, logAccountDelete, deleteDocument, pwaDrawerToggle, reauthenticate
 } from 'pwa-auth';
 ```
 
@@ -362,6 +362,7 @@ import {
 | `logAccountDelete()` | Analytics event `delete_account`. It does not delete the account. |
 | `deleteDocument(collect, item)` | Deletes one Firestore document. |
 | `pwaDrawerToggle()` | Closes the drawer. It does not toggle. Prefer `closeDrawer()`. |
+| `reauthenticate(password)` | Confirms the current password before email, password, and delete. Returns true when it succeeds. |
 
 `pwa-auth` and `pwa-auth/production` both resolve types to `base/export/pwa-auth.d.ts`. The production entry is the rollup bundle. `lit` and `firebase` are peer dependencies. Redux ships inside the package. `sideEffects` is true because the entry registers the elements. The published `files` list is `base/`, the production bundle, `source/pwa-styles.css`, `source/empty.jpg`, the readme, and the licenses.
 
@@ -457,6 +458,10 @@ npm run test:emulator  # Auth, Firestore, and Storage emulators, then the browse
 ```
 
 `npm run test:emulator` uses `firebase-tools` 14.24.0. Firestore and Storage need Java 21 or newer on `PATH`.
+
+`npm publish` runs `prepublishOnly`, which is `npm run build` then `npm run rollup`.
+
+Pushing `master` runs `.github/workflows/publish.yml`. The action builds, then publishes when `package.json` has a version that is not already on npm. The repository secret `NPM_TOKEN` must be an npm automation token. A push that does not change the version is skipped.
 
 ## Feedback
 

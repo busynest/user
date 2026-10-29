@@ -212,6 +212,7 @@ window.__criticalPromise = (async () => {
       const before = events('pwa-email-changed').length;
       const next = 'ada-' + Date.now() + '@example.com';
       setValue(input(mail.shadowRoot, 'input[type="email"]'), next);
+      setValue(input(mail.shadowRoot, '#pwa-current-email-password'), password);
       mail.shadowRoot.querySelector('button').click();
       await until('email', () => events('pwa-email-changed').length > before);
       const detail = events('pwa-email-changed').at(-1).detail;
@@ -230,6 +231,7 @@ window.__criticalPromise = (async () => {
       const box = settings.shadowRoot.querySelector('input-password');
       const root = box.shadowRoot;
       const before = events('pwa-password-changed').length;
+      setValue(input(root, '#pwa-current-password'), password);
       setValue(input(root, '#pwa-new-password'), 'secret99');
       setValue(input(root, '#pwa-verify-password'), 'secret99');
       root.querySelector('button[type="submit"]').click();
@@ -273,6 +275,8 @@ window.__criticalPromise = (async () => {
       await uploadBytes(ref(storage, 'pwa-auth/' + uid + '/note.txt'), new Uint8Array([1, 2, 3]));
       const settings = document.querySelector('user-settings');
       settings.shadowRoot.querySelector('button[value="delete"]').click();
+      await sleep(50);
+      setValue(input(settings.shadowRoot.querySelector('delete-user').shadowRoot, '#pwa-delete-password'), 'secret99');
       await sleep(50);
       const before = events('pwa-account-deleted').length;
       settings.shadowRoot.querySelector('delete-user').shadowRoot.querySelector('button').click();

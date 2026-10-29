@@ -1,13 +1,14 @@
 import { store } from '../store';
 import { closeSign, iconAuth, nameAuth, userAuth } from '../redux/frontend';
 import { accID, accEmail, accImage, accName } from '../redux/backend';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { EmailAuthProvider, getAuth, onAuthStateChanged, reauthenticateWithCredential, signOut } from 'firebase/auth';
 import { doc, deleteDoc } from "firebase/firestore";
 import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
 import { deleteObject, listAll, ref } from "firebase/storage";
 import { application, auth, db, isReady, onReady, storage } from './authentication';
 import { pwaAuthChanged, pwaAuthError, pwaLogout } from '../events/names';
 import { emitWindow, toAuthError, toPwaUser } from '../events/emit';
+import { userMessage } from './message';
 let analytics;
 let analyticsReady = Promise.resolve();
 export const pwaDrawerToggle = () => {
@@ -43,6 +44,25 @@ onReady(() => {
         }
     });
 });
+export const reauthenticate = async (password) => {
+    const current = auth.currentUser;
+    if (!current || !current.email) {
+        const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
+        emitWindow(pwaAuthError, detail);
+        alert(userMessage(detail));
+        return false;
+    }
+    try {
+        const credential = EmailAuthProvider.credential(current.email, password);
+        await reauthenticateWithCredential(current, credential);
+        return true;
+    }
+    catch (error) {
+        emitWindow(pwaAuthError, toAuthError(error));
+        alert(userMessage(error));
+        return false;
+    }
+};
 export const logOut = async () => {
     if (!isReady()) {
         const detail = { code: 'pwa/not-ready', message: 'Sign-in is not ready yet.' };

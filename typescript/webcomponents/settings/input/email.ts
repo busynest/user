@@ -7,6 +7,7 @@ import { labelStyle }       from "../../form/css/label";
 import { inputStyle }       from "../../form/css/input";
 import { buttonStyle }      from "../../form/css/button";
 import { verifyBeforeUpdateEmail } from "firebase/auth";
+import { reauthenticate }   from "../../../firebase/interface";
 import { pwaAuthError, pwaEmailChanged } from "../../../events/names";
 import { emitWindow, toAuthError } from "../../../events/emit";
 import { emitLegacyEmailChanged } from "../../../deprecated/email-changed";
@@ -49,7 +50,17 @@ export class ContactEmail extends connect(store)(LitElement) {
 
     <form
       autocomplete="off"
-      @submit="${this.default}">
+      @submit="${this.saveEmail}">
+
+      <label for="pwa-current-email-password">Current password
+
+        <input
+          id            = "pwa-current-email-password"
+          name          = "current_password"
+          type          = "password"
+          autocomplete  = "current-password"/>
+
+      </label>
 
       <label for="pwa-email" >E-mail:
 
@@ -69,10 +80,9 @@ export class ContactEmail extends connect(store)(LitElement) {
       </label>
 
       <button
+        type          = "submit"
         class         = "action-button"
         part          = "submit"
-        type          = "button"
-        @click        = "${this.saveEmail}"
         ?disabled     = "${this.login === false}">Update</button>
 
     </form>
@@ -80,19 +90,31 @@ export class ContactEmail extends connect(store)(LitElement) {
     `;
   }
 
-  /* Form Default */
-  private default = (e:Event) => {
-    e.preventDefault();
-  }
-
   // Save Email
-  private saveEmail = async () => {
+  private saveEmail = async (event: Event) => {
+
+    event.preventDefault();
 
     const current = auth.currentUser;
-    if (!current) { return; }
+    if (!current) {
+      const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
+      emitWindow(pwaAuthError, detail);
+      alert(userMessage(detail));
+      return;
+    }
 
+    const currentPassword = (this.shadowRoot?.querySelector('#pwa-current-email-password') as HTMLInputElement | null)?.value ?? '';
     const contactMail = this.shadowRoot?.querySelector('#pwa-email') as HTMLInputElement | null;
     if (!contactMail) { return; }
+    if (currentPassword.length < 6) {
+      const detail = { code: 'pwa/current-password', message: 'Enter your current password.' };
+      emitWindow(pwaAuthError, detail);
+      alert(userMessage(detail));
+      return;
+    }
+
+    const ok = await reauthenticate(currentPassword);
+    if (!ok) { return; }
 
     try {
 

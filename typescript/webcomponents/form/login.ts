@@ -10,10 +10,7 @@ import {
   state
 }                         from 'lit/decorators.js';
 
-import {
-  EmailAuthProvider,
-  signInWithCredential
-}                         from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 import { auth }           from '../../firebase/authentication';
 
@@ -174,8 +171,8 @@ export class FormLogin extends LitElement {
       alert(userMessage(detail));
       return;
     }
-    if (this.password.length < 4) {
-      const detail = { code: 'pwa/missing-password', message: 'Enter a password.' };
+    if (this.password.length < 6) {
+      const detail = { code: 'pwa/short-password', message: 'Password must be at least 6 characters.' };
       emitWindow(pwaAuthError, detail);
       alert(userMessage(detail));
       return;
@@ -187,8 +184,7 @@ export class FormLogin extends LitElement {
   private signIn = async (email:string, password:string) => {
   
     try {
-      const authCredential = EmailAuthProvider.credential(email, password);
-      const signed = await signInWithCredential(auth, authCredential);
+      const signed = await signInWithEmailAndPassword(auth, email, password);
       const person = toPwaUser(signed.user);
       if (person) emitWindow(pwaLogin, { user: person });
     } catch (error) {

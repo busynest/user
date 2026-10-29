@@ -16,6 +16,7 @@ import { labelStyle } from "../../form/css/label";
 import { inputStyle } from "../../form/css/input";
 import { buttonStyle } from "../../form/css/button";
 import { verifyBeforeUpdateEmail } from "firebase/auth";
+import { reauthenticate } from "../../../firebase/interface";
 import { pwaAuthError, pwaEmailChanged } from "../../../events/names";
 import { emitWindow, toAuthError } from "../../../events/emit";
 import { emitLegacyEmailChanged } from "../../../deprecated/email-changed";
@@ -26,16 +27,28 @@ export class ContactEmail extends connect(store)(LitElement) {
         this.email = '';
         this.login = false;
         this.mail = "";
-        this.default = (e) => {
-            e.preventDefault();
-        };
-        this.saveEmail = async () => {
+        this.saveEmail = async (event) => {
+            event.preventDefault();
             const current = auth.currentUser;
             if (!current) {
+                const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
+                emitWindow(pwaAuthError, detail);
+                alert(userMessage(detail));
                 return;
             }
+            const currentPassword = this.shadowRoot?.querySelector('#pwa-current-email-password')?.value ?? '';
             const contactMail = this.shadowRoot?.querySelector('#pwa-email');
             if (!contactMail) {
+                return;
+            }
+            if (currentPassword.length < 6) {
+                const detail = { code: 'pwa/current-password', message: 'Enter your current password.' };
+                emitWindow(pwaAuthError, detail);
+                alert(userMessage(detail));
+                return;
+            }
+            const ok = await reauthenticate(currentPassword);
+            if (!ok) {
                 return;
             }
             try {
@@ -76,7 +89,17 @@ export class ContactEmail extends connect(store)(LitElement) {
 
     <form
       autocomplete="off"
-      @submit="${this.default}">
+      @submit="${this.saveEmail}">
+
+      <label for="pwa-current-email-password">Current password
+
+        <input
+          id            = "pwa-current-email-password"
+          name          = "current_password"
+          type          = "password"
+          autocomplete  = "current-password"/>
+
+      </label>
 
       <label for="pwa-email" >E-mail:
 
@@ -96,10 +119,9 @@ export class ContactEmail extends connect(store)(LitElement) {
       </label>
 
       <button
+        type          = "submit"
         class         = "action-button"
         part          = "submit"
-        type          = "button"
-        @click        = "${this.saveEmail}"
         ?disabled     = "${this.login === false}">Update</button>
 
     </form>

@@ -4,7 +4,7 @@ export { UserSettings } from '../webcomponents/settings/settings';
 export { UserIcon } from '../webcomponents/icon/icon';
 export { EmailReset } from '../webcomponents/form/forgot';
 export { firebaseConfig, application, db, storage, auth, user, initialize } from '../firebase/authentication';
-export { logOut, logAccount, logAccountDelete, deleteDocument, pwaDrawerToggle } from "../firebase/interface";
+export { logOut, logAccount, logAccountDelete, deleteDocument, pwaDrawerToggle, reauthenticate } from "../firebase/interface";
 export { getCurrentUser, onUserChanged } from '../api/user';
 export { openDrawer, closeDrawer, toggleDrawer } from '../api/drawer';
 export { pwaAuthChanged, pwaLogin, pwaLogout, pwaSignup, pwaAccountDeleted, pwaProfileUpdated, pwaEmailChanged, pwaPasswordChanged, pwaDrawerToggleName, pwaAuthError, eventName } from '../events/names';

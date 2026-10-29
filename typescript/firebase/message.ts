@@ -14,6 +14,8 @@ const known: Record<string, string> = {
   'auth/user-disabled':           'This account is disabled.',
   'pwa/missing-email':            'Enter an email address.',
   'pwa/missing-password':         'Enter a password.',
+  'pwa/short-password':           'Password must be at least 6 characters.',
+  'pwa/current-password':         'Enter your current password.',
   'pwa/password-mismatch':        'Those passwords do not match.',
   'pwa/weak-password':            'Use at least 8 characters with letters and numbers.',
   'pwa/signed-out':               'Sign in first.',
