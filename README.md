@@ -149,7 +149,7 @@ Four tabs: Icon, Profile, Password, Delete.
 |---|---|
 | `empty` | Fallback photo, passed through to the uploader as `emptyArtwork`. |
 
-Profile updates the display name and starts an email change with `verifyBeforeUpdateEmail`. On success the page dispatches `pwa-email-changed` on `window` with `{ email }`. The old `userEmailChanged` event still fires and is deprecated. Password requires the verify field to match. Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user. A failed action alerts a short sentence and dispatches `pwa-auth-error`.
+Profile updates the display name and starts an email change with `verifyBeforeUpdateEmail`. On success the page dispatches `pwa-email-changed` on `window` with `{ email }`. The old `userEmailChanged` event still fires and is deprecated. Password requires the verify field to match. On success the page dispatches `pwa-password-changed` on `window` with `{ uid }`. Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user. A failed action alerts a short sentence and dispatches `pwa-auth-error`.
 
 ### `<email-reset>`
 
@@ -213,6 +213,7 @@ Global events fire on `window`. `pwa-drawer-toggle` fires on `<user-drawer>`, bu
 - `pwa-account-deleted` — the auth user was deleted. Detail: `{ uid }`
 - `pwa-profile-updated` — display name or photo saved. Detail: `{ uid, displayName, photoURL }`
 - `pwa-email-changed` — `verifyBeforeUpdateEmail` accepted the address. Detail: `{ email }`
+- `pwa-password-changed` — `updatePassword` succeeded. Detail: `{ uid }`. The new password is not included.
 - `pwa-drawer-toggle` — the drawer open flag changed. Detail: `{ open }`
 - `pwa-auth-error` — an account action failed. Detail: `{ code, message }`
 
@@ -270,7 +271,7 @@ window.addEventListener(eventName.login, (event) => {
 | `closeDrawer()` | Closes the drawer. |
 | `toggleDrawer()` | Flips the drawer. |
 | `eventName` | The `pwa-` strings. `eventName.drawerToggle` is `pwa-drawer-toggle`. |
-| `pwaAuthChanged`, `pwaLogin`, `pwaLogout`, `pwaSignup`, `pwaAccountDeleted`, `pwaProfileUpdated`, `pwaEmailChanged`, `pwaDrawerToggleName`, `pwaAuthError` | The same strings, one constant each. `pwaDrawerToggleName` is the event. `pwaDrawerToggle()` is the older close function. |
+| `pwaAuthChanged`, `pwaLogin`, `pwaLogout`, `pwaSignup`, `pwaAccountDeleted`, `pwaProfileUpdated`, `pwaEmailChanged`, `pwaPasswordChanged`, `pwaDrawerToggleName`, `pwaAuthError` | The same strings, one constant each. `pwaDrawerToggleName` is the event. `pwaDrawerToggle()` is the older close function. |
 
 `import { store } from 'pwa-auth'` is not a public export. Use `getCurrentUser`, `onUserChanged`, and the events. Account fields stay inside the package.
 

@@ -16,6 +16,7 @@ export {
   pwaAccountDeleted,
   pwaProfileUpdated,
   pwaEmailChanged,
+  pwaPasswordChanged,
   pwaDrawerToggleName,
   pwaAuthError,
   eventName
@@ -29,6 +30,7 @@ export type {
   PwaAccountDeletedDetail,
   PwaProfileUpdatedDetail,
   PwaEmailChangedDetail,
+  PwaPasswordChangedDetail,
   PwaDrawerToggleDetail,
   PwaAuthErrorDetail,
   PwaEventMap

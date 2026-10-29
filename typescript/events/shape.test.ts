@@ -7,6 +7,7 @@ import {
   pwaAuthError,
   pwaDrawerToggleName,
   pwaEmailChanged,
+  pwaPasswordChanged,
   pwaLogin,
   pwaLogout,
   pwaProfileUpdated,
@@ -25,6 +26,8 @@ describe('event names', () => {
     expect(pwaAccountDeleted).toBe('pwa-account-deleted');
     expect(pwaProfileUpdated).toBe('pwa-profile-updated');
     expect(pwaEmailChanged).toBe('pwa-email-changed');
+    expect(pwaPasswordChanged).toBe('pwa-password-changed');
+    expect(eventName.passwordChanged).toBe(pwaPasswordChanged);
     expect(pwaDrawerToggleName).toBe('pwa-drawer-toggle');
     expect(pwaAuthError).toBe('pwa-auth-error');
     expect(eventName.drawerToggle).toBe(pwaDrawerToggleName);
@@ -81,6 +84,21 @@ describe('event shape', () => {
     expect(seen[0].bubbles).toBe(true);
     expect(seen[0].composed).toBe(true);
     host.remove();
+  });
+
+  it('dispatches pwa-password-changed with the uid only', () => {
+    const seen: CustomEvent[] = [];
+    const hear = (event: Event) => { seen.push(event as CustomEvent); };
+    window.addEventListener(pwaPasswordChanged, hear);
+
+    emitWindow(pwaPasswordChanged, { uid: 'u1' });
+
+    window.removeEventListener(pwaPasswordChanged, hear);
+
+    expect(seen[0].detail).toEqual({ uid: 'u1' });
+    expect(seen[0].detail.password).toBeUndefined();
+    expect(seen[0].bubbles).toBe(true);
+    expect(seen[0].composed).toBe(true);
   });
 
 });

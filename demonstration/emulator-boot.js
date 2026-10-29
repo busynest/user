@@ -15,6 +15,7 @@ const names = [
   'pwa-account-deleted',
   'pwa-profile-updated',
   'pwa-email-changed',
+  'pwa-password-changed',
   'pwa-drawer-toggle',
   'pwa-auth-error',
   'userEmailChanged'

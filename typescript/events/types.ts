@@ -43,6 +43,11 @@ export interface PwaEmailChangedDetail {
   email: string;
 }
 
+/** Required - pwa-password-changed. The new password stays off this event. */
+export interface PwaPasswordChangedDetail {
+  uid: string;
+}
+
 /** Required - pwa-drawer-toggle. */
 export interface PwaDrawerToggleDetail {
   open: boolean;
@@ -63,6 +68,7 @@ export interface PwaEventMap {
   'pwa-account-deleted':  CustomEvent<PwaAccountDeletedDetail>;
   'pwa-profile-updated':  CustomEvent<PwaProfileUpdatedDetail>;
   'pwa-email-changed':    CustomEvent<PwaEmailChangedDetail>;
+  'pwa-password-changed': CustomEvent<PwaPasswordChangedDetail>;
   'pwa-drawer-toggle':    CustomEvent<PwaDrawerToggleDetail>;
   'pwa-auth-error':       CustomEvent<PwaAuthErrorDetail>;
 }

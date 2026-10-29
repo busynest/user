@@ -229,14 +229,17 @@ window.__criticalPromise = (async () => {
       await sleep(50);
       const box = settings.shadowRoot.querySelector('input-password');
       const root = box.shadowRoot;
+      const before = events('pwa-password-changed').length;
       setValue(input(root, '#pwa-new-password'), 'secret99');
       setValue(input(root, '#pwa-verify-password'), 'secret99');
       root.querySelector('button[type="submit"]').click();
-      await sleep(800);
+      await until('password event', () => events('pwa-password-changed').length > before);
+      const detail = events('pwa-password-changed').at(-1).detail;
+      if (detail.uid !== uid || detail.password) throw new Error(JSON.stringify(detail));
       await signOut(auth);
       await signInWithEmailAndPassword(auth, email, 'secret99');
       if (!auth.currentUser || auth.currentUser.uid !== uid) throw new Error('new password rejected');
-      record('change password', true, 'signed in with the new password');
+      record('change password', true, 'pwa-password-changed ' + detail.uid);
     } catch (error) {
       record('change password', false, error.message);
     }

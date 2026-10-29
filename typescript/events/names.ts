@@ -19,6 +19,9 @@ export const pwaProfileUpdated = 'pwa-profile-updated';
 /** Required - window. verifyBeforeUpdateEmail accepted the address. */
 export const pwaEmailChanged = 'pwa-email-changed';
 
+/** Required - window. updatePassword succeeded. Detail is the uid only. */
+export const pwaPasswordChanged = 'pwa-password-changed';
+
 /** Required - element. Drawer open flag changed. The string is pwa-drawer-toggle. */
 export const pwaDrawerToggleName = 'pwa-drawer-toggle';
 
@@ -34,6 +37,7 @@ export const eventName = {
   accountDeleted:   pwaAccountDeleted,
   profileUpdated:   pwaProfileUpdated,
   emailChanged:     pwaEmailChanged,
+  passwordChanged:  pwaPasswordChanged,
   drawerToggle:     pwaDrawerToggleName,
   authError:        pwaAuthError
 } as const;

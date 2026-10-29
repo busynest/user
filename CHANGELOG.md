@@ -9,7 +9,7 @@ All notable changes to pwa-auth.js will be documented in this file.
 # [3.5.0] - 2026-10-29
 
 ## Added
-- window events: pwa-auth-changed, pwa-login, pwa-logout, pwa-signup, pwa-account-deleted, pwa-profile-updated, pwa-email-changed, pwa-auth-error
+- window events: pwa-auth-changed, pwa-login, pwa-logout, pwa-signup, pwa-account-deleted, pwa-profile-updated, pwa-email-changed, pwa-password-changed, pwa-auth-error
 - element event: pwa-drawer-toggle { open }
 - getCurrentUser(), onUserChanged(), openDrawer(), closeDrawer(), toggleDrawer()
 - initialize({ app, config }) and the firebase-config attribute
