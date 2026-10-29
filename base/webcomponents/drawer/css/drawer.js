@@ -24,7 +24,7 @@ export const drawerStyle = css `
   }
 
   .userDrawer > .spec > .wrapper {
-    margin: 16px;
+    margin: 20px 8px 12px; /* Required - space under the drawer header */
   }
 
   .userDrawer,
@@ -50,11 +50,11 @@ export const drawerStyle = css `
     animation-name:         animay;
     animation-duration:     1.4s;
 */
-    border-bottom:          var(--pwa_drawer_border, 3px #303030 solid);
-    z-index:                var(--pwa_drawer_z-index, 2);
-    background-color:       var(--pwa_drawer_background_color, #fff);
-    color:                  var(--pwa_drawer_text_color, #303030);
-    border-radius:          var(--pwa_drawer_border-radius, 0px);
+    border-bottom:          var(--pwa_drawer_border, 0);
+    z-index:                var(--pwa_drawer_z-index, 3);
+    background-color:       var(--pwa_drawer_background_color, #fffdf8);
+    color:                  var(--pwa_drawer_text_color, #1c2430);
+    border-radius:          var(--pwa_drawer_border-radius, 0 0 18px 18px);
   }
 
   .in {

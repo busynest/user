@@ -6,11 +6,15 @@ All notable changes to pwa-auth.js will be documented in this file.
 - Social Login Flow
 - animated login mascot
 
-# [3.4.10] - 2026-10-26
+# [3.4.10] - 2026-10-28
 
 ## Added
 - --pwa_tap 44px on drawer, sign-in, settings, and delete controls
 - 320px fit for those controls
+
+## Changed
+- demonstration page and component chrome use the paper and forest palette
+- readme matches the elements, exports, and build path
 
 ## Changed
 - dependencies aligned with published 3.4.9 (lit, @reduxjs/toolkit; firebase ^12.15.0)

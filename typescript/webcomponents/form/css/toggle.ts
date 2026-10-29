@@ -3,18 +3,17 @@ import { css, CSSResult } from "lit";
 export const toggleStyle: CSSResult = css`
   
   .new {
-    border:             0px;
-    border-top:         2px solid black;
-    box-shadow:         0px 0px 6px 0px;
-    padding:            12px;
-  /*  border-radius:      4px; */
+    border:             0;
+    border-top:         1px solid var(--pwa_line_color, #e3daca);
+    padding:            14px 16px;
     appearance:         none;
     background-color:   transparent;
-    color:              inherit;
+    color:              var(--pwa_action_background_color, #2a6b45);
     cursor:             pointer;
     text-decoration:    underline;
-    font-size:          small;
-    line-height:        42px;
+    text-underline-offset: 3px;
+    font-size:          0.95rem;
+    line-height:        1.4;
     min-height:         var(--pwa_tap, 44px); /* Required - minimum tap target */
   }
 

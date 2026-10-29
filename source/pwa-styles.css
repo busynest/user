@@ -3,70 +3,48 @@
   /* Required - minimum tap target */
   --pwa_tap:                      44px;
 
-  /* WebComponent 1 : User Icon
-  <user-icon>
-    <button> */
-  --pwa_icon_hover_color:         lightgrey;
-  --pwa_icon_background_color:    #6cc04a;
-  --pwa_icon_border:              2px solid black;
+  /* <user-icon> */
+  --pwa_icon_hover_color:         #214f34;
+  --pwa_icon_background_color:    #2a6b45;
+  --pwa_icon_border:              0;
 
-  /* WebComponent 1: logged-out
-  <user-icon>
-    <button class="login"> */
-  --pwa_icon_height:              32px; /* sync to --pwa_icon_diameter */
-  --pwa_icon_padding:             0px 16px;
-  --pwa_icon_radius:              6px;
-  --pwa_icon_font:                'Arial', sans-serif;
+  /* logged-out */
+  --pwa_icon_height:              44px; /* sync to --pwa_icon_diameter */
+  --pwa_icon_padding:             0 18px;
+  --pwa_icon_radius:              10px;
+  --pwa_icon_font:                "Avenir Next", "Segoe UI", system-ui, sans-serif;
 
-  /* WebComponent 1: logged-in
-  <user-icon>
-    <button class="icon"> */
-  --pwa_icon_diameter:            32px; /* sync to --pwa_icon_height */
+  /* logged-in */
+  --pwa_icon_diameter:            44px; /* sync to --pwa_icon_height */
 
+  /* <user-drawer> */
+  --pwa_drawer_position:          absolute;
+  --pwa_drawer_border:            0;
+  --pwa_drawer_z-index:           3;
+  --pwa_drawer_border-radius:     0 0 18px 18px;
+  --pwa_drawer_text_color:        #1c2430;
+  --pwa_drawer_background_color:  #fffdf8;
 
+  /* <user-settings> */
+  --pwa_settings_background_color: #fffdf8;
+  --pwa_divider_color:            #e3daca;
+  --pwa_nav_button_color:         #4e5b6a;
+  --pwa_nav_highlight_color:      #1c2430;
+  --pwa_nav_on_background:        #f3efe6;
+  --pwa_header_color:             #1c2430;
 
-  /* WebComponent 2: Drop-down Drawer
-  <user-drawer>
-    <section>
-      <header></header>
-      <div class="spec"> */
-  --pwa_drawer_border:            3px #303030 solid;
-  --pwa_drawer_z-index:           2;
-  --pwa_drawer_border-radius:     20px;
+  /* fields */
+  --pwa_label_text_color:         #1c2430;
+  --pwa_input_background_color:   #f3efe6;
+  --pwa_line_color:               #e3daca;
 
-  /* WebComponent 2: Drop-down Drawer - logged-out
-  <div class="spec"> */
-  --pwa_drawer_text_color:        #303030;
-  --pwa_drawer_background_color:  #fff;
-
-
-
-  /* WebComponent 3: Settings Page
-  <user-settings>
-    <nav></nav>
-    <section></section> */
-  --pwa_settings_background_color: white;
-  --pwa_divider_color:            black;
-
-  /* Navigation */
-  --pwa_nav_button_color:         grey;
-  --pwa_nav_highlight_color:      black;
-
-  /* Section Header */
-  --pwa_header_color:             black;
-
-  /* Label */
-  --pwa_label_text_color:         black;
-
-  /* Input */
-  --pwa_input_background_color:   #E1E5EB;
-
-  /* Button */
+  /* buttons */
   --pwa_action_text_color:        #fff;
-  --pwa_action_background_color:  #6cc04a;
-  --pwa_action_border_color:      #60b23e;
+  --pwa_action_background_color:  #2a6b45;
+  --pwa_action_border_color:      #214f34;
+  --pwa_close_color:              #9a3b32;
 
-  --section_background_color:     white;
-  --pwa_page_login_background:    white;
+  /* <user-login> */
+  --section_background_color:     #fffdf8;
 
 }

@@ -10,15 +10,14 @@ export const inputStyle : CSSResult = css`
     -webkit-box-sizing:       border-box;
     width:                    100%; /* Required - fit 320px */
     max-width:                100%;
-    height:                   50px;
+    height:                   48px;
     text-align:               left;
-    padding:                  8px 16px;
-    background-color:         var(--pwa_input_background_color, #E1E5EB);
-    border:                   1px solid grey;
-    border-radius:            4px;
-    -webkit-border-radius:    4px;
-    font-size:                smaller;
-    box-shadow:               0px 6px 6px -6px;
+    padding:                  8px 14px;
+    color:                    var(--pwa_drawer_text_color, #1c2430);
+    background-color:         var(--pwa_input_background_color, #f3efe6);
+    border:                   1px solid var(--pwa_line_color, #e3daca);
+    border-radius:            10px;
+    font-size:                1rem;
   }
 
   input.invalid { background-color: #ffdddd; }

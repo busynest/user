@@ -1,41 +1,39 @@
- /* CSS: Custom Variables: <head> tag */
+/* CSS: Custom Variables: <head> tag */
 :root {
+
   /* Required - minimum tap target */
   --pwa_tap:                      44px;
 
-  --pwa_icon_hover_color:         lightgrey;
-  --pwa_icon_background_color:    #6cc04a;
-  --pwa_icon_border:              2px solid black;
+  --pwa_icon_hover_color:         #214f34;
+  --pwa_icon_background_color:    #2a6b45;
+  --pwa_icon_border:              0;
+  --pwa_icon_height:              44px;
+  --pwa_icon_padding:             0 18px;
+  --pwa_icon_radius:              10px;
+  --pwa_icon_font:                "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --pwa_icon_diameter:            44px;
 
-  --pwa_icon_height:              32px;
-  --pwa_icon_padding:             0px 16px;
-  --pwa_icon_radius:              6px;
-  --pwa_icon_font:                'Arial', sans-serif;
+  --pwa_drawer_position:          absolute;
+  --pwa_drawer_border:            0;
+  --pwa_drawer_z-index:           3;
+  --pwa_drawer_border-radius:     0 0 18px 18px;
+  --pwa_drawer_text_color:        #1c2430;
+  --pwa_drawer_background_color:  #fffdf8;
 
-  --pwa_icon_diameter:            40px;
-
-  --pwa_drawer_border:            3px #303030 solid;
-  --pwa_drawer_z-index:           2;
-  --pwa_drawer_border-radius:     20px;
-
-  --pwa_drawer_text_color:        #303030;
-  --pwa_drawer_background_color:  #fff;
-
-  --pwa_settings_background_color: white;
-  --pwa_divider_color:            black;
-
-  --pwa_nav_button_color:         grey;
-  --pwa_nav_highlight_color:      black;
-
-  --pwa_header_color:             black;
-
-  --pwa_label_text_color:         black;
-
-  --pwa_input_background_color:   #E1E5EB;
-
-  --section_background_color:     white;
+  --pwa_settings_background_color: #fffdf8;
+  --pwa_divider_color:            #e3daca;
+  --pwa_nav_button_color:         #4e5b6a;
+  --pwa_nav_highlight_color:      #1c2430;
+  --pwa_nav_on_background:        #f3efe6;
+  --pwa_header_color:             #1c2430;
+  --pwa_label_text_color:         #1c2430;
+  --pwa_input_background_color:   #f3efe6;
+  --pwa_line_color:               #e3daca;
+  --section_background_color:     #fffdf8;
 
   --pwa_action_text_color:        #fff;
-  --pwa_action_background_color:  #6cc04a;
-  --pwa_action_border_color:      #60b23e;
+  --pwa_action_background_color:  #2a6b45;
+  --pwa_action_border_color:      #214f34;
+  --pwa_close_color:              #9a3b32;
+
 }

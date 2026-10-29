@@ -30,7 +30,7 @@ let UserIcon = class UserIcon extends connect(store)(LitElement) {
         this._user = state.frontend.login;
         this._photoURL = state.backend.photoURL;
     }
-    static get styles() { return [iconStyles, css `:host {  border-radius: 8px; }`]; }
+    static get styles() { return [iconStyles, css `:host { border-radius: 10px; }`]; }
     render() {
         return html `
 

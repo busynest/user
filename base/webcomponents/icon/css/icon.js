@@ -5,8 +5,8 @@ export const iconStyles = css `
     cursor:                   pointer;
     margin:                   auto;
     overflow:                 hidden;
-    border:                   var(--pwa_icon_border, 2px solid black);
-    background-color:         var(--pwa_icon_background_color, #6cc04a);
+    border:                   var(--pwa_icon_border, 0);
+    background-color:         var(--pwa_icon_background_color, #2a6b45);
     color:                    white;
     font-size:                15px;
     text-decoration:          none;
@@ -15,26 +15,24 @@ export const iconStyles = css `
 
   .icon:hover,
   .login:hover {
-    background-color:         var(--pwa_icon_hover_color, lightgrey);
+    background-color:         var(--pwa_icon_hover_color, #214f34);
   }
 
   .icon {
-    height:                   var(--pwa_icon_diameter, 40px);
-    width:                    var(--pwa_icon_diameter, 40px);
+    height:                   var(--pwa_icon_diameter, 44px);
+    width:                    var(--pwa_icon_diameter, 44px);
     border-radius:            50%;
     padding:                  0;
   }
 
   .login {
     width:                    auto;
-    border-radius:            var(--pwa_icon_radius, 6px);
-    height:                   var(--pwa_icon_height, 40px);
-    padding:                  var(--pwa_icon_padding, 0px 16px);
-    font-family:              var(--pwa_icon_font, 'Arial', sans-serif);
+    border-radius:            var(--pwa_icon_radius, 10px);
+    height:                   var(--pwa_icon_height, 44px);
+    padding:                  var(--pwa_icon_padding, 0 18px);
+    font-family:              var(--pwa_icon_font, "Avenir Next", "Segoe UI", system-ui, sans-serif);
     font-weight:              500;
     text-align:               center;
-    /* box-shadow:               4px 4px 4px 0px;*/
-    border-radius:            8px;
   }
 
   .userImage {
@@ -43,8 +41,8 @@ export const iconStyles = css `
     transition-duration:      2s;
     clip-path:                circle(50%);
     overflow:                 hidden;
-    width:                    calc(var(--pwa_icon_diameter, 40px) - 2px);
-    height:                   calc(var(--pwa_icon_diameter, 40px) - 2px);
+    width:                    100%;
+    height:                   100%;
     margin:                   auto;
   }  
   
