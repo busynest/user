@@ -32,8 +32,11 @@ export const animation = css `
 
     backface-visibility:                    hidden;
 
-    /* Required - slide. Visibility waits out the transform, then hides. */
-    transition:                             transform 0.8s ease-in-out, visibility 0s linear 0.8s;
+    /* Optional - --pwa_slide_time: 1.4s. Optional - --pwa_slide_ease: ease-in-out. */
+    /* Required - form swap is 1.4s * 1.429, about 2s. Hide after the slide. */
+    transition:
+      transform calc(var(--pwa_slide_time, 1.4s) * 1.429) var(--pwa_slide_ease, ease-in-out),
+      visibility 0s linear calc(var(--pwa_slide_time, 1.4s) * 1.429);
 
     position:relative;
     z-index: 1;
@@ -50,7 +53,9 @@ export const animation = css `
     visibility:                             visible;
     position:                               relative; /* Required - this form sets the panel height */
     z-index:                                3;
-    transition:                             transform 0.8s ease-in-out, visibility 0s linear 0s;
+    transition:
+      transform calc(var(--pwa_slide_time, 1.4s) * 1.429) var(--pwa_slide_ease, ease-in-out),
+      visibility 0s linear 0s;
 }
 
 .closed {
@@ -66,11 +71,7 @@ export const animation = css `
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .content,
-    .opened,
-    .closed {
-        transition:                         none;
-    }
+    :host { --pwa_slide_time: 0s; }
 }
 
 `;
