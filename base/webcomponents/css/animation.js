@@ -10,6 +10,7 @@ export const animation = css `
 
 .inner {
     display:                                grid;
+    position:                               relative;
     grid-template-areas:                    'pages';
     overflow-y:                             auto;
     border-bottom:                          1px solid var(--pwa_line_color, #e3daca);
@@ -56,11 +57,15 @@ export const animation = css `
 }
 
 .closed {
-    transform:                              translate3d(0, -102%, 0);/*rotateY(-180deg);*/
-    animation:                              slide-out 2s ease-out forwards;
+    /* Required - stay out of the header and the tab order */
+    visibility:                             hidden;
+    pointer-events:                         none;
+    position:                               absolute;
+    height:                                 0;
+    width:                                  0;
     overflow:                               hidden;
-    position:relative;
-    z-index: 2;
+    transform:                              none;
+    z-index:                                0;
 }
 
 `;

@@ -14,6 +14,7 @@ import { auth } from '../../firebase/authentication';
 import { logAccount } from '../../firebase/interface';
 import { pwaAuthError, pwaSignup } from '../../events/names';
 import { emitWindow, toAuthError, toPwaUser } from '../../events/emit';
+import { userMessage } from '../../firebase/message';
 import { buttonStyle } from './css/button';
 import { labelStyle } from './css/label';
 import { inputStyle } from './css/input';
@@ -39,7 +40,7 @@ let FormSignup = class FormSignup extends LitElement {
             }
             catch (error) {
                 emitWindow(pwaAuthError, toAuthError(error));
-                alert(error instanceof Error ? error.message : 'Sign up failed');
+                alert(userMessage(error));
             }
         };
     }
@@ -83,9 +84,11 @@ let FormSignup = class FormSignup extends LitElement {
             <label>Email
 
               <input
-                id=         "${this.source}-signup-email"
-                type=       "email"
-                @change=    "${this.handleEmail}">
+                id=           "${this.source}-signup-email"
+                part=         "email"
+                type=         "email"
+                autocomplete= "email"
+                @change=      "${this.handleEmail}">
 
             </label>
 
@@ -98,9 +101,11 @@ let FormSignup = class FormSignup extends LitElement {
             <label>Password
               
               <input
-                id=         "${this.source}-signup-pass"
-                type=       "password"
-                @change=    "${this.handlePassword}">
+                id=           "${this.source}-signup-pass"
+                part=         "password"
+                type=         "password"
+                autocomplete= "new-password"
+                @change=      "${this.handlePassword}">
 
             </label>
 
@@ -110,6 +115,7 @@ let FormSignup = class FormSignup extends LitElement {
 
             <button
               type=         "submit"
+              part=         "submit"
               class=        "newUser action-button">Sign up</button>
 
           </li>
@@ -129,6 +135,7 @@ let FormSignup = class FormSignup extends LitElement {
 
         <button
           type="button"
+          part="switch"
           class="new"
           @click="${this.change}">login with existing email</button>
 
@@ -160,13 +167,15 @@ let FormSignup = class FormSignup extends LitElement {
     signUp() {
         this.readFields();
         if (this.email.length < 4) {
-            emitWindow(pwaAuthError, { code: 'pwa/missing-email', message: 'Please enter an email address.' });
-            alert('Please enter an email address.');
+            const detail = { code: 'pwa/missing-email', message: 'Enter an email address.' };
+            emitWindow(pwaAuthError, detail);
+            alert(userMessage(detail));
             return;
         }
         if (this.password.length < 4) {
-            emitWindow(pwaAuthError, { code: 'pwa/missing-password', message: 'Please enter a password.' });
-            alert('Please enter a password.');
+            const detail = { code: 'pwa/missing-password', message: 'Enter a password.' };
+            emitWindow(pwaAuthError, detail);
+            alert(userMessage(detail));
             return;
         }
         this.newAccount(this.email, this.password);

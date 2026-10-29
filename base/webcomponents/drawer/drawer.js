@@ -18,11 +18,12 @@ import { drawerStyle } from './css/drawer';
 import { exitStyle } from './css/exit';
 import { linkStyle } from './css/link';
 import { lineStyle } from './css/paragraph';
-import { toggleSign } from '../../redux/frontend';
+import { closeSign } from '../../redux/frontend';
 import { logOut } from '../../firebase/interface';
 import { applyFirebaseConfig } from '../../firebase/attribute';
 import { pwaDrawerToggleName } from '../../events/names';
 import { emitElement } from '../../events/emit';
+import { deepActive, focusable } from './keys';
 import '../form/login';
 import '../form/signup';
 import { animation } from '../css/animation';
@@ -38,10 +39,45 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.signup = false;
         this.wasOpen = false;
         this.sawOpen = false;
+        this.returnFocus = null;
+        this.onKey = (event) => {
+            if (!this.drawer)
+                return;
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                store.dispatch(closeSign());
+                return;
+            }
+            if (event.key !== 'Tab')
+                return;
+            const items = focusable(this);
+            if (!items.length)
+                return;
+            const first = items[0];
+            const last = items[items.length - 1];
+            const active = deepActive();
+            const inside = active ? items.includes(active) : false;
+            if (event.shiftKey) {
+                if (!inside || active === first) {
+                    event.preventDefault();
+                    last.focus();
+                }
+                return;
+            }
+            if (!inside || active === last) {
+                event.preventDefault();
+                first.focus();
+            }
+        };
     }
     connectedCallback() {
         applyFirebaseConfig(this);
         super.connectedCallback();
+        this.addEventListener('keydown', this.onKey);
+    }
+    disconnectedCallback() {
+        this.removeEventListener('keydown', this.onKey);
+        super.disconnectedCallback();
     }
     stateChanged(state) {
         const open = state.frontend.drawer;
@@ -56,20 +92,37 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.wasOpen = open;
         this.sawOpen = true;
     }
+    updated(changed) {
+        if (!changed.has('drawer'))
+            return;
+        if (this.drawer) {
+            const active = deepActive();
+            this.returnFocus = active && !this.contains(active) ? active : this.returnFocus;
+            this.shadowRoot?.querySelector('.close')?.focus();
+            return;
+        }
+        this.returnFocus?.focus();
+        this.returnFocus = null;
+    }
     firstUpdated() {
         this.shadowRoot.querySelector('.close').addEventListener('click', () => {
-            store.dispatch(toggleSign());
+            store.dispatch(closeSign());
         });
-        this.shadowRoot.querySelector('.leave').addEventListener('click', () => {
+        this.shadowRoot.querySelector('.leave').addEventListener('click', async () => {
             if (this.user) {
-                logOut();
+                try {
+                    await logOut();
+                }
+                catch {
+                    return;
+                }
             }
-            store.dispatch(toggleSign());
+            store.dispatch(closeSign());
         });
         const link = this.shadowRoot.querySelectorAll('a');
         link.forEach(item => {
             item.addEventListener('click', () => {
-                store.dispatch(toggleSign());
+                store.dispatch(closeSign());
             });
         });
     }
@@ -84,6 +137,16 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             listStyle,
             tapStyle,
             css `
+    .close:focus-visible,
+    .leave:focus-visible {
+      outline:                2px solid var(--pwa_action_border_color, #214f34);
+      outline-offset:         2px;
+    }
+
+    .leave {
+      min-height:             var(--pwa_tap, 44px); /* Required - minimum tap target */
+    }
+
     ::slotted(a) {
       font-size:                0.95rem;
       color:                    var(--pwa_label_text_color, #1c2430);
@@ -108,13 +171,19 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
 
     <!-- Drawer Wrapper -->
     <section
+      part="panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="pwa-drawer-title"
+      aria-hidden="${this.drawer ? 'false' : 'true'}"
+      ?inert="${!this.drawer}"
       class="userDrawer ${this.drawer ? 'out' : 'in'}">
 
       <!-- Exit Button -->
-      <header class="exit">
+      <header class="exit" part="header">
         <div></div>
-        <h3>${this.user === false ? this.signup === this.subscribe ? `Login` : `Subscribe` : this.name}</h3>
-        <button class="close">${close}</button>
+        <h3 id="pwa-drawer-title" part="title">${this.user === false ? this.signup === this.subscribe ? `Login` : `Subscribe` : this.name}</h3>
+        <button class="close" part="close" type="button" aria-label="Close">${close}</button>
       </header>
 
       <!-- Logged-out State -->
@@ -128,6 +197,8 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             <!-- Log-in State -->
             <form-login
               source="drawer"
+              exportparts="email: login-email, password: login-password, submit: login-submit, switch: login-switch"
+              ?inert="${this.signup !== this.subscribe}"
               class="content ${this.signup ===
             this.subscribe ?
             'opened' :
@@ -137,6 +208,8 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             <!-- Sign-up State -->
             <form-signup
               source="drawer"
+              exportparts="email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch"
+              ?inert="${this.signup === this.subscribe}"
               class="content ${!this.signup === this.subscribe ? 'opened' : 'closed'} ">
             </form-signup>
 
@@ -152,11 +225,11 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
 
           <slot name="before"></slot>
 
-          <a href="${this.url}">Settings</a>
+          <a href="${this.url}" part="settings">Settings</a>
 
           <slot></slot>
 
-          <button class="leave" aria-label="log out">Log out</button>
+          <button class="leave" part="logout" type="button" aria-label="Log out">Log out</button>
           
       </div>
 

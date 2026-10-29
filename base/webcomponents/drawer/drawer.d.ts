@@ -1,4 +1,4 @@
-import { CSSResultArray, LitElement } from 'lit';
+import { CSSResultArray, LitElement, PropertyValues } from 'lit';
 import { AppState } from '../../store';
 import '../form/login';
 import '../form/signup';
@@ -43,9 +43,13 @@ export declare class UserDrawer extends UserDrawer_base {
     private signup;
     private wasOpen;
     private sawOpen;
+    private returnFocus;
     constructor();
     connectedCallback(): void;
+    disconnectedCallback(): void;
     stateChanged(state: AppState): void;
+    protected updated(changed: PropertyValues): void;
+    private onKey;
     protected firstUpdated(): void;
     static get styles(): CSSResultArray;
     protected render(): import("lit-html").TemplateResult<1>;

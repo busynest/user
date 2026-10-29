@@ -17,9 +17,14 @@ export const drawerStyle = css `
     min-width:              0;
   }
 
-  :host([drawer]) {       
-    /* transition-duration:    1.4s; */
+  :host([drawer]) {
+    /* Required - opaque sheet at 320px so the page does not show through */
+    left:                   0;
+    right:                  0;
+    z-index:                5;
     max-height:             100%;
+    background-color:       var(--pwa_drawer_background_color, #fffdf8);
+    box-shadow:             0 18px 40px rgba(28, 36, 48, 0.16);
     transition:             max-height 1.4s ease-in-out;
   }
 

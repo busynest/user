@@ -7,11 +7,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { html, } from 'lit';
+import { html, css } from 'lit';
 import { customElement, state } from "lit/decorators.js";
 import { LazyLoader } from '../../lazyLoader';
 import { auth } from '../../firebase/authentication';
 import { sendPasswordResetEmail } from 'firebase/auth';
+import { pwaAuthError } from '../../events/names';
+import { emitWindow, toAuthError } from '../../events/emit';
+import { userMessage } from '../../firebase/message';
+import { labelStyle } from './css/label';
+import { inputStyle } from './css/input';
+import { buttonStyle } from './css/button';
 let EmailReset = class EmailReset extends LazyLoader {
     constructor() {
         super();
@@ -20,10 +26,28 @@ let EmailReset = class EmailReset extends LazyLoader {
             event.preventDefault();
             const input = this.renderRoot.querySelector('.email');
             this.userEmail = input?.value ?? '';
-            await sendPasswordResetEmail(auth, this.userEmail)
-                .catch((error) => { console.log(error); });
+            if (this.userEmail.length < 4) {
+                const detail = { code: 'pwa/missing-email', message: 'Enter an email address.' };
+                emitWindow(pwaAuthError, detail);
+                alert(userMessage(detail));
+                return;
+            }
+            try {
+                await sendPasswordResetEmail(auth, this.userEmail);
+                alert('Check your inbox for the reset email.');
+            }
+            catch (error) {
+                emitWindow(pwaAuthError, toAuthError(error));
+                alert(userMessage(error));
+            }
         };
     }
+    static { this.styles = [
+        labelStyle,
+        inputStyle,
+        buttonStyle,
+        css `:host { display: block; }`
+    ]; }
     handleEmail(event) {
         const input = event.target;
         this.userEmail = input.value;
@@ -31,25 +55,27 @@ let EmailReset = class EmailReset extends LazyLoader {
     render() {
         return html `
 
-        <form
-          class="resetPass"
-          @submit="${this.resetPassword}">
+      <form
+        class="resetPass"
+        @submit="${this.resetPassword}">
+
+        <label>Email
 
           <input
-            class       ="email"
-            type        ="text"
-            placeholder ="email"
-            @change     ="${this.handleEmail}">
+            class         = "email"
+            part          = "email"
+            type          = "email"
+            autocomplete  = "email"
+            @change       = "${this.handleEmail}">
 
-          <button
-            type        ="submit"
-            class       ="reset">Forgot Password</button>
+        </label>
 
-        </form>
+        <button
+          type          = "submit"
+          part          = "submit"
+          class         = "reset action-button">Send reset email</button>
 
-        <input
-          class ="phoneVerify"
-          type  ="text" />
+      </form>
 
     `;
     }

@@ -85,18 +85,19 @@ export class ContactPhoto extends connect(store)(LitElement) {
     render() {
         return html `
 <label
-      for="pwa-uploader"
       style="
         display: grid;
         grid-template-columns: auto 1fr;
         grid-gap: 16px;
         padding: 0 16px;
-      ">Upload:
+      ">Upload
       <progress
         id="pwa-uploader"
         class="uploader"
+        part="progress"
         value="0"
         max="100"
+        aria-label="Upload progress"
         style="
           height: 24px;
           width: 100%;
@@ -108,8 +109,10 @@ export class ContactPhoto extends connect(store)(LitElement) {
       id="photoURL"
       type="file"
       name="photoURL"
+      part="file"
       class="contractorPhoto"
       accept="image/*"
+      aria-label="Choose a photo"
       @change="${this.saveImage}"
       ?disabled="${this.login === false}"
       style="display: none;" />
@@ -122,7 +125,8 @@ export class ContactPhoto extends connect(store)(LitElement) {
         margin: 0 16px;
         padding: 0 16px 16px 16px;
       "
-      for ="photoURL">Photo:
+      for ="photoURL"
+      part="preview">Photo:
     
       <!-- Output - Retrieved Image -->
       <canvas
