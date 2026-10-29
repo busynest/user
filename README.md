@@ -178,7 +178,7 @@ Four tabs: Icon, Profile, Password, Delete.
 |---|---|
 | `empty` | Fallback photo, passed through to the uploader as `emptyArtwork`. |
 
-Profile updates the display name. Email and password changes, and delete, ask for the current password and call `reauthenticate` first. Email then calls `verifyBeforeUpdateEmail`. On success the page dispatches `pwa-email-changed` on `window` with `{ email }`. The old `userEmailChanged` event still fires and is deprecated. Password requires the verify field to match. On success the page dispatches `pwa-password-changed` on `window` with `{ uid }`. Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user. It does not delete `users/{uid}`. See [Data ownership](#data-ownership). A failed action alerts a short sentence and dispatches `pwa-auth-error`.
+Profile updates the display name. Email and password changes, and delete, ask for the current password and call `reauthenticate` first. Email then calls `verifyBeforeUpdateEmail`. On success the page dispatches `pwa-email-changed` on `window` with `{ email }`. The old `userEmailChanged` event still fires and is deprecated. Password requires the verify field to match and rejects a new password shorter than 6 characters, the same rule as sign-in and sign-up. On success the page dispatches `pwa-password-changed` on `window` with `{ uid }`. Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user. It does not delete `users/{uid}`. See [Data ownership](#data-ownership). A failed action alerts a short sentence and dispatches `pwa-auth-error`.
 
 ### `<email-reset>`
 
@@ -468,7 +468,7 @@ npm run test:emulator  # Auth, Firestore, and Storage emulators, then the browse
 
 `npm publish` runs `prepublishOnly`, which is `npm run build` then `npm run rollup`.
 
-Pushing `master` runs `.github/workflows/publish.yml`. The action builds, then publishes when `package.json` has a version that is not already on npm. The repository secret `NPM_TOKEN` must be an npm automation token. A push that does not change the version is skipped.
+Publishing runs only when Jack starts `.github/workflows/publish.yml` by hand (`workflow_dispatch`). The action builds, then publishes when `package.json` has a version that is not already on npm. The repository secret `NPM_TOKEN` must be an npm automation token. A run that does not change the version is skipped.
 
 ## Feedback
 

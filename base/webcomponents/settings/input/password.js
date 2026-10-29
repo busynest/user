@@ -175,25 +175,19 @@ export class InputPassword extends connect(store)(LitElement) {
             this.message = 'Passwords do not match';
             emitWindow(pwaAuthError, { code: 'pwa/password-mismatch', message: this.message });
         }
-        else if (this.password.length < 8) {
-            this.message = 'Password must be at least 8 characters long';
-            emitWindow(pwaAuthError, { code: 'pwa/weak-password', message: this.message });
+        else if (this.password.length < 6) {
+            this.message = 'Password must be at least 6 characters.';
+            emitWindow(pwaAuthError, { code: 'pwa/short-password', message: this.message });
         }
         else {
             this.message = `Password entered:`;
-            if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(this.password)) {
-                this.message = 'Password must include letters, numbers, and be 8+ characters';
-                emitWindow(pwaAuthError, { code: 'pwa/weak-password', message: this.message });
+            if (auth.currentUser) {
+                this.updatePass(currentPassword, this.password);
             }
             else {
-                if (auth.currentUser) {
-                    this.updatePass(currentPassword, this.password);
-                }
-                else {
-                    const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
-                    emitWindow(pwaAuthError, detail);
-                    alert(userMessage(detail));
-                }
+                const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
+                emitWindow(pwaAuthError, detail);
+                alert(userMessage(detail));
             }
         }
     }
