@@ -154,14 +154,36 @@ window.__criticalPromise = (async () => {
     try {
       const reset = document.querySelector('email-reset');
       const root = reset.shadowRoot;
+      const beforeError = events('pwa-auth-error').length;
+      setValue(input(root, 'input[type="email"]'), 'not-an-email');
+      root.querySelector('form').requestSubmit();
+      await until('reset invalid', () => events('pwa-auth-error').length > beforeError);
+      const bad = events('pwa-auth-error').at(-1).detail;
+      if (bad.code !== 'pwa/invalid-email') throw new Error(JSON.stringify(bad));
+      const invalidStatus = root.querySelector('#pwa-reset-status').textContent;
+      if (!String(invalidStatus).includes('valid email')) throw new Error(invalidStatus);
+
+      const before = events('pwa-reset-sent').length;
       setValue(input(root, 'input[type="email"]'), email);
-      input(root, 'button[type="submit"]').click();
-      await until('reset alert', () => window.__alerts.some((item) => item.includes('reset')));
+      root.querySelector('form').requestSubmit();
+      await until('reset sent', () => events('pwa-reset-sent').length > before);
+      const detail = events('pwa-reset-sent').at(-1).detail;
+      if (!detail || detail.email !== email) throw new Error(JSON.stringify(detail));
+      const status = root.querySelector('#pwa-reset-status').textContent;
+      const sentence = 'If an account uses that email, a reset link is on its way.';
+      if (status !== sentence) throw new Error(status);
+      if (!window.__alerts.includes(sentence)) throw new Error(JSON.stringify(window.__alerts));
+      const leaked = events('pwa-auth-error').slice(beforeError + 1).some((item) => {
+        return String(item.detail.code).includes('user-not-found');
+      });
+      if (leaked) throw new Error('reset revealed a missing account');
+      const button = root.querySelector('button[type="submit"]');
+      if (!button.disabled) throw new Error('expected a resend cooldown');
       const response = await fetch('http://127.0.0.1:9099/emulator/v1/projects/pwa-authentic/oobCodes');
       const body = await response.json();
       const sent = (body.oobCodes || []).some((item) => item.email === email && String(item.requestType).includes('PASSWORD'));
       if (!sent) throw new Error('no reset code ' + JSON.stringify(body.oobCodes));
-      record('forgot password', true, 'reset email in the emulator');
+      record('forgot password', true, 'pwa-reset-sent, same sentence, emulator code');
     } catch (error) {
       record('forgot password', false, error.message);
     }

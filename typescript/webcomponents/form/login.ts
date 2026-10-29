@@ -27,6 +27,7 @@ import { tapStyle }       from '../css/tap';
 
 import store                  from '../../store';
 import { universalToggle }    from '../../redux/frontend';
+import { rememberEmail }      from './draft';
 
 @customElement('form-login')
 export class FormLogin extends LitElement {
@@ -140,6 +141,7 @@ export class FormLogin extends LitElement {
   private handleEmail(event: Event) {
     const input     = event.target as HTMLInputElement;
     this.email      = input.value; // Update the property with the input value
+    rememberEmail(this.email);
   }
 
   // Sync Password
@@ -154,6 +156,7 @@ export class FormLogin extends LitElement {
     const password  = this.renderRoot.querySelector('input[type="password"]') as HTMLInputElement | null;
     this.email      = email?.value ?? '';
     this.password   = password?.value ?? '';
+    rememberEmail(this.email);
   }
 
   // Form Default

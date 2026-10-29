@@ -182,7 +182,13 @@ Profile updates the display name. Email and password changes, and delete, ask fo
 
 ### `<email-reset>`
 
-Sends a password reset for the address in the field.
+Sends a password reset for the address in the field. The address is checked before `sendPasswordResetEmail`. An empty or short address fires `pwa-auth-error` with `pwa/missing-email`. A malformed address uses `pwa/invalid-email`.
+
+While the request is in flight the button is disabled and reads Sending…. Success shows one sentence either way, including when Firebase returns `auth/user-not-found`: "If an account uses that email, a reset link is on its way." The page dispatches `pwa-reset-sent` on `window` with `{ email }`. The button then waits 45 seconds.
+
+`auth/invalid-email`, `auth/too-many-requests`, and `auth/network-request-failed` alert a short sentence and dispatch `pwa-auth-error`. The event still carries the Firebase code.
+
+If a sign-in form on the page already has an email, the field starts with that address until someone types in the reset field. Back to sign in opens `<user-drawer>` on the sign-in form. With no drawer, it shows the sign-in form in `<user-login>`.
 
 | Attribute | |
 |---|---|
@@ -274,6 +280,7 @@ Global events fire on `window`. `pwa-drawer-toggle` fires on `<user-drawer>`, bu
 - `pwa-profile-updated` — display name or photo saved. Detail: `{ uid, displayName, photoURL }`
 - `pwa-email-changed` — `verifyBeforeUpdateEmail` accepted the address. Detail: `{ email }`
 - `pwa-password-changed` — `updatePassword` succeeded. Detail: `{ uid }`. The new password is not included.
+- `pwa-reset-sent` — `sendPasswordResetEmail` finished, or the address has no account. Detail: `{ email }`. The same event either way.
 - `pwa-drawer-toggle` — the drawer open flag changed. Detail: `{ open }`
 - `pwa-auth-error` — an account action failed. Detail: `{ code, message }`
 
@@ -331,7 +338,7 @@ window.addEventListener(eventName.login, (event) => {
 | `closeDrawer()` | Closes the drawer. |
 | `toggleDrawer()` | Flips the drawer. |
 | `eventName` | The `pwa-` strings. `eventName.drawerToggle` is `pwa-drawer-toggle`. |
-| `pwaAuthChanged`, `pwaLogin`, `pwaLogout`, `pwaSignup`, `pwaAccountDeleted`, `pwaProfileUpdated`, `pwaEmailChanged`, `pwaPasswordChanged`, `pwaDrawerToggleName`, `pwaAuthError` | The same strings, one constant each. `pwaDrawerToggleName` is the event. `pwaDrawerToggle()` is the older close function. |
+| `pwaAuthChanged`, `pwaLogin`, `pwaLogout`, `pwaSignup`, `pwaAccountDeleted`, `pwaProfileUpdated`, `pwaEmailChanged`, `pwaPasswordChanged`, `pwaResetSent`, `pwaDrawerToggleName`, `pwaAuthError` | The same strings, one constant each. `pwaDrawerToggleName` is the event. `pwaDrawerToggle()` is the older close function. |
 
 `import { store } from 'pwa-auth'` is not a public export. Use `getCurrentUser`, `onUserChanged`, and the events. Account fields stay inside the package.
 
@@ -374,7 +381,7 @@ Hosts style the controls with `::part`. Nested fields are forwarded with `export
 - `user-drawer`: `panel`, `header`, `title`, `close`, `settings`, `logout`, `login-email`, `login-password`, `login-submit`, `login-switch`, `signup-email`, `signup-password`, `signup-submit`, `signup-switch`
 - `user-login`: `panel`, `header`, `title`, and the same `login-*` and `signup-*` field parts
 - `user-settings`: `tab`, `panel`, `name`, `name-submit`, `email`, `email-submit`, `password`, `verify`, `password-submit`, `progress`, `file`, `preview`, `delete`
-- `email-reset`: `email`, `submit`
+- `email-reset`: `email`, `submit`, `status`, `back`
 
 ```css
 user-icon::part(button) { border-radius: 8px; }
