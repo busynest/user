@@ -290,7 +290,8 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       <!-- Log-in State -->
       <form
         @submit=          ${this._handleSubmit}
-        autocomplete=     "on">
+        autocomplete=     "on"
+        novalidate>
 
         <ul>
 
@@ -370,7 +371,8 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       <!-- Sign Up State-->
       <form
         @submit=            ${this._handleSubmit}
-        autocomplete=       "on">
+        autocomplete=       "on"
+        novalidate>
         
         <ul>
 
@@ -1069,7 +1071,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
 
       </form>
 
-    `}alertPassword(){const e=this.shadowRoot.querySelector("#pwa-new-password").value,t=this.shadowRoot.querySelector("#pwa-verify-password").value;if(this.password=e,this.password)if(this.password!==t)this.message="Passwords do not match",lD(aD,{code:"pwa/password-mismatch",message:this.message});else if(this.password.length<8)this.message="Password must be at least 8 characters long",lD(aD,{code:"pwa/weak-password",message:this.message});else if(this.message="Password entered:",/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(this.password))if(Vw.currentUser)this.updatePass(this.password);else{const e={code:"pwa/signed-out",message:"Sign in first."};lD(aD,e),alert(pD(e))}else this.message="Password must include letters, numbers, and be 8+ characters",lD(aD,{code:"pwa/weak-password",message:this.message});else this.message="Please enter a password",lD(aD,{code:"pwa/missing-password",message:this.message})}}m_([ue(),E_("design:type",String)],w_.prototype,"message",void 0),m_([ue(),E_("design:type",String)],w_.prototype,"password",void 0),m_([ue(),E_("design:type",Boolean)],w_.prototype,"login",void 0),customElements.define("input-password",w_);var D_=function(e,t,n,r){var s,i=arguments.length,a=i<3?t:null===r?r=Object.getOwnPropertyDescriptor(t,n):r;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)a=Reflect.decorate(e,t,n,r);else for(var o=e.length-1;o>=0;o--)(s=e[o])&&(a=(i<3?s(a):i>3?s(t,n,a):s(t,n))||a);return i>3&&a&&Object.defineProperty(t,n,a),a},y_=function(e,t){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(e,t)};class __ extends(he(gn)(ie)){constructor(){super(),this.login=!1,this.email="",this.officialDelete=async()=>{const e=Vw.currentUser;if(e)try{const t=e.uid;await(async e=>{const t=xw(Hw,"pwa-auth/"+e),n=await Fw(t);await Promise.all(n.items.map(e=>kw(e)));for(const e of n.prefixes){const t=await Fw(e);await Promise.all(t.items.map(e=>kw(e)))}})(t),await Hy(),await e.delete(),lD(nD,{uid:t})}catch(e){lD(aD,uD(e)),alert(pD(e))}else alert("Please Sign-in")}}firstUpdated(){this.shadowRoot.querySelector(".deleteUser").addEventListener("click",()=>{this.alertDelete()})}stateChanged(e){this.login=e.frontend.login,this.email=e.backend.email}static get styles(){return[dD,i`
+    `}alertPassword(){const e=this.shadowRoot.querySelector("#pwa-new-password").value,t=this.shadowRoot.querySelector("#pwa-verify-password").value;if(this.password=e,this.password)if(this.password!==t)this.message="Passwords do not match",lD(aD,{code:"pwa/password-mismatch",message:this.message});else if(this.password.length<8)this.message="Password must be at least 8 characters long",lD(aD,{code:"pwa/weak-password",message:this.message});else if(this.message="Password entered:",/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(this.password))if(Vw.currentUser)this.updatePass(this.password);else{const e={code:"pwa/signed-out",message:"Sign in first."};lD(aD,e),alert(pD(e))}else this.message="Password must include letters, numbers, and be 8+ characters",lD(aD,{code:"pwa/weak-password",message:this.message});else this.message="Please enter a password",lD(aD,{code:"pwa/missing-password",message:this.message})}}m_([ue(),E_("design:type",String)],w_.prototype,"message",void 0),m_([ue(),E_("design:type",String)],w_.prototype,"password",void 0),m_([ue(),E_("design:type",Boolean)],w_.prototype,"login",void 0),customElements.define("input-password",w_);var D_=function(e,t,n,r){var s,i=arguments.length,a=i<3?t:null===r?r=Object.getOwnPropertyDescriptor(t,n):r;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)a=Reflect.decorate(e,t,n,r);else for(var o=e.length-1;o>=0;o--)(s=e[o])&&(a=(i<3?s(a):i>3?s(t,n,a):s(t,n))||a);return i>3&&a&&Object.defineProperty(t,n,a),a},y_=function(e,t){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(e,t)};class __ extends(he(gn)(ie)){constructor(){super(),this.login=!1,this.email="",this.officialDelete=async()=>{const e=Vw.currentUser;if(e)try{const t=e.uid;await(async e=>{const t=xw(Hw,"pwa-auth/"+e),n=await Fw(t);await Promise.all(n.items.map(e=>kw(e)));for(const e of n.prefixes){const t=await Fw(e);await Promise.all(t.items.map(e=>kw(e)))}})(t);try{await Vy("users",t)}catch(e){if(!(e&&"object"==typeof e&&"code"in e?String(e.code):"").includes("permission-denied"))throw e}await Hy(),await e.delete(),lD(nD,{uid:t})}catch(e){lD(aD,uD(e)),alert(pD(e))}else alert("Please Sign-in")}}firstUpdated(){this.shadowRoot.querySelector(".deleteUser").addEventListener("click",()=>{this.alertDelete()})}stateChanged(e){this.login=e.frontend.login,this.email=e.backend.email}static get styles(){return[dD,i`
 
     :host {
       display:                  grid;
@@ -1321,6 +1323,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
 
       <form
         class="resetPass"
+        novalidate
         @submit="${this.resetPassword}">
 
         <label>Email

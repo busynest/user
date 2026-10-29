@@ -73,7 +73,8 @@ let FormLogin = class FormLogin extends LitElement {
       <!-- Log-in State -->
       <form
         @submit=          ${this._handleSubmit}
-        autocomplete=     "on">
+        autocomplete=     "on"
+        novalidate>
 
         <ul>
 

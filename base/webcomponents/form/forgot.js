@@ -57,6 +57,7 @@ let EmailReset = class EmailReset extends LazyLoader {
 
       <form
         class="resetPass"
+        novalidate
         @submit="${this.resetPassword}">
 
         <label>Email
