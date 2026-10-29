@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getStorage } from '@firebase/storage';
+import { getStorage } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 export let firebaseConfig = {};
 export let application;

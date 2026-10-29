@@ -10,18 +10,6 @@ import { pwaAuthChanged, pwaAuthError, pwaLogout } from '../events/names';
 import { emitWindow, toAuthError, toPwaUser } from '../events/emit';
 let analytics;
 let analyticsReady = Promise.resolve();
-if ('serviceWorker' in navigator) {
-    console.log('Service Worker is supported');
-}
-else {
-    console.log('Service Worker is not supported');
-}
-if ('PushManager' in window) {
-    console.log('Push API is supported');
-}
-else {
-    console.log('Push API is not supported');
-}
 export const pwaDrawerToggle = () => {
     store.dispatch(closeSign());
 };

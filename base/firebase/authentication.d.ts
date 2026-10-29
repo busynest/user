@@ -1,6 +1,6 @@
 import { FirebaseApp, FirebaseOptions } from 'firebase/app';
 import { Firestore } from 'firebase/firestore';
-import { FirebaseStorage } from '@firebase/storage';
+import { FirebaseStorage } from 'firebase/storage';
 import { User, Auth } from 'firebase/auth';
 export interface InitializeOptions {
     app?: FirebaseApp;

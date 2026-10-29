@@ -14,7 +14,7 @@ import { connect } from 'pwa-helpers';
 import { auth, storage } from '../../../firebase/authentication';
 import { updateProfile } from 'firebase/auth';
 import { accImage } from '../../../redux/backend';
-import { ref, updateMetadata, getDownloadURL, uploadBytesResumable } from "@firebase/storage";
+import { ref, updateMetadata, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { labelStyle } from '../../form/css/label';
 import { pwaAuthError, pwaProfileUpdated } from '../../../events/names';
 import { emitWindow, toAuthError } from '../../../events/emit';
