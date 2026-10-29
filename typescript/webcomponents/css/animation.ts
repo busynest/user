@@ -13,7 +13,7 @@ export const animation : CSSResult = css`
     display:                                grid;
     position:                               relative;
     grid-template-areas:                    'pages';
-    overflow-y:                             auto;
+    overflow:                               hidden; /* Required - clip the slide under the header */
     border-bottom:                          1px solid var(--pwa_line_color, #e3daca);
     border-radius:                          0 0 14px 14px;
     scrollbar-width:                        thin;
@@ -31,19 +31,14 @@ export const animation : CSSResult = css`
 
     will-change:                            transform;
 
-    transition-property:                    transform, transition;
-    -webkit-transition-property:            transform, transition;
-
     backface-visibility:                    hidden;
 
-    transition-timing-function:             ease-in-out;
-    -webkit-transition-timing-function:     ease-in-out;
-
-    transition-duration:                    2s;
-    -webkit-transition-duration:            2s;
+    /* Required - slide. Visibility waits out the transform, then hides. */
+    transition:                             transform 0.8s ease-in-out, visibility 0s linear 0.8s;
 
     position:relative;
     z-index: 1;
+    width:                                  100%;
 }
 
 @keyframes slide-out {
@@ -52,21 +47,31 @@ export const animation : CSSResult = css`
 }
 
 .opened {
-    transform:                              translate3d(0, 0, 0);/*rotateY(0deg);*/
-    position:relative;
-    z-index: 3;
+    transform:                              translate3d(0, 0, 0);
+    visibility:                             visible;
+    position:                               relative; /* Required - this form sets the panel height */
+    z-index:                                3;
+    transition:                             transform 0.8s ease-in-out, visibility 0s linear 0s;
 }
 
 .closed {
-    /* Required - stay out of the header and the tab order */
+    /* Required - same cell, full width, slid up. Absolute so it does not stretch the row. */
+    transform:                              translate3d(0, -100%, 0);
     visibility:                             hidden;
     pointer-events:                         none;
     position:                               absolute;
-    height:                                 0;
-    width:                                  0;
-    overflow:                               hidden;
-    transform:                              none;
-    z-index:                                0;
+    top:                                    0;
+    left:                                   0;
+    width:                                  100%;
+    z-index:                                2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .content,
+    .opened,
+    .closed {
+        transition:                         none;
+    }
 }
 
 `;
