@@ -6,6 +6,19 @@ All notable changes to pwa-auth.js will be documented in this file.
 - Social Login Flow
 - animated login mascot
 
+# [3.5.0] - 2026-10-29
+
+## Added
+- window events: pwa-auth-changed, pwa-login, pwa-logout, pwa-signup, pwa-account-deleted, pwa-profile-updated, pwa-email-changed, pwa-auth-error
+- element event: pwa-drawer-toggle { open }
+- getCurrentUser(), onUserChanged(), openDrawer(), closeDrawer(), toggleDrawer()
+- initialize({ app, config }) and the firebase-config attribute
+- vitest for event shape and onUserChanged unsubscribe
+
+## Changed
+- userEmailChanged still fires on window and is deprecated
+- types resolve for pwa-auth and pwa-auth/production
+
 # [3.4.10] - 2026-10-28
 
 ## Added

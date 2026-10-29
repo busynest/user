@@ -4,7 +4,7 @@ Jack's Publishing maintains sign-in and account components so a site can stay on
 
 Five custom elements sign a person up, sign them in, and let them change their name, email, password, and photo, or delete the account. Email and password only. One Firebase app, one Redux store, shared by every tag on the page.
 
-Place the tags, set the Firebase config before the module loads, and optionally restyle with `--pwa_` variables.
+Place the tags, set the Firebase config before the module loads or call `initialize`, and optionally restyle with `--pwa_` variables. Host pages listen for `pwa-` events instead of reading the Redux store.
 
 ## Prerequisites
 
@@ -40,7 +40,7 @@ A plain script tag uses the bundle:
 
 ## Firebase
 
-Required. Set this in a classic script before the module runs. One assignment. A second `window.process = …` replaces the first and drops keys you already set.
+Required. Either set this in a classic script before the module runs, or call `initialize` from the host. One assignment. A second `window.process = …` replaces the first and drops keys you already set.
 
 ```html
 <script>
@@ -57,7 +57,35 @@ Required. Set this in a classic script before the module runs. One assignment. A
 </script>
 ```
 
-`authentication.ts` reads `process.env.FIREBASE_CONFIG` and calls `initializeApp`. An empty config throws, and then none of the tags upgrade.
+`authentication.ts` reads `process.env.FIREBASE_CONFIG` when `apiKey` is present and calls `initialize`. An empty config does not throw. Call `initialize` instead.
+
+```javascript
+import { initialize } from 'pwa-auth';
+import { getApp } from 'firebase/app';
+
+// Optional - your config
+initialize({
+  config: {
+    apiKey:            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    authDomain:        "xxxxxxx.xxxxxxx.xxx",
+    projectId:         "xxxxxxx",
+    storageBucket:     "xxxxxxx.xxxxxxx.xxx",
+    messagingSenderId: "xxxxxxxxxxx",
+    appId:             "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  }
+});
+
+// Optional - an app you already created. Omit FIREBASE_CONFIG when you do this.
+initialize({ app: getApp() });
+```
+
+Optional. A tag can carry the same JSON. The first element to connect wins, and only when the app is not up yet.
+
+```html
+<user-icon firebase-config='{"apiKey":"...","authDomain":"...","projectId":"..."}'></user-icon>
+```
+
+The first `initialize` wins. A later call with a different app throws.
 
 ## Elements
 
@@ -172,6 +200,78 @@ Sends a password reset for the address in the field.
 </body>
 ```
 
+## Events
+
+Global events fire on `window`. `pwa-drawer-toggle` fires on `<user-drawer>`, bubbles, and is `composed`. Every event is a `CustomEvent` with `bubbles: true` and `composed: true`. Names and detail types live in `typescript/events/names.ts` and `typescript/events/types.ts`.
+
+- `pwa-auth-changed` — every `onAuthStateChanged`. Detail: `{ user: { uid, displayName, email, photoURL } | null }`
+- `pwa-login` — email sign-in succeeded. Detail: `{ user: { uid, displayName, email, photoURL } }`
+- `pwa-logout` — `logOut()` finished. Detail: `{ user: null }`
+- `pwa-signup` — `createUserWithEmailAndPassword` succeeded. Detail: `{ user: { uid, displayName, email, photoURL } }`
+- `pwa-account-deleted` — the auth user was deleted. Detail: `{ uid }`
+- `pwa-profile-updated` — display name or photo saved. Detail: `{ uid, displayName, photoURL }`
+- `pwa-email-changed` — `verifyBeforeUpdateEmail` accepted the address. Detail: `{ email }`
+- `pwa-drawer-toggle` — the drawer open flag changed. Detail: `{ open }`
+- `pwa-auth-error` — an account action failed. Detail: `{ code, message }`
+
+`userEmailChanged` still fires on `window` with `{ email }`. Deprecated. Listen for `pwa-email-changed`.
+
+```javascript
+import { pwaAuthChanged, pwaDrawerToggleName } from 'pwa-auth';
+
+window.addEventListener(pwaAuthChanged, (event) => {
+  const user = event.detail.user;
+  console.log(user && user.uid);
+});
+
+window.addEventListener(pwaDrawerToggleName, (event) => {
+  console.log(event.detail.open);
+});
+```
+
+## API
+
+```javascript
+import {
+  initialize,
+  getCurrentUser,
+  onUserChanged,
+  openDrawer,
+  closeDrawer,
+  toggleDrawer,
+  eventName
+} from 'pwa-auth';
+
+initialize({ config });
+
+const stop = onUserChanged((user) => {
+  console.log(user);
+});
+stop();
+
+getCurrentUser();
+openDrawer();
+closeDrawer();
+toggleDrawer();
+
+window.addEventListener(eventName.login, (event) => {
+  console.log(event.detail.user.email);
+});
+```
+
+| Export | |
+|---|---|
+| `initialize({ app, config })` | Boot Firebase. `app` is a host app. `config` is a host config. The legacy `FIREBASE_CONFIG` script still works. |
+| `getCurrentUser()` | `{ uid, displayName, email, photoURL }` or `null`. |
+| `onUserChanged(callback)` | Calls back with that same shape. Returns `unsubscribe`. |
+| `openDrawer()` | Opens the drawer. |
+| `closeDrawer()` | Closes the drawer. |
+| `toggleDrawer()` | Flips the drawer. |
+| `eventName` | The `pwa-` strings. `eventName.drawerToggle` is `pwa-drawer-toggle`. |
+| `pwaAuthChanged`, `pwaLogin`, `pwaLogout`, `pwaSignup`, `pwaAccountDeleted`, `pwaProfileUpdated`, `pwaEmailChanged`, `pwaDrawerToggleName`, `pwaAuthError` | The same strings, one constant each. `pwaDrawerToggleName` is the event. `pwaDrawerToggle()` is the older close function. |
+
+`import { store } from 'pwa-auth'` is not a public export. Use `getCurrentUser`, `onUserChanged`, and the events. Account fields stay inside the package.
+
 ## Exports
 
 ```javascript
@@ -191,16 +291,16 @@ import {
 | `auth` | Firebase Auth for this app. Read `auth.currentUser` at call time. |
 | `db` | Firestore. |
 | `storage` | Cloud Storage. |
-| `application` | The Firebase app created at load. |
+| `application` | The Firebase app from `initialize` or from `FIREBASE_CONFIG`. |
 | `firebaseConfig` | The parsed config object. |
-| `user` | Deprecated. Snapshot of `auth.currentUser` from module load. It stays `null`. |
-| `logOut()` | `signOut(auth)`. |
+| `user` | Deprecated. Snapshot of `auth.currentUser` taken when `initialize` runs. It stays `null`. Read `getCurrentUser()` at call time. |
+| `logOut()` | `signOut(auth)`. Then `pwa-logout`. |
 | `logAccount()` | Analytics event `create_account`, after Analytics is ready. No event when Analytics is unsupported. |
 | `logAccountDelete()` | Analytics event `delete_account`. It does not delete the account. |
 | `deleteDocument(collect, item)` | Deletes one Firestore document. |
-| `pwaDrawerToggle()` | Closes the drawer. It does not toggle. |
+| `pwaDrawerToggle()` | Closes the drawer. It does not toggle. Prefer `closeDrawer()`. |
 
-The store is not exported. Account fields (`userId`, `name`, `email`, `photoURL`) stay inside the package.
+`pwa-auth` and `pwa-auth/production` both resolve types to `base/export/pwa-auth.d.ts`. The production entry is the rollup bundle.
 
 ## Theme
 

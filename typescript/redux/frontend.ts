@@ -55,6 +55,11 @@ export const userSlice = createSlice({
         else                              { state.drawer = true; }
        },
 
+      // Required - open stays open
+      openSign: ( state ) => {
+        state.drawer = true;
+      },
+
       closeSign: ( state ) => {  
         state.drawer = false;
       },
@@ -121,7 +126,7 @@ export const userSlice = createSlice({
           }
 });
 
-export const { universalToggle, navigateAuth, iconAuth, nameAuth, userAuth, toggleSign, closeSign, signUpAction, signUpClose } = userSlice.actions;
+export const { universalToggle, navigateAuth, iconAuth, nameAuth, userAuth, toggleSign, openSign, closeSign, signUpAction, signUpClose } = userSlice.actions;
 
 export default userSlice.reducer;
 

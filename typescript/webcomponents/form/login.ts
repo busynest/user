@@ -17,6 +17,9 @@ import {
 
 import { auth }           from '../../firebase/authentication';
 
+import { pwaAuthError, pwaLogin } from '../../events/names';
+import { emitWindow, toAuthError, toPwaUser } from '../../events/emit';
+
 import { buttonStyle }    from './css/button';
 import { labelStyle }     from './css/label';
 import { inputStyle }     from './css/input';
@@ -157,8 +160,16 @@ export class FormLogin extends LitElement {
   // Login Action
   private login() {
     this.readFields();
-    if (this.email.length < 4) { alert('Please enter an email address.'); return; }
-    if (this.password.length < 4) { alert('Please enter a password.'); return; }
+    if (this.email.length < 4) {
+      emitWindow(pwaAuthError, { code: 'pwa/missing-email', message: 'Please enter an email address.' });
+      alert('Please enter an email address.');
+      return;
+    }
+    if (this.password.length < 4) {
+      emitWindow(pwaAuthError, { code: 'pwa/missing-password', message: 'Please enter a password.' });
+      alert('Please enter a password.');
+      return;
+    }
     this.signIn(this.email,this.password); // Sign in with email and password
   }
   
@@ -167,8 +178,11 @@ export class FormLogin extends LitElement {
   
     try {
       const authCredential = EmailAuthProvider.credential(email, password);
-      await signInWithCredential(auth, authCredential);
+      const signed = await signInWithCredential(auth, authCredential);
+      const person = toPwaUser(signed.user);
+      if (person) emitWindow(pwaLogin, { user: person });
     } catch (error) {
+      emitWindow(pwaAuthError, toAuthError(error));
       alert(error instanceof Error ? error.message : 'Sign in failed');
     }
   

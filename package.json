@@ -6,7 +6,7 @@
     "url": "https://www.jackspublishing.com",
     "email": "jack.solutionbox@gmail.com"
   },
-  "version": "3.4.10",
+  "version": "3.5.0",
   "description": "pwa-auth is a collection of four HTML webomponents for User Management to display a login button with icon picture state once logged in. Sign up and login within a drawer and optionally a static for a page. Being able to log out, change account details, and delete account.",
   "homepage": "https://pwa-authentic.firebaseapp.com",
   "repository": {
@@ -37,11 +37,19 @@
   "types": "./base/export/pwa-auth.d.ts",
   "exports": {
     ".": {
-      "default": "./base/export/pwa-auth.js",
-      "types": "./base/export/pwa-auth.d.ts"
+      "types": "./base/export/pwa-auth.d.ts",
+      "default": "./base/export/pwa-auth.js"
     },
     "./production": {
+      "types": "./base/export/pwa-auth.d.ts",
       "default": "./source/pwa-auth.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "production": [
+        "./base/export/pwa-auth.d.ts"
+      ]
     }
   },
   "license": "SEE LICENSES.txt",
@@ -50,7 +58,8 @@
     "demo": "web-dev-server --node-resolve --watch --open --app-index demonstration/index.html",
     "website": "web-dev-server --node-resolve --watch --open --app-index website/index.html",
     "rollup": "rollup -c rollup.config.js",
-    "build": "tsc --project tsconfig.production.json && node typescript/keep-deprecated.js"
+    "build": "tsc --project tsconfig.production.json && node typescript/keep-deprecated.js",
+    "test": "vitest run"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.12.0",
@@ -74,11 +83,13 @@
     "@web/rollup-plugin-copy": "^0.5.1",
     "babel-plugin-template-html-minifier": "^4.1.0",
     "firebase": "^12.15.0",
+    "happy-dom": "^21.0.4",
     "rollup": "^4.54.0",
     "rollup-plugin-dts": "^6.3.0",
     "rollup-plugin-html-literals": "^2.0.1",
     "rollup-plugin-license": "^3.6.0",
     "rollup-plugin-summary": "^3.0.1",
-    "tslib": "^2.8.1"
+    "tslib": "^2.8.1",
+    "vitest": "^5.0.5"
   }
 }

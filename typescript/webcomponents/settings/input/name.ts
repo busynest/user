@@ -8,6 +8,8 @@ import { auth }               from "../../../firebase/authentication";
 import { labelStyle }         from "../../form/css/label";
 import { inputStyle }         from "../../form/css/input";
 import { buttonStyle }        from "../../form/css/button";
+import { pwaAuthError, pwaProfileUpdated } from "../../../events/names";
+import { emitWindow, toAuthError } from "../../../events/emit";
 
 export class InputName extends connect(store)(LitElement) {
 
@@ -77,13 +79,29 @@ export class InputName extends connect(store)(LitElement) {
   private alertProfile = async () => {
 
     // Dispatch the Information to Firestore Function
-    if (auth.currentUser) {
+    const current = auth.currentUser;
 
-      await updateProfile(auth.currentUser, { displayName: this.value })
+    if (current) {
+
+      await updateProfile(current, { displayName: this.value })
       .then( () => { store.dispatch(accName(this.value)) })
-      .then( () => { alert('updated name:' + this.value); });
+      .then( () => {
+        emitWindow(pwaProfileUpdated, {
+          uid:          current.uid,
+          displayName:  this.value,
+          photoURL:     current.photoURL
+        });
+        alert('updated name:' + this.value);
+      })
+      .catch((error: unknown) => {
+        emitWindow(pwaAuthError, toAuthError(error));
+        alert(error instanceof Error ? error.message : 'Name update failed');
+      });
 
-    } else { alert('Please Login'); }
+    } else {
+      emitWindow(pwaAuthError, { code: 'pwa/signed-out', message: 'Please Login' });
+      alert('Please Login');
+    }
   
   }
 

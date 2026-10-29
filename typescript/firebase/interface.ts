@@ -24,10 +24,10 @@ import { Analytics, getAnalytics, isSupported, logEvent } from "firebase/analyti
 import { deleteObject, listAll, ref } from "firebase/storage";
 
 // Start Authentication
-import { application, auth, db, storage } from './authentication'
+import { application, auth, db, onReady, storage } from './authentication'
 
-// LANGUAGE
-getAuth().useDeviceLanguage();
+import { pwaAuthChanged, pwaAuthError, pwaLogout } from '../events/names';
+import { emitWindow, toAuthError, toPwaUser } from '../events/emit';
 
 
 
@@ -38,11 +38,7 @@ getAuth().useDeviceLanguage();
 // Required - analytics, only when this browser supports it
 let analytics: Analytics | undefined;
 
-const analyticsReady: Promise<void> = (async () => {
-  if (await isSupported()) {
-    analytics = getAnalytics(application);
-  }
-})();
+let analyticsReady: Promise<void> = Promise.resolve();
 
 
 
@@ -76,10 +72,23 @@ export const pwaDrawerToggle = () => {
     // Close Drawer State
     store.dispatch( closeSign() );
 }
-    
 
-// Firebase State Change Function
-onAuthStateChanged(auth, (user) => {
+
+// Required - redux, analytics, and pwa-auth-changed once the app exists
+onReady(() => {
+
+  getAuth(application).useDeviceLanguage();
+
+  analyticsReady = (async () => {
+    if (await isSupported()) {
+      analytics = getAnalytics(application);
+    }
+  })();
+
+  onAuthStateChanged(auth, (user) => {
+
+  // Required - every auth state, including the first
+  emitWindow(pwaAuthChanged, { user: toPwaUser(user) });
 
   // Account Login
   if (user) {
@@ -135,6 +144,8 @@ onAuthStateChanged(auth, (user) => {
 
   }
 
+  });
+
 });
 
 
@@ -152,7 +163,15 @@ onAuthStateChanged(auth, (user) => {
 export const alertEmail = (error:any) => { console.log( 'Problem: ' + error );/* if (this._user) { this.updateEmail(); } else { alert('Please Login'); } */ }
 
 
-export const logOut             = async () => { return signOut(auth); };
+export const logOut             = async () => {
+  try {
+    await signOut(auth);
+    emitWindow(pwaLogout, { user: null });
+  } catch (error) {
+    emitWindow(pwaAuthError, toAuthError(error));
+    throw error;
+  }
+};
 
 export const logAccount         = async () => {
   await analyticsReady;

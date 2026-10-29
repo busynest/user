@@ -13,6 +13,7 @@ import { listStyle }    from '../form/css/list';
 import '../form/login';
 import '../form/signup';
 import { tapStyle } from '../css/tap';
+import { applyFirebaseConfig } from '../../firebase/attribute';
 
 @customElement('user-login')
 export class UserLogin extends connect(store)(LitElement) {
@@ -25,6 +26,11 @@ export class UserLogin extends connect(store)(LitElement) {
   @state() private _sign        = false; // Sign-up State
   
   constructor() { super(); }
+
+  override connectedCallback(): void {
+    applyFirebaseConfig(this);
+    super.connectedCallback();
+  }
 
   stateChanged(state: AppState) {
     this._name        = state.backend!.name;        // User Name

@@ -3,5 +3,34 @@ export { UserDrawer }           from '../webcomponents/drawer/drawer';
 export { UserSettings }         from '../webcomponents/settings/settings';
 export { UserIcon }             from '../webcomponents/icon/icon';
 export { EmailReset }           from '../webcomponents/form/forgot';
-export { firebaseConfig, application, db, storage, auth, user } from '../firebase/authentication';
+export { firebaseConfig, application, db, storage, auth, user, initialize } from '../firebase/authentication';
+export type { InitializeOptions } from '../firebase/authentication';
 export { logOut, logAccount, logAccountDelete, deleteDocument, pwaDrawerToggle } from "../firebase/interface";
+export { getCurrentUser, onUserChanged } from '../api/user';
+export { openDrawer, closeDrawer, toggleDrawer } from '../api/drawer';
+export {
+  pwaAuthChanged,
+  pwaLogin,
+  pwaLogout,
+  pwaSignup,
+  pwaAccountDeleted,
+  pwaProfileUpdated,
+  pwaEmailChanged,
+  pwaDrawerToggleName,
+  pwaAuthError,
+  eventName
+} from '../events/names';
+export type {
+  PwaUser,
+  PwaAuthChangedDetail,
+  PwaLoginDetail,
+  PwaLogoutDetail,
+  PwaSignupDetail,
+  PwaAccountDeletedDetail,
+  PwaProfileUpdatedDetail,
+  PwaEmailChangedDetail,
+  PwaDrawerToggleDetail,
+  PwaAuthErrorDetail,
+  PwaEventMap
+} from '../events/types';
+export { userEmailChanged } from '../deprecated/email-changed';

@@ -5,6 +5,8 @@ import store, { AppState }    from "../../../store";
 import { buttonStyle }        from "../../form/css/button";
 import { auth }               from '../../../firebase/authentication';
 import { deleteUserFiles, logAccountDelete } from '../../../firebase/interface';
+import { pwaAccountDeleted, pwaAuthError } from '../../../events/names';
+import { emitWindow, toAuthError } from '../../../events/emit';
 
 export class DeleteUser extends connect(store)(LitElement) {
    
@@ -57,7 +59,13 @@ export class DeleteUser extends connect(store)(LitElement) {
   }
 
   /* Delete Account */
-  private alertDelete()  { if (auth.currentUser) { this.deleteUser(); } else { alert('Please Login'); } }
+  private alertDelete()  {
+    if (auth.currentUser) { this.deleteUser(); }
+    else {
+      emitWindow(pwaAuthError, { code: 'pwa/signed-out', message: 'Please Login' });
+      alert('Please Login');
+    }
+  }
   private deleteUser() {
     const d = confirm("Delete Account?");
     if    ( d == true ) { this.officialDelete(); console.log("user gone"); }
@@ -73,12 +81,15 @@ export class DeleteUser extends connect(store)(LitElement) {
 
     try {
 
-      await deleteUserFiles(current.uid);
+      const uid = current.uid;
+      await deleteUserFiles(uid);
       await logAccountDelete();
       await current.delete();
+      emitWindow(pwaAccountDeleted, { uid });
 
     } catch (error) {
 
+      emitWindow(pwaAuthError, toAuthError(error));
       alert('Problem: ' + (error instanceof Error ? error.message : 'Delete failed'));
 
     }

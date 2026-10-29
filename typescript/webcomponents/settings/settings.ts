@@ -12,6 +12,7 @@ import './input/delete';
 import { listStyle } from '../form/css/list';
 import { animation } from '../css/animation';
 import { tapStyle } from '../css/tap';
+import { applyFirebaseConfig } from '../../firebase/attribute';
 
 @customElement('user-settings')
 export class UserSettings extends connect(store)(LitElement) {
@@ -23,6 +24,11 @@ export class UserSettings extends connect(store)(LitElement) {
   @state() private name = '';
 
   constructor() { super(); }
+
+  override connectedCallback(): void {
+    applyFirebaseConfig(this);
+    super.connectedCallback();
+  }
 
   protected firstUpdated() {
 

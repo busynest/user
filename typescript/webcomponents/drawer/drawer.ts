@@ -16,6 +16,10 @@ import { lineStyle }        from './css/paragraph';
 
 import { toggleSign }       from '../../redux/frontend'; 
 import { logOut }           from '../../firebase/interface';
+import { applyFirebaseConfig } from '../../firebase/attribute';
+
+import { pwaDrawerToggleName } from '../../events/names';
+import { emitElement } from '../../events/emit';
 
 import '../form/login';
 import '../form/signup';
@@ -37,14 +41,31 @@ export class UserDrawer extends connect(store)(LitElement) {
   @state() private name         = "";     // String Username
   @state() private user         = false;  // True user is logged-in, false, user is logged-out, state
   @state() private signup       = false;  // True sign-up, false log-in, State
+
+  private wasOpen = false;
+  private sawOpen = false;
   
   constructor() { super(); }
 
+  override connectedCallback(): void {
+    applyFirebaseConfig(this);
+    super.connectedCallback();
+  }
+
   stateChanged(state: AppState) {
+    const open        = state.frontend!.drawer;         // Drawer State
     this.name         = state.backend!.name;            // User Name
-    this.drawer       = state.frontend!.drawer;         // Drawer State
+    this.drawer       = open;
     this.user         = state.frontend!.login;          // Logged in-out State
     this.signup       = state.frontend!.registerOne;    // Sign-up State
+
+    // Required - UI event from this element. Skip the closed state on first read.
+    const changed = this.sawOpen ? open !== this.wasOpen : open;
+    if (changed) {
+      emitElement(this, pwaDrawerToggleName, { open });
+    }
+    this.wasOpen = open;
+    this.sawOpen = true;
   }
   
   protected firstUpdated() {
