@@ -3,8 +3,8 @@ export const navigation = css `
 
   nav {
     overflow:         hidden;
-   /* box-shadow:       0 0 6px 0;*/
     z-index:          3;
+    padding:          8px 8px 0; /* Required - space around the tabs */
   }
 
   nav > ul {
@@ -20,13 +20,13 @@ export const navigation = css `
 
   nav > ul > li > button {
 
-    color:            var(--pwa_nav_button_color, grey);
+    color:            var(--pwa_nav_button_color, #4e5b6a);
     border:           0;
     width:            100%;
     margin:           auto;
     padding:          0px;
-    font-weight:      800;
-    font-size:        .8em;
+    font-weight:      600;
+    font-size:        0.85rem;
     min-height:       var(--pwa_tap, 44px); /* Required - minimum tap target */
     height:           auto;
     border-radius:    6px 6px 0 0;
@@ -36,8 +36,8 @@ export const navigation = css `
 
   nav > ul > li > button[on] {
 
-    color: var(--pwa_nav_highlight_color, black);
-    background-color: lightgrey;
+    color: var(--pwa_nav_highlight_color, #1c2430);
+    background-color: var(--pwa_nav_on_background, #f3efe6);
 
   }
 
@@ -64,22 +64,17 @@ export const navigation = css `
 
   section {
     grid-template-rows:     auto 1fr;
-    background-color:       var( --section_background_color, white);
+    background-color:       var(--section_background_color, #fffdf8);
   }
 
 
   h2 {
-    color:            var(--pwa_header_color, black);
+    color:            var(--pwa_header_color, #1c2430);
     text-align:       center;
-    text-shadow:      1px 1px 2px black, 0 0 15px grey, 0 0 5px #fff;
-    
-    /* border-bottom:    2px solid var(--pwa_divider_color, black); */
-    /* border-top:       2px solid var(--pwa_divider_color, black); */
-
-    margin:           6px 0 0 0;
-    padding:          16px 0;
-
-    box-shadow:       0px 6px 6px -6px;
+    font-weight:      600;
+    font-size:        1.35rem;
+    margin:           0;
+    padding:          20px 16px 4px;
   }
 
 `;

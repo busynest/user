@@ -59,7 +59,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
 
       :host {
         display:          grid;
-        background-color: var(--pwa_settings_background_color, white);
+        background-color: var(--pwa_settings_background_color, #fffdf8);
       }
 
       form {
