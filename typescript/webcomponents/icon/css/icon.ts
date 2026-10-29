@@ -34,8 +34,6 @@ export const iconStyles = css`
     font-family:              var(--pwa_icon_font, "Avenir Next", "Segoe UI", system-ui, sans-serif);
     font-weight:              500;
     text-align:               center;
-    /* box-shadow:               4px 4px 4px 0px;*/
-    border-radius:            8px;
   }
 
   .userImage {
