@@ -16,7 +16,7 @@ import { labelStyle } from "../../form/css/label";
 import { inputStyle } from "../../form/css/input";
 import { buttonStyle } from "../../form/css/button";
 import { updatePassword } from "firebase/auth";
-import { pwaAuthError } from "../../../events/names";
+import { pwaAuthError, pwaPasswordChanged } from "../../../events/names";
 import { emitWindow, toAuthError } from "../../../events/emit";
 import { userMessage } from "../../../firebase/message";
 export class InputPassword extends connect(store)(LitElement) {
@@ -31,8 +31,9 @@ export class InputPassword extends connect(store)(LitElement) {
         };
         this.updatePass = async (newPassword) => {
             if (auth.currentUser) {
-                await updatePassword(auth.currentUser, newPassword)
-                    .then(() => { console.log("Password successful!"); })
+                const current = auth.currentUser;
+                await updatePassword(current, newPassword)
+                    .then(() => { emitWindow(pwaPasswordChanged, { uid: current.uid }); })
                     .catch((error) => {
                     emitWindow(pwaAuthError, toAuthError(error));
                     alert(userMessage(error));

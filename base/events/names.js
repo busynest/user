@@ -5,6 +5,7 @@ export const pwaSignup = 'pwa-signup';
 export const pwaAccountDeleted = 'pwa-account-deleted';
 export const pwaProfileUpdated = 'pwa-profile-updated';
 export const pwaEmailChanged = 'pwa-email-changed';
+export const pwaPasswordChanged = 'pwa-password-changed';
 export const pwaDrawerToggleName = 'pwa-drawer-toggle';
 export const pwaAuthError = 'pwa-auth-error';
 export const eventName = {
@@ -15,6 +16,7 @@ export const eventName = {
     accountDeleted: pwaAccountDeleted,
     profileUpdated: pwaProfileUpdated,
     emailChanged: pwaEmailChanged,
+    passwordChanged: pwaPasswordChanged,
     drawerToggle: pwaDrawerToggleName,
     authError: pwaAuthError
 };

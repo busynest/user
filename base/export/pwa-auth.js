@@ -7,6 +7,6 @@ export { firebaseConfig, application, db, storage, auth, user, initialize } from
 export { logOut, logAccount, logAccountDelete, deleteDocument, pwaDrawerToggle } from "../firebase/interface";
 export { getCurrentUser, onUserChanged } from '../api/user';
 export { openDrawer, closeDrawer, toggleDrawer } from '../api/drawer';
-export { pwaAuthChanged, pwaLogin, pwaLogout, pwaSignup, pwaAccountDeleted, pwaProfileUpdated, pwaEmailChanged, pwaDrawerToggleName, pwaAuthError, eventName } from '../events/names';
+export { pwaAuthChanged, pwaLogin, pwaLogout, pwaSignup, pwaAccountDeleted, pwaProfileUpdated, pwaEmailChanged, pwaPasswordChanged, pwaDrawerToggleName, pwaAuthError, eventName } from '../events/names';
 export { userEmailChanged } from '../deprecated/email-changed';
 //# sourceMappingURL=pwa-auth.js.map

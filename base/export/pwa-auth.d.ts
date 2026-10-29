@@ -8,6 +8,6 @@ export type { InitializeOptions } from '../firebase/authentication';
 export { logOut, logAccount, logAccountDelete, deleteDocument, pwaDrawerToggle } from "../firebase/interface";
 export { getCurrentUser, onUserChanged } from '../api/user';
 export { openDrawer, closeDrawer, toggleDrawer } from '../api/drawer';
-export { pwaAuthChanged, pwaLogin, pwaLogout, pwaSignup, pwaAccountDeleted, pwaProfileUpdated, pwaEmailChanged, pwaDrawerToggleName, pwaAuthError, eventName } from '../events/names';
-export type { PwaUser, PwaAuthChangedDetail, PwaLoginDetail, PwaLogoutDetail, PwaSignupDetail, PwaAccountDeletedDetail, PwaProfileUpdatedDetail, PwaEmailChangedDetail, PwaDrawerToggleDetail, PwaAuthErrorDetail, PwaEventMap } from '../events/types';
+export { pwaAuthChanged, pwaLogin, pwaLogout, pwaSignup, pwaAccountDeleted, pwaProfileUpdated, pwaEmailChanged, pwaPasswordChanged, pwaDrawerToggleName, pwaAuthError, eventName } from '../events/names';
+export type { PwaUser, PwaAuthChangedDetail, PwaLoginDetail, PwaLogoutDetail, PwaSignupDetail, PwaAccountDeletedDetail, PwaProfileUpdatedDetail, PwaEmailChangedDetail, PwaPasswordChangedDetail, PwaDrawerToggleDetail, PwaAuthErrorDetail, PwaEventMap } from '../events/types';
 export { userEmailChanged } from '../deprecated/email-changed';
