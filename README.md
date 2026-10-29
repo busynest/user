@@ -187,7 +187,7 @@ Four tabs: Icon, Profile, Password, Delete.
 |---|---|
 | `empty` | Fallback photo, passed through to the uploader as `emptyArtwork`. |
 
-Profile updates the display name. When the signed-in address is unverified, that tab shows a notice and a Resend verification email button. The button reads Sending… while the request is in flight, then waits 45 seconds. The status is an `aria-live` region. `auth/too-many-requests` and `auth/network-request-failed` alert a short sentence and dispatch `pwa-auth-error`. A verified address reads Email verified. Sign-in is not blocked either way. Email and password changes, and delete, ask for the current password and call `reauthenticate` first. Email then calls `verifyBeforeUpdateEmail`. On success the page dispatches `pwa-email-changed` on `window` with `{ email }`. The old `userEmailChanged` event still fires and is deprecated. Password requires the verify field to match and rejects a new password shorter than 6 characters, the same rule as sign-in and sign-up. On success the page dispatches `pwa-password-changed` on `window` with `{ uid }`. Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user. It does not delete `users/{uid}`. See [Data ownership](#data-ownership). A failed action alerts a short sentence and dispatches `pwa-auth-error`.
+Profile updates the display name. When the signed-in address is unverified, that tab shows a notice (`::part(notice)`) and a Resend verification email button (`::part(verify-submit)`). The status (`::part(verify-status)`) is an `aria-live` region. The button reads Sending… while the request is in flight, then waits 45 seconds. `auth/too-many-requests` and `auth/network-request-failed` alert a short sentence and dispatch `pwa-auth-error`. A verified address reads Email verified. Sign-in is not blocked either way. Email and password changes, and delete, ask for the current password and call `reauthenticate` first. Email then calls `verifyBeforeUpdateEmail`. On success the page dispatches `pwa-email-changed` on `window` with `{ email }`. The old `userEmailChanged` event still fires and is deprecated. Password requires the verify field to match and rejects a new password shorter than 6 characters, the same rule as sign-in and sign-up. On success the page dispatches `pwa-password-changed` on `window` with `{ uid }`. Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user. It does not delete `users/{uid}`. See [Data ownership](#data-ownership). A failed action alerts a short sentence and dispatches `pwa-auth-error`.
 
 ### `<email-reset>`
 
@@ -342,14 +342,13 @@ window.addEventListener(eventName.login, (event) => {
 | `initialize({ app, config, actionCodeSettings })` | Boot Firebase. `app` is a host app. `config` is a host config. `actionCodeSettings` is optional and is passed to the verification email. The legacy `FIREBASE_CONFIG` script still works. |
 | `getCurrentUser()` | `{ uid, displayName, email, photoURL, emailVerified }` or `null`. |
 | `onUserChanged(callback)` | Calls back with that same shape. Returns `unsubscribe`. |
-| `sendVerification()` | Sends the verification email for the signed-in user. Resolves `true` when Firebase accepts it. Fires `pwa-verification-sent` with `{ email }`. |
-| `isEmailVerified()` | Reloads the signed-in user and resolves `emailVerified`. Fires `pwa-email-verified` when that flag becomes true. |
+| `sendVerification()` | Sends the verification email for the signed-in user. Resolves `true` when Firebase accepts it. Fires `pwa-verification-sent` with `{ email }`. The constant is `pwaVerificationSent`, and `eventName.verificationSent` is the same string. |
+| `isEmailVerified()` | Reloads the signed-in user and resolves `emailVerified`. Fires `pwa-email-verified` when that flag becomes true. The constant is `pwaEmailVerified`, and `eventName.emailVerified` is the same string. |
 | `openDrawer()` | Opens the drawer. |
 | `closeDrawer()` | Closes the drawer. |
 | `toggleDrawer()` | Flips the drawer. |
 | `eventName` | The `pwa-` strings. `eventName.drawerToggle` is `pwa-drawer-toggle`. |
 | `pwaAuthChanged`, `pwaLogin`, `pwaLogout`, `pwaSignup`, `pwaAccountDeleted`, `pwaProfileUpdated`, `pwaEmailChanged`, `pwaPasswordChanged`, `pwaDrawerToggleName`, `pwaAuthError` | The same strings, one constant each. `pwaDrawerToggleName` is the event. `pwaDrawerToggle()` is the older close function. |
-| `pwaVerificationSent`, `pwaEmailVerified` | `pwa-verification-sent` and `pwa-email-verified`. `eventName.verificationSent` and `eventName.emailVerified` are the same strings. |
 
 `import { store } from 'pwa-auth'` is not a public export. Use `getCurrentUser`, `onUserChanged`, and the events. Account fields stay inside the package.
 
@@ -391,7 +390,7 @@ Hosts style the controls with `::part`. Nested fields are forwarded with `export
 - `user-icon`: `button`, `photo`
 - `user-drawer`: `panel`, `header`, `title`, `close`, `settings`, `logout`, `login-email`, `login-password`, `login-submit`, `login-switch`, `signup-email`, `signup-password`, `signup-submit`, `signup-switch`
 - `user-login`: `panel`, `header`, `title`, and the same `login-*` and `signup-*` field parts
-- `user-settings`: `tab`, `panel`, `notice`, `verify-status`, `verify-submit`, `name`, `name-submit`, `email`, `email-submit`, `password`, `verify`, `password-submit`, `progress`, `file`, `preview`, `delete`
+- `user-settings`: `tab`, `panel`, `name`, `name-submit`, `email`, `email-submit`, `password`, `verify`, `password-submit`, `progress`, `file`, `preview`, `delete`
 - `email-reset`: `email`, `submit`
 
 ```css
