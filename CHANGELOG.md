@@ -18,6 +18,11 @@ All notable changes to pwa-auth.js will be documented in this file.
 ## Changed
 - userEmailChanged still fires on window and is deprecated
 - types resolve for pwa-auth and pwa-auth/production
+- lit and firebase are peer dependencies, sideEffects is true, and files lists the publish set
+- alerts use short sentences; pwa-auth-error still carries the code
+- drawer traps focus, closes on Escape, and exposes ::part
+- 320px action buttons wrap
+- unused font, face icon, settings icon, alertEmail, and the reset phone field are retired
 
 # [3.4.10] - 2026-10-28
 

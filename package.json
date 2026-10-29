@@ -7,7 +7,7 @@
     "email": "jack.solutionbox@gmail.com"
   },
   "version": "3.5.0",
-  "description": "pwa-auth is a collection of four HTML webomponents for User Management to display a login button with icon picture state once logged in. Sign up and login within a drawer and optionally a static for a page. Being able to log out, change account details, and delete account.",
+  "description": "Five HTML web components for sign-in and account settings: a login button, a drawer, a page form, settings, and password reset.",
   "homepage": "https://pwa-authentic.firebaseapp.com",
   "repository": {
     "type": "git",
@@ -38,13 +38,25 @@
   "exports": {
     ".": {
       "types": "./base/export/pwa-auth.d.ts",
+      "import": "./base/export/pwa-auth.js",
       "default": "./base/export/pwa-auth.js"
     },
     "./production": {
       "types": "./base/export/pwa-auth.d.ts",
+      "import": "./source/pwa-auth.js",
       "default": "./source/pwa-auth.js"
     }
   },
+  "sideEffects": true,
+  "files": [
+    "base",
+    "source/pwa-auth.js",
+    "source/pwa-styles.css",
+    "source/empty.jpg",
+    "README.md",
+    "license",
+    "LICENSES.txt"
+  ],
   "typesVersions": {
     "*": {
       "production": [
@@ -66,6 +78,10 @@
     "lit": "^3.3.3",
     "pwa-helpers": "^0.9.1",
     "redux": "^5.0.1"
+  },
+  "peerDependencies": {
+    "firebase": "^12.0.0",
+    "lit": "^3.3.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.28.0",

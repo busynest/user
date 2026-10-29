@@ -24,7 +24,7 @@ import { Analytics, getAnalytics, isSupported, logEvent } from "firebase/analyti
 import { deleteObject, listAll, ref } from "firebase/storage";
 
 // Start Authentication
-import { application, auth, db, onReady, storage } from './authentication'
+import { application, auth, db, isReady, onReady, storage } from './authentication'
 
 import { pwaAuthChanged, pwaAuthError, pwaLogout } from '../events/names';
 import { emitWindow, toAuthError, toPwaUser } from '../events/emit';
@@ -158,12 +158,12 @@ onReady(() => {
 
 
 
-// To Do - Alert        
-
-export const alertEmail = (error:any) => { console.log( 'Problem: ' + error );/* if (this._user) { this.updateEmail(); } else { alert('Please Login'); } */ }
-
-
 export const logOut             = async () => {
+  if (!isReady()) {
+    const detail = { code: 'pwa/not-ready', message: 'Sign-in is not ready yet.' };
+    emitWindow(pwaAuthError, detail);
+    throw new Error(detail.message);
+  }
   try {
     await signOut(auth);
     emitWindow(pwaLogout, { user: null });

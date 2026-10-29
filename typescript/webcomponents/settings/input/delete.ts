@@ -7,6 +7,7 @@ import { auth }               from '../../../firebase/authentication';
 import { deleteUserFiles, logAccountDelete } from '../../../firebase/interface';
 import { pwaAccountDeleted, pwaAuthError } from '../../../events/names';
 import { emitWindow, toAuthError } from '../../../events/emit';
+import { userMessage } from '../../../firebase/message';
 
 export class DeleteUser extends connect(store)(LitElement) {
    
@@ -52,6 +53,8 @@ export class DeleteUser extends connect(store)(LitElement) {
       <p>Permanently delete the user account and data related to: ${this.email}</p>
 
       <button
+        type="button"
+        part="submit"
         class="action-button deleteUser"
         ?disabled="${this.login === false}">Delete</button>
 
@@ -62,8 +65,9 @@ export class DeleteUser extends connect(store)(LitElement) {
   private alertDelete()  {
     if (auth.currentUser) { this.deleteUser(); }
     else {
-      emitWindow(pwaAuthError, { code: 'pwa/signed-out', message: 'Please Login' });
-      alert('Please Login');
+      const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
+      emitWindow(pwaAuthError, detail);
+      alert(userMessage(detail));
     }
   }
   private deleteUser() {
@@ -90,7 +94,7 @@ export class DeleteUser extends connect(store)(LitElement) {
     } catch (error) {
 
       emitWindow(pwaAuthError, toAuthError(error));
-      alert('Problem: ' + (error instanceof Error ? error.message : 'Delete failed'));
+      alert(userMessage(error));
 
     }
 

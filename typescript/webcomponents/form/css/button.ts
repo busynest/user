@@ -34,6 +34,15 @@ export const buttonStyle: CSSResult = css`
     border-color:         var(--pwa_action_border_color, #214f34);
   }
 
+  /* Required - fit 320px */
+  @media (max-width: 320px) {
+    .action-button {
+      white-space:        normal;
+      margin-left:        16px;
+      margin-right:       16px;
+    }
+  }
+
   .saving{
     transition: background-color 0.3s;
     background-color:   #d7ebe0;

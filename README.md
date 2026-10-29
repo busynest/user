@@ -23,7 +23,7 @@ npm install pwa-auth
 Two entries:
 
 ```javascript
-// Required - dev graph. tsc output. The app supplies lit, firebase, and redux.
+// Required - dev graph. tsc output. Install the lit and firebase peers.
 import 'pwa-auth';
 
 // Optional - one file. Rollup bundle for a page or for npm production.
@@ -100,7 +100,7 @@ The button that opens the drawer.
 | `subscribe` | Logged-out label is Subscribe. Without it, the label is Login. |
 | `empty` | Image URL used when the account has no photo. |
 
-Logged in, the button shows the photo. The click dispatches `toggleSign`.
+Logged in, the button shows the photo. The click opens or closes the drawer. Style it with `user-icon::part(button)` and `user-icon::part(photo)`.
 
 ### `<user-drawer>`
 
@@ -147,7 +147,7 @@ Four tabs: Icon, Profile, Password, Delete.
 |---|---|
 | `empty` | Fallback photo, passed through to the uploader as `emptyArtwork`. |
 
-Profile updates the display name and starts an email change with `verifyBeforeUpdateEmail`. On success the page dispatches `userEmailChanged` on `window` with `detail.email`. Password requires the verify field to match. Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user.
+Profile updates the display name and starts an email change with `verifyBeforeUpdateEmail`. On success the page dispatches `pwa-email-changed` on `window` with `{ email }`. The old `userEmailChanged` event still fires and is deprecated. Password requires the verify field to match. Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user. A failed action alerts a short sentence and dispatches `pwa-auth-error`.
 
 ### `<email-reset>`
 
@@ -300,7 +300,25 @@ import {
 | `deleteDocument(collect, item)` | Deletes one Firestore document. |
 | `pwaDrawerToggle()` | Closes the drawer. It does not toggle. Prefer `closeDrawer()`. |
 
-`pwa-auth` and `pwa-auth/production` both resolve types to `base/export/pwa-auth.d.ts`. The production entry is the rollup bundle.
+`pwa-auth` and `pwa-auth/production` both resolve types to `base/export/pwa-auth.d.ts`. The production entry is the rollup bundle. `lit` and `firebase` are peer dependencies. Redux ships inside the package. `sideEffects` is true because the entry registers the elements. The published `files` list is `base/`, the production bundle, `source/pwa-styles.css`, `source/empty.jpg`, the readme, and the licenses.
+
+## Parts
+
+Hosts style the controls with `::part`. Nested fields are forwarded with `exportparts`, so the host does not enter a shadow root.
+
+- `user-icon`: `button`, `photo`
+- `user-drawer`: `panel`, `header`, `title`, `close`, `settings`, `logout`, `login-email`, `login-password`, `login-submit`, `login-switch`, `signup-email`, `signup-password`, `signup-submit`, `signup-switch`
+- `user-login`: `panel`, `header`, `title`, and the same `login-*` and `signup-*` field parts
+- `user-settings`: `tab`, `panel`, `name`, `name-submit`, `email`, `email-submit`, `password`, `verify`, `password-submit`, `progress`, `file`, `preview`, `delete`
+- `email-reset`: `email`, `submit`
+
+```css
+user-icon::part(button) { border-radius: 8px; }
+user-drawer::part(panel) { background: #fff; }
+user-drawer::part(login-submit) { letter-spacing: 0.02em; }
+```
+
+The drawer is a dialog. Escape closes it, Tab stays inside while it is open, and focus returns to the control that opened it. Off-screen forms are `inert`.
 
 ## Theme
 

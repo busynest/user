@@ -10,6 +10,7 @@ import { buttonStyle  }     from "../../form/css/button";
 import { updatePassword }   from "firebase/auth";
 import { pwaAuthError }     from "../../../events/names";
 import { emitWindow, toAuthError } from "../../../events/emit";
+import { userMessage } from "../../../firebase/message";
 
 export class InputPassword extends connect(store)(LitElement) {
 
@@ -60,7 +61,9 @@ export class InputPassword extends connect(store)(LitElement) {
             <input
               id      = "pwa-new-password"
               name    = "new_password"
+              part    = "password"
               type    = "password"
+              autocomplete = "new-password"
               .value  = "${this.password}"
               @input  = "${this.handleInputChange}"
               aria-describedby = "password-help">
@@ -77,7 +80,9 @@ export class InputPassword extends connect(store)(LitElement) {
             <input
               id      = "pwa-verify-password"
               name    = "verify_password"
-              type    = "password">
+              part    = "verify"
+              type    = "password"
+              autocomplete = "new-password">
 
           </label>
 
@@ -98,6 +103,7 @@ export class InputPassword extends connect(store)(LitElement) {
         <!-- Submit -->
         <button
           type="submit"
+          part="submit"
           class="action-button pass"
           ?disabled="${this.login === false}">Update</button>
 
@@ -138,8 +144,9 @@ export class InputPassword extends connect(store)(LitElement) {
 
         if (auth.currentUser)     { this.updatePass(this.password); }
         else {
-          emitWindow(pwaAuthError, { code: 'pwa/signed-out', message: 'Please Login' });
-          alert('Please Login');
+          const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
+          emitWindow(pwaAuthError, detail);
+          alert(userMessage(detail));
         }
         
       }
@@ -158,12 +165,13 @@ export class InputPassword extends connect(store)(LitElement) {
         .then ( () => { console.log("Password successful!"); })
         .catch ( (error: unknown) => {
           emitWindow(pwaAuthError, toAuthError(error));
-          console.log("Problem: " + (error instanceof Error ? error.message : 'Password failed'));
+          alert(userMessage(error));
         });
 
     } else {
-      emitWindow(pwaAuthError, { code: 'pwa/signed-out', message: 'Please Login' });
-      alert('Please Login');
+      const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
+      emitWindow(pwaAuthError, detail);
+      alert(userMessage(detail));
     }
 
   }

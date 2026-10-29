@@ -10,6 +10,7 @@ import { verifyBeforeUpdateEmail } from "firebase/auth";
 import { pwaAuthError, pwaEmailChanged } from "../../../events/names";
 import { emitWindow, toAuthError } from "../../../events/emit";
 import { emitLegacyEmailChanged } from "../../../deprecated/email-changed";
+import { userMessage } from "../../../firebase/message";
 
 export class ContactEmail extends connect(store)(LitElement) {
 
@@ -55,7 +56,9 @@ export class ContactEmail extends connect(store)(LitElement) {
         <input
           id            = "pwa-email"
           name          = "email"
+          part          = "email"
           type          = "email"
+          autocomplete  = "email"
           class         = "email"
           data-label    = "Account Email"
           @input        = "${this.handleEmail}"
@@ -66,7 +69,9 @@ export class ContactEmail extends connect(store)(LitElement) {
       </label>
 
       <button
-        class         = "action-button" 
+        class         = "action-button"
+        part          = "submit"
+        type          = "button"
         @click        = "${this.saveEmail}"
         ?disabled     = "${this.login === false}">Update</button>
 
@@ -98,12 +103,12 @@ export class ContactEmail extends connect(store)(LitElement) {
       emitWindow(pwaEmailChanged, detail);
       emitLegacyEmailChanged(detail);
 
-      alert('Email Updated');
+      alert('Check your inbox to confirm the new address.');
 
     } catch (error) {
 
       emitWindow(pwaAuthError, toAuthError(error));
-      console.log(error);
+      alert(userMessage(error));
 
     }
 

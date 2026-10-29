@@ -12,10 +12,17 @@ describe('package exports', () => {
     const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
 
     expect(pkg.exports['.'].types).toBe('./base/export/pwa-auth.d.ts');
+    expect(pkg.exports['.'].import).toBe('./base/export/pwa-auth.js');
     expect(pkg.exports['.'].default).toBe('./base/export/pwa-auth.js');
     expect(pkg.exports['./production'].types).toBe('./base/export/pwa-auth.d.ts');
+    expect(pkg.exports['./production'].import).toBe('./source/pwa-auth.js');
     expect(pkg.exports['./production'].default).toBe('./source/pwa-auth.js');
     expect(pkg.typesVersions['*'].production).toEqual(['./base/export/pwa-auth.d.ts']);
+    expect(pkg.sideEffects).toBe(true);
+    expect(pkg.peerDependencies.lit).toBeTruthy();
+    expect(pkg.peerDependencies.firebase).toBeTruthy();
+    expect(pkg.files).toContain('base');
+    expect(pkg.files).toContain('source/pwa-auth.js');
 
     expect(existsSync(resolve(root, 'base/export/pwa-auth.d.ts'))).toBe(true);
     expect(existsSync(resolve(root, 'source/pwa-auth.js'))).toBe(true);
