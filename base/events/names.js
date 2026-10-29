@@ -6,6 +6,7 @@ export const pwaAccountDeleted = 'pwa-account-deleted';
 export const pwaProfileUpdated = 'pwa-profile-updated';
 export const pwaEmailChanged = 'pwa-email-changed';
 export const pwaPasswordChanged = 'pwa-password-changed';
+export const pwaResetSent = 'pwa-reset-sent';
 export const pwaDrawerToggleName = 'pwa-drawer-toggle';
 export const pwaAuthError = 'pwa-auth-error';
 export const pwaVerificationSent = 'pwa-verification-sent';
@@ -19,6 +20,7 @@ export const eventName = {
     profileUpdated: pwaProfileUpdated,
     emailChanged: pwaEmailChanged,
     passwordChanged: pwaPasswordChanged,
+    resetSent: pwaResetSent,
     drawerToggle: pwaDrawerToggleName,
     authError: pwaAuthError,
     verificationSent: pwaVerificationSent,

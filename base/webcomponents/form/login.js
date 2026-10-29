@@ -22,6 +22,7 @@ import { toggleStyle } from './css/toggle';
 import { tapStyle } from '../css/tap';
 import store from '../../store';
 import { universalToggle } from '../../redux/frontend';
+import { rememberEmail } from './draft';
 let FormLogin = class FormLogin extends LitElement {
     constructor() {
         super();
@@ -143,6 +144,7 @@ let FormLogin = class FormLogin extends LitElement {
     handleEmail(event) {
         const input = event.target;
         this.email = input.value;
+        rememberEmail(this.email);
     }
     handlePassword(event) {
         const input = event.target;
@@ -153,6 +155,7 @@ let FormLogin = class FormLogin extends LitElement {
         const password = this.renderRoot.querySelector('input[type="password"]');
         this.email = email?.value ?? '';
         this.password = password?.value ?? '';
+        rememberEmail(this.email);
     }
     _handleSubmit(event) {
         event.preventDefault();

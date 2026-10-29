@@ -31,6 +31,9 @@ export interface PwaEmailChangedDetail {
 export interface PwaPasswordChangedDetail {
     uid: string;
 }
+export interface PwaResetSentDetail {
+    email: string;
+}
 export interface PwaDrawerToggleDetail {
     open: boolean;
 }
@@ -47,6 +50,7 @@ export interface PwaEventMap {
     'pwa-profile-updated': CustomEvent<PwaProfileUpdatedDetail>;
     'pwa-email-changed': CustomEvent<PwaEmailChangedDetail>;
     'pwa-password-changed': CustomEvent<PwaPasswordChangedDetail>;
+    'pwa-reset-sent': CustomEvent<PwaResetSentDetail>;
     'pwa-drawer-toggle': CustomEvent<PwaDrawerToggleDetail>;
     'pwa-auth-error': CustomEvent<PwaAuthErrorDetail>;
 }

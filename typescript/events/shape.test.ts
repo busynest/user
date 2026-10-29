@@ -8,6 +8,7 @@ import {
   pwaDrawerToggleName,
   pwaEmailChanged,
   pwaPasswordChanged,
+  pwaResetSent,
   pwaLogin,
   pwaLogout,
   pwaProfileUpdated,
@@ -29,7 +30,9 @@ describe('event names', () => {
     expect(pwaProfileUpdated).toBe('pwa-profile-updated');
     expect(pwaEmailChanged).toBe('pwa-email-changed');
     expect(pwaPasswordChanged).toBe('pwa-password-changed');
+    expect(pwaResetSent).toBe('pwa-reset-sent');
     expect(eventName.passwordChanged).toBe(pwaPasswordChanged);
+    expect(eventName.resetSent).toBe(pwaResetSent);
     expect(pwaDrawerToggleName).toBe('pwa-drawer-toggle');
     expect(pwaAuthError).toBe('pwa-auth-error');
     expect(eventName.drawerToggle).toBe(pwaDrawerToggleName);
@@ -90,6 +93,20 @@ describe('event shape', () => {
     expect(seen[0].bubbles).toBe(true);
     expect(seen[0].composed).toBe(true);
     host.remove();
+  });
+
+  it('dispatches pwa-reset-sent with the address only', () => {
+    const seen: CustomEvent[] = [];
+    const hear = (event: Event) => { seen.push(event as CustomEvent); };
+    window.addEventListener(pwaResetSent, hear);
+
+    emitWindow(pwaResetSent, { email: 'ada@example.com' });
+
+    window.removeEventListener(pwaResetSent, hear);
+
+    expect(seen[0].detail).toEqual({ email: 'ada@example.com' });
+    expect(seen[0].bubbles).toBe(true);
+    expect(seen[0].composed).toBe(true);
   });
 
   it('dispatches pwa-password-changed with the uid only', () => {

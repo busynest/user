@@ -8,7 +8,7 @@ export { logOut, logAccount, logAccountDelete, deleteDocument, pwaDrawerToggle, 
 export { getCurrentUser, onUserChanged } from '../api/user';
 export { sendVerification, isEmailVerified } from '../api/verify';
 export { openDrawer, closeDrawer, toggleDrawer } from '../api/drawer';
-export { pwaAuthChanged, pwaLogin, pwaLogout, pwaSignup, pwaAccountDeleted, pwaProfileUpdated, pwaEmailChanged, pwaPasswordChanged, pwaDrawerToggleName, pwaAuthError, eventName } from '../events/names';
+export { pwaAuthChanged, pwaLogin, pwaLogout, pwaSignup, pwaAccountDeleted, pwaProfileUpdated, pwaEmailChanged, pwaPasswordChanged, pwaResetSent, pwaDrawerToggleName, pwaAuthError, eventName } from '../events/names';
 export { userEmailChanged } from '../deprecated/email-changed';
 export { pwaVerificationSent, pwaEmailVerified } from '../events/names';
 //# sourceMappingURL=pwa-auth.js.map
