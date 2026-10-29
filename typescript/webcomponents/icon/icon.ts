@@ -33,7 +33,7 @@ export class UserIcon extends connect(store)(LitElement) {
     // this._sign        = state.frontend!.register;
   }  
 
-  static get styles():CSSResultArray { return [ iconStyles, css`:host {  border-radius: 8px; }` ] }
+  static get styles():CSSResultArray { return [ iconStyles, css`:host { border-radius: 10px; }` ] }
   
   protected render() {
     return html`

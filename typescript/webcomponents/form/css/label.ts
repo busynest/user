@@ -2,23 +2,16 @@ import { css, CSSResult } from "lit";
 
 export const labelStyle : CSSResult = css`
 
-  label         { font-size: .9em; }
   label {
     display:              grid;
-    color:                var(--pwa_label_text_color, black);
+    gap:                  6px;
+    color:                var(--pwa_label_text_color, #1c2430);
     box-sizing:           border-box;
-    font-size:            smaller;
-    margin-bottom:        0;
-    font-weight:          bold;
-    line-height:          36px;
-    padding:              0 4px;
-    padding-bottom:       16px;
-  }
-
-  @media (max-width: 460px) {
-
-    label { font-size: .8em; }
-
+    font-size:            0.85rem;
+    margin:               0;
+    font-weight:          600;
+    line-height:          1.3;
+    padding:              0 16px 14px; /* Required - field inset */
   }
 
 `;

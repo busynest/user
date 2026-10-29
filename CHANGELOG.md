@@ -5,6 +5,7 @@ All notable changes to pwa-auth.js will be documented in this file.
 ## [Unreleased]
 - Social Login Flow
 - animated login mascot
+- component chrome uses the paper and forest palette
 
 # [3.4.10] - 2026-10-26
 

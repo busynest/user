@@ -48,7 +48,7 @@ export class FormSignup extends LitElement {
     css`
 
       :host {
-        background-color:           white;
+        background-color:           var(--section_background_color, #fffdf8);
       }
     
       .double {

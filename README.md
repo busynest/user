@@ -176,49 +176,52 @@ The entire bundle is one instance of firebase that takes in the configuration in
 
     /* <user-icon> */
     :root {
-    --pwa_icon_background_color:        #6cc04a;
-    --pwa_icon_radius:                  6px;
-    --pwa_icon_border:                  2px solid black;
-    --pwa_icon_padding:                 0px 16px;
-    --pwa_icon_hover_color:             lightgrey;
-    --pwa_icon_font:                    'Arial', sans-serif;
-    --pwa_icon_height:                  32px; /* state: Logged-out (sync) */
-    --pwa_icon_diameter:                32px; /* state: Logged-in (sync) */
+    --pwa_icon_background_color:        #2a6b45;
+    --pwa_icon_radius:                  10px;
+    --pwa_icon_border:                  0;
+    --pwa_icon_padding:                 0 18px;
+    --pwa_icon_hover_color:             #214f34;
+    --pwa_icon_font:                    "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    --pwa_icon_height:                  44px; /* state: Logged-out (sync) */
+    --pwa_icon_diameter:                44px; /* state: Logged-in (sync) */
     }
 
     /* <user-drawer> */
     :root {
-    --pwa_drawer_background_color:      #fff;
-    --pwa_drawer_border-radius:         0px;
-    --pwa_drawer_border:                3px #303030 solid;
-    --pwa_drawer_z-index:               2;
-    --pwa_drawer_text_color:            #303030;
-    --pwa_drawer_position:              fixed;
+    --pwa_drawer_background_color:      #fffdf8;
+    --pwa_drawer_border-radius:         0 0 18px 18px;
+    --pwa_drawer_border:                0;
+    --pwa_drawer_z-index:               3;
+    --pwa_drawer_text_color:            #1c2430;
+    --pwa_drawer_position:              absolute;
+    --pwa_line_color:                   #e3daca;
+    --pwa_close_color:                  #9a3b32;
     }
 
     /* <user-settings> */
     :root {
-    --pwa_settings_background_color:    grey;
+    --pwa_settings_background_color:    #fffdf8;
 
-    --pwa_nav_button_color:             grey;
-    --pwa_nav_highlight_color:          black;
+    --pwa_nav_button_color:             #4e5b6a;
+    --pwa_nav_highlight_color:          #1c2430;
+    --pwa_nav_on_background:            #f3efe6;
 
-    --pwa_divider_color:                grey;
-    --pwa_header_color:                 black;
+    --pwa_divider_color:                #e3daca;
+    --pwa_header_color:                 #1c2430;
 
-    --pwa_input_background_color:       #E1E5EB;
+    --pwa_input_background_color:       #f3efe6;
 
-    --pwa_label_text_color:             black;
+    --pwa_label_text_color:             #1c2430;
 
     --pwa_action_text_color:            #fff;
-    --pwa_action_background_color:      #6cc04a;
-    --pwa_action_border_color:          #60b23e;
+    --pwa_action_background_color:      #2a6b45;
+    --pwa_action_border_color:          #214f34;
     }
 
     /* shared core elements */
     :root {
     --pwa_tap:                          44px; /* Required - minimum tap target */
-    --section_background_color:         white;
+    --section_background_color:         #fffdf8;
     }
     
   </style>

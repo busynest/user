@@ -44,4 +44,9 @@
   /* <user-login> */
   --section_background_color:     #fffdf8;
 
+  /* Optional - rules shared by the drawer, fields, and tabs */
+  --pwa_line_color:               #e3daca;
+  --pwa_close_color:              #9a3b32;
+  --pwa_nav_on_background:        #f3efe6;
+
 }

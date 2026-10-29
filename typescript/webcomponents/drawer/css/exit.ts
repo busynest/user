@@ -5,19 +5,17 @@ export const exitStyle: CSSResult = css`
   .exit {
     display:                grid;
     grid-template-columns:  minmax(var(--pwa_tap, 44px), 80px) minmax(0, 1fr) minmax(var(--pwa_tap, 44px), 80px); /* Required - fit 320px */
-    padding:                16px;
+    padding:                12px 8px;
     z-index:                2;
-    background-color:       white;
-    border-bottom:          2px solid black;
-    box-shadow:             0px 0px 6px;
+    background-color:       var(--pwa_drawer_background_color, #fffdf8);
+    border-bottom:          1px solid var(--pwa_line_color, #e3daca);
   }
 
   .exit > h3 {
-    font-weight:            800;
-    font-size:              .9em;
-    margin:                 0px auto;
-    opacity:                .8;
-    line-height:            36px;
+    font-weight:            600;
+    font-size:              1rem;
+    margin:                 0 auto;
+    line-height:            44px; /* Required - match the tap target */
   }
 
   .exit > .remove {
@@ -48,8 +46,7 @@ export const exitStyle: CSSResult = css`
     margin:                 auto;
     background-color:       transparent;
     border:                 0px;
-    fill:                   red;
-    opacity:                .8;
+    fill:                   var(--pwa_close_color, #9a3b32);
   }
 
   .close svg {
