@@ -19,6 +19,7 @@ import { listStyle } from '../form/css/list';
 import '../form/login';
 import '../form/signup';
 import { tapStyle } from '../css/tap';
+import { applyFirebaseConfig } from '../../firebase/attribute';
 let UserLogin = class UserLogin extends connect(store)(LitElement) {
     constructor() {
         super();
@@ -26,6 +27,10 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
         this._name = "";
         this._log = false;
         this._sign = false;
+    }
+    connectedCallback() {
+        applyFirebaseConfig(this);
+        super.connectedCallback();
     }
     stateChanged(state) {
         this._name = state.backend.name;

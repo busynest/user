@@ -16,6 +16,8 @@ import { updateProfile } from 'firebase/auth';
 import { accImage } from '../../../redux/backend';
 import { ref, updateMetadata, getDownloadURL, uploadBytesResumable } from "@firebase/storage";
 import { labelStyle } from '../../form/css/label';
+import { pwaAuthError, pwaProfileUpdated } from '../../../events/names';
+import { emitWindow, toAuthError } from '../../../events/emit';
 export class ContactPhoto extends connect(store)(LitElement) {
     constructor() {
         super();
@@ -27,9 +29,22 @@ export class ContactPhoto extends connect(store)(LitElement) {
         this.error = '';
         this.status = '';
         this.dispatchPhoto = async (url) => {
-            if (auth.currentUser) {
-                await updateProfile(auth.currentUser, { photoURL: url }).catch((error) => { console.log(error); });
+            const current = auth.currentUser;
+            if (current) {
+                let saved = true;
+                await updateProfile(current, { photoURL: url }).catch((error) => {
+                    saved = false;
+                    emitWindow(pwaAuthError, toAuthError(error));
+                    console.log(error);
+                });
                 store.dispatch(accImage(url));
+                if (saved) {
+                    emitWindow(pwaProfileUpdated, {
+                        uid: current.uid,
+                        displayName: current.displayName,
+                        photoURL: url
+                    });
+                }
             }
         };
         this.progress = 0;
@@ -136,7 +151,8 @@ export class ContactPhoto extends connect(store)(LitElement) {
             this.error = '';
             this.status = 'Uploading...';
             const file = this.shadowRoot.querySelector('#photoURL');
-            if (!file) {
+            if (!file || !file.files?.[0]) {
+                emitWindow(pwaAuthError, { code: 'pwa/missing-file', message: 'No file selected' });
                 console.error('No file selected');
                 return;
             }
@@ -177,6 +193,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
             }, (error) => {
                 this.error = `Upload failed: ${error.message}`;
                 this.status = '';
+                emitWindow(pwaAuthError, toAuthError(error));
                 console.error('Upload failed:', error);
                 uploader.value = 0;
                 uploader.textContent = 'Error';

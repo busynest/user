@@ -13,6 +13,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../store';
 import { iconStyles } from './css/icon';
 import { toggleSign } from '../../redux/frontend';
+import { applyFirebaseConfig } from '../../firebase/attribute';
 let UserIcon = class UserIcon extends connect(store)(LitElement) {
     constructor() {
         super();
@@ -20,6 +21,10 @@ let UserIcon = class UserIcon extends connect(store)(LitElement) {
         this.empty = '';
         this._user = false;
         this._photoURL = '';
+    }
+    connectedCallback() {
+        applyFirebaseConfig(this);
+        super.connectedCallback();
     }
     firstUpdated() {
         this.shadowRoot.querySelector('.toggles').addEventListener('click', () => {

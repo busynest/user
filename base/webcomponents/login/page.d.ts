@@ -40,6 +40,7 @@ export declare class UserLogin extends UserLogin_base {
     private _log;
     private _sign;
     constructor();
+    connectedCallback(): void;
     stateChanged(state: AppState): void;
     static get styles(): CSSResultArray;
     protected render(): import("lit-html").TemplateResult<1>;

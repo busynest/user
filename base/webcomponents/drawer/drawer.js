@@ -20,6 +20,9 @@ import { linkStyle } from './css/link';
 import { lineStyle } from './css/paragraph';
 import { toggleSign } from '../../redux/frontend';
 import { logOut } from '../../firebase/interface';
+import { applyFirebaseConfig } from '../../firebase/attribute';
+import { pwaDrawerToggleName } from '../../events/names';
+import { emitElement } from '../../events/emit';
 import '../form/login';
 import '../form/signup';
 import { animation } from '../css/animation';
@@ -33,12 +36,25 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.name = "";
         this.user = false;
         this.signup = false;
+        this.wasOpen = false;
+        this.sawOpen = false;
+    }
+    connectedCallback() {
+        applyFirebaseConfig(this);
+        super.connectedCallback();
     }
     stateChanged(state) {
+        const open = state.frontend.drawer;
         this.name = state.backend.name;
-        this.drawer = state.frontend.drawer;
+        this.drawer = open;
         this.user = state.frontend.login;
         this.signup = state.frontend.registerOne;
+        const changed = this.sawOpen ? open !== this.wasOpen : open;
+        if (changed) {
+            emitElement(this, pwaDrawerToggleName, { open });
+        }
+        this.wasOpen = open;
+        this.sawOpen = true;
     }
     firstUpdated() {
         this.shadowRoot.querySelector('.close').addEventListener('click', () => {

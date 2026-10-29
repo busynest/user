@@ -21,12 +21,17 @@ import './input/delete';
 import { listStyle } from '../form/css/list';
 import { animation } from '../css/animation';
 import { tapStyle } from '../css/tap';
+import { applyFirebaseConfig } from '../../firebase/attribute';
 let UserSettings = class UserSettings extends connect(store)(LitElement) {
     constructor() {
         super();
         this.empty = '';
         this.profileTopic = '';
         this.name = '';
+    }
+    connectedCallback() {
+        applyFirebaseConfig(this);
+        super.connectedCallback();
     }
     firstUpdated() {
         this.addEventListener('submit', (event) => {

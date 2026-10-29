@@ -42,6 +42,7 @@ export declare class UserSettings extends UserSettings_base {
     private profileTopic;
     private name;
     constructor();
+    connectedCallback(): void;
     protected firstUpdated(): void;
     stateChanged(state: AppState): void;
     static get styles(): CSSResultArray;

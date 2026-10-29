@@ -5,14 +5,11 @@ import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, deleteDoc } from "firebase/firestore";
 import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
 import { deleteObject, listAll, ref } from "firebase/storage";
-import { application, auth, db, storage } from './authentication';
-getAuth().useDeviceLanguage();
+import { application, auth, db, onReady, storage } from './authentication';
+import { pwaAuthChanged, pwaAuthError, pwaLogout } from '../events/names';
+import { emitWindow, toAuthError, toPwaUser } from '../events/emit';
 let analytics;
-const analyticsReady = (async () => {
-    if (await isSupported()) {
-        analytics = getAnalytics(application);
-    }
-})();
+let analyticsReady = Promise.resolve();
 if ('serviceWorker' in navigator) {
     console.log('Service Worker is supported');
 }
@@ -28,29 +25,47 @@ else {
 export const pwaDrawerToggle = () => {
     store.dispatch(closeSign());
 };
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        store.dispatch(userAuth(true));
-        store.dispatch(closeSign());
-        store.dispatch(accID(user.uid));
-        store.dispatch(accName(user.displayName || 'John Doe'));
-        store.dispatch(accEmail(user.email || ''));
-        store.dispatch(accImage(user.photoURL || ''));
-        store.dispatch(nameAuth(user.displayName || 'John Doe'));
-        store.dispatch(iconAuth(user.photoURL || ''));
-    }
-    else {
-        store.dispatch(userAuth(false));
-        store.dispatch(accID(''));
-        store.dispatch(accName('John Doe'));
-        store.dispatch(accEmail(''));
-        store.dispatch(accImage(''));
-        store.dispatch(nameAuth('John Doe'));
-        store.dispatch(iconAuth(''));
-    }
+onReady(() => {
+    getAuth(application).useDeviceLanguage();
+    analyticsReady = (async () => {
+        if (await isSupported()) {
+            analytics = getAnalytics(application);
+        }
+    })();
+    onAuthStateChanged(auth, (user) => {
+        emitWindow(pwaAuthChanged, { user: toPwaUser(user) });
+        if (user) {
+            store.dispatch(userAuth(true));
+            store.dispatch(closeSign());
+            store.dispatch(accID(user.uid));
+            store.dispatch(accName(user.displayName || 'John Doe'));
+            store.dispatch(accEmail(user.email || ''));
+            store.dispatch(accImage(user.photoURL || ''));
+            store.dispatch(nameAuth(user.displayName || 'John Doe'));
+            store.dispatch(iconAuth(user.photoURL || ''));
+        }
+        else {
+            store.dispatch(userAuth(false));
+            store.dispatch(accID(''));
+            store.dispatch(accName('John Doe'));
+            store.dispatch(accEmail(''));
+            store.dispatch(accImage(''));
+            store.dispatch(nameAuth('John Doe'));
+            store.dispatch(iconAuth(''));
+        }
+    });
 });
 export const alertEmail = (error) => { console.log('Problem: ' + error); };
-export const logOut = async () => { return signOut(auth); };
+export const logOut = async () => {
+    try {
+        await signOut(auth);
+        emitWindow(pwaLogout, { user: null });
+    }
+    catch (error) {
+        emitWindow(pwaAuthError, toAuthError(error));
+        throw error;
+    }
+};
 export const logAccount = async () => {
     await analyticsReady;
     if (!analytics) {

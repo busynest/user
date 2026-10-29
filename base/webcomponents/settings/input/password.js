@@ -16,6 +16,8 @@ import { labelStyle } from "../../form/css/label";
 import { inputStyle } from "../../form/css/input";
 import { buttonStyle } from "../../form/css/button";
 import { updatePassword } from "firebase/auth";
+import { pwaAuthError } from "../../../events/names";
+import { emitWindow, toAuthError } from "../../../events/emit";
 export class InputPassword extends connect(store)(LitElement) {
     constructor() {
         super();
@@ -30,9 +32,13 @@ export class InputPassword extends connect(store)(LitElement) {
             if (auth.currentUser) {
                 await updatePassword(auth.currentUser, newPassword)
                     .then(() => { console.log("Password successful!"); })
-                    .catch((error) => { console.log("Problem: " + error.message); });
+                    .catch((error) => {
+                    emitWindow(pwaAuthError, toAuthError(error));
+                    console.log("Problem: " + (error instanceof Error ? error.message : 'Password failed'));
+                });
             }
             else {
+                emitWindow(pwaAuthError, { code: 'pwa/signed-out', message: 'Please Login' });
                 alert('Please Login');
             }
         };
@@ -128,23 +134,28 @@ export class InputPassword extends connect(store)(LitElement) {
         this.password = entered;
         if (!this.password) {
             this.message = 'Please enter a password';
+            emitWindow(pwaAuthError, { code: 'pwa/missing-password', message: this.message });
         }
         else if (this.password !== verify) {
             this.message = 'Passwords do not match';
+            emitWindow(pwaAuthError, { code: 'pwa/password-mismatch', message: this.message });
         }
         else if (this.password.length < 8) {
             this.message = 'Password must be at least 8 characters long';
+            emitWindow(pwaAuthError, { code: 'pwa/weak-password', message: this.message });
         }
         else {
             this.message = `Password entered:`;
             if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(this.password)) {
                 this.message = 'Password must include letters, numbers, and be 8+ characters';
+                emitWindow(pwaAuthError, { code: 'pwa/weak-password', message: this.message });
             }
             else {
                 if (auth.currentUser) {
                     this.updatePass(this.password);
                 }
                 else {
+                    emitWindow(pwaAuthError, { code: 'pwa/signed-out', message: 'Please Login' });
                     alert('Please Login');
                 }
             }

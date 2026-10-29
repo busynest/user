@@ -16,6 +16,9 @@ import { labelStyle } from "../../form/css/label";
 import { inputStyle } from "../../form/css/input";
 import { buttonStyle } from "../../form/css/button";
 import { verifyBeforeUpdateEmail } from "firebase/auth";
+import { pwaAuthError, pwaEmailChanged } from "../../../events/names";
+import { emitWindow, toAuthError } from "../../../events/emit";
+import { emitLegacyEmailChanged } from "../../../deprecated/email-changed";
 export class ContactEmail extends connect(store)(LitElement) {
     constructor() {
         super();
@@ -36,12 +39,13 @@ export class ContactEmail extends connect(store)(LitElement) {
             }
             try {
                 await verifyBeforeUpdateEmail(current, contactMail.value);
-                window.dispatchEvent(new CustomEvent("userEmailChanged", {
-                    detail: { email: contactMail.value }
-                }));
+                const detail = { email: contactMail.value };
+                emitWindow(pwaEmailChanged, detail);
+                emitLegacyEmailChanged(detail);
                 alert('Email Updated');
             }
             catch (error) {
+                emitWindow(pwaAuthError, toAuthError(error));
                 console.log(error);
             }
         };

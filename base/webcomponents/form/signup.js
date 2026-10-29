@@ -12,6 +12,8 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../../firebase/authentication';
 import { logAccount } from '../../firebase/interface';
+import { pwaAuthError, pwaSignup } from '../../events/names';
+import { emitWindow, toAuthError, toPwaUser } from '../../events/emit';
 import { buttonStyle } from './css/button';
 import { labelStyle } from './css/label';
 import { inputStyle } from './css/input';
@@ -31,8 +33,12 @@ let FormSignup = class FormSignup extends LitElement {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 await sendEmailVerification(userCredential.user);
                 await logAccount();
+                const person = toPwaUser(userCredential.user);
+                if (person)
+                    emitWindow(pwaSignup, { user: person });
             }
             catch (error) {
+                emitWindow(pwaAuthError, toAuthError(error));
                 alert(error instanceof Error ? error.message : 'Sign up failed');
             }
         };
@@ -154,10 +160,12 @@ let FormSignup = class FormSignup extends LitElement {
     signUp() {
         this.readFields();
         if (this.email.length < 4) {
+            emitWindow(pwaAuthError, { code: 'pwa/missing-email', message: 'Please enter an email address.' });
             alert('Please enter an email address.');
             return;
         }
         if (this.password.length < 4) {
+            emitWindow(pwaAuthError, { code: 'pwa/missing-password', message: 'Please enter a password.' });
             alert('Please enter a password.');
             return;
         }

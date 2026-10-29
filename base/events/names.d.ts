@@ -1,0 +1,20 @@
+export declare const pwaAuthChanged = "pwa-auth-changed";
+export declare const pwaLogin = "pwa-login";
+export declare const pwaLogout = "pwa-logout";
+export declare const pwaSignup = "pwa-signup";
+export declare const pwaAccountDeleted = "pwa-account-deleted";
+export declare const pwaProfileUpdated = "pwa-profile-updated";
+export declare const pwaEmailChanged = "pwa-email-changed";
+export declare const pwaDrawerToggleName = "pwa-drawer-toggle";
+export declare const pwaAuthError = "pwa-auth-error";
+export declare const eventName: {
+    readonly authChanged: "pwa-auth-changed";
+    readonly login: "pwa-login";
+    readonly logout: "pwa-logout";
+    readonly signup: "pwa-signup";
+    readonly accountDeleted: "pwa-account-deleted";
+    readonly profileUpdated: "pwa-profile-updated";
+    readonly emailChanged: "pwa-email-changed";
+    readonly drawerToggle: "pwa-drawer-toggle";
+    readonly authError: "pwa-auth-error";
+};

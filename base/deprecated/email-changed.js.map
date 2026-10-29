@@ -1,0 +1,1 @@
+{"version":3,"file":"email-changed.js","sourceRoot":"","sources":["../../typescript/deprecated/email-changed.ts"],"names":[],"mappings":"AAGA,MAAM,CAAC,MAAM,gBAAgB,GAAG,kBAAkB,CAAC;AAGnD,MAAM,UAAU,sBAAsB,CAAC,MAA6B;IAElE,MAAM,CAAC,aAAa,CAAC,IAAI,WAAW,CAAC,gBAAgB,EAAE;QACrD,MAAM;QACN,OAAO,EAAG,IAAI;QACd,QAAQ,EAAE,IAAI;KACf,CAAC,CAAC,CAAC;AAEN,CAAC"}

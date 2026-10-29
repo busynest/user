@@ -11,6 +11,8 @@ import { html, LitElement, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { EmailAuthProvider, signInWithCredential } from 'firebase/auth';
 import { auth } from '../../firebase/authentication';
+import { pwaAuthError, pwaLogin } from '../../events/names';
+import { emitWindow, toAuthError, toPwaUser } from '../../events/emit';
 import { buttonStyle } from './css/button';
 import { labelStyle } from './css/label';
 import { inputStyle } from './css/input';
@@ -28,9 +30,13 @@ let FormLogin = class FormLogin extends LitElement {
         this.signIn = async (email, password) => {
             try {
                 const authCredential = EmailAuthProvider.credential(email, password);
-                await signInWithCredential(auth, authCredential);
+                const signed = await signInWithCredential(auth, authCredential);
+                const person = toPwaUser(signed.user);
+                if (person)
+                    emitWindow(pwaLogin, { user: person });
             }
             catch (error) {
+                emitWindow(pwaAuthError, toAuthError(error));
                 alert(error instanceof Error ? error.message : 'Sign in failed');
             }
         };
@@ -148,10 +154,12 @@ let FormLogin = class FormLogin extends LitElement {
     login() {
         this.readFields();
         if (this.email.length < 4) {
+            emitWindow(pwaAuthError, { code: 'pwa/missing-email', message: 'Please enter an email address.' });
             alert('Please enter an email address.');
             return;
         }
         if (this.password.length < 4) {
+            emitWindow(pwaAuthError, { code: 'pwa/missing-password', message: 'Please enter a password.' });
             alert('Please enter a password.');
             return;
         }

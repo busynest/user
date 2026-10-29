@@ -41,7 +41,10 @@ export declare class UserDrawer extends UserDrawer_base {
     private name;
     private user;
     private signup;
+    private wasOpen;
+    private sawOpen;
     constructor();
+    connectedCallback(): void;
     stateChanged(state: AppState): void;
     protected firstUpdated(): void;
     static get styles(): CSSResultArray;

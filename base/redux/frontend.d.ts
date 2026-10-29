@@ -69,6 +69,20 @@ export declare const userSlice: import("@reduxjs/toolkit").Slice<{
         phone: string;
         email: string;
     }) => void;
+    openSign: (state: {
+        settings: string;
+        login: boolean;
+        drawer: boolean;
+        registerOne: boolean;
+        registerTwo: boolean;
+        userId: string;
+        customer: string;
+        profileChoice: string;
+        name: string;
+        photoURL: string;
+        phone: string;
+        email: string;
+    }) => void;
     closeSign: (state: {
         settings: string;
         login: boolean;
@@ -167,7 +181,7 @@ export declare const userSlice: import("@reduxjs/toolkit").Slice<{
     phone: string;
     email: string;
 }>>;
-export declare const universalToggle: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "user/universalToggle">, navigateAuth: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "user/navigateAuth">, iconAuth: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "user/iconAuth">, nameAuth: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "user/nameAuth">, userAuth: import("@reduxjs/toolkit").ActionCreatorWithPayload<boolean, "user/userAuth">, toggleSign: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"user/toggleSign">, closeSign: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"user/closeSign">, signUpAction: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"user/signUpAction">, signUpClose: import("@reduxjs/toolkit").ActionCreatorWithPayload<boolean, "user/signUpClose">;
+export declare const universalToggle: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "user/universalToggle">, navigateAuth: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "user/navigateAuth">, iconAuth: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "user/iconAuth">, nameAuth: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "user/nameAuth">, userAuth: import("@reduxjs/toolkit").ActionCreatorWithPayload<boolean, "user/userAuth">, toggleSign: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"user/toggleSign">, openSign: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"user/openSign">, closeSign: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"user/closeSign">, signUpAction: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"user/signUpAction">, signUpClose: import("@reduxjs/toolkit").ActionCreatorWithPayload<boolean, "user/signUpClose">;
 declare const _default: import("redux").Reducer<{
     settings: string;
     login: boolean;
