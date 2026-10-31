@@ -41,23 +41,22 @@ npm install pwa-auth lit firebase
 ```html
 <user-icon></user-icon>
 <user-drawer></user-drawer>
-<script type="module">
-  import { initialize, pwaAuthChanged } from './node_modules/pwa-auth/source/pwa-auth.js';
-  initialize({ config: {
-    apiKey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    authDomain: "xxxxxxx.xxxxxxx.xxx",
-    projectId: "xxxxxxx",
-    storageBucket: "xxxxxxx.xxxxxxx.xxx",
+<script>
+  window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
+    apiKey:            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    authDomain:        "xxxxxxx.xxxxxxx.xxx",
+    databaseURL:       "https://xxxxxxx.xxxxxxx.xxx",
+    projectId:         "xxxxxxx",
+    storageBucket:     "xxxxxxx.xxxxxxx.xxx",
     messagingSenderId: "xxxxxxxxxxx",
-    appId: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  } });
-  window.addEventListener(pwaAuthChanged, (event) => {
-    console.log(event.detail.user);
-  });
+    appId:             "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    measurementId:     "xxxxxxxxxxx"
+  }) } };
 </script>
+<script type="module" src="./node_modules/pwa-auth/source/pwa-auth.js"></script>
 ```
 
-That import is the production bundle. Lit and Firebase are already in the file. A bundler imports `pwa-auth` instead. See [Install & entries](#install--entries). Project setup is in [firebase.md](firebase.md).
+The module script loads the production bundle. Lit and Firebase are already in the file. A bundler imports `pwa-auth` instead. See [Install & entries](#install--entries). Setup for that script, including `initialize({ config })`, is in [firebase.md](firebase.md).
 
 ## Install & entries
 
