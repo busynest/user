@@ -17,7 +17,7 @@ Peers: `lit` ^3.3.0 and `firebase` ^12.0.0. The package is ESM (`"type": "module
 
 - [Quick start](#quick-start)
 - [Install & entries](#install--entries)
-- [Firebase setup](#firebase-setup)
+- [Firebase](firebase.md)
 - [Elements](#elements)
 - [Page examples](#page-examples)
 - [Events](#events)
@@ -57,7 +57,7 @@ npm install pwa-auth lit firebase
 </script>
 ```
 
-That import is the production bundle. Lit and Firebase are already in the file. A bundler imports `pwa-auth` instead. See [Install & entries](#install--entries).
+That import is the production bundle. Lit and Firebase are already in the file. A bundler imports `pwa-auth` instead. See [Install & entries](#install--entries). Project setup is in [firebase.md](firebase.md).
 
 ## Install & entries
 
@@ -91,71 +91,9 @@ import 'pwa-auth/production';
 
 `pwa-auth/production` resolves to `source/pwa-auth.js`.
 
-## Firebase setup
+## Firebase
 
-- Firebase Authentication with email and password
-- Cloud Storage bucket
-- Google Analytics, if you call `logAccount` or `logAccountDelete`
-
-Storage rules must allow the signed-in user to read and write only `pwa-auth/{uid}/**`.
-
-Firestore rules allow `users/{uid}` and `contractors/{uid}`, and any other document `deleteDocument` removes, only when the signed-in uid is the document id or the `owner` field. Everything else is denied. The host owns those documents. See [Data ownership](#data-ownership).
-
-Required. Call `initialize({ config })`, or set `window.process.env.FIREBASE_CONFIG` in a classic script before the module runs. One assignment. A second `window.process = …` replaces the first and drops keys you already set.
-
-```html
-<script>
-  window.process = { env: { FIREBASE_CONFIG: JSON.stringify({
-    apiKey:            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    authDomain:        "xxxxxxx.xxxxxxx.xxx",
-    databaseURL:       "https://xxxxxxx.xxxxxxx.xxx",
-    projectId:         "xxxxxxx",
-    storageBucket:     "xxxxxxx.xxxxxxx.xxx",
-    messagingSenderId: "xxxxxxxxxxx",
-    appId:             "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    measurementId:     "xxxxxxxxxxx"
-  }) } };
-</script>
-```
-
-`authentication.ts` reads `process.env.FIREBASE_CONFIG` when `apiKey` is present and calls `initialize`. An empty config does not throw. Call `initialize` instead.
-
-```javascript
-import { initialize } from 'pwa-auth';
-import { getApp } from 'firebase/app';
-
-// Optional - your config
-initialize({
-  config: {
-    apiKey:            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    authDomain:        "xxxxxxx.xxxxxxx.xxx",
-    projectId:         "xxxxxxx",
-    storageBucket:     "xxxxxxx.xxxxxxx.xxx",
-    messagingSenderId: "xxxxxxxxxxx",
-    appId:             "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  }
-});
-
-// Optional - an app you already created. Omit FIREBASE_CONFIG when you do this.
-initialize({ app: getApp() });
-```
-
-Optional. A tag can carry the same JSON. The first element to connect wins, and only when the app is not up yet.
-
-```html
-<user-icon firebase-config='{"apiKey":"...","authDomain":"...","projectId":"..."}'></user-icon>
-```
-
-The first `initialize` wins. A later call with a different app throws.
-
-Optional. `actionCodeSettings` is passed to `sendEmailVerification`. Put the continue URL in `url`. A later `initialize({ actionCodeSettings })` still stores it after the app is up.
-
-```javascript
-initialize({
-  config,
-  actionCodeSettings: { url: 'https://example.com/continue' }
-});
-```
+Project setup, `initialize({ config })`, `FIREBASE_CONFIG`, rules, and emulators are in [firebase.md](firebase.md).
 
 ## Elements
 
@@ -368,7 +306,7 @@ window.addEventListener(eventName.login, (event) => {
 
 | Export | |
 |---|---|
-| `initialize({ app, config, actionCodeSettings })` | Boot Firebase. `app` is a host app. `config` is a host config. `actionCodeSettings` is optional and is passed to the verification email. The legacy `FIREBASE_CONFIG` script still works. |
+| `initialize({ app, config, actionCodeSettings })` | See [firebase.md](firebase.md). |
 | `getCurrentUser()` | `{ uid, displayName, email, photoURL, emailVerified }` or `null`. |
 | `onUserChanged(callback)` | Calls back with that same shape. Returns `unsubscribe`. |
 | `sendVerification()` | Sends the verification email for the signed-in user. Resolves `true` when Firebase accepts it. Fires `pwa-verification-sent` with `{ email }`. The constant is `pwaVerificationSent`, and `eventName.verificationSent` is the same string. |
@@ -397,11 +335,11 @@ import {
 
 | Export | |
 |---|---|
-| `auth` | Firebase Auth for this app. Read `auth.currentUser` at call time. |
-| `db` | Firestore. |
-| `storage` | Cloud Storage. |
-| `application` | The Firebase app from `initialize` or from `FIREBASE_CONFIG`. |
-| `firebaseConfig` | The parsed config object. |
+| `auth` | See [firebase.md](firebase.md). |
+| `db` | See [firebase.md](firebase.md). |
+| `storage` | See [firebase.md](firebase.md). |
+| `application` | See [firebase.md](firebase.md). |
+| `firebaseConfig` | See [firebase.md](firebase.md). |
 | `user` | Deprecated. Snapshot of `auth.currentUser` taken when `initialize` runs. It stays `null`. Read `getCurrentUser()` at call time. |
 | `logOut()` | `signOut(auth)`. Then `pwa-logout`. |
 | `logAccount()` | Analytics event `create_account`, after Analytics is ready. No event when Analytics is unsupported. |
@@ -410,7 +348,7 @@ import {
 | `pwaDrawerToggle()` | Closes the drawer. It does not toggle. Prefer `closeDrawer()`. |
 | `reauthenticate(password)` | Confirms the current password before email, password, and delete. Returns true when it succeeds. |
 
-`pwa-auth` and `pwa-auth/production` both resolve types to `base/export/pwa-auth.d.ts`. The production entry is the rollup bundle. `lit` and `firebase` are peer dependencies. Redux ships inside the package. `sideEffects` is true because the entry registers the elements. The published `files` list is `base/`, the production bundle, `source/pwa-styles.css`, `source/empty.jpg`, the readme, and the licenses.
+`pwa-auth` and `pwa-auth/production` both resolve types to `base/export/pwa-auth.d.ts`. The production entry is the rollup bundle. `lit` and `firebase` are peer dependencies. Redux ships inside the package. `sideEffects` is true because the entry registers the elements. The published `files` list is `base/`, the production bundle, `source/pwa-styles.css`, `source/empty.jpg`, the readme, `intro.md`, `firebase.md`, and the licenses.
 
 ## Theme
 
@@ -544,10 +482,9 @@ npm run rollup         # writes source/pwa-auth.js and website/javascript/pwa-au
 npm run demo           # serves demonstration/index.html
 npm run website        # serves website/index.html
 npm test               # vitest
-npm run test:emulator  # Auth, Firestore, and Storage emulators, then the browser checks
 ```
 
-`npm run test:emulator` uses `firebase-tools` 14.24.0. Firestore and Storage need Java 21 or newer on `PATH`.
+Auth, Firestore, and Storage emulators are in [firebase.md](firebase.md).
 
 ### Publish
 
