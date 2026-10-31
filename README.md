@@ -3,6 +3,8 @@
 [![npm version](https://img.shields.io/npm/v/pwa-auth)](https://www.npmjs.com/package/pwa-auth)
 [![license](https://img.shields.io/badge/license-MIT-blue)](license)
 
+Site owners can start with [a short introduction](intro.md).
+
 Jack's Publishing maintains sign-in and account components so a site can stay on its own interface. [Live demo](https://pwa-authentic.firebaseapp.com).
 
 Five elements: `user-icon`, `user-drawer`, `user-login`, `user-settings`, and `email-reset`. They sign a person up, sign them in, and let them change name, email, password, and photo, or delete the account. Email and password only. Sign-up sends a verification email. Sign-in still succeeds when that address is unverified. One Firebase session, shared by every tag on the page.
