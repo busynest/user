@@ -26,3 +26,4 @@ export declare const eventName: {
     readonly verificationSent: "pwa-verification-sent";
     readonly emailVerified: "pwa-email-verified";
 };
+//# sourceMappingURL=names.d.ts.map

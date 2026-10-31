@@ -1,6 +1,6 @@
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, isReady, onReady } from '../firebase/authentication';
-import { toPwaUser } from '../events/emit';
+import { auth, isReady, onReady } from '../firebase/authentication.js';
+import { toPwaUser } from '../events/emit.js';
 export function getCurrentUser() {
     if (!isReady())
         return null;

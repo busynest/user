@@ -1,5 +1,5 @@
 import { CSSResultArray, LitElement } from "lit";
-import { AppState } from "../../../store";
+import { AppState } from "../../../store.js";
 declare const ContactEmail_base: (new (...args: any[]) => {
     _storeUnsubscribe: import("redux").Unsubscribe;
     connectedCallback(): void;
@@ -49,3 +49,4 @@ declare global {
     }
 }
 export {};
+//# sourceMappingURL=email.d.ts.map

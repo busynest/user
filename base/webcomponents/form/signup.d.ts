@@ -19,3 +19,4 @@ declare global {
         'form-signup': FormSignup;
     }
 }
+//# sourceMappingURL=signup.d.ts.map

@@ -197,3 +197,4 @@ declare const _default: import("redux").Reducer<{
     email: string;
 }>;
 export default _default;
+//# sourceMappingURL=frontend.d.ts.map

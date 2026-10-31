@@ -2,10 +2,10 @@
 /* Optional - retired. The send below alerted success and did not emit pwa-reset-sent. */
 
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '../firebase/authentication';
-import { pwaAuthError } from '../events/names';
-import { emitWindow, toAuthError } from '../events/emit';
-import { userMessage } from '../firebase/message';
+import { auth } from '../firebase/authentication.js';
+import { pwaAuthError } from '../events/names.js';
+import { emitWindow, toAuthError } from '../events/emit.js';
+import { userMessage } from '../firebase/message.js';
 
 export const phoneField = `
 <input

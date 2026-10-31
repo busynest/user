@@ -1,4 +1,4 @@
-import { toAuthError } from '../events/emit';
+import { toAuthError } from '../events/emit.js';
 
 /** Required - plain sentences for the codes the forms actually hit. */
 const known: Record<string, string> = {

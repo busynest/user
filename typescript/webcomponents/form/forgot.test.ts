@@ -54,7 +54,7 @@ import { closeDrawer } from '../../../base/api/drawer.js';
 import store from '../../../base/store.js';
 import { universalToggle } from '../../../base/redux/frontend.js';
 import { clearDraftEmail } from '../../../base/webcomponents/form/draft.js';
-import { pwaAuthError, pwaResetSent } from '../../events/names';
+import { pwaAuthError, pwaResetSent } from '../../events/names.js';
 import '../../../base/webcomponents/form/login.js';
 import '../../../base/webcomponents/form/forgot.js';
 import '../../../base/webcomponents/drawer/drawer.js';

@@ -1,8 +1,8 @@
 import { onAuthStateChanged } from 'firebase/auth';
 
-import { auth, isReady, onReady } from '../firebase/authentication';
-import { toPwaUser } from '../events/emit';
-import type { PwaUser } from '../events/types';
+import { auth, isReady, onReady } from '../firebase/authentication.js';
+import { toPwaUser } from '../events/emit.js';
+import type { PwaUser } from '../events/types.js';
 
 /** Required - uid, displayName, email, photoURL, emailVerified. Null when signed out or not ready. */
 export function getCurrentUser(): PwaUser | null {

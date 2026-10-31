@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { focusable, isHidden } from './keys';
+import { focusable, isHidden } from './keys.js';
 
 function drawerWithSlot(open: boolean) {
   const host = document.createElement('div');

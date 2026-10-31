@@ -1,4 +1,4 @@
-import { toAuthError } from '../events/emit';
+import { toAuthError } from '../events/emit.js';
 const known = {
     'auth/invalid-email': 'Enter a valid email address.',
     'auth/user-not-found': 'No account uses that email.',

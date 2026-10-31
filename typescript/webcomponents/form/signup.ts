@@ -14,23 +14,23 @@ import {
   createUserWithEmailAndPassword
 }                         from 'firebase/auth';
 
-import { auth }           from '../../firebase/authentication';
-import { logAccount }     from '../../firebase/interface';
-import { sendVerification } from '../../api/verify';
+import { auth }           from '../../firebase/authentication.js';
+import { logAccount }     from '../../firebase/interface.js';
+import { sendVerification } from '../../api/verify.js';
 
-import { pwaAuthError, pwaSignup } from '../../events/names';
-import { emitWindow, toAuthError, toPwaUser } from '../../events/emit';
-import { userMessage } from '../../firebase/message';
+import { pwaAuthError, pwaSignup } from '../../events/names.js';
+import { emitWindow, toAuthError, toPwaUser } from '../../events/emit.js';
+import { userMessage } from '../../firebase/message.js';
 
-import { buttonStyle }    from './css/button';
-import { labelStyle }     from './css/label';
-import { inputStyle }     from './css/input';
-import { listStyle }      from './css/list';
-import { toggleStyle }    from './css/toggle';
-import { tapStyle }       from '../css/tap';
+import { buttonStyle }    from './css/button.js';
+import { labelStyle }     from './css/label.js';
+import { inputStyle }     from './css/input.js';
+import { listStyle }      from './css/list.js';
+import { toggleStyle }    from './css/toggle.js';
+import { tapStyle }       from '../css/tap.js';
 
-import store                  from '../../store';
-import { universalToggle }    from '../../redux/frontend';
+import store                  from '../../store.js';
+import { universalToggle }    from '../../redux/frontend.js';
 
 @customElement('form-signup')
 export class FormSignup extends LitElement {

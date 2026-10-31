@@ -10,11 +10,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { LitElement, css, html } from 'lit';
 import { state } from 'lit/decorators.js';
 import { connect } from 'pwa-helpers';
-import store from '../../../store';
-import { sendVerification } from '../../../api/verify';
-import { userMessage } from '../../../firebase/message';
-import { buttonStyle } from '../../form/css/button';
-import { tapStyle } from '../../css/tap';
+import store from '../../../store.js';
+import { sendVerification } from '../../../api/verify.js';
+import { userMessage } from '../../../firebase/message.js';
+import { buttonStyle } from '../../form/css/button.js';
+import { tapStyle } from '../../css/tap.js';
 const verifyWait = 45;
 const sentMessage = 'Check your inbox for the verification email.';
 export class EmailVerify extends connect(store)(LitElement) {

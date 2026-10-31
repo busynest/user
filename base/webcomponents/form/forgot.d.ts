@@ -1,5 +1,5 @@
 import { TemplateResult } from 'lit';
-import { LazyLoader } from '../../lazyLoader';
+import { LazyLoader } from '../../lazyLoader.js';
 export declare class EmailReset extends LazyLoader {
     private userEmail;
     private status;
@@ -35,3 +35,4 @@ declare global {
         'email-reset': EmailReset;
     }
 }
+//# sourceMappingURL=forgot.d.ts.map

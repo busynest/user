@@ -1,5 +1,5 @@
 import { CSSResultArray, LitElement } from 'lit';
-import { AppState } from '../../store';
+import { AppState } from '../../store.js';
 declare const UserIcon_base: (new (...args: any[]) => {
     _storeUnsubscribe: import("redux").Unsubscribe;
     connectedCallback(): void;
@@ -50,3 +50,4 @@ declare global {
     }
 }
 export {};
+//# sourceMappingURL=icon.d.ts.map

@@ -1,4 +1,4 @@
-import type { PwaAuthErrorDetail, PwaUser } from './types';
+import type { PwaAuthErrorDetail, PwaUser } from './types.js';
 export declare function toPwaUser(user: {
     uid: string;
     displayName: string | null;
@@ -9,3 +9,4 @@ export declare function toPwaUser(user: {
 export declare function emitWindow<T>(name: string, detail: T): void;
 export declare function emitElement<T>(target: EventTarget, name: string, detail: T): void;
 export declare function toAuthError(error: unknown): PwaAuthErrorDetail;
+//# sourceMappingURL=emit.d.ts.map

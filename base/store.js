@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { userSlice } from './redux/frontend';
-import { accountSlice } from './redux/backend';
+import { userSlice } from './redux/frontend.js';
+import { accountSlice } from './redux/backend.js';
 export const store = configureStore({
     reducer: {
         frontend: userSlice.reducer,

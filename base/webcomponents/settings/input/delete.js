@@ -10,15 +10,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { LitElement, css, html } from "lit";
 import { state } from "lit/decorators.js";
 import { connect } from "pwa-helpers";
-import store from "../../../store";
-import { buttonStyle } from "../../form/css/button";
-import { labelStyle } from "../../form/css/label";
-import { inputStyle } from "../../form/css/input";
-import { auth } from '../../../firebase/authentication';
-import { deleteUserFiles, logAccountDelete, reauthenticate } from '../../../firebase/interface';
-import { pwaAccountDeleted, pwaAuthError } from '../../../events/names';
-import { emitWindow, toAuthError } from '../../../events/emit';
-import { userMessage } from '../../../firebase/message';
+import store from "../../../store.js";
+import { buttonStyle } from "../../form/css/button.js";
+import { labelStyle } from "../../form/css/label.js";
+import { inputStyle } from "../../form/css/input.js";
+import { auth } from '../../../firebase/authentication.js';
+import { deleteUserFiles, logAccountDelete, reauthenticate } from '../../../firebase/interface.js';
+import { pwaAccountDeleted, pwaAuthError } from '../../../events/names.js';
+import { emitWindow, toAuthError } from '../../../events/emit.js';
+import { userMessage } from '../../../firebase/message.js';
 export class DeleteUser extends connect(store)(LitElement) {
     constructor() {
         super();

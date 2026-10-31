@@ -1,5 +1,5 @@
-import { store } from '../store';
-import { closeSign, openSign, toggleSign } from '../redux/frontend';
+import { store } from '../store.js';
+import { closeSign, openSign, toggleSign } from '../redux/frontend.js';
 export function openDrawer() {
     store.dispatch(openSign());
 }

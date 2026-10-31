@@ -1,4 +1,4 @@
-import type { PwaEmailChangedDetail } from '../events/types';
+import type { PwaEmailChangedDetail } from '../events/types.js';
 
 /** @deprecated Optional - window event userEmailChanged. Required - listen for pwa-email-changed. */
 export const userEmailChanged = 'userEmailChanged';

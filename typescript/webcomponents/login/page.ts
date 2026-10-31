@@ -1,19 +1,19 @@
 import { CSSResultArray, html, LitElement }   from 'lit';
 import { customElement, property, state }     from 'lit/decorators.js';
-import { connect }                            from 'pwa-helpers/connect-mixin';
-import { store, AppState }                    from '../../store';
+import { connect }                            from 'pwa-helpers/connect-mixin.js';
+import { store, AppState }                    from '../../store.js';
 
-import { authStyles }   from './css/auth';
-import { linkStyle }    from './css/link';
-import { lineStyle }    from './css/paragraph'; 
-import { animation }    from '../css/animation'; 
+import { authStyles }   from './css/auth.js';
+import { linkStyle }    from './css/link.js';
+import { lineStyle }    from './css/paragraph.js'; 
+import { animation }    from '../css/animation.js'; 
 
-import { listStyle }    from '../form/css/list';
+import { listStyle }    from '../form/css/list.js';
 
-import '../form/login';
-import '../form/signup';
-import { tapStyle } from '../css/tap';
-import { applyFirebaseConfig } from '../../firebase/attribute';
+import '../form/login.js';
+import '../form/signup.js';
+import { tapStyle } from '../css/tap.js';
+import { applyFirebaseConfig } from '../../firebase/attribute.js';
 
 @customElement('user-login')
 export class UserLogin extends connect(store)(LitElement) {

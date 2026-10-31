@@ -1,3 +1,3 @@
 /* Optional - retired, see deprecated/images */
 
-export { _listImages } from '../../../deprecated/images';
+export { _listImages } from '../../../deprecated/images.js';

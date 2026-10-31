@@ -2,16 +2,16 @@
 import { CSSResultArray, LitElement, css, html } from "lit";
 import { state }            from "lit/decorators.js";
 import { connect }          from "pwa-helpers";
-import store, { AppState }  from "../../../store";
-import { auth }             from "../../../firebase/authentication";
-import { labelStyle }       from "../../form/css/label";
-import { inputStyle }       from "../../form/css/input";
-import { buttonStyle  }     from "../../form/css/button";
+import store, { AppState }  from "../../../store.js";
+import { auth }             from "../../../firebase/authentication.js";
+import { labelStyle }       from "../../form/css/label.js";
+import { inputStyle }       from "../../form/css/input.js";
+import { buttonStyle  }     from "../../form/css/button.js";
 import { updatePassword }   from "firebase/auth";
-import { reauthenticate }   from "../../../firebase/interface";
-import { pwaAuthError, pwaPasswordChanged } from "../../../events/names";
-import { emitWindow, toAuthError } from "../../../events/emit";
-import { userMessage } from "../../../firebase/message";
+import { reauthenticate }   from "../../../firebase/interface.js";
+import { pwaAuthError, pwaPasswordChanged } from "../../../events/names.js";
+import { emitWindow, toAuthError } from "../../../events/emit.js";
+import { userMessage } from "../../../firebase/message.js";
 
 export class InputPassword extends connect(store)(LitElement) {
 

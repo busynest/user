@@ -1,6 +1,6 @@
 /* Optional - retired. The host owns users/{uid}. It deletes that doc on pwa-account-deleted. */
 
-import { deleteDocument } from '../firebase/interface';
+import { deleteDocument } from '../firebase/interface.js';
 
 export async function deleteUserDoc(uid: string) {
 

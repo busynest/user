@@ -1,4 +1,4 @@
-import type { PwaAuthErrorDetail, PwaUser } from './types';
+import type { PwaAuthErrorDetail, PwaUser } from './types.js';
 
 /** Required - cross the shadow root and bubble. */
 const travel = { bubbles: true, composed: true };
