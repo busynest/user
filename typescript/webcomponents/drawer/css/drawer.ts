@@ -49,7 +49,6 @@ export const drawerStyle: CSSResult = css`
     left:                   0;
     right:                  0; */
     transition-duration:    var(--pwa_slide_time, 1.4s);
-    transition-timing-function: var(--pwa_slide_ease, ease-in-out);
     overflow:               hidden;
     box-sizing:             border-box;
     height:                 auto;
@@ -68,17 +67,13 @@ export const drawerStyle: CSSResult = css`
   .in {
     max-height:             0px;
     visibility:             hidden;
-    /* Required - hide only after the drawer has finished closing */
-    transition:
-      max-height var(--pwa_slide_time, 1.4s) var(--pwa_slide_ease, ease-in-out),
-      visibility 0s linear var(--pwa_slide_time, 1.4s),
-      transform var(--pwa_slide_time, 1.4s) ease;
+    /* Required - max-height eases. transform is the bare 1.4s, same shorthand as Jack. */
+    transition:             max-height var(--pwa_slide_time, 1.4s) ease-in-out, visibility 0s linear var(--pwa_slide_time, 1.4s), transform var(--pwa_slide_time, 1.4s);
   }
 
   .spec-in {
     transform:              translate3d(0, -100%, 0);
-    /* Required - 1.5s when --pwa_slide_time is 1.4s. ease is the shorthand default. */
-    transition:             transform calc(var(--pwa_slide_time, 1.4s) * 15 / 14) ease;
+    transition:             transform 1.5s;
     z-index:                -1;
     animation-timing-function: linear;
   }
@@ -86,22 +81,40 @@ export const drawerStyle: CSSResult = css`
   .out {
     max-height:             100%;
     visibility:             visible;
-    transition:
-      max-height var(--pwa_slide_time, 1.4s) var(--pwa_slide_ease, ease-in-out),
-      visibility 0s linear 0s,
-      transform var(--pwa_slide_time, 1.4s) ease;
+    transition:             max-height var(--pwa_slide_time, 1.4s) ease-in-out, visibility 0s, transform var(--pwa_slide_time, 1.4s);
   }
-  
+
   .spec-out {
     transform:              translate3d(0, 0, 0);
-    /* Required - forms follow the drawer. 2.2s when --pwa_slide_time is 1.4s. */
-    transition:             transform calc(var(--pwa_slide_time, 1.4s) * 11 / 7) ease;
+    transition:             transform 2.2s;
     z-index:                -1;
     animation-timing-function: linear;
   }
 
+  /* Required - inside spec > wrapper > inner, max-height and transform run together. */
+  .userDrawer .content {
+    transition-property:    transform;
+    -webkit-transition-property: transform;
+    transition-timing-function: ease-in-out;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-duration:    2s;
+    -webkit-transition-duration: 2s;
+  }
+
+  .userDrawer .content.closed {
+    transform:              translate3d(0, -102%, 0);
+    animation:              slide-out 2s ease-out forwards;
+    position:               relative;
+    overflow:               hidden;
+    visibility:             visible;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     :host { --pwa_slide_time: 0s; }
+    .spec-in,
+    .spec-out,
+    .userDrawer .content { transition-duration: 0s; }
+    .userDrawer .content.closed { animation-duration: 0s; }
   }
 
 `;
