@@ -13,7 +13,6 @@
   --pwa_icon_font:                "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --pwa_icon_diameter:            44px;
 
-  --pwa_drawer_position:          absolute;
   --pwa_drawer_border:            0;
   --pwa_drawer_z-index:           3;
   --pwa_drawer_border-radius:     0 0 18px 18px;

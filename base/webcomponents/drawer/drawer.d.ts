@@ -80,6 +80,7 @@ export declare class UserDrawer extends UserDrawer_base {
     private onKey;
     private onLightClick;
     protected firstUpdated(): void;
+    private placeAnchor;
     private watchColumn;
     private onColumnResize;
     static get styles(): CSSResultArray;

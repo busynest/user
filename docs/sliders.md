@@ -1,6 +1,6 @@
 # Slides
 
-The drawer, the page login, and settings each slide on their own. Opening one does not move the others. Nothing moves on the first paint.
+The drawer, the page login, and settings each slide on their own. The drawer opens downward from the tag and does not push the page. Opening one does not move the others. Nothing moves on the first paint.
 
 Three components slide, and each one owns its roll. `user-drawer` (`typescript/webcomponents/drawer/drawer.ts`), `user-login` (`typescript/webcomponents/login/page.ts`), and `user-settings` (`typescript/webcomponents/settings/settings.ts`) do not import a shared roll helper. There is no `css/roll.ts`.
 

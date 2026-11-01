@@ -2,15 +2,14 @@ import { css } from "lit";
 export const drawerStyle = css `
 
   :host {
-    position:               var(--pwa_drawer_position, absolute);
-    z-index:                4;
-    overflow:               hidden;
-    height:                 auto;
+    /* Required - stay where the tag is. Height 0 so a closed drawer takes no space. */
+    position:               var(--pwa_drawer_position, relative);
+    display:                block;
+    height:                 0;
+    overflow:               visible;
     width:                  100%;
     box-sizing:             border-box;
     -webkit-box-sizing:     border-box;
-    display:                block; /* Required - the child must start at the top of the clip */
-    /* padding-top lives on .userDrawer so the clip height matches the translating sheet */
     max-width:              100%; /* Required - fit 320px */
     min-width:              0;
     background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
@@ -18,13 +17,8 @@ export const drawerStyle = css `
 
   :host([drawer]),
   :host([sliding]) {
-    /* Required - the growing box. Top stays put; radius and shadow follow the bottom edge. */
-    left:                   0;
-    right:                  0;
+    /* Required - the overlay beats the content that follows the tag. */
     z-index:                5;
-    background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
-    border-radius:          var(--pwa_drawer_border-radius, 0 0 18px 18px);
-    box-shadow:             0 18px 40px rgba(28, 36, 48, 0.16);
   }
 
   .userDrawer > .spec > .wrapper {
