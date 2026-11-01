@@ -58,8 +58,6 @@ describe('package exports', () => {
     expect(pkg.peerDependencies.redux).toBeUndefined();
     expect(pkg.files).toEqual([
       'base',
-      '!base/deprecated',
-      '!base/deprecated/**',
       'source/pwa-auth.js',
       'source/pwa-styles.css',
       'source/empty.jpg',

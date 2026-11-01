@@ -12,7 +12,7 @@ All notable changes to pwa-auth.js will be documented in this file.
 
 ## Removed
 - Unused internal Redux fields and actions (phone, anon, message token, uid copy, and the second name/photo copy).
-- Re-exports nothing imported: the old font stylesheet, image lister, drawer slice, and state types.
+- Unused code that nothing imported: the old font stylesheet, image lister, drawer slice, and state types.
 - Page leftovers: the `login` attribute on `user-login`, and `--pwa_divider_color` (nothing reads it).
 
 # [3.6.0] - 2026-11-01
@@ -98,7 +98,7 @@ Sign-in is not blocked when the email is unverified. The host gates on `emailVer
 
 ## Removed
 - redux-thunk
-- drawer slice and images list, retired to typescript/deprecated
+- drawer slice and images list
 
 # [3.4.8] - 2026-01-21
 
