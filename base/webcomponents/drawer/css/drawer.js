@@ -15,13 +15,12 @@ export const drawerStyle = css `
     min-width:              0;
   }
 
-  :host([drawer]) {
-    /* Required - opaque sheet at 320px so the page does not show through */
+  :host([drawer]),
+  :host([sliding]) {
+    /* Required - stay full width while the panel slides, including the close */
     left:                   0;
     right:                  0;
     z-index:                5;
-    background-color:       var(--pwa_drawer_background_color, #fffdf8);
-    box-shadow:             0 18px 40px rgba(28, 36, 48, 0.16);
   }
 
   .userDrawer > .spec > .wrapper {
@@ -47,9 +46,10 @@ export const drawerStyle = css `
     height:                 auto;
     border-bottom:          var(--pwa_drawer_border, 0);
     z-index:                var(--pwa_drawer_z-index, 3);
-    background-color:       var(--pwa_drawer_background_color, #fffdf8);
+    background-color:       var(--pwa_drawer_background_color, #fffdf8); /* Required - opaque sheet, it travels with the transform */
     color:                  var(--pwa_drawer_text_color, #1c2430);
     border-radius:          var(--pwa_drawer_border-radius, 0 0 18px 18px);
+    box-shadow:             0 18px 40px rgba(28, 36, 48, 0.16);
   }
 
 `;

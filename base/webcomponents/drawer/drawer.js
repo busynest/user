@@ -47,10 +47,25 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.notice = "";
         this.user = false;
         this.signup = false;
+        this.sliding = false;
+        this.shown = false;
         this.wasOpen = false;
         this.sawOpen = false;
         this.returnFocus = null;
         this.stopNotice = null;
+        this.openFrame = 0;
+        this.reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        this.onSlideEnd = (event) => {
+            if (!(event instanceof TransitionEvent))
+                return;
+            if (event.propertyName !== 'transform')
+                return;
+            if (event.target !== event.currentTarget)
+                return;
+            if (this.drawer)
+                return;
+            this.sliding = false;
+        };
         this.onKey = (event) => {
             if (!this.drawer)
                 return;
@@ -125,6 +140,8 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.stopNotice = onVerificationNotice(() => { this.notice = verificationNotice(); });
     }
     disconnectedCallback() {
+        cancelAnimationFrame(this.openFrame);
+        this.shadowRoot?.querySelector('.userDrawer')?.removeEventListener('transitionend', this.onSlideEnd);
         this.removeEventListener('keydown', this.onKey);
         this.removeEventListener('click', this.onLightClick);
         this.stopNotice?.();
@@ -136,6 +153,14 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.name = state.backend.name;
         this.email = state.backend.email;
         this.verified = Boolean(state.backend?.verified);
+        if (open)
+            this.sliding = true;
+        else {
+            cancelAnimationFrame(this.openFrame);
+            if (this.reduceMotion.matches)
+                this.sliding = false;
+        }
+        this.shown = open && (this.reduceMotion.matches || this.shown);
         this.drawer = open;
         this.user = state.frontend.login;
         this.signup = state.frontend.registerOne;
@@ -147,6 +172,9 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.sawOpen = true;
     }
     updated(changed) {
+        if (changed.has('drawer') && this.drawer && !this.shown && !this.reduceMotion.matches) {
+            this.armOpen();
+        }
         if (!changed.has('drawer'))
             return;
         if (this.drawer) {
@@ -159,7 +187,17 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.returnFocus?.focus();
         this.returnFocus = null;
     }
+    armOpen() {
+        cancelAnimationFrame(this.openFrame);
+        this.openFrame = requestAnimationFrame(() => {
+            this.openFrame = requestAnimationFrame(() => {
+                if (this.drawer)
+                    this.shown = true;
+            });
+        });
+    }
     firstUpdated() {
+        this.shadowRoot.querySelector('.userDrawer').addEventListener('transitionend', this.onSlideEnd);
         this.shadowRoot.querySelector('.close').addEventListener('click', () => {
             store.dispatch(closeSign());
         });
@@ -255,9 +293,9 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="pwa-drawer-title"
-      aria-hidden="${this.drawer ? 'false' : 'true'}"
-      ?inert="${!this.drawer}"
-      class="userDrawer ${this.drawer ? 'out' : 'in'}">
+      aria-hidden="${this.sliding ? 'false' : 'true'}"
+      ?inert="${!this.sliding}"
+      class="userDrawer ${this.shown ? 'out' : 'in'}">
 
       <!-- Exit Button -->
       <header class="exit" part="header">
@@ -380,6 +418,14 @@ __decorate([
     state(),
     __metadata("design:type", Object)
 ], UserDrawer.prototype, "signup", void 0);
+__decorate([
+    property({ type: Boolean, reflect: true }),
+    __metadata("design:type", Object)
+], UserDrawer.prototype, "sliding", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserDrawer.prototype, "shown", void 0);
 UserDrawer = __decorate([
     customElement('user-drawer'),
     __metadata("design:paramtypes", [])

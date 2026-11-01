@@ -467,11 +467,11 @@ user-drawer::part(login-submit) { letter-spacing: 0.02em; }
 
 ## Drawer behaviour
 
-The drawer loads hidden at the top (`max-height: 0`). A press on `user-icon` slides it down.
+The drawer loads parked above its clip (`translate3d(0, -100%, 0)`). A press on `user-icon` slides it down.
 
 Sign-in and sign-up share one grid area, `pages`. They slide past each other. The closed form is translated `translate3d(0, -100%, 0)`, `visibility: hidden`, and `inert`.
 
-The slide is shared. See [Slides](docs/sliders.md) and [Drawer slide](docs/drawer-slide.md). Max-height is `1.4s` `ease-in-out`. Transform times stay `1.5s`, `2.2s`, and `2s`. `prefers-reduced-motion: reduce` sets those durations to `0s`.
+The slide is shared. See [Slides](docs/sliders.md) and [Drawer slide](docs/drawer-slide.md). `--pwa_slide` is `2s` `ease-in-out` for the drawer and for the forms. `prefers-reduced-motion: reduce` sets that variable to `0s`.
 
 While the drawer is open it covers `user-icon`. Close it with the ✕ button or Escape. The drawer is a dialog. Tab stays inside while it is open, and focus returns to the control that opened it. Off-screen forms are `inert`. The panel is `inert` while it is closed.
 

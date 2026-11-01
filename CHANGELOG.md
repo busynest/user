@@ -12,6 +12,9 @@ All notable changes to pwa-auth.js will be documented in this file.
 ### Fixed
 - Drawer login and sign-up slide past each other again. The closed form is absolute, and the transform is 2s.
 
+### Changed
+- The drawer opens and closes on `--pwa_slide` (`2s` `ease-in-out`). The panel transform is the motion. `max-height` only parks the host after `transitionend`.
+
 ### Added
 - `sendEmailVerification` after sign-up, then `pwa-verification-sent` `{ email }`
 - `emailVerified` on the public user, and `pwa-email-verified` when a reload sees it become true

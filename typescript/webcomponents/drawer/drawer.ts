@@ -55,10 +55,18 @@ export class UserDrawer extends connect(store)(LitElement) {
   @state() private user         = false;  // True user is logged-in, false, user is logged-out, state
   @state() private signup       = false;  // True sign-up, false log-in, State
 
+  /** True while the panel is open or still sliding shut. Drops on transitionend. */
+  @property({ type: Boolean, reflect: true }) private sliding = false;
+
+  /** Drives .out / .in. Set a frame after the clip opens so the transform can run. */
+  @state() private shown = false;
+
   private wasOpen = false;
   private sawOpen = false;
   private returnFocus: HTMLElement | null = null;
   private stopNotice: (() => void) | null = null;
+  private openFrame = 0;
+  private reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   
   constructor() { super(); }
 
@@ -72,6 +80,8 @@ export class UserDrawer extends connect(store)(LitElement) {
   }
 
   override disconnectedCallback(): void {
+    cancelAnimationFrame(this.openFrame);
+    this.shadowRoot?.querySelector('.userDrawer')?.removeEventListener('transitionend', this.onSlideEnd);
     this.removeEventListener('keydown', this.onKey);
     this.removeEventListener('click', this.onLightClick);
     this.stopNotice?.();
@@ -84,6 +94,12 @@ export class UserDrawer extends connect(store)(LitElement) {
     this.name         = state.backend!.name;            // User Name
     this.email        = state.backend!.email;
     this.verified     = Boolean(state.backend?.verified);
+    if (open) this.sliding = true;
+    else {
+      cancelAnimationFrame(this.openFrame);
+      if (this.reduceMotion.matches) this.sliding = false;
+    }
+    this.shown        = open && (this.reduceMotion.matches || this.shown);
     this.drawer       = open;
     this.user         = state.frontend!.login;          // Logged in-out State
     this.signup       = state.frontend!.registerOne;    // Sign-up State
@@ -98,6 +114,9 @@ export class UserDrawer extends connect(store)(LitElement) {
   }
 
   protected updated(changed: PropertyValues): void {
+    if (changed.has('drawer') && this.drawer && !this.shown && !this.reduceMotion.matches) {
+      this.armOpen();
+    }
     if (!changed.has('drawer')) return;
     if (this.drawer) {
       const active = deepActive();
@@ -109,6 +128,25 @@ export class UserDrawer extends connect(store)(LitElement) {
     this.returnFocus?.focus();
     this.returnFocus = null;
   }
+
+  // Paint the parked panel inside the open clip, then let .out run the 2s transform.
+  private armOpen(): void {
+    cancelAnimationFrame(this.openFrame);
+    this.openFrame = requestAnimationFrame(() => {
+      this.openFrame = requestAnimationFrame(() => {
+        if (this.drawer) this.shown = true;
+      });
+    });
+  }
+
+  // Required - visibility, pointer-events, and inert wait until this transform ends.
+  private onSlideEnd = (event: Event) => {
+    if (!(event instanceof TransitionEvent)) return;
+    if (event.propertyName !== 'transform') return;
+    if (event.target !== event.currentTarget) return;
+    if (this.drawer) return;
+    this.sliding = false;
+  };
 
   // Required - Escape closes. Tab stays inside the open drawer.
   private onKey = (event: KeyboardEvent) => {
@@ -151,6 +189,8 @@ export class UserDrawer extends connect(store)(LitElement) {
   };
   
   protected firstUpdated() {
+
+    this.shadowRoot!.querySelector('.userDrawer')!.addEventListener('transitionend', this.onSlideEnd);
 
     this.shadowRoot!.querySelector('.close')!.addEventListener('click', () => {
        store.dispatch(closeSign());
@@ -245,9 +285,9 @@ export class UserDrawer extends connect(store)(LitElement) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="pwa-drawer-title"
-      aria-hidden="${this.drawer ? 'false' : 'true'}"
-      ?inert="${!this.drawer}"
-      class="userDrawer ${this.drawer ? 'out' : 'in'}">
+      aria-hidden="${this.sliding ? 'false' : 'true'}"
+      ?inert="${!this.sliding}"
+      class="userDrawer ${this.shown ? 'out' : 'in'}">
 
       <!-- Exit Button -->
       <header class="exit" part="header">

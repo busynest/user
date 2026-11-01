@@ -1,9 +1,13 @@
 import { css, CSSResult } from "lit";
 
-/* Shell max-height is 1.4s ease-in-out. Form and tab swap is a 2s transform.
-   slide-out is not the form swap. Do not play it on .closed. */
+/* --pwa_slide is the only duration. Form swap and drawer open/close both use it.
+   Motion is transform. max-height does not ease. slide-out is not used. */
 
 export const animation : CSSResult = css`
+
+:host {
+    --pwa_slide:                            2s; /* Required - one duration for every slide */
+}
 
 .wrapper {
     display:                                grid;
@@ -36,9 +40,9 @@ export const animation : CSSResult = css`
 
     backface-visibility:                    hidden;
 
-    /* Required - form swap is 2s. Hide the leaving form only after it has slid away. */
-    transition:                             transform 2s ease-in-out, visibility 0s linear 2s;
-    -webkit-transition:                     transform 2s ease-in-out, visibility 0s linear 2s;
+    /* Required - same duration as the drawer. Hide the leaving form when the transform ends. */
+    transition:                             transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear var(--pwa_slide, 2s);
+    -webkit-transition:                     transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear var(--pwa_slide, 2s);
 
     position:relative;
     z-index: 1;
@@ -56,9 +60,9 @@ export const animation : CSSResult = css`
     position:                               relative; /* Required - this form sets the panel height */
     align-self:                             start; /* Required - keep the Update button under its field */
     z-index:                                3;
-    /* Required - show the arriving form immediately, then slide it for 2s. */
-    transition:                             transform 2s ease-in-out, visibility 0s linear 0s;
-    -webkit-transition:                     transform 2s ease-in-out, visibility 0s linear 0s;
+    /* Required - show the arriving form immediately. The duration matches --pwa_slide. */
+    transition:                             transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear 0s;
+    -webkit-transition:                     transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear 0s;
 }
 
 .closed {
@@ -77,82 +81,49 @@ export const animation : CSSResult = css`
 }
 
 @media (prefers-reduced-motion: reduce) {
-    :host,
-    .content,
-    .opened,
-    .closed {
-        transition-duration:                0s;
-        transition-delay:                   0s;
-        -webkit-transition-duration:        0s;
-        -webkit-transition-delay:           0s;
-        animation-duration:                 0s;
+    :host {
+        --pwa_slide:                        0s;
     }
 }
 
 `;
 
-/* Drawer shell and sheet. Imported by user-drawer only, so :host is the drawer. */
+/* Drawer shell. Imported by user-drawer only. The panel transform is the motion.
+   max-height only collapses the host after transitionend (attribute sliding). */
 export const drawerShell : CSSResult = css`
 
   :host {
-    max-height:             0px;
-    transition:             max-height 1.4s ease-in-out;
+    max-height:             0px; /* Required - layout when parked. Not a transition. */
+    visibility:             hidden;
+    pointer-events:         none;
   }
 
-  :host([drawer]) {
-    max-height:             100%;
-    transition:             max-height 1.4s ease-in-out;
+  :host([sliding]) {
+    max-height:             none; /* Required - hold the clip open. It does not ease. */
+    visibility:             visible;
+    pointer-events:         auto;
+  }
+
+  .userDrawer {
+    transition:             transform var(--pwa_slide, 2s) ease-in-out;
+    -webkit-transition:     transform var(--pwa_slide, 2s) ease-in-out;
   }
 
   .in {
-    max-height:             0px;
-    visibility:             hidden;
-    transition:             max-height 1.4s ease-in-out, visibility 0s linear 1.4s;
-  }
-
-  .spec-in {
     transform:              translate3d(0, -100%, 0);
-    transition:             transform 1.5s;
-    z-index:                -1;
-    animation-timing-function: linear;
   }
 
   .out {
-    max-height:             100%;
-    visibility:             visible;
-    transition:             max-height 1.4s ease-in-out, visibility 0s;
-  }
-
-  .spec-out {
     transform:              translate3d(0, 0, 0);
-    transition:             transform 2.2s;
-    z-index:                -1;
-    animation-timing-function: linear;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    :host,
-    .in,
-    .out,
-    .spec-in,
-    .spec-out {
-      transition-duration:  0s;
-      animation-duration:   0s;
-    }
   }
 
 `;
 
-/* user-login host. The animation attribute is not set. Values match the shell. */
+/* user-login host. The animation attribute is not set. No max-height ease. */
 export const hostCollapse : CSSResult = css`
-
-  :host {
-    transition:             max-height 1.4s ease-in-out;
-  }
 
   :host([animation]) {
     max-height:             100%;
-    transition:             max-height 1.4s ease-in-out;
   }
 
 `;

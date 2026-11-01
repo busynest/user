@@ -1,6 +1,6 @@
 # Drawer login and sign-up slide
 
-The form swap is a transform. It is not a `max-height` animation. The shell that opens and closes the drawer does use `max-height`. Those are different motions. Both live in `typescript/webcomponents/css/animation.ts`.
+The form swap and the drawer open/close are both transforms. They share one duration, `--pwa_slide` (`2s`, `ease-in-out`), set on `:host` in `typescript/webcomponents/css/animation.ts`. `max-height` only parks the host. It does not ease.
 
 ## How the form swap works
 
@@ -10,11 +10,11 @@ The open form (class `opened`) is `position: relative` and `transform: translate
 
 The closed form (class `closed`) is `position: absolute` at `top: 0; left: 0`, with `width: 100%` and `height: auto`. Absolute removes it from the row, so it does not stretch the panel. It is translated `translate3d(0, -100%, 0)`. A percentage in `translate` is a percentage of the element itself, so `-100%` moves it up by its own height, just outside the clip.
 
-The transform runs for `2s` with `ease-in-out` in both directions. The arriving form moves from `-100%` to `0`. The leaving form moves from `0` to `-100%`. Both travel upward through the same cell. `opened` is `z-index: 3` and `closed` is `z-index: 2`, so the arriving form paints on top.
+The transform runs for `var(--pwa_slide, 2s)` with `ease-in-out` in both directions. The arriving form moves from `-100%` to `0`. The leaving form moves from `0` to `-100%`. Both travel upward through the same cell. `opened` is `z-index: 3` and `closed` is `z-index: 2`, so the arriving form paints on top.
 
-The leaving form is hidden when that transform ends. There is no `transitionend` listener. `.content` sets `transition: transform 2s ease-in-out, visibility 0s linear 2s`. Visibility duration is `0s` and its delay is `2s`, so visibility snaps to `hidden` at the same moment the transform finishes. `.opened` overrides that with `visibility 0s linear 0s`, so the arriving form is shown immediately. `pointer-events: none` and the `inert` attribute are separate from the paint. `inert` keeps the off-screen form out of the tab order.
+The leaving form is hidden when that transform ends. `.content` sets `transition: transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear var(--pwa_slide, 2s)`. Visibility duration is `0s` and its delay is the slide, so visibility snaps to `hidden` at the same moment the transform finishes. `.opened` overrides that with `visibility 0s linear 0s`, so the arriving form is shown immediately. `pointer-events: none` and the `inert` attribute are separate from the paint. `inert` keeps the off-screen form out of the tab order.
 
-`prefers-reduced-motion: reduce` sets `transition-duration` and `transition-delay` to `0s` on `.content`, `.opened`, and `.closed`. The swap is instant, and the visibility wait does not linger.
+`prefers-reduced-motion: reduce` sets `--pwa_slide` to `0s` on `:host`. The swap is instant, and the visibility wait does not linger.
 
 ### What toggles it
 
@@ -34,8 +34,25 @@ Each `change()` dispatches `universalToggle(this.source)`. Inside the drawer, `s
 
 These do not run the form swap:
 
-- Attribute `drawer`, and classes `in` / `out` and `spec-in` / `spec-out`, open and close the shell.
+- Attribute `drawer`, class `out` / `in` on `.userDrawer`, and attribute `sliding` open and close the shell. See below.
+- Classes `spec-in` and `spec-out` follow the open flag. They do not transform.
 - Attribute `on` on `.spec` is `display`. It shows the logged-out block. It is not a slide.
+
+## How the drawer opens and closes
+
+`:host` is the clip (`overflow: hidden`). `.userDrawer` is the sheet, header included, so the whole drawer moves together.
+
+- Parked: class `in`, `transform: translate3d(0, -100%, 0)`. The host is `max-height: 0`, `visibility: hidden`, `pointer-events: none`, and the section is `inert`.
+- Open: class `out`, `transform: translate3d(0, 0, 0)`, over `--pwa_slide` `ease-in-out`.
+- Close: class `in` again, the same transform back up, same duration, same ease.
+
+`max-height` does not transition. While attribute `sliding` is set it is `none`, so the clip is as tall as the sheet and the rising or falling panel stays visible. When `sliding` drops it is `0px`, which only removes the parked box. A snap between `0px` and `none` is not interpolable, and it is not given a duration, so it cannot skew the ease.
+
+`sliding` turns on in the same turn the drawer opens. `visibility`, `pointer-events`, and `inert` come on with it (delay `0`). The class `out` is applied on the next frame, after the parked transform has been painted inside the open clip, so the browser has a from-value and the 2s run can start.
+
+`sliding` turns off when `.userDrawer` fires `transitionend` for `transform` and the drawer is closed. That is `--pwa_slide` after the close starts, not a second timer. `visibility`, `pointer-events`, and `inert` drop together. Descendant form transitions bubble, and those are ignored (`event.target` must be the panel).
+
+`spec-in` and `spec-out` used to translate on their own, at `1.5s` and `2.2s`, while the shell eased `max-height` for `1.4s`. Three clocks, and the `max-height` range was not the sheet's height, so the ease looked wrong. They no longer move.
 
 The same `opened` / `closed` rules slide the page login (`typescript/webcomponents/login/page.ts`, state `registerTwo`) and the four settings panels. A change to `.closed` changes all three.
 
@@ -77,15 +94,9 @@ People sometimes animate `max-height` from `0` to a huge length (`9999px`, `100d
 
 On the way open, the panel appears to finish early, and the named ease is not the ease you see. On the way closed, most of the duration is spent shrinking empty space above the content, then the content collapses in a rush at the end. `ease-in-out` over that range does not look like `ease-in-out` over the form. That is another reason `slide-out` (`100%` to `100dvh`, 2s) cannot stand in for the 2s transform.
 
-### What the drawer open and close actually use
+### What the drawer open and close uses
 
-The shell is `drawerShell` in the same file, imported only by `user-drawer`.
-
-- `:host` is `max-height: 0px`. `:host([drawer])` is `max-height: 100%`. Both transition `max-height` for `1.4s` `ease-in-out`.
-- `.userDrawer.in` is `max-height: 0` and `visibility: hidden`, with the hide delayed `1.4s`. `.userDrawer.out` is `max-height: 100%` and `visibility: visible` immediately.
-- `.spec.spec-in` translates to `translate3d(0, -100%, 0)` in `1.5s`. `.spec.spec-out` translates to `translate3d(0, 0, 0)` in `2.2s`. That is the sheet, not the forms.
-
-The `drawer` attribute sets `in` / `out` and `spec-in` / `spec-out`. Leave those numbers alone when changing the form swap. The timings table in [Slides](sliders.md) lists them.
+The shell is `drawerShell` in the same file, imported only by `user-drawer`. The motion is the `.userDrawer` transform described above. `max-height` is the parked layout (`0px` / `none`) and it does not transition. The old `1.4s` / `1.5s` / `2.2s` split is gone. The timings table in [Slides](sliders.md) lists the one duration.
 
 ## Pitfalls
 
@@ -93,25 +104,21 @@ The `drawer` attribute sets `in` / `out` and `spec-in` / `spec-out`. Leave those
 - `animation: slide-out` on `.closed` does not slide the form. Starting an animation on that element can also drop the transform transition, so the swap snaps.
 - Do not transition `height` or `max-height` to `auto` or `none`. It will snap.
 - Do not fake the form swap with a large `max-height`. The visible motion will be shorter than the duration, and the ease will look wrong.
-- The visibility delay on `.content` must equal the transform duration. Shorter, and the leaving form vanishes mid-slide. Longer, and it stays painted after it is off screen. The visibility duration stays `0s`. It snaps. It does not fade.
-- `.opened` must set its own transition with a `0s` visibility delay. If it inherits the `2s` delay, the arriving form is invisible for the whole slide.
-- The transform duration is written on both `.content` and `.opened`. Change both.
-- Reduced motion must zero `transition-delay` as well as `transition-duration`. Zeroing only the duration leaves the 2s visibility wait.
+- The visibility delay on `.content` must be `var(--pwa_slide)`, not a different literal. Shorter, and the leaving form vanishes mid-slide. Longer, and it stays painted after it is off screen. The visibility duration stays `0s`. It snaps. It does not fade.
+- `.opened` must set its own transition with a `0s` visibility delay. If it inherits the close delay, the arriving form is invisible for the whole slide.
+- Do not give `.spec` its own transform duration. That second clock is what fought the shell.
+- Do not transition `:host` `max-height`. A long range finishes visually early and the ease looks wrong. `none` does not interpolate anyway.
+- `sliding` has to stay up until the panel `transitionend`. Clearing it when `drawer` flips clips the close, because the host `max-height` becomes `0` while the sheet is still moving.
+- Reduced motion has to set `--pwa_slide: 0s`. Zeroing only `transition-duration` leaves a delay that still uses the variable.
 - A more specific `.userDrawer .content.closed` rule is how `f607737` broke the drawer while the shared rule still looked right.
 - `-100%` is the element's own height. `height: 0` on `.closed` makes that distance zero, so nothing moves.
-- `.inner` has the clip. Removing `overflow: hidden` shows the parked form.
-- There is no `--pwa_slide_time`. `6959a29` removed it. Do not put `calc()` back on the transform.
+- `.inner` clips the forms. `:host` clips the drawer. Removing either shows the parked piece.
+- Do not bring back `--pwa_slide_time` or `calc()` on the transform. `6959a29` removed that. `--pwa_slide` is a single time, not a formula.
 
 ## Changing the duration
 
-Use one time for the form swap, for example `1.6s`.
+Change one value: `--pwa_slide` on `:host` in `animation.ts`. The drawer transform, the form transform, and the form visibility delay all read it. `sliding` ends on `transitionend`, so it follows whatever that time is. Leave the visibility duration at `0s`, and leave `.opened` at `visibility 0s linear 0s`.
 
-1. In `animation.ts`, set the `transform` duration on `.content` and on `.opened` to that time.
-2. Set the visibility delay on `.content` (the `2s` in `visibility 0s linear 2s`) to the same time. Leave the visibility duration at `0s`.
-3. Leave `.opened` at `visibility 0s linear 0s`.
-4. Do not edit `drawerShell`. The shell stays `1.4s`, `1.5s`, and `2.2s`.
-5. Keep the reduced-motion block zeroing duration and delay.
-6. Update the timings table in `docs/sliders.md` and the `2s` figures in this file.
-7. Rebuild so `base/webcomponents/css/animation.js`, `source/pwa-auth.js`, and `website/javascript/pwa-auth.js` match.
+Update the `2s` figures in `docs/sliders.md` and in this file. Rebuild so `base/webcomponents/css/animation.js`, `source/pwa-auth.js`, and `website/javascript/pwa-auth.js` match.
 
-Then open the drawer, click `login with existing email`, and click `create a new account`. Each direction should show both forms during the motion, and the leaving form should disappear only at the end.
+Then open the drawer and close it. Each direction should take the new time, header and forms together, and the host should collapse only at the end. Click `login with existing email` and `create a new account`. Each direction should show both forms during the motion, and the leaving form should disappear only at the end.
