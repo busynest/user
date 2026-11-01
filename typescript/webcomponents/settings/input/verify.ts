@@ -49,15 +49,29 @@ export class EmailVerify extends connect(store)(LitElement) {
       verifiedStyle,
       css`
 
-        :host { display: block; }
+        :host {
+          display:            block;
+          box-sizing:         border-box;
+          width:              100%;
+          min-width:          0;
+          max-width:          min(100%, var(--pwa_max_width, 400px));
+          margin-inline:      auto;
+          padding-inline:     var(--pwa_inset, 0px);
+        }
 
         .notice {
-          margin:               4px 16px 8px;
-          padding:              14px 16px 16px;
+          margin:               4px 0 8px;
+          padding:              14px 0 16px;
           color:                var(--pwa_label_text_color, #1c2430);
-          background:           var(--pwa_nav_on_background, #f3efe6);
+          background:           var(--pwa_nav_on_background, #f2f2f2);
           border:               1px solid var(--pwa_line_color, #e3daca);
           border-radius:        10px;
+        }
+
+        .lead,
+        .row {
+          padding:              0;
+          box-sizing:           border-box;
         }
 
         .lead {
@@ -114,9 +128,12 @@ export class EmailVerify extends connect(store)(LitElement) {
         }
 
         button.action-button {
-          display:              inline-block;
-          margin:               12px 0 0;
-          max-width:            100%;
+          display:              block;
+          /* Required - pull across the notice border so the button matches the field column. */
+          width:                calc(100% + 2px);
+          max-width:            none;
+          min-width:            0;
+          margin:               12px -1px 0;
         }
 
         button.action-button:disabled {

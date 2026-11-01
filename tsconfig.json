@@ -32,7 +32,7 @@
 
     "types": ["node"]
   },
-  "include": ["typescript/export/pwa-auth.ts"],
+  "include": ["typescript/export/*.ts"],
   "exclude": [
     "typescript/**/*.test.ts",
     "typescript/emulator/**",

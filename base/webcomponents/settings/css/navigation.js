@@ -37,7 +37,7 @@ export const navigation = css `
   nav > ul > li > button[on] {
 
     color: var(--pwa_nav_highlight_color, #1c2430);
-    background-color: var(--pwa_nav_on_background, #f3efe6);
+    background-color: var(--pwa_nav_on_background, #f2f2f2);
 
   }
 
@@ -64,7 +64,7 @@ export const navigation = css `
 
   section {
     align-content:          start; /* Required - tabs keep each button under its fields */
-    background-color:       var(--section_background_color, #fffdf8);
+    background-color:       var(--pwa_background, var(--section_background_color, #fff));
   }
 
 
@@ -74,7 +74,7 @@ export const navigation = css `
     font-weight:      600;
     font-size:        1.35rem;
     margin:           0;
-    padding:          20px 16px 4px;
+    padding:          20px var(--pwa_inset, 0px) 4px;
   }
 
 `;

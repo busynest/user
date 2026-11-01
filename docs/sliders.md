@@ -1,22 +1,33 @@
 # Slides
 
-The slide is one module: `typescript/webcomponents/css/animation.ts`. `user-drawer`, `user-login`, and `user-settings` import it.
+The drawer, the page login, and settings each slide on their own. Opening one does not move the others. Nothing moves on the first paint.
 
-Three parts.
+Three components slide, and each one owns its roll. `user-drawer` (`typescript/webcomponents/drawer/drawer.ts`), `user-login` (`typescript/webcomponents/login/page.ts`), and `user-settings` (`typescript/webcomponents/settings/settings.ts`) do not import a shared roll helper. There is no `css/roll.ts`.
 
-- The container carries `max-height`.
-- The moving child carries `transform`.
-- Closed content runs both. Class `closed` translates `translate3d(0, -102%, 0)` and plays `slide-out`, which animates `max-height`.
+`animation.ts` is the form swap only: `--pwa_slide`, `.opened` / `.closed`, and the drawer shell's closed backstop. Settings does not import it. The full roll write-up is [The roll](drawer-slide.md#the-roll).
+
+The fields are flush with the element. Spacing belongs to the page: `--pwa_inset` defaults to `0`. The form column fills a narrow host and, once the host is wider than `--pwa_max_width` (`400px`), stays that wide and centers. The page login column centers under the full-width heading. Signed-in drawer links use that same column. Set either variable on `user-drawer`, `user-login`, `user-settings`, or `email-reset`. The drawer header and the settings tabs stay full width. Each host is `display: block` with `width: 100%` and `min-width: 0` (`user-icon` is `width: fit-content`, `max-width: 100%`). A resize while a roll is in motion remeasures that component and eases from the current clip height with the sheet bottom still on the clip.
+
+Two motions, one duration, per component.
+
+- The drawer rolls. `.drawer-clip` eases `height` and `max-height` from `0px` to the measured content height and back. `section.userDrawer` translates on that same clock, so the sheet's bottom stays on the clip's bottom.
+- Closed forms share one grid cell. Class `closed` is `position: absolute` and translates `translate3d(0, -100%, 0)`. Once `.inner` has class `motion`, `visibility` waits out `--pwa_slide`, then hides. Settings panels do not use these classes.
 
 ## How it works
 
-The slide is two motions that run together. The container's `max-height` grows or shrinks the space. The child's `transform` slides the panel into that space. `inner` clips, so it looks like it comes from behind an edge.
+The clip is an element in that component's template (`overflow: hidden`, `display: block`). The sheet is the block that should ride the bottom edge. `styleMap` binds `height`, `max-height`, `transform`, and `transition` from that component's state. `classMap` binds `opened` and `closed`.
 
-On close, visibility is held for `1.4s`, so the panel does not vanish before the motion ends.
+The first render is the resting state and `transition: none`. The drawer binds shut (`0px`, sheet `-100%`). The page login binds the card at `height: auto` with the signup form already `closed`. Settings binds the active tab at `auto`, or the signed-out line when nobody is logged in. Nothing eases on that paint. Class `motion` is added on that component's `.inner` afterwards, and it only arms the form swap. The roll's transition is written later, inside that component's own ease, when the user actually changes something.
 
-Closed content translates to `-102%` and runs `slide-out`, so height and position change together.
+JS measures the height in px and the binding eases from the current px to the next px. The range is the real height, so the ease is not crushed into the start of a huge range. At progress `p`, open from 0, the clip is `p` times the height and the sheet is shifted `(p - 1)` times its height. A height change that is not from 0 uses clip `A + (B - A) * p` and `translateY = clip − sheetHeight`.
 
-If either motion loses its timing, they fall out of step and the slide snaps.
+After the clip's own `max-height` `transitionend`, the binding becomes `height: auto` and `max-height: none`. The listener requires `event.target` to be that clip. Closing measures again, locks that px, and eases both heights to `0` and the transform back to `-100%`. A drawer form swap, a page-login switch, and a settings tab each run only their own ease.
+
+`sliding` on the drawer turns on as the open starts. It turns off when the drawer's clip reaches 0. That same moment drops `visibility`, `pointer-events`, and `inert`. The host's `max-height: 0` backstop has no transition, so it cannot play an open-to-closed ease at load.
+
+The drawer and the page login still swap login and sign-up inside `.inner`. That pair shares one grid cell: the open form is `position: relative` and sets the height, the closed form is absolute and translated up. `.inner` clips it. Settings tabs do not use that pair. Their panel area is their own roll. The nav stays outside it.
+
+`@keyframes slide-out` only changes `max-height`. It is not the form swap. Playing it on `.closed`, or leaving `.closed` in flow with `position: relative`, moves the row while the transform runs and the forms snap instead of sliding past each other.
 
 ## Elements
 
@@ -24,43 +35,39 @@ On the drawer, inside `.userDrawer`:
 
 `spec` → `wrapper` → `inner` → `content`
 
-`wrapper` does not transition. `inner` clips the slide.
+`wrapper` does not transition. `inner` clips the form swap. `.drawer-clip` clips the roll.
 
 | Piece | Element | What moves |
 |---|---|---|
-| Shell | `:host`, and `.userDrawer` with `in` / `out` | `max-height` |
-| Sheet | `.spec` with `spec-in` / `spec-out` | `transform` |
-| Forms and settings panels | `.content` with `opened` / `closed` | `transform`, and `slide-out` on `closed` |
+| Drawer clip | `.drawer-clip` | `0px` ↔ measured px, this host's `--pwa_slide` |
+| Drawer sheet | `section.userDrawer` | lockstep `translateY`, same clock |
+| Drawer and page forms | `.content` with `opened` / `closed` | `transform` `--pwa_slide` after `motion`, then `visibility` |
+| Settings panels | `.settings-clip` / `.settings-sheet` | that component's own roll |
+| Page login card | `.login-clip` / `section.service` | that component's own roll, on `registerTwo` |
 
-Page login uses `spec` / `wrapper` / `inner` / `content` for the form swap. It has no collapsing shell. The four settings panels (`profile`, `verification`, `password`, `delete`) are `.content` inside `wrapper` / `inner`. They have no `.spec`.
-
-`user-login` host uses the same max-height timing as the drawer shell. Nothing sets the `animation` attribute, so that host does not collapse.
+Page login uses `spec` / `wrapper` / `inner` / `content` for the form swap, and rolls `section.service` when that swap changes the card height. The four settings panels (`profile`, `verification`, `password`, `delete`) sit in `.settings-sheet`. The inactive ones are `hidden`. The nav is outside the roll.
 
 ## Triggers
 
-- Attribute `drawer` on `user-drawer`. Classes `in` and `out` on `.userDrawer`. That opens and closes the shell.
-- Classes `spec-in` and `spec-out` on `.spec`. Same flag. The sheet moves.
-- Classes `opened` and `closed` on `.content`. Drawer and page forms follow sign-in versus sign-up. Settings panels follow the tab.
+- Attribute `drawer` on `user-drawer`, after the first update, rolls `.drawer-clip`. Attribute `sliding` holds `visibility`, `pointer-events`, and `inert` until that clip's `max-height` `transitionend`. The `[drawer]` attribute does not set a transform.
+- Class `motion` on `.inner` arms `.content` transitions. It is absent on the first paint. The drawer and the page login each set their own.
+- Classes `opened` and `closed` on `.content`, bound with `classMap`. Drawer forms follow `registerOne`. Page forms follow `registerTwo`. Settings panels follow the tab by rolling `.settings-clip`, not by those classes.
 - Attribute `on` on `.spec` is `display`. It is not a slide.
-- Attribute `animation` on `user-login` would open the host `max-height`. It is not set.
 
 ## Timings
 
-Durations are literals. The shell beat is `1.4s`. Leave it there.
+`--pwa_slide` is `2s` on each component's `:host`. The drawer and the page login set it in `animation.ts`. Settings sets it in `settings.ts`. Every transform duration and every close delay in that component reads its own variable. Do not add a second number, and do not put the variable on `:root`.
 
 | Piece | Duration | Easing |
 |---|---|---|
-| Host and `.in` / `.out` `max-height` | `1.4s` | `ease-in-out` |
-| `.in` visibility delay | `1.4s` | `linear` |
-| `.spec-out` transform, open | `2.2s` | `ease` |
-| `.spec-in` transform, close | `1.5s` | `ease` |
-| `.content` transform | `2s` | `ease-in-out` |
-| `slide-out` on `.closed` | `2s` | `ease-out` |
+| Clip `height` / `max-height` and sheet transform | `--pwa_slide` (`2s`) | `ease-in-out` |
+| Form-swap height glide | `--pwa_slide` (`2s`) | `ease-in-out` |
+| `sliding` drop (`visibility`, `pointer-events`, `inert`) | on the clip's `transitionend` | n/a |
+| `.content` transform, after `motion` | `--pwa_slide` (`2s`) | `ease-in-out` |
+| `.content` visibility delay when closing | `--pwa_slide` (`2s`) | `linear` |
 
-The sheet moves from `translate3d(0, -100%, 0)` to `translate3d(0, 0, 0)`. Opening was measured at `2.2s` (`.spec-out`). Closing uses `.spec-in` at `1.5s`.
-
-No slide timing is a custom property. Hosts do not set one.
+Open and close are the same duration. The first paint uses neither.
 
 ## Reduced motion
 
-`prefers-reduced-motion: reduce` sets `transition-duration` and `animation-duration` to `0s` on the shell, the sheet, and `.content`. Only inside that media query. It does not go through a custom property.
+`prefers-reduced-motion: reduce` sets that host's `--pwa_slide` to `0s`. The roll also skips the ease and writes the resting binding with `transition: none`. Only inside that media query, and only on that host.

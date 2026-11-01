@@ -25,28 +25,21 @@
   --pwa_drawer_z-index:           3;
   --pwa_drawer_border-radius:     0 0 18px 18px;
   --pwa_drawer_text_color:        #1c2430;
-  --pwa_drawer_background_color:  #fffdf8;
 
   /* <user-settings> */
-  --pwa_settings_background_color: #fffdf8;
   --pwa_divider_color:            #e3daca;
   --pwa_nav_button_color:         #4e5b6a;
   --pwa_nav_highlight_color:      #1c2430;
   --pwa_header_color:             #1c2430;
   --pwa_label_text_color:         #1c2430;
-  --pwa_input_background_color:   #f3efe6;
 
   /* buttons */
   --pwa_action_text_color:        #fff;
   --pwa_action_background_color:  #2a6b45;
   --pwa_action_border_color:      #214f34;
 
-  /* <user-login> */
-  --section_background_color:     #fffdf8;
-
   /* Optional - rules shared by the drawer, fields, and tabs */
   --pwa_line_color:               #e3daca;
   --pwa_close_color:              #9a3b32;
-  --pwa_nav_on_background:        #f3efe6;
 
 }

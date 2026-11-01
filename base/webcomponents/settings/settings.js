@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { css, html, LitElement } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../store.js';
 import { navigateAuth } from '../../redux/frontend.js';
@@ -20,7 +21,6 @@ import './input/password.js';
 import './input/delete.js';
 import './input/verify.js';
 import { listStyle } from '../form/css/list.js';
-import { animation } from '../css/animation.js';
 import { tapStyle } from '../css/tap.js';
 import { applyFirebaseConfig } from '../../firebase/attribute.js';
 import { accountTitle } from '../form/letters.js';
@@ -32,8 +32,24 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         this.name = '';
         this.email = '';
         this.login = false;
+        this.clipHeight = 'auto';
+        this.sheetShift = 'none';
+        this.rollMotion = false;
+        this.booted = false;
+        this.heldHeight = null;
+        this.columnWidth = 0;
+        this.columnObserver = null;
         this.onSubmit = (event) => {
             event.preventDefault();
+        };
+        this.onClipEnd = (event) => {
+            if (!(event instanceof TransitionEvent))
+                return;
+            if (event.target !== event.currentTarget)
+                return;
+            if (event.propertyName !== 'max-height')
+                return;
+            this.rest();
         };
     }
     connectedCallback() {
@@ -43,6 +59,8 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
     }
     disconnectedCallback() {
         this.removeEventListener('submit', this.onSubmit);
+        this.columnObserver?.disconnect();
+        this.columnObserver = null;
         super.disconnectedCallback();
     }
     onTabKey(event) {
@@ -67,13 +85,37 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         return [
             navigation,
             listStyle,
-            animation,
             tapStyle,
             css `
 
       :host {
-        display:          grid;
-        background-color: var(--pwa_settings_background_color, #fffdf8);
+        display:          block;
+        box-sizing:       border-box;
+        width:            100%;
+        min-width:        0; /* Required - shrink inside a flex or grid track */
+        max-width:        100%;
+        /* Required - this component's clock. It is not the drawer or the page login. */
+        --pwa_slide:      2s;
+        background-color: var(--pwa_background, var(--pwa_settings_background_color, #fff));
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        :host { --pwa_slide: 0s; }
+      }
+
+      /* Required - this settings roll only. Block, so the sheet is not stretched. */
+      .settings-clip {
+        display:          block;
+        overflow:         hidden;
+        min-height:       0;
+      }
+
+      .settings-sheet {
+        display:          block;
+        height:           auto;
+        width:            100%;
+        box-sizing:       border-box;
+        background-color: var(--pwa_background, var(--pwa_settings_background_color, #fff));
       }
 
       form {
@@ -86,7 +128,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
 
       .signed-out {
         margin:           0;
-        padding:          20px 16px;
+        padding:          20px var(--pwa_inset, 0px);
         text-align:       center;
         color:            var(--pwa_label_text_color, #1c2430);
         font-size:        0.95rem;
@@ -105,6 +147,114 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
     }
     openTab(name) {
         store.dispatch(navigateAuth(name));
+    }
+    willUpdate(changed) {
+        if (!this.booted || !this.login || changed.has('login'))
+            return;
+        if (!changed.has('profileTopic'))
+            return;
+        const clip = this.clip();
+        if (!clip)
+            return;
+        this.heldHeight = Math.ceil(clip.getBoundingClientRect().height);
+        this.rollMotion = false;
+        this.clipHeight = `${this.heldHeight}px`;
+        this.sheetShift = 'translate3d(0, 0, 0)';
+    }
+    updated(changed) {
+        const boot = !this.booted;
+        this.booted = true;
+        if (boot)
+            this.watchColumn();
+        if (boot || !changed.has('profileTopic') || !this.login || changed.has('login'))
+            return;
+        const clip = this.clip();
+        const sheet = this.sheet();
+        if (!clip || !sheet || this.heldHeight == null)
+            return;
+        const from = this.heldHeight;
+        this.heldHeight = null;
+        const to = Math.ceil(sheet.getBoundingClientRect().height);
+        if (Math.abs(to - from) > 1)
+            this.rollBetween(clip, sheet, from, to, to);
+        else
+            this.rest();
+    }
+    watchColumn() {
+        if (typeof ResizeObserver === 'undefined')
+            return;
+        this.columnObserver = new ResizeObserver(() => {
+            const width = Math.round(this.getBoundingClientRect().width);
+            if (!width || width === this.columnWidth)
+                return;
+            this.columnWidth = width;
+            if (!this.rollMotion)
+                return;
+            const clip = this.clip();
+            const sheet = this.sheet();
+            if (!clip || !sheet)
+                return;
+            const from = Math.ceil(clip.getBoundingClientRect().height);
+            const sheetH = Math.ceil(sheet.getBoundingClientRect().height);
+            this.rollBetween(clip, sheet, from, sheetH, sheetH);
+        });
+        this.columnObserver.observe(this);
+    }
+    clip() {
+        return this.shadowRoot?.querySelector('.settings-clip') ?? null;
+    }
+    sheet() {
+        return this.shadowRoot?.querySelector('.settings-sheet') ?? null;
+    }
+    reduced() {
+        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+    rest() {
+        this.rollMotion = false;
+        this.clipHeight = 'auto';
+        this.sheetShift = 'none';
+    }
+    clipStyle() {
+        const travel = this.rollMotion && !this.reduced();
+        return {
+            height: this.clipHeight,
+            maxHeight: this.clipHeight === 'auto' ? 'none' : this.clipHeight,
+            transition: travel
+                ? 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out'
+                : 'none',
+        };
+    }
+    sheetStyle() {
+        const travel = this.rollMotion && !this.reduced();
+        return {
+            transform: this.sheetShift,
+            transition: travel ? 'transform var(--pwa_slide, 2s) ease-in-out' : 'none',
+        };
+    }
+    rollBetween(clip, sheet, from, to, sheetHeight) {
+        const start = from - sheetHeight;
+        const end = to - sheetHeight;
+        const shift = (px) => `translate3d(0, ${px}px, 0)`;
+        if (this.reduced() || Math.abs(to - from) <= 1) {
+            this.rest();
+            return;
+        }
+        const travel = 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out';
+        const move = 'transform var(--pwa_slide, 2s) ease-in-out';
+        clip.style.transition = 'none';
+        sheet.style.transition = 'none';
+        clip.style.height = `${Math.max(0, from)}px`;
+        clip.style.maxHeight = `${Math.max(0, from)}px`;
+        sheet.style.transform = shift(start);
+        void clip.offsetHeight;
+        clip.style.transition = travel;
+        sheet.style.transition = move;
+        clip.style.height = `${Math.max(0, to)}px`;
+        clip.style.maxHeight = `${Math.max(0, to)}px`;
+        sheet.style.transform = shift(end);
+        this.rollMotion = true;
+        this.clipHeight = `${Math.max(0, to)}px`;
+        this.sheetShift = shift(end);
     }
     render() {
         if (!this.login) {
@@ -173,8 +323,11 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
       </nav>
 
       
-      <div class=     "wrapper">
-        <div class=   "inner">
+      <div
+        class="settings-clip"
+        style=${styleMap(this.clipStyle())}
+        @transitionend=${this.onClipEnd}>
+          <div class="settings-sheet" style=${styleMap(this.sheetStyle())}>
 
 
           <!-- Page 1: Profile -->
@@ -183,7 +336,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             role="tabpanel"
             aria-hidden="${this.profileTopic === 'profile' ? 'false' : 'true'}"
             ?inert="${this.profileTopic !== 'profile'}"
-            class="content ${this.profileTopic === 'profile' ? 'opened' : 'closed'}">
+            ?hidden="${this.profileTopic !== 'profile'}">
 
             <!-- Display Username -->
             <h2>${title}</h2>
@@ -199,7 +352,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             role="tabpanel"
             aria-hidden="${this.profileTopic === 'verification' ? 'false' : 'true'}"
             ?inert="${this.profileTopic !== 'verification'}"
-            class="content ${this.profileTopic === 'verification' ? 'opened' : 'closed'}">
+            ?hidden="${this.profileTopic !== 'verification'}">
 
             <!-- Page Title -->
             <h2>Contact Information</h2>
@@ -221,7 +374,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             role="tabpanel"
             aria-hidden="${this.profileTopic === 'password' ? 'false' : 'true'}"
             ?inert="${this.profileTopic !== 'password'}"
-            class="content ${this.profileTopic === 'password' ? 'opened' : 'closed'}">
+            ?hidden="${this.profileTopic !== 'password'}">
 
             <!-- Page Title -->
             <h2>Password</h2>
@@ -237,7 +390,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             role="tabpanel"
             aria-hidden="${this.profileTopic === 'delete' ? 'false' : 'true'}"
             ?inert="${this.profileTopic !== 'delete'}"
-            class="content ${this.profileTopic === 'delete' ? 'opened' : 'closed'}">
+            ?hidden="${this.profileTopic !== 'delete'}">
 
             <!-- Page Title -->
             <h2>Delete Account</h2>
@@ -247,7 +400,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
 
           </section>
 
-        </div>
+          </div>
       </div>
 
     `;
@@ -273,6 +426,18 @@ __decorate([
     state(),
     __metadata("design:type", Object)
 ], UserSettings.prototype, "login", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserSettings.prototype, "clipHeight", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserSettings.prototype, "sheetShift", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserSettings.prototype, "rollMotion", void 0);
 UserSettings = __decorate([
     customElement('user-settings'),
     __metadata("design:paramtypes", [])

@@ -4,7 +4,7 @@ import { css, CSSResult, html, TemplateResult } from 'lit';
 export const statusStyle: CSSResult = css`
 
   .status {
-    margin:                 0 16px 8px;
+    margin:                 0 0 8px;
     color:                  var(--pwa_label_text_color, #1c2430);
     font-size:              0.95rem;
     line-height:            1.4;
@@ -25,10 +25,23 @@ export const statusStyle: CSSResult = css`
   .status.error { color: var(--pwa_close_color, #9a3b32); }
 
   .pair {
-    display:                grid;
-    grid-template-columns:  minmax(0, 1fr) auto;
-    gap:                    8px;
-    align-items:            center;
+    display:                block;
+    position:               relative;
+    min-width:              0;
+  }
+
+  /* Required - Show sits in the field so the input border matches the column. */
+  .pair > input {
+    padding-right:          4.75rem;
+  }
+
+  .pair > .reveal {
+    position:               absolute;
+    top:                    0;
+    right:                  6px;
+    height:                 48px;
+    min-height:             0;
+    margin:                 0;
   }
 
 `;

@@ -7,8 +7,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { html, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../store.js';
 import { authStyles } from './css/auth.js';
@@ -34,7 +36,24 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
         this._notice = "";
         this._log = false;
         this._sign = false;
+        this.motion = false;
+        this.clipHeight = 'auto';
+        this.sheetShift = 'none';
+        this.rollMotion = false;
+        this.booted = false;
         this.stopNotice = null;
+        this.heldHeight = null;
+        this.columnWidth = 0;
+        this.columnObserver = null;
+        this.onClipEnd = (event) => {
+            if (!(event instanceof TransitionEvent))
+                return;
+            if (event.target !== event.currentTarget)
+                return;
+            if (event.propertyName !== 'max-height')
+                return;
+            this.rest();
+        };
     }
     connectedCallback() {
         applyFirebaseConfig(this);
@@ -45,6 +64,8 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
     disconnectedCallback() {
         this.stopNotice?.();
         this.stopNotice = null;
+        this.columnObserver?.disconnect();
+        this.columnObserver = null;
         super.disconnectedCallback();
     }
     stateChanged(state) {
@@ -54,6 +75,119 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
         this._log = state.frontend.login;
         this._sign = state.frontend.registerTwo;
     }
+    willUpdate(changed) {
+        if (!this.booted)
+            return;
+        if (!changed.has('_sign') && !changed.has('_log'))
+            return;
+        if (changed.has('_sign'))
+            this.motion = true;
+        const clip = this.clip();
+        if (!clip)
+            return;
+        this.heldHeight = Math.ceil(clip.getBoundingClientRect().height);
+        this.rollMotion = false;
+        this.clipHeight = `${this.heldHeight}px`;
+        this.sheetShift = 'translate3d(0, 0, 0)';
+    }
+    updated(changed) {
+        const boot = !this.booted;
+        this.booted = true;
+        if (boot) {
+            this.watchColumn();
+            requestAnimationFrame(() => { this.motion = true; });
+            return;
+        }
+        if (!changed.has('_sign') && !changed.has('_log'))
+            return;
+        const clip = this.clip();
+        const sheet = this.sheet();
+        if (!clip || !sheet || this.heldHeight == null)
+            return;
+        const from = this.heldHeight;
+        this.heldHeight = null;
+        const to = Math.ceil(sheet.getBoundingClientRect().height);
+        if (Math.abs(to - from) > 1)
+            this.rollBetween(clip, sheet, from, to, to);
+        else
+            this.rest();
+    }
+    watchColumn() {
+        if (typeof ResizeObserver === 'undefined')
+            return;
+        this.columnObserver = new ResizeObserver(() => {
+            const width = Math.round(this.getBoundingClientRect().width);
+            if (!width || width === this.columnWidth)
+                return;
+            this.columnWidth = width;
+            if (!this.rollMotion)
+                return;
+            const clip = this.clip();
+            const sheet = this.sheet();
+            if (!clip || !sheet)
+                return;
+            const from = Math.ceil(clip.getBoundingClientRect().height);
+            const sheetH = Math.ceil(sheet.getBoundingClientRect().height);
+            this.rollBetween(clip, sheet, from, sheetH, sheetH);
+        });
+        this.columnObserver.observe(this);
+    }
+    clip() {
+        return this.shadowRoot?.querySelector('.login-clip') ?? null;
+    }
+    sheet() {
+        return this.shadowRoot?.querySelector('.service') ?? null;
+    }
+    reduced() {
+        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+    rest() {
+        this.rollMotion = false;
+        this.clipHeight = 'auto';
+        this.sheetShift = 'none';
+    }
+    clipStyle() {
+        const travel = this.rollMotion && !this.reduced();
+        return {
+            height: this.clipHeight,
+            maxHeight: this.clipHeight === 'auto' ? 'none' : this.clipHeight,
+            transition: travel
+                ? 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out'
+                : 'none',
+        };
+    }
+    sheetStyle() {
+        const travel = this.rollMotion && !this.reduced();
+        return {
+            transform: this.sheetShift,
+            transition: travel ? 'transform var(--pwa_slide, 2s) ease-in-out' : 'none',
+        };
+    }
+    rollBetween(clip, sheet, from, to, sheetHeight) {
+        const start = from - sheetHeight;
+        const end = to - sheetHeight;
+        const shift = (px) => `translate3d(0, ${px}px, 0)`;
+        if (this.reduced() || Math.abs(to - from) <= 1) {
+            this.rest();
+            return;
+        }
+        const travel = 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out';
+        const move = 'transform var(--pwa_slide, 2s) ease-in-out';
+        clip.style.transition = 'none';
+        sheet.style.transition = 'none';
+        clip.style.height = `${Math.max(0, from)}px`;
+        clip.style.maxHeight = `${Math.max(0, from)}px`;
+        sheet.style.transform = shift(start);
+        void clip.offsetHeight;
+        clip.style.transition = travel;
+        sheet.style.transition = move;
+        clip.style.height = `${Math.max(0, to)}px`;
+        clip.style.maxHeight = `${Math.max(0, to)}px`;
+        sheet.style.transform = shift(end);
+        this.rollMotion = true;
+        this.clipHeight = `${Math.max(0, to)}px`;
+        this.sheetShift = shift(end);
+    }
     static get styles() {
         return [
             authStyles,
@@ -62,14 +196,31 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
             listStyle,
             animation,
             tapStyle,
-            noticeStyle
+            noticeStyle,
+            css `
+      /* Required - this card's roll only. Block, so the sheet is not stretched to the clip. */
+      .login-clip {
+        display:            block;
+        overflow:           hidden;
+        min-height:         0;
+      }
+
+      .login-clip > .service {
+        height:             auto;
+        align-self:         start;
+      }
+    `
         ];
     }
     ;
     render() {
         return html `
 
-    <section class="service" part="panel">
+    <div
+      class="login-clip"
+      style=${styleMap(this.clipStyle())}
+      @transitionend=${this.onClipEnd}>
+    <section class="service" part="panel" style=${styleMap(this.sheetStyle())}>
 
       <header part="header">
         <h3 part="title">${this._log ? accountTitle(this._name, this._email) : this._sign === this.subscribe ? 'Login' : 'Subscribe'}</h3>
@@ -81,7 +232,7 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
         ?on=            "${this._log === false}">
 
         <div class=     "wrapper">
-          <div class=   "inner">
+          <div class=${classMap({ inner: true, motion: this.motion })}>
 
             <!-- Required - subscribe chooses the open form -->
             <form-login
@@ -89,7 +240,11 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
               ?hide-google= "${this.hideGoogle}"
               exportparts=  "email: login-email, password: login-password, submit: login-submit, switch: login-switch, forgot: login-forgot, status: login-status, reveal: login-reveal, google: login-google"
               ?inert=       "${this._sign !== this.subscribe}"
-              class=        "content ${this._sign === this.subscribe ? 'opened' : 'closed'} "></form-login>
+              class=        ${classMap({
+            content: true,
+            opened: this._sign === this.subscribe,
+            closed: this._sign !== this.subscribe,
+        })}></form-login>
 
             <!-- Sign-up State -->
             <form-signup
@@ -97,7 +252,11 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
               ?hide-google= "${this.hideGoogle}"
               exportparts=  "email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch, status: signup-status, reveal: signup-reveal, notice: signup-notice, google: signup-google"
               ?inert=       "${this._sign === this.subscribe}"
-              class=        "content ${!this._sign === this.subscribe ? 'opened' : 'closed'}"></form-signup>
+              class=        ${classMap({
+            content: true,
+            opened: !this._sign === this.subscribe,
+            closed: !this._sign !== this.subscribe,
+        })}></form-signup>
 
           </div>
         </div>
@@ -118,6 +277,7 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
       </div>
 
     </section>
+    </div>
 
     `;
     }
@@ -154,6 +314,22 @@ __decorate([
     state(),
     __metadata("design:type", Object)
 ], UserLogin.prototype, "_sign", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserLogin.prototype, "motion", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserLogin.prototype, "clipHeight", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserLogin.prototype, "sheetShift", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserLogin.prototype, "rollMotion", void 0);
 UserLogin = __decorate([
     customElement('user-login'),
     __metadata("design:paramtypes", [])

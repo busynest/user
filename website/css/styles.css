@@ -37,7 +37,8 @@ footer  { grid-area:          foot; }
 
 header {
   display:                    grid;
-  grid-template-columns:      auto 1fr auto;
+  grid-template-columns:      1fr auto;
+  align-items:                center;
   padding:                    16px;
 }
 
@@ -76,6 +77,13 @@ footer {
 
 user-icon {
   margin: auto;
+}
+
+user-drawer,
+user-login,
+user-settings,
+email-reset {
+  --pwa_inset:                16px;
 }
 
 user-login {

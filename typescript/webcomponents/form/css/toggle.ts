@@ -3,6 +3,13 @@ import { css, CSSResult } from "lit";
 export const toggleStyle: CSSResult = css`
   
   .new {
+    display:            block;
+    box-sizing:         border-box;
+    width:              100%;
+    max-width:          100%;
+    min-width:          0;
+    margin-left:        0;
+    margin-right:       0;
     border:             0;
     border-top:         1px solid var(--pwa_line_color, #e3daca);
     padding:            14px 16px;

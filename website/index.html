@@ -7,18 +7,18 @@
     <meta name="viewport"       content="width=device-width, minimum-scale=1, initial-scale=1" />
     <meta name="theme-color"    content="#272931" />
     <meta name="author"         content="Jacek Markiewicz" />
-    <meta name="description"    content="Five elements: user-icon, user-drawer, user-login, user-settings, and email-reset. pwa- events, a small API, and --pwa_ theme variables." />
+    <meta name="description"    content="Sign-in elements for your own pages." />
     <meta name="keywords"       content="login, pwa, pwa-auth, auth, firebase, user-icon, user-drawer, user-login, user-settings, email-reset, web components" />
     <meta name="referrer"       content="origin" />
     <link rel="canonical"       href="https://pwa-authentic.firebaseapp.com/" />
     <meta property="og:title"        content="pwa-auth" />
-    <meta property="og:description"  content="Five elements: user-icon, user-drawer, user-login, user-settings, and email-reset. pwa- events, a small API, and --pwa_ theme variables." />
+    <meta property="og:description"  content="Sign-in elements for your own pages." />
     <meta property="og:url"          content="https://pwa-authentic.firebaseapp.com/" />
     <meta property="og:type"         content="website" />
     <meta property="og:image"        content="https://pwa-authentic.firebaseapp.com/images/manifest/logo-512.png" />
     <meta name="twitter:card"        content="summary" />
     <meta name="twitter:title"       content="pwa-auth" />
-    <meta name="twitter:description" content="Five elements: user-icon, user-drawer, user-login, user-settings, and email-reset. pwa- events, a small API, and --pwa_ theme variables." />
+    <meta name="twitter:description" content="Sign-in elements for your own pages." />
     <link rel="manifest"        href="./manifest.json" />
     <link rel="icon"            href="./images/favicon.ico">
     <link rel="stylesheet"      href="./css/pwa-styles.css">
@@ -61,18 +61,6 @@
 
     <header>
 
-      <div style="display: grid;">
-        
-        <!-- Sponsor Me -->
-        <iframe
-          src="https://github.com/sponsors/busynest/button"
-          title="Sponsor busynest"
-          height="32"
-          width="114"
-          style="border: 0; border-radius: 6px;  margin: auto 0 auto 0;"></iframe>
-
-      </div>
-
       <span><h1>pwa-auth</h1></span>
 
       <user-icon></user-icon>
@@ -84,20 +72,19 @@
 
     <main id="main">
 
-      <p>Five elements share one session: user-icon, user-drawer, user-login, user-settings, and email-reset. Listen for pwa- events, call the small API, restyle with --pwa_ variables.</p>
+      <p>Sign-in elements for your own pages.</p>
+
+      <p><code>npm install pwa-auth lit firebase</code></p>
 
       <p class="links">
         <a href="https://www.npmjs.com/package/pwa-auth">npm</a>
         <a href="https://github.com/busynest/user">GitHub</a>
-        <a href="https://github.com/busynest/user/blob/master/intro.md">introduction</a>
-        <a href="https://github.com/busynest/user/blob/master/README.md#quick-start">quick start</a>
+        <a href="https://github.com/busynest/user/blob/master/README.md">docs</a>
       </p>
 
       <section id="drawer" style="display: grid;">
 
         <h2>Drawer Button</h2>
-
-        <p class="note">Signed out, this says Subscribe and opens the drawer. Sign up there with any email. After you sign in, the button shows your photo or your initials, and the drawer shows your name, Settings, and the two markers slotted - before and slotted - default.</p>
 
         <!-- Login / Subscribe - Button -->
         <user-icon      subscribe    ></user-icon>
@@ -108,8 +95,6 @@
 
         <h2>Login Page</h2>
 
-        <p class="note">The same forms, in the page. Use create a new account. The password needs at least 8 characters. A wrong password is written under the field. You can sign in before you open the verification email.</p>
-
         <!-- Log-in - -Page-->
         <user-login     login     ></user-login>
 
@@ -119,8 +104,6 @@
 
         <h2>email-reset</h2>
 
-        <p class="note">Sends a reset link for the address you type. The same sentence appears whether or not an account uses that email.</p>
-
         <email-reset active></email-reset>
 
       </section>
@@ -128,8 +111,6 @@
       <section id="account">
 
         <h2>Settings Page</h2>
-
-        <p class="note">Change your name, photo, email, or password, or delete the account. The name and photo are still there the next time you sign in. Settings in the drawer lands here.</p>
 
         <!-- Settings - Page-->
         <user-settings></user-settings>

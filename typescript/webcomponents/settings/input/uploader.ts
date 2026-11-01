@@ -58,6 +58,10 @@ export class ContactPhoto extends connect(store)(LitElement) {
         grid-template-rows:       auto auto auto;
         grid-template-columns:    1fr;
         width:                    100%;
+        max-width:                min(100%, var(--pwa_max_width, 400px));
+        min-width:                0;
+        margin-inline:            auto;
+        padding-inline:           var(--pwa_inset, 0px);
         align-content:            start;
       }
 
@@ -89,7 +93,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
         font-weight:              600;
         letter-spacing:           0.04em;
         color:                    var(--pwa_action_background_color, #2a6b45);
-        background:               var(--pwa_nav_on_background, #f3efe6);
+        background:               var(--pwa_nav_on_background, #f2f2f2);
       }
 
     `
@@ -109,7 +113,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
         display: grid;
         grid-template-columns: auto 1fr;
         grid-gap: 16px;
-        padding: 0 16px;
+        padding: 0;
       ">Upload
       <progress
         id="pwa-uploader"
@@ -142,8 +146,8 @@ export class ContactPhoto extends connect(store)(LitElement) {
         border: 1px dashed var(--pwa_line_color, #e3daca);
         border-radius: 12px;
         overflow: hidden;
-        margin: 0 16px;
-        padding: 0 16px 16px 16px;
+        margin: 0;
+        padding: 0 0 16px;
       "
       for ="photoURL"
       part="preview">Photo:

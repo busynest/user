@@ -1,6 +1,24 @@
 import { css } from "lit";
 export const labelStyle = css `
 
+  :host {
+    box-sizing:           border-box;
+    width:                100%;
+    min-width:            0;
+    max-width:            100%;
+  }
+
+  /* Required - the column fills a narrow host and stops at --pwa_max_width on a wide one. Centered. */
+  form {
+    box-sizing:           border-box;
+    width:                100%;
+    max-width:            min(100%, var(--pwa_max_width, 400px));
+    min-width:            0;
+    margin-inline:        auto;
+    margin-block:         0;
+    padding-inline:       var(--pwa_inset, 0px);
+  }
+
   label {
     display:              grid;
     gap:                  6px;
@@ -10,7 +28,7 @@ export const labelStyle = css `
     margin:               0;
     font-weight:          600;
     line-height:          1.3;
-    padding:              0 16px 14px; /* Required - field inset */
+    padding:              0 0 14px;
   }
 
   .hint {

@@ -10,23 +10,26 @@ export const drawerStyle: CSSResult = css`
     width:                  100%;
     box-sizing:             border-box;
     -webkit-box-sizing:     border-box;
-    display:                grid;
-    padding-top:            env(safe-area-inset-top);
+    display:                block; /* Required - the child must start at the top of the clip */
+    /* padding-top lives on .userDrawer so the clip height matches the translating sheet */
     max-width:              100%; /* Required - fit 320px */
     min-width:              0;
+    background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
   }
 
-  :host([drawer]) {
-    /* Required - opaque sheet at 320px so the page does not show through */
+  :host([drawer]),
+  :host([sliding]) {
+    /* Required - the growing box. Top stays put; radius and shadow follow the bottom edge. */
     left:                   0;
     right:                  0;
     z-index:                5;
-    background-color:       var(--pwa_drawer_background_color, #fffdf8);
+    background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
+    border-radius:          var(--pwa_drawer_border-radius, 0 0 18px 18px);
     box-shadow:             0 18px 40px rgba(28, 36, 48, 0.16);
   }
 
   .userDrawer > .spec > .wrapper {
-    margin: 20px 8px 12px; /* Required - space under the drawer header */
+    margin: 20px 0 12px; /* Required - space under the header. Side gap is --pwa_inset on the form. */
   }
 
   .userDrawer,
@@ -48,9 +51,10 @@ export const drawerStyle: CSSResult = css`
     height:                 auto;
     border-bottom:          var(--pwa_drawer_border, 0);
     z-index:                var(--pwa_drawer_z-index, 3);
-    background-color:       var(--pwa_drawer_background_color, #fffdf8);
+    background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
     color:                  var(--pwa_drawer_text_color, #1c2430);
     border-radius:          var(--pwa_drawer_border-radius, 0 0 18px 18px);
+    padding-top:            env(safe-area-inset-top);
   }
 
 `;

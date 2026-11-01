@@ -101,11 +101,17 @@ export class DeleteUser extends connect(store)(LitElement) {
       display:                  grid;
       grid-template-rows:       auto auto auto auto;
       align-content:            start;
+      box-sizing:               border-box;
+      width:                    100%;
+      max-width:                min(100%, var(--pwa_max_width, 400px));
+      min-width:                0;
+      margin-inline:            auto;
+      padding-inline:           var(--pwa_inset, 0px);
     }
     
     p.lead {
       margin:               0;
-      padding:              4px 20px 0;
+      padding:              4px 0 0;
       line-height:          1.5;
       color:                var(--pwa_label_text_color, #1c2430);
     }

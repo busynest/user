@@ -1,6 +1,15 @@
 import { css } from 'lit';
 export const iconStyles = css `
 
+  :host {
+    display:                  block;
+    box-sizing:               border-box;
+    width:                    fit-content; /* Required - the button sizes to its label, not the page */
+    max-width:                100%;
+    min-width:                0;
+    background-color:         var(--pwa_background, #fff);
+  }
+
   .icon, .login {
     cursor:                   pointer;
     margin:                   auto;

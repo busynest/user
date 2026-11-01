@@ -170,13 +170,20 @@ h2 {
   color:                      var(--muted);
 }
 
+user-drawer,
+user-login,
+user-settings,
+email-reset {
+  --pwa_inset:                16px;
+}
+
 user-login,
 user-settings {
   display:                    block;
   border-radius:              14px;
   overflow:                   hidden;
   border:                     1px solid var(--line);
-  background:                 #fff;
+  background:                 var(--pwa_background, #fff);
 }
 
 @media (max-width: 320px) {
