@@ -19,6 +19,8 @@ import { toggleStyle } from "../../form/css/toggle.js";
 import { statusStyle, liveStatus } from "../../form/css/status.js";
 import { revealControl } from "../../form/reveal.js";
 import { verifyBeforeUpdateEmail } from "firebase/auth";
+import { emailActionCodeSettings } from "../../../firebase/authentication.js";
+import { sendVerification } from "../../../api/verify.js";
 import { reauthenticate, takeAuthFailure } from "../../../firebase/interface.js";
 import { pwaAuthError, pwaEmailChanged } from "../../../events/names.js";
 import { emitWindow, toAuthError } from "../../../events/emit.js";
@@ -64,12 +66,22 @@ export class ContactEmail extends connect(store)(LitElement) {
                 return;
             }
             try {
-                await verifyBeforeUpdateEmail(current, contactMail.value);
+                const settings = emailActionCodeSettings();
+                if (settings)
+                    await verifyBeforeUpdateEmail(current, contactMail.value, settings);
+                else
+                    await verifyBeforeUpdateEmail(current, contactMail.value);
                 const detail = { email: contactMail.value };
                 emitWindow(pwaEmailChanged, detail);
                 emitLegacyEmailChanged(detail);
                 this.tone = '';
                 this.status = 'Check your inbox to confirm the new address.';
+                if (!current.emailVerified) {
+                    try {
+                        await sendVerification();
+                    }
+                    catch { }
+                }
             }
             catch (error) {
                 const detail = toAuthError(error);

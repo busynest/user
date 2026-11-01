@@ -1,5 +1,6 @@
 import { CSSResultArray, LitElement, PropertyValues } from 'lit';
 import { AppState } from '../../store.js';
+import '../settings/input/verify.js';
 import '../form/login.js';
 import '../form/signup.js';
 declare const UserDrawer_base: (new (...args: any[]) => {

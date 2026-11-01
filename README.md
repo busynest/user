@@ -144,7 +144,7 @@ Sign-in calls `signInWithEmailAndPassword` and sends the password as typed. Sign
 
 Forgot password? sits on the sign-in form. It calls `sendPasswordResetEmail` for the address already in the email field. Success shows the same sentence as `<email-reset>`: "If an account uses that email, a reset link is on its way." A missing account gets that sentence too. The page dispatches `pwa-reset-sent`.
 
-Sign-up sends a verification email and shows "Check your inbox for the verification email. You can still sign in." The same notice stays on `<user-login>` and in the drawer until the address is verified.
+Sign-up calls `sendEmailVerification`. `actionCodeSettings` from `initialize` is passed through when it is set. The form shows "Check your inbox for the verification email. You can still sign in." The same notice stays on `<user-login>` and in the drawer until the address is verified.
 
 Each password field has a Show control. Logged in, the forms are replaced by slot `content`.
 
@@ -174,12 +174,15 @@ A failed action writes a sentence into that tab's `aria-live` region and dispatc
 
 When the signed-in address is unverified:
 
-- That tab shows a notice (`::part(notice)`) and a Resend verification email button (`::part(verify-submit)`).
+- That tab shows the address, the words Not verified (`::part(unverified)`), and a Resend verification email button (`::part(verify-submit)`).
+- The same words and the same button are in the drawer, next to the name or email.
 - The status (`::part(verify-status)`) is an `aria-live` region.
-- The button reads Sending… while the request is in flight, then waits 45 seconds.
+- The button reads Sending… while the request is in flight, then waits 45 seconds. The confirmation is "Check your inbox for the verification email."
 - `auth/too-many-requests` and `auth/network-request-failed` write a short sentence into the status region and dispatch `pwa-auth-error`.
-- A verified address reads Email verified.
+- A verified address shows a check (`::part(verified)`, aria-label Email verified) beside the email in settings and beside the name or email in the drawer. The colour is `--pwa_verified_color`.
+- Opening the drawer, or focusing the window, calls `user.reload()`. When that reload sees the address become verified, the page fires `pwa-email-verified`.
 - Sign-in is not blocked either way.
+- Changing the email calls `verifyBeforeUpdateEmail`. `actionCodeSettings` from `initialize` is passed through. If the address still on the account is unverified, `sendEmailVerification` runs as well.
 
 Email, password, and delete ask for the current password and call `reauthenticate` first.
 
@@ -419,6 +422,9 @@ The published sheet is `node_modules/pwa-auth/source/pwa-styles.css`.
   --pwa_action_text_color:         #fff;
   --pwa_action_background_color:   #2a6b45;
   --pwa_action_border_color:       #214f34;
+
+  /* Email verified check */
+  --pwa_verified_color:            #2a6b45;
 }
 ```
 
@@ -429,9 +435,9 @@ The published sheet is `node_modules/pwa-auth/source/pwa-styles.css`.
 Hosts style the controls with `::part`. Nested fields are forwarded with `exportparts`, so the host does not enter a shadow root.
 
 - `user-icon`: `button`, `photo`, `initials`
-- `user-drawer`: `panel`, `header`, `title`, `close`, `settings`, `notice`, `logout`, `login-email`, `login-password`, `login-submit`, `login-switch`, `login-forgot`, `login-status`, `login-reveal`, `signup-email`, `signup-password`, `signup-submit`, `signup-switch`, `signup-status`, `signup-reveal`, `signup-notice`
+- `user-drawer`: `panel`, `header`, `title`, `close`, `settings`, `notice`, `verified`, `unverified`, `verify-submit`, `verify-status`, `logout`, `login-email`, `login-password`, `login-submit`, `login-switch`, `login-forgot`, `login-status`, `login-reveal`, `signup-email`, `signup-password`, `signup-submit`, `signup-switch`, `signup-status`, `signup-reveal`, `signup-notice`
 - `user-login`: `panel`, `header`, `title`, `notice`, and the same `login-*` and `signup-*` field parts
-- `user-settings`: `tab`, `panel`, `signed-out`, `name`, `name-submit`, `email`, `email-submit`, `password`, `verify`, `password-submit`, `progress`, `file`, `preview`, `delete`
+- `user-settings`: `tab`, `panel`, `signed-out`, `name`, `name-submit`, `email`, `email-submit`, `verified`, `unverified`, `verify-submit`, `verify-status`, `password`, `verify`, `password-submit`, `progress`, `file`, `preview`, `delete`
 - `email-reset`: `email`, `submit`, `status`, `back`
 
 ```css

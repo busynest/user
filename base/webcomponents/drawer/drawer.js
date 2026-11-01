@@ -20,6 +20,7 @@ import { linkStyle } from './css/link.js';
 import { lineStyle } from './css/paragraph.js';
 import { closeSign } from '../../redux/frontend.js';
 import { logOut } from '../../firebase/interface.js';
+import { refreshEmailVerified } from '../../api/verify.js';
 import { applyFirebaseConfig } from '../../firebase/attribute.js';
 import { pwaDrawerToggleName, pwaSettings } from '../../events/names.js';
 import { emitElement } from '../../events/emit.js';
@@ -27,6 +28,8 @@ import { deepActive, focusable } from './keys.js';
 import { accountTitle } from '../form/letters.js';
 import { noticeStyle } from '../form/css/notice.js';
 import { onVerificationNotice, verificationNotice } from '../form/notice.js';
+import { verifiedMark, verifiedStyle } from '../form/verified.js';
+import '../settings/input/verify.js';
 import '../form/login.js';
 import '../form/signup.js';
 import { animation } from '../css/animation.js';
@@ -132,6 +135,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             const active = deepActive();
             this.returnFocus = active && !this.contains(active) ? active : this.returnFocus;
             this.shadowRoot?.querySelector('.close')?.focus();
+            void refreshEmailVerified(false);
             return;
         }
         this.returnFocus?.focus();
@@ -170,7 +174,16 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             listStyle,
             tapStyle,
             noticeStyle,
+            verifiedStyle,
             css `
+    .exit > h3 {
+      display:                flex;
+      align-items:            center;
+      justify-content:        center;
+      gap:                    8px;
+      flex-wrap:              wrap;
+    }
+
     .close:focus-visible,
     .leave:focus-visible,
     .settings:focus-visible {
@@ -217,7 +230,10 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       <!-- Exit Button -->
       <header class="exit" part="header">
         <div></div>
-        <h3 id="pwa-drawer-title" part="title">${this.user === false ? this.signup === this.subscribe ? `Login` : `Subscribe` : accountTitle(this.name, this.email)}</h3>
+        <h3 id="pwa-drawer-title" part="title">
+          <span class="who">${this.user === false ? this.signup === this.subscribe ? `Login` : `Subscribe` : accountTitle(this.name, this.email)}</span>
+          ${this.user ? this.verified ? verifiedMark : html `<span class="unverified" part="unverified">Not verified</span>` : ''}
+        </h3>
         <button class="close" part="close" type="button" aria-label="Close">${close}</button>
       </header>
 
@@ -268,6 +284,8 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
           ${this.user && this.notice && !this.verified ? html `
             <p class="notice" part="notice" role="status" aria-live="polite">Check your inbox for the verification email. You can still sign in.</p>
           ` : ''}
+
+          ${this.user ? html `<email-verify exportparts="notice: verify-notice, status: verify-status, submit: verify-submit, verified: email-verified, unverified"></email-verify>` : ''}
 
           <button class="leave" part="logout" type="button" aria-label="Log out">Log out</button>
           

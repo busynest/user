@@ -205,7 +205,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             <h2>Contact Information</h2>
 
             <!-- Required - unverified notice. Sign-in stays open. -->
-            <email-verify exportparts="notice, status: verify-status, submit: verify-submit"></email-verify>
+            <email-verify exportparts="notice, status: verify-status, submit: verify-submit, verified, unverified"></email-verify>
 
             <!-- Custom - Username -->
             <input-name exportparts="name, submit: name-submit"></input-name>

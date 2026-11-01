@@ -166,6 +166,28 @@ window.__criticalPromise = (async () => {
       await until('verification notice', () => {
         return document.querySelector('user-login').shadowRoot.textContent.includes('Check your inbox for the verification email');
       });
+      const drawer = document.querySelector('user-drawer');
+      if (!drawer.hasAttribute('drawer')) {
+        document.querySelector('user-icon').shadowRoot.querySelector('button').click();
+        await until('unverified drawer', () => drawer.hasAttribute('drawer'));
+        await sleep(1500);
+      }
+      if (drawer.shadowRoot.querySelector('[part="verified"]')) throw new Error('checkmark before the link');
+      if (!drawer.shadowRoot.textContent.includes('Not verified')) throw new Error('drawer missing Not verified');
+      const drawerMail = drawer.shadowRoot.querySelector('email-verify');
+      if (!drawerMail.shadowRoot.textContent.includes('Resend verification email')) throw new Error('drawer missing resend');
+      await pause('unverified-drawer');
+      drawer.shadowRoot.querySelector('.close').click();
+      await until('drawer shut', () => !drawer.hasAttribute('drawer'));
+
+      const settings = document.querySelector('user-settings');
+      settings.shadowRoot.querySelector('button[value="verification"]').click();
+      await sleep(2200);
+      const settingsMail = settings.shadowRoot.querySelector('email-verify');
+      if (!settingsMail.shadowRoot.textContent.includes('Not verified')) throw new Error('settings missing Not verified');
+      if (!settingsMail.shadowRoot.textContent.includes('Resend verification email')) throw new Error('settings missing resend');
+      settingsMail.scrollIntoView({ block: 'center' });
+      await pause('unverified-settings');
       await pause('verification');
       record('sign up', true, email);
     } catch (error) {
@@ -240,6 +262,25 @@ window.__criticalPromise = (async () => {
       const detail = events('pwa-email-verified').at(-1).detail;
       if (!verified || !auth.currentUser || !auth.currentUser.emailVerified) throw new Error('emailVerified still false');
       if (!detail.user || detail.user.emailVerified !== true || detail.user.email !== email) throw new Error(JSON.stringify(detail));
+      const open = document.querySelector('user-drawer');
+      if (!open.hasAttribute('drawer')) {
+        document.querySelector('user-icon').shadowRoot.querySelector('button').click();
+        await until('verified drawer', () => open.hasAttribute('drawer'));
+        await sleep(1500);
+      }
+      const drawerMark = open.shadowRoot.querySelector('[part="verified"]');
+      if (!drawerMark || drawerMark.getAttribute('aria-label') !== 'Email verified') throw new Error('drawer check missing');
+      await pause('verified-drawer');
+      open.shadowRoot.querySelector('.close').click();
+      await until('verified drawer shut', () => !open.hasAttribute('drawer'));
+      await sleep(1500);
+      const settingsBox = document.querySelector('user-settings');
+      settingsBox.shadowRoot.querySelector('button[value="verification"]').click();
+      await sleep(300);
+      const settingsMark = settingsBox.shadowRoot.querySelector('email-verify').shadowRoot.querySelector('[part="verified"]');
+      if (!settingsMark || settingsMark.getAttribute('aria-label') !== 'Email verified') throw new Error('settings check missing');
+      settingsBox.shadowRoot.querySelector('email-verify').scrollIntoView({ block: 'center' });
+      await pause('verified-settings');
       record('email verification', true, 'oob code applied, emailVerified true');
     } catch (error) {
       record('email verification', false, error.message);
