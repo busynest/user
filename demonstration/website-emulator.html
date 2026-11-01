@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>pwa-auth</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1">
+    <link rel="stylesheet" href="../website/css/pwa-styles.css">
+    <link rel="stylesheet" href="../website/css/styles.css">
+    <script>
+      window.process = { env: {
+        NODE_ENV: 'production',
+        FIREBASE_CONFIG: JSON.stringify({
+          apiKey: 'demo-key',
+          authDomain: 'pwa-authentic.firebaseapp.com',
+          projectId: 'pwa-authentic',
+          storageBucket: 'pwa-authentic.appspot.com',
+          messagingSenderId: '1',
+          appId: '1:1:web:demo'
+        })
+      } };
+      window.__alerts = [];
+      window.alert = (message) => { window.__alerts.push(String(message)); };
+      window.confirm = () => true;
+    </script>
+  </head>
+  <body>
+
+    <header>
+      <div style="display: grid;">
+        <iframe
+          src="https://github.com/sponsors/busynest/button"
+          title="Sponsor busynest"
+          height="32"
+          width="114"
+          style="border: 0; border-radius: 6px; margin: auto 0 auto 0;"></iframe>
+      </div>
+      <span><h1>pwa-auth</h1></span>
+      <user-icon></user-icon>
+    </header>
+
+    <user-drawer subscribe url="#account"></user-drawer>
+
+    <main id="main">
+      <p>Five elements share one session: user-icon, user-drawer, user-login, user-settings, and email-reset. Listen for pwa- events, call the small API, restyle with --pwa_ variables.</p>
+      <p class="links">
+        <a href="https://www.npmjs.com/package/pwa-auth">npm</a>
+        <a href="https://github.com/busynest/user">GitHub</a>
+        <a href="https://github.com/busynest/user/blob/master/intro.md">introduction</a>
+        <a href="https://github.com/busynest/user/blob/master/README.md#quick-start">quick start</a>
+      </p>
+
+      <section id="drawer" style="display: grid;">
+        <h2>Drawer Button</h2>
+        <p class="note">Signed out, this says Subscribe and opens the drawer. Sign up there with any email. After you sign in, the button shows your photo or your initials, and the drawer shows your name, Settings, and the two markers slotted - before and slotted - default.</p>
+        <user-icon subscribe></user-icon>
+      </section>
+
+      <section id="login">
+        <h2>Login Page</h2>
+        <p class="note">The same forms, in the page. Use create a new account. The password needs at least 8 characters. A wrong password is written under the field. You can sign in before you open the verification email.</p>
+        <user-login login></user-login>
+      </section>
+
+      <section id="reset">
+        <h2>email-reset</h2>
+        <p class="note">Sends a reset link for the address you type. The same sentence appears whether or not an account uses that email.</p>
+        <email-reset active></email-reset>
+      </section>
+
+      <section id="account">
+        <h2>Settings Page</h2>
+        <p class="note">Change your name, photo, email, or password, or delete the account. The name and photo are still there the next time you sign in. Settings in the drawer lands here.</p>
+        <user-settings></user-settings>
+      </section>
+    </main>
+
+    <script type="module" src="website-boot.js"></script>
+  </body>
+</html>

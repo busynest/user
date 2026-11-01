@@ -89,3 +89,54 @@ user-settings {
   overflow:                   hidden;
  /* border:                     2px solid black;*/
 }
+
+/* Required - the sections have to scroll. hidden cut them off. */
+main {
+  min-height:                 0;
+  overflow:                   auto;
+}
+
+h1 {
+  margin:                     0;
+  font-size:                  1.25rem;
+  font-weight:                600;
+  text-align:                 center;
+  line-height:                1.2;
+}
+
+.note {
+  margin:                     0 0 16px;
+  line-height:                1.45;
+}
+
+.links {
+  display:                    flex;
+  flex-wrap:                  wrap;
+  gap:                        8px 16px;
+  margin:                     0;
+}
+
+.links a {
+  color:                      #102028;
+  font-weight:                600;
+}
+
+.links a:focus-visible {
+  outline:                    2px solid #102028;
+  outline-offset:             2px;
+}
+
+@media (max-width: 360px) {
+  header {
+    grid-template-columns:    1fr auto;
+    align-items:              center;
+  }
+
+  header > span {
+    grid-column:              1 / -1;
+  }
+
+  h2 {
+    padding:                  12px;
+  }
+}
