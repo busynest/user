@@ -34,70 +34,52 @@
     <header class="top">
       <div class="bar">
         <div>
-          <p class="mark">pwa-auth</p>
-          <h1>Account controls for a small site</h1>
-          <p class="lede">Five elements share one session: user-icon, user-drawer, user-login, user-settings, and email-reset. Listen for pwa- events, call the small API, restyle with --pwa_ variables.</p>
+          <h1>pwa-auth</h1>
+          <p class="lede">Sign-in elements for your own pages.</p>
+          <p><code>npm install pwa-auth lit firebase</code></p>
+          <p class="links">
+            <a href="https://www.npmjs.com/package/pwa-auth">npm</a>
+            <a href="https://github.com/busynest/user">GitHub</a>
+            <a href="https://github.com/busynest/user/blob/master/README.md">docs</a>
+          </p>
         </div>
-        <iframe
-          class="sponsor"
-          src="https://github.com/sponsors/busynest/button"
-          title="Sponsor busynest"
-          height="32"
-          width="114"></iframe>
       </div>
     </header>
 
     <!-- Drop-down drawer. subscribe starts on the sign-up form. -->
     <user-drawer subscribe>
       <a slot="before" href="#settings">Settings</a>
-      <a href="#events">What this page hears</a>
+      <a href="#events">Events</a>
     </user-drawer>
 
     <main class="wrap">
 
       <section class="card">
-        <p class="kicker">Button</p>
-        <h2>Subscribe, then a photo</h2>
-        <p class="note">Signed out, this is the subscribe button. Signed in, it shows the account photo. Either state opens the drawer.</p>
         <div class="stage">
           <user-icon subscribe></user-icon>
         </div>
       </section>
 
       <section class="card">
-        <p class="kicker">Page</p>
-        <h2>Sign in on the page</h2>
-        <p class="note">A static form for a route of its own. After sign-in, the content slot replaces the form.</p>
         <div class="panel">
           <user-login></user-login>
         </div>
       </section>
 
       <section class="card">
-        <p class="kicker">Reset</p>
-        <h2>Send a reset email</h2>
-        <p class="note">email-reset renders once active is set.</p>
         <div class="panel">
           <email-reset active></email-reset>
         </div>
       </section>
 
       <section class="card" id="settings">
-        <p class="kicker">Settings</p>
-        <h2>Photo, profile, password, delete</h2>
-        <p class="note">Four tabs. The photo falls back to the empty image until an upload lands in storage.</p>
         <div class="panel">
           <user-settings></user-settings>
         </div>
       </section>
 
       <section class="card" id="events">
-        <p class="kicker">Events</p>
-        <h2>What this page hears</h2>
-        <p class="note">Each pwa- event lands here as it fires, including the drawer toggle.</p>
-        <ol id="event-log" class="log">
-          <li class="quiet">Waiting for an account event.</li>
-        </ol>
+        <ol id="event-log" class="log"></ol>
       </section>
 
     </main>

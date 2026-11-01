@@ -27,8 +27,14 @@
     <header class="top">
       <div class="bar">
         <div>
-          <p class="mark">pwa-auth</p>
-          <h1>Account controls for a small site</h1>
+          <h1>pwa-auth</h1>
+          <p class="lede">Sign-in elements for your own pages.</p>
+          <p><code>npm install pwa-auth lit firebase</code></p>
+          <p class="links">
+            <a href="https://www.npmjs.com/package/pwa-auth">npm</a>
+            <a href="https://github.com/busynest/user">GitHub</a>
+            <a href="https://github.com/busynest/user/blob/master/README.md">docs</a>
+          </p>
         </div>
       </div>
     </header>
@@ -37,38 +43,31 @@
 
     <main class="wrap">
       <section class="card">
-        <p class="kicker">Button</p>
         <div class="stage">
           <user-icon subscribe></user-icon>
         </div>
       </section>
 
       <section class="card">
-        <p class="kicker">Page</p>
         <div class="panel">
           <user-login subscribe></user-login>
         </div>
       </section>
 
       <section class="card">
-        <p class="kicker">Reset</p>
         <div class="panel">
           <email-reset active></email-reset>
         </div>
       </section>
 
       <section class="card">
-        <p class="kicker">Settings</p>
         <div class="panel">
           <user-settings id="settings"></user-settings>
         </div>
       </section>
 
       <section class="card">
-        <p class="kicker">Events</p>
-        <ol id="event-log" class="log">
-          <li class="quiet">Waiting for an account event.</li>
-        </ol>
+        <ol id="event-log" class="log"></ol>
       </section>
     </main>
 
