@@ -121,6 +121,8 @@ Drops open from the top. Timing is in [Drawer behaviour](#drawer-behaviour).
 
 Logged out, the header reads Subscribe or Login to match the form. The slots are in the signed-in block, so they are not shown until someone is signed in. Logged in, the header shows the display name, or the email when the account has no name, then, in this order:
 
+The slots are where the host passes its own links, such as a link to wherever its own settings page lives. The `before` slot places links top down from the top of the drawer, above Settings, and the default slot places them lower, before Log out.
+
 1. slot `before`
 2. Settings (`url`, or the button that stays on this page)
 3. the default slot
