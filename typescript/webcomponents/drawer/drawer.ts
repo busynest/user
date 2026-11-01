@@ -219,6 +219,7 @@ export class UserDrawer extends connect(store)(LitElement) {
     const sheet = this.sheet();
     if (!clip || !sheet) return;
     this.scrollTop = 0;
+    this.placeAnchor();
     const target = this.sheetPx(clip, sheet);
     const from = Math.ceil(clip.getBoundingClientRect().height);
     this.rollBetween(clip, sheet, from, target, target);
@@ -358,16 +359,39 @@ export class UserDrawer extends connect(store)(LitElement) {
     this.watchColumn();
   }
 
+  // Required - a parent grid can park this tag after named areas. Shift it back under the previous element.
+  private placeAnchor(): void {
+    const pos = getComputedStyle(this).position;
+    if (pos === 'fixed' || pos === 'absolute') {
+      if (this.style.top) this.style.top = '';
+      return;
+    }
+    const parent = this.parentElement;
+    if (!parent) return;
+    const prev = this.previousElementSibling;
+    const want = prev
+      ? prev.getBoundingClientRect().bottom
+      : parent.getBoundingClientRect().top + (parseFloat(getComputedStyle(parent).paddingTop) || 0);
+    const applied = parseFloat(this.style.top) || 0;
+    const delta = want - (this.getBoundingClientRect().top - applied);
+    if (Math.abs(delta - applied) <= 0.5) return;
+    this.style.top = Math.abs(delta) <= 0.5 ? '' : `${delta}px`;
+  }
+
   // Required - a resize while the sheet is rolling retargets the measured height.
   private watchColumn(): void {
     if (typeof ResizeObserver === 'undefined') return;
     this.columnObserver = new ResizeObserver(() => {
+      this.placeAnchor();
       const width = Math.round(this.getBoundingClientRect().width);
       if (!width || width === this.columnWidth) return;
       this.columnWidth = width;
       this.onColumnResize();
     });
     this.columnObserver.observe(this);
+    const prev = this.previousElementSibling;
+    if (prev) this.columnObserver.observe(prev);
+    this.placeAnchor();
   }
 
   // Required - keep the sheet bottom on the clip while the column reflows.
@@ -394,11 +418,18 @@ export class UserDrawer extends connect(store)(LitElement) {
     noticeStyle,
     verifiedStyle,
     css`
-    /* Required - this drawer's roll only. display:block so the sheet is not stretched. */
+    /* Required - this drawer's roll only. The clip hangs from the tag and grows down. */
     .drawer-clip {
       display:                block;
+      position:               absolute;
+      top:                    0;
+      left:                   0;
+      right:                  0;
       overflow:               hidden;
       min-height:             0;
+      z-index:                var(--pwa_drawer_z-index, 5);
+      border-radius:          var(--pwa_drawer_border-radius, 0 0 18px 18px);
+      box-shadow:             0 18px 40px rgba(28, 36, 48, 0.16);
     }
 
     .drawer-clip > .userDrawer {

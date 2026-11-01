@@ -18,7 +18,6 @@
   --pwa_icon_diameter:            44px; /* sync to --pwa_icon_height */
 
   /* <user-drawer> */
-  --pwa_drawer_position:          absolute;
   --pwa_drawer_border:            0;
   --pwa_drawer_z-index:           3;
   --pwa_drawer_border-radius:     0 0 18px 18px;
