@@ -8,7 +8,7 @@ pwa-auth is the sign-in for your website. It stays on your site, in your own loo
 
 Your visitors see a button. Before they sign in it says Login, or Subscribe if you prefer that word. After they sign in it shows their photo.
 
-A panel drops down from the top. They can create an account or sign in. Once they are in, they see their name, a link to their settings, and a way to log out.
+A panel drops down from the top. They can create an account or sign in, or continue with Google in one click. Once they are in, they see their name, a link to their settings, and a way to log out.
 
 In settings they can change their photo, name, email, and password, or delete the account. Creating an account sends a verification email. They can still sign in before they open that email.
 

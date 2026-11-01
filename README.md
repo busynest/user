@@ -161,6 +161,8 @@ The same forms, in the page instead of the drawer.
 |---|---|
 | `subscribe` | Starts on sign-up. Without it, starts on sign-in. |
 
+Continue with Google is on the sign-in form and the sign-up form. The first Google sign-in creates the Firebase user. A Google account is already verified, so the checkmark shows. `hide-google` on `<user-login>` or `<user-drawer>` removes the button. The default is to show it.
+
 Sign-in calls `signInWithEmailAndPassword` and sends the password as typed. Sign-up rejects a new password shorter than 8 characters or longer than 128. Spaces and other characters are allowed. The field hint reads "At least 8 characters. A passphrase works well." A failed sign-in or sign-up writes one sentence into an `aria-live` region (`::part(status)`). The button is disabled and reads Signing in… or Creating account… while the request is in flight.
 
 Forgot password? sits on the sign-in form. It calls `sendPasswordResetEmail` for the address already in the email field. Success shows the same sentence as `<email-reset>`: "If an account uses that email, a reset link is on its way." A missing account gets that sentence too. The page dispatches `pwa-reset-sent`.
@@ -451,8 +453,8 @@ The published sheet is `node_modules/pwa-auth/source/pwa-styles.css`.
 Hosts style the controls with `::part`. Nested fields are forwarded with `exportparts`, so the host does not enter a shadow root.
 
 - `user-icon`: `button`, `photo`, `initials`
-- `user-drawer`: `panel`, `header`, `title`, `close`, `settings`, `notice`, `verified`, `unverified`, `verify-submit`, `verify-status`, `logout`, `login-email`, `login-password`, `login-submit`, `login-switch`, `login-forgot`, `login-status`, `login-reveal`, `signup-email`, `signup-password`, `signup-submit`, `signup-switch`, `signup-status`, `signup-reveal`, `signup-notice`
-- `user-login`: `panel`, `header`, `title`, `notice`, and the same `login-*` and `signup-*` field parts
+- `user-drawer`: `panel`, `header`, `title`, `close`, `settings`, `notice`, `verified`, `unverified`, `verify-submit`, `verify-status`, `logout`, `login-google`, `signup-google`, `login-email`, `login-password`, `login-submit`, `login-switch`, `login-forgot`, `login-status`, `login-reveal`, `signup-email`, `signup-password`, `signup-submit`, `signup-switch`, `signup-status`, `signup-reveal`, `signup-notice`
+- `user-login`: `panel`, `header`, `title`, `notice`, `login-google`, `signup-google`, and the same `login-*` and `signup-*` field parts
 - `user-settings`: `tab`, `panel`, `signed-out`, `name`, `name-submit`, `email`, `email-submit`, `verified`, `unverified`, `verify-submit`, `verify-status`, `password`, `verify`, `password-submit`, `progress`, `file`, `preview`, `delete`
 - `email-reset`: `email`, `submit`, `status`, `back`
 

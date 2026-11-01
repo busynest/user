@@ -2,6 +2,11 @@ Change Log
 ==========
 All notable changes to pwa-auth.js will be documented in this file.
 
+# [3.6.0] - 2026-11-01
+
+## Added
+- Continue with Google on the sign-in and sign-up forms. The first Google sign-in creates the Firebase user. A phone, or a blocked popup, uses a redirect. `hide-google` removes the button.
+
 ## [Unreleased]
 
 ### Added

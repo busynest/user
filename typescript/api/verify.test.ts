@@ -58,7 +58,11 @@ vi.mock('firebase/auth', () => ({
   updatePassword: vi.fn(),
   verifyBeforeUpdateEmail: firebase.verifyBeforeUpdateEmail,
   reauthenticateWithCredential: vi.fn(async () => undefined),
-  EmailAuthProvider: { credential: vi.fn() }
+  EmailAuthProvider: { credential: vi.fn() },
+  GoogleAuthProvider: class GoogleAuthProvider {},
+  signInWithPopup: vi.fn(),
+  signInWithRedirect: vi.fn(async () => undefined),
+  getRedirectResult: vi.fn(async () => null)
 }));
 
 vi.mock('firebase/firestore', () => ({

@@ -39,6 +39,7 @@ export declare class UserDrawer extends UserDrawer_base {
     url: string;
     drawer: boolean;
     subscribe: boolean;
+    hideGoogle: boolean;
     private name;
     private email;
     private verified;

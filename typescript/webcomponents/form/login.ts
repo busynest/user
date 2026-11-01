@@ -11,6 +11,7 @@ import {
 }                         from 'lit/decorators.js';
 
 import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithGoogle, takeGoogleNotice } from '../../firebase/google.js';
 
 import { auth }           from '../../firebase/authentication.js';
 
@@ -26,6 +27,7 @@ import { toggleStyle }    from './css/toggle.js';
 import { statusStyle, liveStatus } from './css/status.js';
 import { tapStyle }       from '../css/tap.js';
 import { revealControl }  from './reveal.js';
+import { googleButton }   from './google-button.js';
 
 import store                  from '../../store.js';
 import { universalToggle }    from '../../redux/frontend.js';
@@ -38,6 +40,9 @@ const sentMessage = 'If an account uses that email, a reset link is on its way.'
 export class FormLogin extends LitElement {
 
   @property({type: String}) public source      = '';
+
+  /** @attr hide-google */
+  @property({type: Boolean, attribute: 'hide-google', reflect: true}) public hideGoogle = false;
   @state() private email        = '';
   @state() private password     = '';
   @state() private status       = '';
@@ -47,6 +52,22 @@ export class FormLogin extends LitElement {
   @state() private showPassword = false;
 
   constructor() { super(); }
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.adoptRedirect();
+  }
+
+  protected updated(): void {
+    this.adoptRedirect();
+  }
+
+  private adoptRedirect() {
+    if (!this.classList.contains('opened')) return;
+    const pending = takeGoogleNotice();
+    if (!pending) return;
+    this.show(pending);
+  }
 
   static get styles() { return [
     listStyle,
@@ -138,6 +159,8 @@ export class FormLogin extends LitElement {
 
             ${liveStatus(statusId, this.status, this.tone)}
 
+            ${this.hideGoogle ? '' : googleButton(this.busy || this.resetBusy, () => { void this.google(); })}
+
             <button
               type=       "submit"
               part=       "submit"
@@ -169,6 +192,20 @@ export class FormLogin extends LitElement {
 
   private change() {
     store.dispatch(universalToggle(this.source));
+  }
+
+  private async google() {
+    if (this.busy || this.resetBusy) return;
+    this.busy = true;
+    this.tone = '';
+    this.status = '';
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      this.show(toAuthError(error));
+    } finally {
+      this.busy = false;
+    }
   }
 
   private show(detail: { code: string; message: string }, error = true) {

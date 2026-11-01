@@ -36,6 +36,7 @@ declare const UserLogin_base: (new (...args: any[]) => {
 }) & typeof LitElement;
 export declare class UserLogin extends UserLogin_base {
     subscribe: boolean;
+    hideGoogle: boolean;
     private _name;
     private _email;
     private _verified;

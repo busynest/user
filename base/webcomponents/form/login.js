@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { html, LitElement, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithGoogle, takeGoogleNotice } from '../../firebase/google.js';
 import { auth } from '../../firebase/authentication.js';
 import { pwaAuthError, pwaLogin, pwaResetSent } from '../../events/names.js';
 import { emitWindow, toAuthError, toPwaUser } from '../../events/emit.js';
@@ -22,6 +23,7 @@ import { toggleStyle } from './css/toggle.js';
 import { statusStyle, liveStatus } from './css/status.js';
 import { tapStyle } from '../css/tap.js';
 import { revealControl } from './reveal.js';
+import { googleButton } from './google-button.js';
 import store from '../../store.js';
 import { universalToggle } from '../../redux/frontend.js';
 import { rememberEmail } from './draft.js';
@@ -30,6 +32,7 @@ let FormLogin = class FormLogin extends LitElement {
     constructor() {
         super();
         this.source = '';
+        this.hideGoogle = false;
         this.email = '';
         this.password = '';
         this.status = '';
@@ -84,6 +87,21 @@ let FormLogin = class FormLogin extends LitElement {
                 this.resetBusy = false;
             }
         };
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        this.adoptRedirect();
+    }
+    updated() {
+        this.adoptRedirect();
+    }
+    adoptRedirect() {
+        if (!this.classList.contains('opened'))
+            return;
+        const pending = takeGoogleNotice();
+        if (!pending)
+            return;
+        this.show(pending);
     }
     static get styles() {
         return [
@@ -177,6 +195,8 @@ let FormLogin = class FormLogin extends LitElement {
 
             ${liveStatus(statusId, this.status, this.tone)}
 
+            ${this.hideGoogle ? '' : googleButton(this.busy || this.resetBusy, () => { void this.google(); })}
+
             <button
               type=       "submit"
               part=       "submit"
@@ -207,6 +227,22 @@ let FormLogin = class FormLogin extends LitElement {
     }
     change() {
         store.dispatch(universalToggle(this.source));
+    }
+    async google() {
+        if (this.busy || this.resetBusy)
+            return;
+        this.busy = true;
+        this.tone = '';
+        this.status = '';
+        try {
+            await signInWithGoogle();
+        }
+        catch (error) {
+            this.show(toAuthError(error));
+        }
+        finally {
+            this.busy = false;
+        }
     }
     show(detail, error = true) {
         this.tone = error ? 'error' : '';
@@ -258,6 +294,10 @@ __decorate([
     property({ type: String }),
     __metadata("design:type", Object)
 ], FormLogin.prototype, "source", void 0);
+__decorate([
+    property({ type: Boolean, attribute: 'hide-google', reflect: true }),
+    __metadata("design:type", Object)
+], FormLogin.prototype, "hideGoogle", void 0);
 __decorate([
     state(),
     __metadata("design:type", Object)

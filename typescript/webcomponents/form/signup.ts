@@ -13,6 +13,7 @@ import {
 import {
   createUserWithEmailAndPassword
 }                         from 'firebase/auth';
+import { signInWithGoogle, takeGoogleNotice } from '../../firebase/google.js';
 
 import { auth }           from '../../firebase/authentication.js';
 import { logAccount }     from '../../firebase/interface.js';
@@ -32,6 +33,7 @@ import { statusStyle, liveStatus } from './css/status.js';
 import { noticeStyle }    from './css/notice.js';
 import { tapStyle }       from '../css/tap.js';
 import { revealControl }  from './reveal.js';
+import { googleButton }   from './google-button.js';
 import { markVerificationNotice } from './notice.js';
 
 import store                  from '../../store.js';
@@ -45,6 +47,9 @@ export class FormSignup extends LitElement {
 
   
   @property({type: String}) public source        = '';
+
+  /** @attr hide-google */
+  @property({type: Boolean, attribute: 'hide-google', reflect: true}) public hideGoogle = false;
   @state() private email        = '';
   @state() private password     = '';
   @state() private status       = '';
@@ -54,6 +59,22 @@ export class FormSignup extends LitElement {
   @state() private notice       = '';
 
   constructor() { super(); }
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.adoptRedirect();
+  }
+
+  protected updated(): void {
+    this.adoptRedirect();
+  }
+
+  private adoptRedirect() {
+    if (!this.classList.contains('opened')) return;
+    const pending = takeGoogleNotice();
+    if (!pending) return;
+    this.show(pending);
+  }
 
   static get styles() { return [
     listStyle,
@@ -151,6 +172,8 @@ export class FormSignup extends LitElement {
 
             ${liveStatus(statusId, this.status, this.tone)}
 
+            ${this.hideGoogle ? '' : googleButton(this.busy, () => { void this.google(); })}
+
             <button
               type=         "submit"
               part=         "submit"
@@ -179,6 +202,20 @@ export class FormSignup extends LitElement {
 
   private change() {
     store.dispatch(universalToggle(this.source));
+  }
+
+  private async google() {
+    if (this.busy) return;
+    this.busy = true;
+    this.tone = '';
+    this.status = '';
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      this.show(toAuthError(error));
+    } finally {
+      this.busy = false;
+    }
   }
 
   private show(detail: { code: string; message: string }) {

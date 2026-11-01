@@ -33,7 +33,11 @@ vi.mock('firebase/auth', () => ({
     firebase.listeners.add(callback);
     callback(firebase.state.currentUser);
     return () => { firebase.listeners.delete(callback); };
-  })
+  }),
+  GoogleAuthProvider: class GoogleAuthProvider {},
+  signInWithPopup: vi.fn(),
+  signInWithRedirect: vi.fn(async () => undefined),
+  getRedirectResult: vi.fn(async () => null)
 }));
 
 vi.mock('firebase/firestore', () => ({

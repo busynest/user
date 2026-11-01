@@ -40,6 +40,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.url = '';
         this.drawer = false;
         this.subscribe = false;
+        this.hideGoogle = false;
         this.name = "";
         this.email = "";
         this.verified = false;
@@ -279,7 +280,8 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             <!-- Log-in State -->
             <form-login
               source="drawer"
-              exportparts="email: login-email, password: login-password, submit: login-submit, switch: login-switch, forgot: login-forgot, status: login-status, reveal: login-reveal"
+              ?hide-google="${this.hideGoogle}"
+              exportparts="email: login-email, password: login-password, submit: login-submit, switch: login-switch, forgot: login-forgot, status: login-status, reveal: login-reveal, google: login-google"
               ?inert="${this.signup !== this.subscribe}"
               class="content ${this.signup ===
             this.subscribe ?
@@ -290,7 +292,8 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             <!-- Sign-up State -->
             <form-signup
               source="drawer"
-              exportparts="email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch, status: signup-status, reveal: signup-reveal, notice: signup-notice"
+              ?hide-google="${this.hideGoogle}"
+              exportparts="email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch, status: signup-status, reveal: signup-reveal, notice: signup-notice, google: signup-google"
               ?inert="${this.signup === this.subscribe}"
               class="content ${!this.signup === this.subscribe ? 'opened' : 'closed'} ">
             </form-signup>
@@ -349,6 +352,10 @@ __decorate([
     property({ type: Boolean, attribute: true, reflect: true }),
     __metadata("design:type", Object)
 ], UserDrawer.prototype, "subscribe", void 0);
+__decorate([
+    property({ type: Boolean, attribute: 'hide-google', reflect: true }),
+    __metadata("design:type", Object)
+], UserDrawer.prototype, "hideGoogle", void 0);
 __decorate([
     state(),
     __metadata("design:type", Object)
