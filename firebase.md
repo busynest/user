@@ -3,6 +3,7 @@
 ## Project
 
 - Firebase Authentication with email and password
+- Google sign-in, if you leave Continue with Google on (the default)
 - Cloud Storage bucket
 - Google Analytics, if you call `logAccount` or `logAccountDelete`
 
@@ -97,6 +98,23 @@ initialize({
 Firebase Auth's own minimum is 6 characters. Sign-up and a password change in `<user-settings>` ask for 8 to 128. Spaces and other characters are allowed. There is no requirement for a number or a symbol. The sentence under the field is "At least 8 characters. A passphrase works well." A short password reads "Use at least 8 characters."
 
 In the Firebase console, open Authentication and turn on the password policy. Set the minimum to 8 so the server uses the same rule. This package does not change that policy.
+
+## Google sign-in
+
+Continue with Google uses Firebase `signInWithPopup`. A blocked popup, or a phone, uses `signInWithRedirect`. The first success creates the Firebase user.
+
+On [pwa-authentic.firebaseapp.com](https://pwa-authentic.firebaseapp.com) the redirect works, because that host is Firebase Hosting and `authDomain` is the same site. A host on another domain should keep the popup. Redirect there needs the [Firebase redirect guidance](https://firebase.google.com/docs/auth/web/redirect-best-practices): `authDomain` must be that site, or the sign-in must be proxied through Firebase Hosting. Browsers block the third-party storage the redirect handler uses.
+
+Enable Google in the Firebase console:
+
+1. Open the project. Go to Build, Authentication.
+2. Open Sign-in method.
+3. Choose Google. Turn on Enable.
+4. Set a public-facing support email. Save.
+5. Open Settings, then Authorized domains.
+6. `localhost` and your `firebaseapp.com` / `web.app` domains are already there. Add every other domain that embeds the component. Save.
+
+`hide-google` on `<user-login>` or `<user-drawer>` removes the button.
 
 ## Emulators
 

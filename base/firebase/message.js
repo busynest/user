@@ -10,6 +10,7 @@ const known = {
     'auth/invalid-user-token': 'This account is no longer available.',
     'auth/user-disabled': 'This account is disabled.',
     'auth/email-already-in-use': 'An account already uses that email.',
+    'auth/account-exists-with-different-credential': 'That email already has an account. Sign in with email and password.',
     'auth/weak-password': passwordShort,
     'auth/too-many-requests': 'Too many tries. Wait and try again.',
     'auth/network-request-failed': 'Network problem. Try again.',

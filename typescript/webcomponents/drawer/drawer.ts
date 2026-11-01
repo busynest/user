@@ -44,6 +44,9 @@ export class UserDrawer extends connect(store)(LitElement) {
   
  /** @attr subscribe */
   @property({type:Boolean, attribute: true, reflect: true}) public subscribe = false; // Drawer State
+
+  /** @attr hide-google */
+  @property({type: Boolean, attribute: 'hide-google', reflect: true}) public hideGoogle = false;
   
   @state() private name         = "";     // String Username
   @state() private email        = "";
@@ -267,7 +270,8 @@ export class UserDrawer extends connect(store)(LitElement) {
             <!-- Log-in State -->
             <form-login
               source="drawer"
-              exportparts="email: login-email, password: login-password, submit: login-submit, switch: login-switch, forgot: login-forgot, status: login-status, reveal: login-reveal"
+              ?hide-google="${this.hideGoogle}"
+              exportparts="email: login-email, password: login-password, submit: login-submit, switch: login-switch, forgot: login-forgot, status: login-status, reveal: login-reveal, google: login-google"
               ?inert="${this.signup !== this.subscribe}"
               class="content ${
                 this.signup        ===     /* If true, sign-up state */
@@ -280,7 +284,8 @@ export class UserDrawer extends connect(store)(LitElement) {
             <!-- Sign-up State -->
             <form-signup
               source="drawer"
-              exportparts="email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch, status: signup-status, reveal: signup-reveal, notice: signup-notice"
+              ?hide-google="${this.hideGoogle}"
+              exportparts="email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch, status: signup-status, reveal: signup-reveal, notice: signup-notice, google: signup-google"
               ?inert="${this.signup === this.subscribe}"
               class="content ${ !this.signup === this.subscribe ? 'opened' : 'closed' } ">
             </form-signup>

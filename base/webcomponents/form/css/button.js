@@ -54,6 +54,45 @@ export const buttonStyle = css `
     margin:             auto;
   }
 
+  .google {
+    display:              inline-flex;
+    align-items:          center;
+    justify-content:      center;
+    gap:                  10px;
+    box-sizing:           border-box;
+    width:                100%;
+    min-height:           var(--pwa_tap, 44px);
+    margin:               0 0 8px;
+    padding:              10px 18px;
+    border-radius:        10px;
+    border:               1px solid #747775;
+    background:           #fff;
+    color:                #1f1f1f;
+    font:                 inherit;
+    font-weight:          600;
+    font-size:            16px;
+    line-height:          1.2;
+    cursor:               pointer;
+  }
+
+  .google:focus { outline: 0; }
+
+  .google:focus-visible {
+    outline:              2px solid #1f1f1f;
+    outline-offset:       2px;
+  }
+
+  .google:disabled {
+    cursor:               default;
+    opacity:              0.72;
+  }
+
+  .google .g {
+    width:                18px;
+    height:               18px;
+    flex:                 0 0 auto;
+  }
+
   .submit:hover  { background-color: #214f34; }
 
   .submit {

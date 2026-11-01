@@ -27,6 +27,7 @@ import { deleteObject, listAll, ref } from "firebase/storage";
 import { application, auth, db, isReady, onReady, storage } from './authentication.js'
 
 import { pwaAuthChanged, pwaAuthError, pwaLogout } from '../events/names.js';
+import { watchGoogleRedirect } from './google.js';
 import { emitWindow, toAuthError, toPwaUser } from '../events/emit.js';
 
 /** Required - the form reads this after reauthenticate returns false. */
@@ -72,6 +73,8 @@ export const pwaDrawerToggle = () => {
 
 // Required - redux, analytics, and pwa-auth-changed once the app exists
 onReady(() => {
+
+  watchGoogleRedirect();
 
   getAuth(application).useDeviceLanguage();
 

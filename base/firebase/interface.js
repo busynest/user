@@ -7,6 +7,7 @@ import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
 import { deleteObject, listAll, ref } from "firebase/storage";
 import { application, auth, db, isReady, onReady, storage } from './authentication.js';
 import { pwaAuthChanged, pwaAuthError, pwaLogout } from '../events/names.js';
+import { watchGoogleRedirect } from './google.js';
 import { emitWindow, toAuthError, toPwaUser } from '../events/emit.js';
 let failed = null;
 export function takeAuthFailure() {
@@ -24,6 +25,7 @@ export const pwaDrawerToggle = () => {
     store.dispatch(closeSign());
 };
 onReady(() => {
+    watchGoogleRedirect();
     getAuth(application).useDeviceLanguage();
     analyticsReady = (async () => {
         if (await isSupported()) {

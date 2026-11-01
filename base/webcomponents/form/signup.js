@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithGoogle, takeGoogleNotice } from '../../firebase/google.js';
 import { auth } from '../../firebase/authentication.js';
 import { logAccount } from '../../firebase/interface.js';
 import { sendVerification } from '../../api/verify.js';
@@ -26,6 +27,7 @@ import { statusStyle, liveStatus } from './css/status.js';
 import { noticeStyle } from './css/notice.js';
 import { tapStyle } from '../css/tap.js';
 import { revealControl } from './reveal.js';
+import { googleButton } from './google-button.js';
 import { markVerificationNotice } from './notice.js';
 import store from '../../store.js';
 import { universalToggle } from '../../redux/frontend.js';
@@ -34,6 +36,7 @@ let FormSignup = class FormSignup extends LitElement {
     constructor() {
         super();
         this.source = '';
+        this.hideGoogle = false;
         this.email = '';
         this.password = '';
         this.status = '';
@@ -68,6 +71,21 @@ let FormSignup = class FormSignup extends LitElement {
                 this.busy = false;
             }
         };
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        this.adoptRedirect();
+    }
+    updated() {
+        this.adoptRedirect();
+    }
+    adoptRedirect() {
+        if (!this.classList.contains('opened'))
+            return;
+        const pending = takeGoogleNotice();
+        if (!pending)
+            return;
+        this.show(pending);
     }
     static get styles() {
         return [
@@ -167,6 +185,8 @@ let FormSignup = class FormSignup extends LitElement {
 
             ${liveStatus(statusId, this.status, this.tone)}
 
+            ${this.hideGoogle ? '' : googleButton(this.busy, () => { void this.google(); })}
+
             <button
               type=         "submit"
               part=         "submit"
@@ -194,6 +214,22 @@ let FormSignup = class FormSignup extends LitElement {
     }
     change() {
         store.dispatch(universalToggle(this.source));
+    }
+    async google() {
+        if (this.busy)
+            return;
+        this.busy = true;
+        this.tone = '';
+        this.status = '';
+        try {
+            await signInWithGoogle();
+        }
+        catch (error) {
+            this.show(toAuthError(error));
+        }
+        finally {
+            this.busy = false;
+        }
     }
     show(detail) {
         this.tone = 'error';
@@ -238,6 +274,10 @@ __decorate([
     property({ type: String }),
     __metadata("design:type", Object)
 ], FormSignup.prototype, "source", void 0);
+__decorate([
+    property({ type: Boolean, attribute: 'hide-google', reflect: true }),
+    __metadata("design:type", Object)
+], FormSignup.prototype, "hideGoogle", void 0);
 __decorate([
     state(),
     __metadata("design:type", Object)

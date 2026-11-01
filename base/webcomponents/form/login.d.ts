@@ -1,6 +1,7 @@
 import { LitElement } from 'lit';
 export declare class FormLogin extends LitElement {
     source: string;
+    hideGoogle: boolean;
     private email;
     private password;
     private status;
@@ -9,9 +10,13 @@ export declare class FormLogin extends LitElement {
     private resetBusy;
     private showPassword;
     constructor();
+    connectedCallback(): void;
+    protected updated(): void;
+    private adoptRedirect;
     static get styles(): import("lit").CSSResult[];
     protected render(): import("lit-html").TemplateResult<1>;
     private change;
+    private google;
     private show;
     private handleEmail;
     private handlePassword;
