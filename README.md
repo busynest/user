@@ -1,8 +1,8 @@
 # pwa-auth
 
-Sign-in elements for a site that keeps its own interface. [Demo](https://pwa-authentic.firebaseapp.com).
+Sign-in elements for a site that keeps its own pages. [Demo](https://pwa-authentic.firebaseapp.com).
 
-Five tags: `user-icon`, `user-drawer`, `user-login`, `user-settings`, `email-reset`. One Firebase session. MIT.
+Five tags. They share one sign-in. MIT.
 
 ## Install
 
@@ -10,13 +10,13 @@ Five tags: `user-icon`, `user-drawer`, `user-login`, `user-settings`, `email-res
 npm install pwa-auth lit firebase
 ```
 
-`lit` and `firebase` are peers. Redux ships with the package.
+Install `lit` and `firebase` alongside pwa-auth.
 
 ```javascript
 import 'pwa-auth';
 ```
 
-That registers all five. One tag at a time:
+That turns on all five tags. One tag at a time:
 
 ```javascript
 import 'pwa-auth/icon';
@@ -26,17 +26,15 @@ import 'pwa-auth/settings';
 import 'pwa-auth/reset';
 ```
 
-Each of those loads only that element. The drawer's roll does not load the page login or the settings roll.
-
-A page with no bundler uses the single file. Lit and Firebase are already in it.
+A page with no build step:
 
 ```html
 <script type="module" src="./node_modules/pwa-auth/source/pwa-auth.js"></script>
 ```
 
-`import 'pwa-auth/production'` is that file.
+`import 'pwa-auth/production'` is that same file. Lit and Firebase are already inside it.
 
-## Usage
+## Tags
 
 ```html
 <user-icon subscribe></user-icon>
@@ -48,17 +46,25 @@ A page with no bundler uses the single file. Lit and Firebase are already in it.
 <email-reset active></email-reset>
 ```
 
-`subscribe` starts the icon label, and the drawer or page form, on sign-up. Leave it off to start on sign-in.
+`user-icon` is the button that opens the drawer. Signed out it says Login, or Subscribe when `subscribe` is set. Signed in it shows the photo, initials, or the picture in `empty`.
 
-`user-drawer` opens from `user-icon`. After sign-in it shows the name, a Settings control, and Log out. Put the host's own links in the `before` slot and the default slot.
+`user-drawer` is the sheet that drops down. `subscribe` starts on sign-up. `hide-google` removes Continue with Google. `url` is the Settings link; leave it off to stay on this page. Your own links go in the `before` slot and the default slot.
 
-`user-login` is the same pair of forms in the page. Slot `content` replaces them after sign-in. `hide-google` removes Continue with Google.
+`user-login` is those same forms in the page. `subscribe` and `hide-google` work the same way. The `content` slot replaces the form after sign-in.
 
-`user-settings` is four tabs: Icon, Profile, Password, Delete. Signed out, it shows one line and no fields.
+`user-settings` holds the photo, name, email, password, and delete tabs. Signed out, it shows one line and no fields. `empty` is the picture used when the account has none.
 
-`email-reset` renders nothing until `active` is set. It sends the reset mail for the address in the field.
+`email-reset` is the password-reset form. It stays blank until `active` is set, then sends a reset email for the address in the field.
 
-The fields sit flush with the element. The page owns any gap. The form column fills a narrow host and stops at 400px, centered, on a wide one. Hosts are block-level, follow their container, and shrink in a flex or grid track (`min-width: 0`). `user-icon` sizes to its label.
+## Layout
+
+The fields work in any layout, phone to desktop.
+
+`--pwa_inset` is the space between the element's edge and its fields. Default `0`.
+
+`--pwa_max_width` is the widest the form gets. Default `400px`, centered.
+
+`--pwa_slide` is the animation length. Default `2s`, and `0s` when the visitor prefers reduced motion.
 
 ```css
 user-drawer, user-login, user-settings, email-reset {
@@ -71,36 +77,38 @@ user-drawer, user-login, user-settings, email-reset {
 import { initialize, getCurrentUser, onUserChanged, openDrawer, closeDrawer } from 'pwa-auth';
 ```
 
-`getCurrentUser()` returns `{ uid, displayName, email, photoURL, emailVerified }` or `null`. `onUserChanged` calls back with that shape and returns `unsubscribe`. `openDrawer` and `closeDrawer` move the drawer.
+`getCurrentUser()` returns `{ uid, displayName, email, photoURL, emailVerified }` or `null`. `onUserChanged` calls you with that same shape and returns a function that stops the calls. `openDrawer` and `closeDrawer` open and close the drawer.
 
 ## Firebase
 
-Call `initialize` before anyone signs in. Email and password, plus Google if the button stays on. Storage is used for the photo at `pwa-auth/{uid}/`.
+Connect Firebase before anyone signs in. Email and password are required. Turn on Google if that button stays. Photos are stored at `pwa-auth/{uid}/`.
+
+1. `initialize()` is the one to use.
 
 ```javascript
 import { initialize } from 'pwa-auth';
 
 initialize({
   config: {
-    apiKey:            'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-    authDomain:        'xxxxxxx.xxxxxxx.xxx',
-    projectId:         'xxxxxxx',
-    storageBucket:     'xxxxxxx.xxxxxxx.xxx',
+    apiKey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    authDomain: 'xxxxxxx.xxxxxxx.xxx',
+    projectId: 'xxxxxxx',
+    storageBucket: 'xxxxxxx.xxxxxxx.xxx',
     messagingSenderId: 'xxxxxxxxxxx',
-    appId:             'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+    appId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
   }
 });
 ```
 
-Or set the same JSON on `window.process.env.FIREBASE_CONFIG` in a classic script before the module runs. One assignment. A second `window.process = …` replaces the first.
+2. Or put that same JSON in `firebase-config` on `user-icon`, `user-drawer`, `user-login`, or `user-settings`.
 
-An element can also carry `firebase-config='{"apiKey":"…"}'`. The first value to connect wins.
+3. Or set `window.process.env.FIREBASE_CONFIG` to that JSON string before pwa-auth loads. If `window.process` is already there, add the value on it.
 
-## Roll animation
+Use one of these. Once Firebase is connected, another one leaves it as it is.
 
-`--pwa_slide` is `2s` `ease-in-out` on each component's own host. `prefers-reduced-motion: reduce` sets that variable to `0s`.
+## Animation
 
-The first paint is already at rest. The drawer is shut. The page card and the settings panel are at their current height. Nothing eases until a later change: opening the drawer, swapping login and sign-up, or changing a settings tab. One component's roll does not start another's.
+The drawer unrolls downward and its buttons ride the bottom edge; nothing animates on page load.
 
 [The roll](docs/drawer-slide.md).
 

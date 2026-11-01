@@ -1,5 +1,7 @@
 # Drawer login and sign-up slide
 
+The drawer unrolls downward and its buttons ride the bottom edge. Nothing animates when the page first loads. Login and sign-up then trade places in the same space.
+
 The controls sit on the host edge. `--pwa_inset` defaults to `0`. `--pwa_max_width` defaults to `400px`: the form column fills a narrow host, then centers at that cap. Signed-in drawer links use that same column. The drawer header stays full width. The host is `display: block`, `width: 100%`, `min-width: 0`, so it follows a flex or grid track. A page sets either variable on `user-drawer`, `user-login`, `user-settings`, and `email-reset`. Do not set `--pwa_max_width` on `:host` inside the component; that would beat the page.
 
 The form swap is a transform inside `.inner`. The drawer rolls open and closed on its own: `.drawer-clip` eases `height` and `max-height` between `0px` and the measured content height, and `section.userDrawer` translates so its bottom stays on the clip's bottom. Both use this component's `--pwa_slide` (`2s`, `ease-in-out`). The page login and the settings tabs roll the same way, each inside its own file. There is no shared roll module.

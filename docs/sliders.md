@@ -1,5 +1,7 @@
 # Slides
 
+The drawer, the page login, and settings each slide on their own. Opening one does not move the others. Nothing moves on the first paint.
+
 Three components slide, and each one owns its roll. `user-drawer` (`typescript/webcomponents/drawer/drawer.ts`), `user-login` (`typescript/webcomponents/login/page.ts`), and `user-settings` (`typescript/webcomponents/settings/settings.ts`) do not import a shared roll helper. There is no `css/roll.ts`.
 
 `animation.ts` is the form swap only: `--pwa_slide`, `.opened` / `.closed`, and the drawer shell's closed backstop. Settings does not import it. The full roll write-up is [The roll](drawer-slide.md#the-roll).
