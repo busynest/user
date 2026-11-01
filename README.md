@@ -58,10 +58,13 @@ A page with no bundler uses the single file. Lit and Firebase are already in it.
 
 `email-reset` renders nothing until `active` is set. It sends the reset mail for the address in the field.
 
-The fields sit flush with the element. The page owns any gap:
+The fields sit flush with the element. The page owns any gap. The form column fills a narrow host and stops at 400px, centered, on a wide one. Hosts are block-level, follow their container, and shrink in a flex or grid track (`min-width: 0`). `user-icon` sizes to its label.
 
 ```css
-user-drawer, user-login, user-settings, email-reset { --pwa_inset: 16px; }
+user-drawer, user-login, user-settings, email-reset {
+  --pwa_inset: 16px;
+  --pwa_max_width: 400px;
+}
 ```
 
 ```javascript

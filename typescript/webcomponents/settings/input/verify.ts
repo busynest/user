@@ -54,7 +54,8 @@ export class EmailVerify extends connect(store)(LitElement) {
           box-sizing:         border-box;
           width:              100%;
           min-width:          0;
-          max-width:          100%;
+          max-width:          min(100%, var(--pwa_max_width, 400px));
+          margin-inline:      auto;
           padding-inline:     var(--pwa_inset, 0px);
         }
 

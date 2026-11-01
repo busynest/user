@@ -43,6 +43,8 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
         this.booted = false;
         this.stopNotice = null;
         this.heldHeight = null;
+        this.columnWidth = 0;
+        this.columnObserver = null;
         this.onClipEnd = (event) => {
             if (!(event instanceof TransitionEvent))
                 return;
@@ -62,6 +64,8 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
     disconnectedCallback() {
         this.stopNotice?.();
         this.stopNotice = null;
+        this.columnObserver?.disconnect();
+        this.columnObserver = null;
         super.disconnectedCallback();
     }
     stateChanged(state) {
@@ -90,6 +94,7 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
         const boot = !this.booted;
         this.booted = true;
         if (boot) {
+            this.watchColumn();
             requestAnimationFrame(() => { this.motion = true; });
             return;
         }
@@ -106,6 +111,26 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
             this.rollBetween(clip, sheet, from, to, to);
         else
             this.rest();
+    }
+    watchColumn() {
+        if (typeof ResizeObserver === 'undefined')
+            return;
+        this.columnObserver = new ResizeObserver(() => {
+            const width = Math.round(this.getBoundingClientRect().width);
+            if (!width || width === this.columnWidth)
+                return;
+            this.columnWidth = width;
+            if (!this.rollMotion)
+                return;
+            const clip = this.clip();
+            const sheet = this.sheet();
+            if (!clip || !sheet)
+                return;
+            const from = Math.ceil(clip.getBoundingClientRect().height);
+            const sheetH = Math.ceil(sheet.getBoundingClientRect().height);
+            this.rollBetween(clip, sheet, from, sheetH, sheetH);
+        });
+        this.columnObserver.observe(this);
     }
     clip() {
         return this.shadowRoot?.querySelector('.login-clip') ?? null;

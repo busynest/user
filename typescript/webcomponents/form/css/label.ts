@@ -9,13 +9,14 @@ export const labelStyle : CSSResult = css`
     max-width:            100%;
   }
 
-  /* Required - inset lives inside the form, so the form keeps the host width. */
+  /* Required - the column fills a narrow host and stops at --pwa_max_width on a wide one. Centered. */
   form {
     box-sizing:           border-box;
     width:                100%;
-    max-width:            100%;
+    max-width:            min(100%, var(--pwa_max_width, 400px));
     min-width:            0;
-    margin:               0;
+    margin-inline:        auto;
+    margin-block:         0;
     padding-inline:       var(--pwa_inset, 0px);
   }
 

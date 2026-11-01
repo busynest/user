@@ -49,6 +49,8 @@ export declare class UserSettings extends UserSettings_base {
     private rollMotion;
     private booted;
     private heldHeight;
+    private columnWidth;
+    private columnObserver;
     constructor();
     connectedCallback(): void;
     disconnectedCallback(): void;
@@ -59,6 +61,7 @@ export declare class UserSettings extends UserSettings_base {
     private openTab;
     protected willUpdate(changed: PropertyValues): void;
     protected updated(changed: PropertyValues): void;
+    private watchColumn;
     private clip;
     private sheet;
     private reduced;

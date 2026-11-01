@@ -78,6 +78,8 @@ export class UserDrawer extends connect(store)(LitElement) {
   private returnFocus: HTMLElement | null = null;
   private stopNotice: (() => void) | null = null;
   private heldHeight: number | null = null;
+  private columnWidth = 0;
+  private columnObserver: ResizeObserver | null = null;
   
   constructor() { super(); }
 
@@ -95,6 +97,8 @@ export class UserDrawer extends connect(store)(LitElement) {
     this.removeEventListener('click', this.onLightClick);
     this.stopNotice?.();
     this.stopNotice = null;
+    this.columnObserver?.disconnect();
+    this.columnObserver = null;
     super.disconnectedCallback();
   }
 
@@ -350,7 +354,31 @@ export class UserDrawer extends connect(store)(LitElement) {
           store.dispatch( closeSign() );
         });
       });
-      
+
+    this.watchColumn();
+  }
+
+  // Required - a resize while the sheet is rolling retargets the measured height.
+  private watchColumn(): void {
+    if (typeof ResizeObserver === 'undefined') return;
+    this.columnObserver = new ResizeObserver(() => {
+      const width = Math.round(this.getBoundingClientRect().width);
+      if (!width || width === this.columnWidth) return;
+      this.columnWidth = width;
+      this.onColumnResize();
+    });
+    this.columnObserver.observe(this);
+  }
+
+  // Required - keep the sheet bottom on the clip while the column reflows.
+  private onColumnResize(): void {
+    if (!this.rollMotion) return;
+    const clip = this.clip();
+    const sheet = this.sheet();
+    if (!clip || !sheet) return;
+    const from = Math.ceil(clip.getBoundingClientRect().height);
+    const sheetH = this.sheetPx(clip, sheet);
+    this.rollBetween(clip, sheet, from, this.drawer ? sheetH : 0, sheetH);
   }
 
   static get styles(): CSSResultArray { return [
@@ -409,14 +437,17 @@ export class UserDrawer extends connect(store)(LitElement) {
       text-decoration:          none;
       appearance:               none;
       padding:                  12px 16px;
-      margin:                   12px var(--pwa_inset, 0px);
+      /* Required - same centered column as the form controls. */
+      margin:                   12px auto;
       border:                   1px solid var(--pwa_line_color, #e3daca);
       border-radius:            10px;
       box-sizing:               border-box;
       text-align:               center;
       cursor:                   pointer;
       display:                  block;
-      width:                    auto;
+      width:                    max(0px, calc(min(100%, var(--pwa_max_width, 400px)) - 2 * var(--pwa_inset, 0px)));
+      max-width:                100%;
+      min-width:                0;
       min-height:               var(--pwa_tap, 44px); /* Required - minimum tap target */
     }
 

@@ -51,6 +51,8 @@ export class UserLogin extends connect(store)(LitElement) {
   private booted = false;
   private stopNotice: (() => void) | null = null;
   private heldHeight: number | null = null;
+  private columnWidth = 0;
+  private columnObserver: ResizeObserver | null = null;
   
   constructor() { super(); }
 
@@ -64,6 +66,8 @@ export class UserLogin extends connect(store)(LitElement) {
   override disconnectedCallback(): void {
     this.stopNotice?.();
     this.stopNotice = null;
+    this.columnObserver?.disconnect();
+    this.columnObserver = null;
     super.disconnectedCallback();
   }
 
@@ -91,6 +95,7 @@ export class UserLogin extends connect(store)(LitElement) {
     const boot = !this.booted;
     this.booted = true;
     if (boot) {
+      this.watchColumn();
       requestAnimationFrame(() => { this.motion = true; });
       return;
     }
@@ -103,6 +108,23 @@ export class UserLogin extends connect(store)(LitElement) {
     const to = Math.ceil(sheet.getBoundingClientRect().height);
     if (Math.abs(to - from) > 1) this.rollBetween(clip, sheet, from, to, to);
     else this.rest();
+  }
+
+  private watchColumn(): void {
+    if (typeof ResizeObserver === 'undefined') return;
+    this.columnObserver = new ResizeObserver(() => {
+      const width = Math.round(this.getBoundingClientRect().width);
+      if (!width || width === this.columnWidth) return;
+      this.columnWidth = width;
+      if (!this.rollMotion) return;
+      const clip = this.clip();
+      const sheet = this.sheet();
+      if (!clip || !sheet) return;
+      const from = Math.ceil(clip.getBoundingClientRect().height);
+      const sheetH = Math.ceil(sheet.getBoundingClientRect().height);
+      this.rollBetween(clip, sheet, from, sheetH, sheetH);
+    });
+    this.columnObserver.observe(this);
   }
 
   private clip(): HTMLElement | null {

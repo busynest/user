@@ -4,7 +4,7 @@ Three components slide, and each one owns its roll. `user-drawer` (`typescript/w
 
 `animation.ts` is the form swap only: `--pwa_slide`, `.opened` / `.closed`, and the drawer shell's closed backstop. Settings does not import it. The full roll write-up is [The roll](drawer-slide.md#the-roll).
 
-The fields are flush with the element. Spacing belongs to the page: `user-drawer, user-login, user-settings, email-reset { --pwa_inset: 16px; }`. The default is `0`.
+The fields are flush with the element. Spacing belongs to the page: `--pwa_inset` defaults to `0`. The form column fills a narrow host and, once the host is wider than `--pwa_max_width` (`400px`), stays that wide and centers. The page login column centers under the full-width heading. Signed-in drawer links use that same column. Set either variable on `user-drawer`, `user-login`, `user-settings`, or `email-reset`. The drawer header and the settings tabs stay full width. Each host is `display: block` with `width: 100%` and `min-width: 0` (`user-icon` is `width: fit-content`, `max-width: 100%`). A resize while a roll is in motion remeasures that component and eases from the current clip height with the sheet bottom still on the clip.
 
 Two motions, one duration, per component.
 

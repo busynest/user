@@ -50,12 +50,15 @@ export declare class UserLogin extends UserLogin_base {
     private booted;
     private stopNotice;
     private heldHeight;
+    private columnWidth;
+    private columnObserver;
     constructor();
     connectedCallback(): void;
     disconnectedCallback(): void;
     stateChanged(state: AppState): void;
     protected willUpdate(changed: PropertyValues): void;
     protected updated(changed: PropertyValues): void;
+    private watchColumn;
     private clip;
     private sheet;
     private reduced;

@@ -58,6 +58,9 @@ export class ContactPhoto extends connect(store)(LitElement) {
         grid-template-rows:       auto auto auto;
         grid-template-columns:    1fr;
         width:                    100%;
+        max-width:                min(100%, var(--pwa_max_width, 400px));
+        min-width:                0;
+        margin-inline:            auto;
         padding-inline:           var(--pwa_inset, 0px);
         align-content:            start;
       }

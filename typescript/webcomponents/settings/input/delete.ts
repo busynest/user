@@ -44,6 +44,9 @@ export class DeleteUser extends connect(store)(LitElement) {
       align-content:            start;
       box-sizing:               border-box;
       width:                    100%;
+      max-width:                min(100%, var(--pwa_max_width, 400px));
+      min-width:                0;
+      margin-inline:            auto;
       padding-inline:           var(--pwa_inset, 0px);
     }
     

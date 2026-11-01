@@ -57,6 +57,8 @@ export declare class UserDrawer extends UserDrawer_base {
     private returnFocus;
     private stopNotice;
     private heldHeight;
+    private columnWidth;
+    private columnObserver;
     constructor();
     connectedCallback(): void;
     disconnectedCallback(): void;
@@ -78,6 +80,8 @@ export declare class UserDrawer extends UserDrawer_base {
     private onKey;
     private onLightClick;
     protected firstUpdated(): void;
+    private watchColumn;
+    private onColumnResize;
     static get styles(): CSSResultArray;
     protected render(): import("lit-html").TemplateResult<1>;
     private destination;

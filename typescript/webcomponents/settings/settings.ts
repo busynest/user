@@ -38,6 +38,8 @@ export class UserSettings extends connect(store)(LitElement) {
 
   private booted = false;
   private heldHeight: number | null = null;
+  private columnWidth = 0;
+  private columnObserver: ResizeObserver | null = null;
 
   constructor() { super(); }
 
@@ -51,6 +53,8 @@ export class UserSettings extends connect(store)(LitElement) {
 
   override disconnectedCallback(): void {
     this.removeEventListener('submit', this.onSubmit);
+    this.columnObserver?.disconnect();
+    this.columnObserver = null;
     super.disconnectedCallback();
   }
 
@@ -85,7 +89,11 @@ export class UserSettings extends connect(store)(LitElement) {
     css`
 
       :host {
-        display:          grid;
+        display:          block;
+        box-sizing:       border-box;
+        width:            100%;
+        min-width:        0; /* Required - shrink inside a flex or grid track */
+        max-width:        100%;
         /* Required - this component's clock. It is not the drawer or the page login. */
         --pwa_slide:      2s;
         background-color: var(--pwa_settings_background_color, #fffdf8);
@@ -154,6 +162,7 @@ export class UserSettings extends connect(store)(LitElement) {
   protected updated(changed: PropertyValues): void {
     const boot = !this.booted;
     this.booted = true;
+    if (boot) this.watchColumn();
     if (boot || !changed.has('profileTopic') || !this.login || changed.has('login')) return;
     const clip = this.clip();
     const sheet = this.sheet();
@@ -163,6 +172,23 @@ export class UserSettings extends connect(store)(LitElement) {
     const to = Math.ceil(sheet.getBoundingClientRect().height);
     if (Math.abs(to - from) > 1) this.rollBetween(clip, sheet, from, to, to);
     else this.rest();
+  }
+
+  private watchColumn(): void {
+    if (typeof ResizeObserver === 'undefined') return;
+    this.columnObserver = new ResizeObserver(() => {
+      const width = Math.round(this.getBoundingClientRect().width);
+      if (!width || width === this.columnWidth) return;
+      this.columnWidth = width;
+      if (!this.rollMotion) return;
+      const clip = this.clip();
+      const sheet = this.sheet();
+      if (!clip || !sheet) return;
+      const from = Math.ceil(clip.getBoundingClientRect().height);
+      const sheetH = Math.ceil(sheet.getBoundingClientRect().height);
+      this.rollBetween(clip, sheet, from, sheetH, sheetH);
+    });
+    this.columnObserver.observe(this);
   }
 
   private clip(): HTMLElement | null {

@@ -5,6 +5,10 @@ export const authStyles = [hostCollapse, css `
   :host {
     overflow:               hidden; /* Required - clip the roll. Height eases on the host. */
     display:                block;
+    box-sizing:             border-box;
+    width:                  100%;
+    min-width:              0; /* Required - shrink inside a flex or grid track */
+    max-width:              100%;
   }
 
   .spec[on] {
