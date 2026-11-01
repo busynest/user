@@ -72,6 +72,8 @@ vi.mock('firebase/analytics', () => ({
 import { initialize } from '../../base/firebase/authentication.js';
 import store from '../../base/store.js';
 import { userAuth } from '../../base/redux/frontend.js';
+import { openDrawer } from '../../base/api/drawer.js';
+import { focusable } from './drawer/keys.js';
 import { accEmail, accImage, accName } from '../../base/redux/backend.js';
 import { lettersFor, accountTitle } from './form/letters.js';
 import { pwaAuthError, pwaResetSent, pwaSettings } from '../events/names.js';
@@ -240,8 +242,12 @@ describe('account product', () => {
     const button = drawer.shadowRoot!.querySelector('[part="settings"]') as HTMLButtonElement;
     expect(button.tagName).toBe('BUTTON');
     expect(button.getAttribute('href')).toBeNull();
-    expect(drawer.shadowRoot!.textContent).not.toContain('SLOTTED');
-    expect(drawer.shadowRoot!.querySelector('slot')!.textContent!.trim()).toBe('');
+    const beforeSlot = drawer.shadowRoot!.querySelector('slot[name="before"]') as HTMLSlotElement;
+    const defaultSlot = drawer.shadowRoot!.querySelector('slot:not([name])') as HTMLSlotElement;
+    expect(beforeSlot.assignedNodes()).toHaveLength(0);
+    expect(beforeSlot.textContent).toContain('slotted - before');
+    expect(defaultSlot.assignedNodes()).toHaveLength(0);
+    expect(defaultSlot.textContent).toContain('slotted - default');
 
     button.click();
     expect(heard.at(-1)!.detail).toEqual({ url: '' });
@@ -252,6 +258,42 @@ describe('account product', () => {
     const link = drawer.shadowRoot!.querySelector('[part="settings"]') as HTMLAnchorElement;
     expect(link.tagName).toBe('A');
     expect(link.getAttribute('href')).toBe('/account');
+  });
+
+  it('replaces the slot markers, keeps them in the tab order, and closes unless prevented', async () => {
+    store.dispatch(userAuth(true));
+    const drawer = document.createElement('user-drawer') as HTMLElement & { updateComplete: Promise<unknown> };
+    const account = document.createElement('a');
+    account.slot = 'before';
+    account.href = '#account';
+    account.textContent = 'Account';
+    const archive = document.createElement('button');
+    archive.type = 'button';
+    archive.textContent = 'Archive';
+    archive.setAttribute('aria-current', 'page');
+    drawer.append(account, archive);
+    document.body.append(drawer);
+    await drawer.updateComplete;
+
+    const beforeSlot = drawer.shadowRoot!.querySelector('slot[name="before"]') as HTMLSlotElement;
+    const defaultSlot = drawer.shadowRoot!.querySelector('slot:not([name])') as HTMLSlotElement;
+    expect(beforeSlot.assignedNodes()[0]).toBe(account);
+    expect(defaultSlot.assignedNodes()[0]).toBe(archive);
+    expect(focusable(drawer)).toContain(account);
+    expect(focusable(drawer)).toContain(archive);
+
+    openDrawer();
+    await drawer.updateComplete;
+    expect(drawer.hasAttribute('drawer')).toBe(true);
+
+    account.addEventListener('click', (event) => event.preventDefault());
+    account.click();
+    await drawer.updateComplete;
+    expect(drawer.hasAttribute('drawer')).toBe(true);
+
+    archive.click();
+    await drawer.updateComplete;
+    expect(drawer.hasAttribute('drawer')).toBe(false);
   });
 
   it('shows initials and a signed-out settings panel', async () => {

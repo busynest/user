@@ -119,18 +119,36 @@ Drops open from the top. Timing is in [Drawer behaviour](#drawer-behaviour).
 | `url` | `href` of the Settings control shown after sign-in. Set it only when that page is a real route. Leave it unset when `<user-settings>` is already on this page. |
 | `drawer` | Reflects the open state. Redux overwrites it. Do not treat it as an input. |
 
-Logged out, the header reads Subscribe or Login to match the form. Logged in, the header shows the display name, or the email when the account has no name, then:
+Logged out, the header reads Subscribe or Login to match the form. The slots are in the signed-in block, so they are not shown until someone is signed in. Logged in, the header shows the display name, or the email when the account has no name, then, in this order:
 
-- slot `before`
-- Settings
-- the default slot
-- Log out
-
-An empty slot renders nothing. There is no fallback label in the slot.
-
-Settings does not assume a `/settings` route. With `url` unset, it is a button. The click closes the drawer, scrolls to `<user-settings>` when that element is on the page, and dispatches `pwa-settings` with `{ url: '' }`. The event is cancelable. Call `preventDefault()` to keep the drawer open and skip the scroll. With `url` set, Settings is a link to that href, and the same event carries `{ url }`.
+1. slot `before`
+2. Settings (`url`, or the button that stays on this page)
+3. the default slot
+4. Log out
 
 There is no slot named `within`. The second slot is the default slot.
+
+Each slot has fallback text so the host can see where a link will sit: `slotted - before` in the before slot, `slotted - default` in the default slot. Pass a link or a button and that marker is replaced.
+
+```html
+<user-drawer>
+  <a slot="before" href="/account">Account</a>
+  <a href="/archive" aria-current="page">Archive</a>
+</user-drawer>
+```
+
+`::slotted(a)` and `::slotted(button)` share one style: a full-width row, the line colour, and a 44px tap target. `aria-current` on either one uses the nav highlight. A click on a slotted link or button closes the drawer, the same as Settings. Call `preventDefault()` on that click to leave the drawer open.
+
+`url` is only the Settings control. It is not the slot. Leave `url` unset when `<user-settings>` is on this page. Set `url` when Settings is a real route. Slotted links are the host's own pages.
+
+Slotted links can flash before the element upgrades. Hide them:
+
+```css
+/* Optional - hide slotted links until user-drawer upgrades */
+user-drawer:not(:defined) { display: none; }
+```
+
+Settings does not assume a `/settings` route. With `url` unset, it is a button. The click closes the drawer, scrolls to `<user-settings>` when that element is on the page, and dispatches `pwa-settings` with `{ url: '' }`. The event is cancelable. Call `preventDefault()` to keep the drawer open and skip the scroll. With `url` set, Settings is a link to that href, and the same event carries `{ url }`.
 
 ### `<user-login>`
 

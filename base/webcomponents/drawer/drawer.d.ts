@@ -55,6 +55,7 @@ export declare class UserDrawer extends UserDrawer_base {
     stateChanged(state: AppState): void;
     protected updated(changed: PropertyValues): void;
     private onKey;
+    private onLightClick;
     protected firstUpdated(): void;
     static get styles(): CSSResultArray;
     protected render(): import("lit-html").TemplateResult<1>;

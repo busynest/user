@@ -90,14 +90,18 @@ window.__criticalPromise = (async () => {
       if (settingsText.includes('John Doe') || iconText.includes('John Doe') || drawerText.includes('John Doe')) {
         throw new Error('John Doe still showing');
       }
-      if (settingsText.includes('Empty Dataset') || iconText.includes('Empty Dataset') || drawerText.includes('SLOTTED')) {
+      if (settingsText.includes('Empty Dataset') || iconText.includes('Empty Dataset')) {
         throw new Error('placeholder still showing');
       }
       if (!settingsText.includes('Sign in to change')) throw new Error(settingsText);
-      if (document.querySelector('user-drawer').querySelector('a, button')) {
-        throw new Error('slotted placeholder leaked into the light DOM');
+      const beforeSlot = document.querySelector('user-drawer').shadowRoot.querySelector('slot[name="before"]');
+      const defaultSlot = document.querySelector('user-drawer').shadowRoot.querySelector('slot:not([name])');
+      if (beforeSlot.assignedNodes().length !== 0 || defaultSlot.assignedNodes().length !== 0) {
+        throw new Error('emulator passed links into the slots');
       }
-      record('signed-out shell', true, 'no John Doe, no empty dataset, no slotted placeholders');
+      if (!beforeSlot.textContent.includes('slotted - before')) throw new Error(beforeSlot.textContent);
+      if (!defaultSlot.textContent.includes('slotted - default')) throw new Error(defaultSlot.textContent);
+      record('signed-out shell', true, 'fallback markers, no host links');
     } catch (error) {
       record('signed-out shell', false, error.message);
     }
@@ -330,6 +334,15 @@ window.__criticalPromise = (async () => {
       document.querySelector('user-icon').shadowRoot.querySelector('button').click();
       await until('drawer open', () => drawer.hasAttribute('drawer'));
       await sleep(1600);
+      const beforeSlot = drawer.shadowRoot.querySelector('slot[name="before"]');
+      const defaultSlot = drawer.shadowRoot.querySelector('slot:not([name])');
+      if (beforeSlot.assignedNodes().length !== 0 || !beforeSlot.textContent.includes('slotted - before')) {
+        throw new Error('before fallback missing');
+      }
+      if (defaultSlot.assignedNodes().length !== 0 || !defaultSlot.textContent.includes('slotted - default')) {
+        throw new Error('default fallback missing');
+      }
+      await pause('slot-fallback');
       await pause('drawer-open');
       const close = drawer.shadowRoot.querySelector('.close');
       const focused = drawer.shadowRoot.activeElement === close;
@@ -343,7 +356,30 @@ window.__criticalPromise = (async () => {
       drawer.shadowRoot.querySelector('.close').click();
       await until('drawer close', () => !drawer.hasAttribute('drawer'));
       if (!focused) throw new Error('close button did not take focus');
-      record('drawer', true, stayed ? 'open, Escape, close, focus stayed' : 'open, Escape, close; tab focus left the drawer');
+      const beforeLink = document.createElement('a');
+      beforeLink.slot = 'before';
+      beforeLink.href = '#settings';
+      beforeLink.textContent = 'Account';
+      const mainLink = document.createElement('a');
+      mainLink.href = '#events';
+      mainLink.textContent = 'Events';
+      mainLink.setAttribute('aria-current', 'page');
+      drawer.append(beforeLink, mainLink);
+      document.querySelector('user-icon').shadowRoot.querySelector('button').click();
+      await until('slotted drawer', () => drawer.hasAttribute('drawer'));
+      await sleep(1600);
+      if (beforeSlot.assignedNodes().length !== 1 || beforeSlot.assignedNodes()[0] !== beforeLink) {
+        throw new Error('before slot did not take the host link');
+      }
+      if (defaultSlot.assignedNodes().length !== 1 || defaultSlot.assignedNodes()[0] !== mainLink) {
+        throw new Error('default slot did not take the host link');
+      }
+      await pause('slot-links');
+      const href = location.href;
+      beforeLink.click();
+      await until('slot closed drawer', () => !drawer.hasAttribute('drawer'));
+      if (location.href.split('#')[0] !== href.split('#')[0]) throw new Error('slotted link left the page ' + location.href);
+      record('drawer', true, stayed ? 'open, Escape, close, focus stayed, slots replace fallback' : 'open, Escape, close; tab focus left the drawer');
       await pause('drawer');
     } catch (error) {
       record('drawer', false, error.message);

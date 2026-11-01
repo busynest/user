@@ -67,7 +67,10 @@
     </header>
 
     <!-- Drop-down - Drawer-->
-    <user-drawer      subscribe    ></user-drawer>
+    <user-drawer      subscribe    >
+      <a slot="before" href="#login">Sign in</a>
+      <a href="#account">Account</a>
+    </user-drawer>
 
     <main>
 
@@ -84,7 +87,7 @@
 
       <section>
 
-        <h2>user-login</h2>
+        <h2 id="login">user-login</h2>
 
         <!-- Log-in - -Page-->
         <user-login     login     ></user-login>
@@ -101,7 +104,7 @@
 
       <section>
 
-        <h2>user-settings</h2>
+        <h2 id="account">user-settings</h2>
 
         <!-- Settings - Page-->
         <user-settings></user-settings>

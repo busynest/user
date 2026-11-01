@@ -1001,7 +1001,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
         </form>
 
       </div>
-    `}showSent(){this.tone="",this.status="Check your inbox for the verification email.",this.cooldown=45,this.armCooldown(),this.updateComplete.then(()=>{this.focusStatus()})}showFirebase(e){this.tone="error",this.status=Ay(e),this.updateComplete.then(()=>{this.focusStatus()})}focusStatus(){const e=this.renderRoot.querySelector("#pwa-verify-status");e?.focus()}clearWait(){window.clearInterval(this.timer),this.timer=0,this.cooldown=0}armCooldown(){window.clearInterval(this.timer),this.timer=window.setInterval(()=>{if(this.cooldown<=1)return this.cooldown=0,window.clearInterval(this.timer),void(this.timer=0);this.cooldown-=1},1e3)}}Y_([ue(),X_("design:type",Object)],Z_.prototype,"login",void 0),Y_([ue(),X_("design:type",Object)],Z_.prototype,"verified",void 0),Y_([ue(),X_("design:type",Object)],Z_.prototype,"email",void 0),Y_([ue(),X_("design:type",Object)],Z_.prototype,"status",void 0),Y_([ue(),X_("design:type",Object)],Z_.prototype,"tone",void 0),Y_([ue(),X_("design:type",Object)],Z_.prototype,"busy",void 0),Y_([ue(),X_("design:type",Object)],Z_.prototype,"cooldown",void 0),customElements.define("email-verify",Z_);var eb=function(e,t,n,s){var r,i=arguments.length,a=i<3?t:null===s?s=Object.getOwnPropertyDescriptor(t,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)a=Reflect.decorate(e,t,n,s);else for(var o=e.length-1;o>=0;o--)(r=e[o])&&(a=(i<3?r(a):i>3?r(t,n,a):r(t,n))||a);return i>3&&a&&Object.defineProperty(t,n,a),a},tb=function(e,t){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(e,t)};let nb=class extends(he(gn)(ie)){constructor(){super(),this.url="",this.drawer=!1,this.subscribe=!1,this.name="",this.email="",this.verified=!1,this.notice="",this.user=!1,this.signup=!1,this.wasOpen=!1,this.sawOpen=!1,this.returnFocus=null,this.stopNotice=null,this.onKey=e=>{if(!this.drawer)return;if("Escape"===e.key)return e.preventDefault(),void gn.dispatch(rn());if("Tab"!==e.key)return;const t=z_(this);if(!t.length)return;const n=t[0],s=t[t.length-1],r=K_(),i=!!r&&t.includes(r);e.shiftKey?i&&r!==n||(e.preventDefault(),s.focus()):i&&r!==s||(e.preventDefault(),n.focus())},this.onSettings=e=>{const t=this.destination();if(!this.dispatchEvent(new CustomEvent(py,{bubbles:!0,composed:!0,cancelable:!0,detail:{url:t}})))return void e.preventDefault();if(gn.dispatch(rn()),t)return;e.preventDefault();const n=document.querySelector("user-settings");n instanceof HTMLElement&&n.scrollIntoView({block:"nearest"})}}connectedCallback(){x_(this),super.connectedCallback(),this.addEventListener("keydown",this.onKey),this.notice=S_(),this.stopNotice=N_(()=>{this.notice=S_()})}disconnectedCallback(){this.removeEventListener("keydown",this.onKey),this.stopNotice?.(),this.stopNotice=null,super.disconnectedCallback()}stateChanged(e){const t=e.frontend.drawer;this.name=e.backend.name,this.email=e.backend.email,this.verified=Boolean(e.backend?.verified),this.drawer=t,this.user=e.frontend.login,this.signup=e.frontend.registerOne;(this.sawOpen?t!==this.wasOpen:t)&&function(e,t,n){e.dispatchEvent(new CustomEvent(t,{...my,detail:n}))}(this,hy,{open:t}),this.wasOpen=t,this.sawOpen=!0}updated(e){if(e.has("drawer")){if(this.drawer){const e=K_();return this.returnFocus=e&&!this.contains(e)?e:this.returnFocus,this.shadowRoot?.querySelector(".close")?.focus(),void y_(!1)}this.returnFocus?.focus(),this.returnFocus=null}}firstUpdated(){this.shadowRoot.querySelector(".close").addEventListener("click",()=>{gn.dispatch(rn())}),this.shadowRoot.querySelector(".leave").addEventListener("click",async()=>{if(this.user)try{await h_()}catch{return}gn.dispatch(rn())});this.shadowRoot.querySelectorAll("a").forEach(e=>{e.addEventListener("click",()=>{gn.dispatch(rn())})})}static get styles(){return[V_,yn,j_,$_,J_,q_,Dn,Fy,T_,W_,i`
+    `}showSent(){this.tone="",this.status="Check your inbox for the verification email.",this.cooldown=45,this.armCooldown(),this.updateComplete.then(()=>{this.focusStatus()})}showFirebase(e){this.tone="error",this.status=Ay(e),this.updateComplete.then(()=>{this.focusStatus()})}focusStatus(){const e=this.renderRoot.querySelector("#pwa-verify-status");e?.focus()}clearWait(){window.clearInterval(this.timer),this.timer=0,this.cooldown=0}armCooldown(){window.clearInterval(this.timer),this.timer=window.setInterval(()=>{if(this.cooldown<=1)return this.cooldown=0,window.clearInterval(this.timer),void(this.timer=0);this.cooldown-=1},1e3)}}Y_([ue(),X_("design:type",Object)],Z_.prototype,"login",void 0),Y_([ue(),X_("design:type",Object)],Z_.prototype,"verified",void 0),Y_([ue(),X_("design:type",Object)],Z_.prototype,"email",void 0),Y_([ue(),X_("design:type",Object)],Z_.prototype,"status",void 0),Y_([ue(),X_("design:type",Object)],Z_.prototype,"tone",void 0),Y_([ue(),X_("design:type",Object)],Z_.prototype,"busy",void 0),Y_([ue(),X_("design:type",Object)],Z_.prototype,"cooldown",void 0),customElements.define("email-verify",Z_);var eb=function(e,t,n,s){var r,i=arguments.length,a=i<3?t:null===s?s=Object.getOwnPropertyDescriptor(t,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)a=Reflect.decorate(e,t,n,s);else for(var o=e.length-1;o>=0;o--)(r=e[o])&&(a=(i<3?r(a):i>3?r(t,n,a):r(t,n))||a);return i>3&&a&&Object.defineProperty(t,n,a),a},tb=function(e,t){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(e,t)};let nb=class extends(he(gn)(ie)){constructor(){super(),this.url="",this.drawer=!1,this.subscribe=!1,this.name="",this.email="",this.verified=!1,this.notice="",this.user=!1,this.signup=!1,this.wasOpen=!1,this.sawOpen=!1,this.returnFocus=null,this.stopNotice=null,this.onKey=e=>{if(!this.drawer)return;if("Escape"===e.key)return e.preventDefault(),void gn.dispatch(rn());if("Tab"!==e.key)return;const t=z_(this);if(!t.length)return;const n=t[0],s=t[t.length-1],r=K_(),i=!!r&&t.includes(r);e.shiftKey?i&&r!==n||(e.preventDefault(),s.focus()):i&&r!==s||(e.preventDefault(),n.focus())},this.onLightClick=e=>{if(e.defaultPrevented)return;const t=e.target;if(!(t instanceof Element))return;const n=t.closest("a, button");n instanceof HTMLElement&&this.contains(n)&&(this.shadowRoot?.contains(n)||gn.dispatch(rn()))},this.onSettings=e=>{const t=this.destination();if(!this.dispatchEvent(new CustomEvent(py,{bubbles:!0,composed:!0,cancelable:!0,detail:{url:t}})))return void e.preventDefault();if(gn.dispatch(rn()),t)return;e.preventDefault();const n=document.querySelector("user-settings");n instanceof HTMLElement&&n.scrollIntoView({block:"nearest"})}}connectedCallback(){x_(this),super.connectedCallback(),this.addEventListener("keydown",this.onKey),this.addEventListener("click",this.onLightClick),this.notice=S_(),this.stopNotice=N_(()=>{this.notice=S_()})}disconnectedCallback(){this.removeEventListener("keydown",this.onKey),this.removeEventListener("click",this.onLightClick),this.stopNotice?.(),this.stopNotice=null,super.disconnectedCallback()}stateChanged(e){const t=e.frontend.drawer;this.name=e.backend.name,this.email=e.backend.email,this.verified=Boolean(e.backend?.verified),this.drawer=t,this.user=e.frontend.login,this.signup=e.frontend.registerOne;(this.sawOpen?t!==this.wasOpen:t)&&function(e,t,n){e.dispatchEvent(new CustomEvent(t,{...my,detail:n}))}(this,hy,{open:t}),this.wasOpen=t,this.sawOpen=!0}updated(e){if(e.has("drawer")){if(this.drawer){const e=K_();return this.returnFocus=e&&!this.contains(e)?e:this.returnFocus,this.shadowRoot?.querySelector(".close")?.focus(),void y_(!1)}this.returnFocus?.focus(),this.returnFocus=null}}firstUpdated(){this.shadowRoot.querySelector(".close").addEventListener("click",()=>{gn.dispatch(rn())}),this.shadowRoot.querySelector(".leave").addEventListener("click",async()=>{if(this.user)try{await h_()}catch{return}gn.dispatch(rn())});this.shadowRoot.querySelectorAll("a").forEach(e=>{e.addEventListener("click",()=>{gn.dispatch(rn())})})}static get styles(){return[V_,yn,j_,$_,J_,q_,Dn,Fy,T_,W_,i`
     .exit > h3 {
       display:                flex;
       align-items:            center;
@@ -1021,11 +1021,17 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       min-height:             var(--pwa_tap, 44px); /* Required - minimum tap target */
     }
 
-    ::slotted(a) {
+    ::slotted(a),
+    ::slotted(button),
+    slot > a,
+    slot > button {
+      font:                     inherit;
       font-size:                0.95rem;
-      color:                    var(--pwa_label_text_color, #1c2430);
       font-weight:              600;
+      color:                    var(--pwa_label_text_color, #1c2430);
+      background:               transparent;
       text-decoration:          none;
+      appearance:               none;
       padding:                  12px 16px;
       margin:                   12px 16px;
       border:                   1px solid var(--pwa_line_color, #e3daca);
@@ -1034,7 +1040,14 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       text-align:               center;
       cursor:                   pointer;
       display:                  block;
+      width:                    auto;
       min-height:               var(--pwa_tap, 44px); /* Required - minimum tap target */
+    }
+
+    ::slotted(a[aria-current]),
+    ::slotted(button[aria-current]) {
+      color:                    var(--pwa_nav_highlight_color, #1c2430);
+      background:               var(--pwa_nav_on_background, #f3efe6);
     }
     `]}render(){return H`
 
@@ -1092,12 +1105,12 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
         class="spec setLog"
         ?on="${!0===this.user}">
 
-          <!-- Required - an empty slot renders nothing. No fallback text. -->
-          <slot name="before"></slot>
+          <!-- Required - Jack's markers. A host link replaces the fallback. -->
+          <slot name="before"><a href="/settings">slotted - before</a></slot>
 
           ${this.settingsControl()}
 
-          <slot></slot>
+          <slot><a href="/settings">slotted - default</a></slot>
 
           ${this.user&&this.notice&&!this.verified?H`
             <p class="notice" part="notice" role="status" aria-live="polite">Check your inbox for the verification email. You can still sign in.</p>

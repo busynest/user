@@ -79,6 +79,21 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
                 first.focus();
             }
         };
+        this.onLightClick = (event) => {
+            if (event.defaultPrevented)
+                return;
+            const target = event.target;
+            if (!(target instanceof Element))
+                return;
+            const control = target.closest('a, button');
+            if (!(control instanceof HTMLElement))
+                return;
+            if (!this.contains(control))
+                return;
+            if (this.shadowRoot?.contains(control))
+                return;
+            store.dispatch(closeSign());
+        };
         this.onSettings = (event) => {
             const url = this.destination();
             const proceed = this.dispatchEvent(new CustomEvent(pwaSettings, {
@@ -104,11 +119,13 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         applyFirebaseConfig(this);
         super.connectedCallback();
         this.addEventListener('keydown', this.onKey);
+        this.addEventListener('click', this.onLightClick);
         this.notice = verificationNotice();
         this.stopNotice = onVerificationNotice(() => { this.notice = verificationNotice(); });
     }
     disconnectedCallback() {
         this.removeEventListener('keydown', this.onKey);
+        this.removeEventListener('click', this.onLightClick);
         this.stopNotice?.();
         this.stopNotice = null;
         super.disconnectedCallback();
@@ -195,11 +212,17 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       min-height:             var(--pwa_tap, 44px); /* Required - minimum tap target */
     }
 
-    ::slotted(a) {
+    ::slotted(a),
+    ::slotted(button),
+    slot > a,
+    slot > button {
+      font:                     inherit;
       font-size:                0.95rem;
-      color:                    var(--pwa_label_text_color, #1c2430);
       font-weight:              600;
+      color:                    var(--pwa_label_text_color, #1c2430);
+      background:               transparent;
       text-decoration:          none;
+      appearance:               none;
       padding:                  12px 16px;
       margin:                   12px 16px;
       border:                   1px solid var(--pwa_line_color, #e3daca);
@@ -208,7 +231,14 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       text-align:               center;
       cursor:                   pointer;
       display:                  block;
+      width:                    auto;
       min-height:               var(--pwa_tap, 44px); /* Required - minimum tap target */
+    }
+
+    ::slotted(a[aria-current]),
+    ::slotted(button[aria-current]) {
+      color:                    var(--pwa_nav_highlight_color, #1c2430);
+      background:               var(--pwa_nav_on_background, #f3efe6);
     }
     `
         ];
@@ -274,12 +304,12 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         class="spec setLog"
         ?on="${this.user === true}">
 
-          <!-- Required - an empty slot renders nothing. No fallback text. -->
-          <slot name="before"></slot>
+          <!-- Required - Jack's markers. A host link replaces the fallback. -->
+          <slot name="before"><a href="/settings">slotted - before</a></slot>
 
           ${this.settingsControl()}
 
-          <slot></slot>
+          <slot><a href="/settings">slotted - default</a></slot>
 
           ${this.user && this.notice && !this.verified ? html `
             <p class="notice" part="notice" role="status" aria-live="polite">Check your inbox for the verification email. You can still sign in.</p>

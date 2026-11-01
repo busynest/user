@@ -49,7 +49,8 @@
 
     <!-- Drop-down drawer. subscribe starts on the sign-up form. -->
     <user-drawer subscribe>
-      <a slot="before" href="#settings">settings</a>
+      <a slot="before" href="#settings">Settings</a>
+      <a href="#events">What this page hears</a>
     </user-drawer>
 
     <main class="wrap">
@@ -90,7 +91,7 @@
         </div>
       </section>
 
-      <section class="card">
+      <section class="card" id="events">
         <p class="kicker">Events</p>
         <h2>What this page hears</h2>
         <p class="note">Each pwa- event lands here as it fires, including the drawer toggle.</p>
