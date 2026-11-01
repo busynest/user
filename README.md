@@ -58,6 +58,12 @@ A page with no bundler uses the single file. Lit and Firebase are already in it.
 
 `email-reset` renders nothing until `active` is set. It sends the reset mail for the address in the field.
 
+The fields sit flush with the element. The page owns any gap:
+
+```css
+user-drawer, user-login, user-settings, email-reset { --pwa_inset: 16px; }
+```
+
 ```javascript
 import { initialize, getCurrentUser, onUserChanged, openDrawer, closeDrawer } from 'pwa-auth';
 ```

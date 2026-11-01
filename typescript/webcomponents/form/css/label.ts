@@ -17,7 +17,7 @@ export const labelStyle : CSSResult = css`
     margin:               0;
     font-weight:          600;
     line-height:          1.3;
-    padding:              0 16px 14px; /* Required - field inset */
+    padding:              0 0 14px;
   }
 
   .hint {

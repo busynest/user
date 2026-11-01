@@ -28,7 +28,14 @@ export const drawerStyle: CSSResult = css`
   }
 
   .userDrawer > .spec > .wrapper {
-    margin: 20px 0 12px; /* Required - space under the header. Fields bring their own 16px inset. */
+    margin: 20px 0 12px; /* Required - space under the header. No side gap of our own. */
+    padding-inline: var(--pwa_inset, 0px);
+    box-sizing: border-box;
+  }
+
+  .spec.setLog {
+    padding-inline: var(--pwa_inset, 0px);
+    box-sizing: border-box;
   }
 
   .userDrawer,

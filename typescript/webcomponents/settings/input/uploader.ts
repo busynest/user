@@ -109,7 +109,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
         display: grid;
         grid-template-columns: auto 1fr;
         grid-gap: 16px;
-        padding: 0 16px;
+        padding: 0;
       ">Upload
       <progress
         id="pwa-uploader"
@@ -142,8 +142,8 @@ export class ContactPhoto extends connect(store)(LitElement) {
         border: 1px dashed var(--pwa_line_color, #e3daca);
         border-radius: 12px;
         overflow: hidden;
-        margin: 0 16px;
-        padding: 0 16px 16px 16px;
+        margin: 0;
+        padding: 0 0 16px;
       "
       for ="photoURL"
       part="preview">Photo:

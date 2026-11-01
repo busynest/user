@@ -17,7 +17,7 @@ export const listStyle: CSSResult = css`
     border-top:     2px dotted black;
     border-bottom:  2px dotted black;
     text-align:     center;
-    margin:         0 16px;
+    margin:         0;
   }
 
 `;

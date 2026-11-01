@@ -75,7 +75,7 @@ export const navigation = css`
     font-weight:      600;
     font-size:        1.35rem;
     margin:           0;
-    padding:          20px 16px 4px;
+    padding:          20px 0 4px;
   }
 
 `;

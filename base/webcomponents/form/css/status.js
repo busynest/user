@@ -2,7 +2,7 @@ import { css, html } from 'lit';
 export const statusStyle = css `
 
   .status {
-    margin:                 0 16px 8px;
+    margin:                 0 0 8px;
     color:                  var(--pwa_label_text_color, #1c2430);
     font-size:              0.95rem;
     line-height:            1.4;

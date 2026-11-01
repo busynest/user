@@ -78,6 +78,13 @@ user-icon {
   margin: auto;
 }
 
+user-drawer,
+user-login,
+user-settings,
+email-reset {
+  --pwa_inset:                16px;
+}
+
 user-login {
   border-radius:              8px;
   overflow:                   hidden;

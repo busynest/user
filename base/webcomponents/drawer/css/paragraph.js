@@ -8,7 +8,7 @@ export const lineStyle = css `
     box-sizing:     border-box;
     width:          auto;
     padding:        12px 16px;
-    margin:         12px 16px;
+    margin:         12px 0;
     border:         1px solid var(--pwa_line_color, #e3daca);
     border-radius:  10px;
     color:          var(--pwa_drawer_text_color, #1c2430);
@@ -27,7 +27,7 @@ export const lineStyle = css `
     box-sizing:     border-box;
     cursor:         pointer;
     padding:        12px 16px;
-    margin:         8px 16px 16px;
+    margin:         8px 0 16px;
     border:         1px solid var(--pwa_line_color, #e3daca);
     border-radius:  10px;
     background:     transparent;

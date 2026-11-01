@@ -1,5 +1,7 @@
 # Drawer login and sign-up slide
 
+The controls sit on the host edge. `--pwa_inset` defaults to `0`. A page that wants the old gap sets `--pwa_inset: 16px` on `user-drawer`, `user-login`, `user-settings`, and `email-reset`.
+
 The form swap is a transform inside `.inner`. The drawer rolls open and closed on its own: `.drawer-clip` eases `height` and `max-height` between `0px` and the measured content height, and `section.userDrawer` translates so its bottom stays on the clip's bottom. Both use this component's `--pwa_slide` (`2s`, `ease-in-out`). The page login and the settings tabs roll the same way, each inside its own file. There is no shared roll module.
 
 ## How the form swap works

@@ -4,6 +4,8 @@ Three components slide, and each one owns its roll. `user-drawer` (`typescript/w
 
 `animation.ts` is the form swap only: `--pwa_slide`, `.opened` / `.closed`, and the drawer shell's closed backstop. Settings does not import it. The full roll write-up is [The roll](drawer-slide.md#the-roll).
 
+The fields are flush with the element. Spacing belongs to the page: `user-drawer, user-login, user-settings, email-reset { --pwa_inset: 16px; }`. The default is `0`.
+
 Two motions, one duration, per component.
 
 - The drawer rolls. `.drawer-clip` eases `height` and `max-height` from `0px` to the measured content height and back. `section.userDrawer` translates on that same clock, so the sheet's bottom stays on the clip's bottom.

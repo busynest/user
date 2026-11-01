@@ -7,6 +7,11 @@ export const authStyles = [hostCollapse, css `
     display:                block;
   }
 
+  .wrapper {
+    padding-inline:         var(--pwa_inset, 0px);
+    box-sizing:             border-box;
+  }
+
   .spec[on] {
     display:                grid;
   }
@@ -24,7 +29,7 @@ export const authStyles = [hostCollapse, css `
 
   h3 {
     margin:                 0;
-    padding:                18px 16px 14px;
+    padding:                18px var(--pwa_inset, 0px) 14px;
     font-size:              1.15rem;
     font-weight:            600;
     border-bottom:          1px solid var(--pwa_line_color, #e3daca);

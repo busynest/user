@@ -12,11 +12,11 @@ export const buttonStyle = css `
     display:              block;
     box-sizing:           border-box;
     white-space:          normal;
-    /* Required - same 16px column as the inputs. Margin box stays inside the host. */
-    width:                calc(100% - 32px);
-    max-width:            calc(100% - 32px);
+    /* Required - flush to the host. The page sets --pwa_inset when it wants a gap. */
+    width:                100%;
+    max-width:            100%;
     min-width:            0;
-    margin:               8px 16px 20px;
+    margin:               8px 0 20px;
     font-weight:          600;
     text-align:           center;
     vertical-align:       middle;
@@ -54,12 +54,12 @@ export const buttonStyle = css `
     justify-content:      center;
     gap:                  10px;
     box-sizing:           border-box;
-    /* Required - same left and right as the inputs. The G mark does not set the width. */
-    width:                calc(100% - 32px);
-    max-width:            calc(100% - 32px);
+    /* Required - full width of the host. The G mark does not set the width. */
+    width:                100%;
+    max-width:            100%;
     min-width:            0;
     min-height:           var(--pwa_tap, 44px);
-    margin:               0 16px 8px;
+    margin:               0 0 8px;
     padding:              10px 18px;
     border-radius:        10px;
     border:               1px solid #747775;
@@ -94,13 +94,13 @@ export const buttonStyle = css `
 
   .submit {
     box-sizing:         border-box;
-    width:              calc(100% - 32px);
-    max-width:          calc(100% - 32px);
+    width:              100%;
+    max-width:          100%;
     min-width:          0;
     background-color:   var(--pwa_action_background_color, #2a6b45);
     color:              white;
     padding:            14px 20px;
-    margin:             8px 16px;
+    margin:             8px 0;
     border:             none;
     border-radius:      4px;
     cursor:             pointer;

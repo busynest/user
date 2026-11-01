@@ -105,6 +105,8 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
       .settings-sheet {
         display:          block;
         height:           auto;
+        padding-inline:   var(--pwa_inset, 0px);
+        box-sizing:       border-box;
       }
 
       form {
@@ -117,7 +119,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
 
       .signed-out {
         margin:           0;
-        padding:          20px 16px;
+        padding:          20px var(--pwa_inset, 0px);
         text-align:       center;
         color:            var(--pwa_label_text_color, #1c2430);
         font-size:        0.95rem;

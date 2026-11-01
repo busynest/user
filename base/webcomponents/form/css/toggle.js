@@ -4,12 +4,11 @@ export const toggleStyle = css `
   .new {
     display:            block;
     box-sizing:         border-box;
-    /* Required - same 16px column as the inputs and the Google button. */
-    width:              calc(100% - 32px);
-    max-width:          calc(100% - 32px);
+    width:              100%;
+    max-width:          100%;
     min-width:          0;
-    margin-left:        16px;
-    margin-right:       16px;
+    margin-left:        0;
+    margin-right:       0;
     border:             0;
     border-top:         1px solid var(--pwa_line_color, #e3daca);
     padding:            14px 16px;
