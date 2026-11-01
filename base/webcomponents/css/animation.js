@@ -32,12 +32,9 @@ export const animation = css `
 
     backface-visibility:                    hidden;
 
-    transition-property:                    transform;
-    -webkit-transition-property:            transform;
-    transition-timing-function:             ease-in-out;
-    -webkit-transition-timing-function:     ease-in-out;
-    transition-duration:                    2s;
-    -webkit-transition-duration:            2s;
+    /* Required - form swap is 2s. Hide the leaving form only after it has slid away. */
+    transition:                             transform 2s ease-in-out, visibility 0s linear 2s;
+    -webkit-transition:                     transform 2s ease-in-out, visibility 0s linear 2s;
 
     position:relative;
     z-index: 1;
@@ -55,18 +52,21 @@ export const animation = css `
     position:                               relative; /* Required - this form sets the panel height */
     align-self:                             start; /* Required - keep the Update button under its field */
     z-index:                                3;
+    /* Required - show the arriving form immediately, then slide it for 2s. */
+    transition:                             transform 2s ease-in-out, visibility 0s linear 0s;
+    -webkit-transition:                     transform 2s ease-in-out, visibility 0s linear 0s;
 }
 
 .closed {
-    /* Required - max-height slide-out runs with the transform. */
-    transform:                              translate3d(0, -102%, 0);
-    animation:                              slide-out 2s ease-out forwards;
-    visibility:                             visible;
+    /* Required - same cell, full width, slid up. Absolute so the row does not stretch and the transform can run. */
+    transform:                              translate3d(0, -100%, 0);
+    visibility:                             hidden;
     pointer-events:                         none;
-    position:                               relative;
-    overflow:                               hidden;
+    position:                               absolute;
+    top:                                    0;
+    left:                                   0;
     width:                                  100%;
-    height:                                 auto;
+    height:                                 auto; /* Required - a stretched row pulls Update to the top */
     align-self:                             start;
     justify-self:                           start;
     z-index:                                2;
@@ -78,6 +78,9 @@ export const animation = css `
     .opened,
     .closed {
         transition-duration:                0s;
+        transition-delay:                   0s;
+        -webkit-transition-duration:        0s;
+        -webkit-transition-delay:           0s;
         animation-duration:                 0s;
     }
 }
