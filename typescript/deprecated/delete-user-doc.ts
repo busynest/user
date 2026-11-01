@@ -1,4 +1,6 @@
-/* Optional - retired. The host owns users/{uid}. It deletes that doc on pwa-account-deleted. */
+/*
+ * Planned removal: 4.0.0. Date: 2026-11-01.
+ Optional - retired. The host owns users/{uid}. It deletes that doc on pwa-account-deleted. */
 
 import { deleteDocument } from '../firebase/interface.js';
 

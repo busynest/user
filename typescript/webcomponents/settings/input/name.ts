@@ -4,7 +4,6 @@ import { connect }            from "pwa-helpers";
 import { store, AppState }    from "../../../store.js";
 import { updateProfile }      from "firebase/auth";
 import { accName }            from "../../../redux/backend.js";
-import { nameAuth }           from "../../../redux/frontend.js";
 import { auth }               from "../../../firebase/authentication.js";
 import { labelStyle }         from "../../form/css/label.js";
 import { inputStyle }         from "../../form/css/input.js";
@@ -121,7 +120,6 @@ export class InputName extends connect(store)(LitElement) {
       this.dirty = false;
       this.draft = name;
       store.dispatch(accName(name));
-      store.dispatch(nameAuth(name));
       this.status = 'Name saved.';
       emitWindow(pwaProfileUpdated, {
         uid:          current.uid,

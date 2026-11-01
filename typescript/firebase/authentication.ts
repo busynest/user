@@ -18,7 +18,7 @@ export let db!: Firestore;
 export let storage!: FirebaseStorage;
 export let auth!: Auth;
 
-/** @deprecated Optional - load-time snapshot. Required - read auth.currentUser at call time. */
+/** @deprecated Use getCurrentUser(). Removed in 4.0.0. This is only a snapshot from startup. */
 export let user: User | null = null;
 
 let started = false;

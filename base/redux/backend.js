@@ -1,13 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     verified: false,
-    anon: false,
-    userId: '',
     name: '',
     email: '',
-    photoURL: '',
-    phone: '',
-    msgToken: ''
+    photoURL: ''
 };
 export const accountSlice = createSlice({
     name: 'backend',
@@ -16,17 +12,8 @@ export const accountSlice = createSlice({
         accVerified: (state, action) => {
             state.verified = action.payload;
         },
-        accAnon: (state, action) => {
-            state.anon = action.payload;
-        },
-        accID: (state, action) => {
-            state.userId = action.payload;
-        },
         accName: (state, action) => {
             state.name = action.payload;
-        },
-        accPhone: (state, action) => {
-            state.phone = action.payload;
         },
         accEmail: (state, action) => {
             state.email = action.payload;
@@ -34,11 +21,8 @@ export const accountSlice = createSlice({
         accImage: (state, action) => {
             state.photoURL = action.payload;
         },
-        messageId: (state, action) => {
-            state.msgToken = action.payload;
-        },
     }
 });
-export const { accVerified, accID, accName, accPhone, accEmail, accImage, accAnon, messageId } = accountSlice.actions;
+export const { accVerified, accName, accEmail, accImage } = accountSlice.actions;
 export default accountSlice.reducer;
 //# sourceMappingURL=backend.js.map

@@ -1,4 +1,6 @@
-/* Optional - retired. Nothing imported these interfaces. */
+/*
+ * Planned removal: 4.0.0. Date: 2026-11-01.
+ Optional - retired. Nothing imported these interfaces. */
 
 export interface frontendAuth {
   login:            boolean,

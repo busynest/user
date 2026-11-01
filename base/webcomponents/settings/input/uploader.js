@@ -14,7 +14,6 @@ import { connect } from 'pwa-helpers';
 import { auth, storage } from '../../../firebase/authentication.js';
 import { updateProfile } from 'firebase/auth';
 import { accImage } from '../../../redux/backend.js';
-import { iconAuth } from '../../../redux/frontend.js';
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { labelStyle } from '../../form/css/label.js';
 import { statusStyle, liveStatus } from '../../form/css/status.js';
@@ -79,7 +78,6 @@ export class ContactPhoto extends connect(store)(LitElement) {
                     }
                     await updateProfile(signed, { photoURL: url });
                     store.dispatch(accImage(url));
-                    store.dispatch(iconAuth(url));
                     this.photo = url;
                     this.progress = 100;
                     this.tone = '';

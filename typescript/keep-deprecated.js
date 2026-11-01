@@ -7,10 +7,12 @@ function restore(path, line, mark) {
   writeFileSync(path, text.replace(line, mark + line));
 }
 
-const userMark = '/** @deprecated Optional - load-time snapshot. Required - read auth.currentUser at call time. */\n';
-const emailMark = '/** @deprecated Optional - window event userEmailChanged. Required - listen for pwa-email-changed. */\n';
+const userMark = '/** @deprecated Use getCurrentUser(). Removed in 4.0.0. This is only a snapshot from startup. */\n';
+const emailMark = '/** @deprecated Listen for pwa-email-changed. Removed in 4.0.0. */\n';
+const toggleMark = '/** @deprecated Use closeDrawer(). Removed in 4.0.0. This only closes the drawer. */\n';
 
 restore('base/firebase/authentication.d.ts', 'export declare let user: User | null;', userMark);
 restore('base/firebase/authentication.d.ts', 'export declare const user: User | null;', userMark);
 restore('base/deprecated/email-changed.d.ts', 'export declare const userEmailChanged = "userEmailChanged";', emailMark);
 restore('base/deprecated/email-changed.d.ts', 'export declare const userEmailChanged: string;', emailMark);
+restore('base/firebase/interface.d.ts', 'export declare const pwaDrawerToggle: () => void;', toggleMark);

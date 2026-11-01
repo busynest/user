@@ -1,4 +1,6 @@
-/* Optional - retired. The drawer close icon still lives in css/svg.ts. */
+/*
+ * Planned removal: 4.0.0. Date: 2026-11-01.
+ Optional - retired. The drawer close icon still lives in css/svg.ts. */
 
 import { html } from 'lit';
 

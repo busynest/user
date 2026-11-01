@@ -12,7 +12,7 @@ export declare let application: FirebaseApp;
 export declare let db: Firestore;
 export declare let storage: FirebaseStorage;
 export declare let auth: Auth;
-/** @deprecated Optional - load-time snapshot. Required - read auth.currentUser at call time. */
+/** @deprecated Use getCurrentUser(). Removed in 4.0.0. This is only a snapshot from startup. */
 export declare let user: User | null;
 export declare function emailActionCodeSettings(): ActionCodeSettings | undefined;
 export declare function isReady(): boolean;

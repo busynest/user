@@ -1,4 +1,6 @@
-/* Optional - retired. Nothing reads .x-font. */
+/*
+ * Planned removal: 4.0.0. Date: 2026-11-01.
+ Optional - retired. Nothing reads .x-font. */
 
 import { css } from 'lit';
 

@@ -1,4 +1,6 @@
-/* Optional - retired. The open flag is frontend.drawer. */
+/*
+ * Planned removal: 4.0.0. Date: 2026-11-01.
+ Optional - retired. The open flag is frontend.drawer. */
 
 import { createSlice }    from "@reduxjs/toolkit";
 

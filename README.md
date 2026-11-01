@@ -190,6 +190,19 @@ initialize({
 
 Use one of these. Once Firebase is connected, another one leaves it as it is.
 
+## Deprecated
+
+These still work. They go away in 4.0.0.
+
+| Name | Use instead | Removed in |
+| --- | --- | --- |
+| `pwaDrawerToggle()` | `closeDrawer()` | 4.0.0 |
+| `userEmailChanged` | `pwa-email-changed` | 4.0.0 |
+| `user` | `getCurrentUser()` | 4.0.0 |
+| `--pwa_drawer_background_color` | `--pwa_background` | 4.0.0 |
+| `--pwa_settings_background_color` | `--pwa_background` | 4.0.0 |
+| `--section_background_color` | `--pwa_background` | 4.0.0 |
+
 ## License
 
 MIT. See [license](license). Third-party notices are in [LICENSES.txt](LICENSES.txt).

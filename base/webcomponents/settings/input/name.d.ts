@@ -11,23 +11,12 @@ declare const InputName_base: (new (...args: any[]) => {
             drawer: boolean;
             registerOne: boolean;
             registerTwo: boolean;
-            userId: string;
-            customer: string;
-            profileChoice: string;
-            name: string;
-            photoURL: string;
-            phone: string;
-            email: string;
         };
         backend: {
             verified: boolean;
-            anon: boolean;
-            userId: string;
             name: string;
             email: string;
             photoURL: string;
-            phone: string;
-            msgToken: string;
         };
     }): void;
     readonly isConnected: boolean;

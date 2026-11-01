@@ -5,23 +5,12 @@ export declare const store: import("@reduxjs/toolkit").EnhancedStore<{
         drawer: boolean;
         registerOne: boolean;
         registerTwo: boolean;
-        userId: string;
-        customer: string;
-        profileChoice: string;
-        name: string;
-        photoURL: string;
-        phone: string;
-        email: string;
     };
     backend: {
         verified: boolean;
-        anon: boolean;
-        userId: string;
         name: string;
         email: string;
         photoURL: string;
-        phone: string;
-        msgToken: string;
     };
 }, import("redux").UnknownAction, import("@reduxjs/toolkit").Tuple<[import("redux").StoreEnhancer<{
     dispatch: import("redux-thunk").ThunkDispatch<{
@@ -31,23 +20,12 @@ export declare const store: import("@reduxjs/toolkit").EnhancedStore<{
             drawer: boolean;
             registerOne: boolean;
             registerTwo: boolean;
-            userId: string;
-            customer: string;
-            profileChoice: string;
-            name: string;
-            photoURL: string;
-            phone: string;
-            email: string;
         };
         backend: {
             verified: boolean;
-            anon: boolean;
-            userId: string;
             name: string;
             email: string;
             photoURL: string;
-            phone: string;
-            msgToken: string;
         };
     }, undefined, import("redux").UnknownAction>;
 }>, import("redux").StoreEnhancer]>>;

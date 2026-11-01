@@ -1,4 +1,6 @@
-/* Optional - retired. These logs used to run on every import of firebase/interface.ts. */
+/*
+ * Planned removal: 4.0.0. Date: 2026-11-01.
+ Optional - retired. These logs used to run on every import of firebase/interface.ts. */
 
 export function logClientSupport() {
 

@@ -4,14 +4,7 @@ export const initialState = {
     login: false,
     drawer: false,
     registerOne: false,
-    registerTwo: false,
-    userId: "user",
-    customer: '',
-    profileChoice: 'unChosen',
-    name: '',
-    photoURL: '',
-    phone: '(...) ... - ....',
-    email: ''
+    registerTwo: false
 };
 export const userSlice = createSlice({
     name: 'user',
@@ -48,14 +41,6 @@ export const userSlice = createSlice({
         closeSign: (state) => {
             state.drawer = false;
         },
-        signUpAction: (state) => {
-            if (state.registerOne === false) {
-                state.registerOne = true;
-            }
-            else {
-                state.registerOne = false;
-            }
-        },
         universalToggle: (state, action) => {
             if (action.payload === 'drawer') {
                 if (state.registerOne === false) {
@@ -73,18 +58,9 @@ export const userSlice = createSlice({
                     state.registerTwo = false;
                 }
             }
-        },
-        signUpClose: (state, action) => {
-            state.registerOne = action.payload;
-        },
-        iconAuth: (state, action) => {
-            state.photoURL = action.payload;
-        },
-        nameAuth: (state, action) => {
-            state.name = action.payload;
         }
     }
 });
-export const { universalToggle, navigateAuth, iconAuth, nameAuth, userAuth, toggleSign, openSign, closeSign, signUpAction, signUpClose } = userSlice.actions;
+export const { universalToggle, navigateAuth, userAuth, toggleSign, openSign, closeSign } = userSlice.actions;
 export default userSlice.reducer;
 //# sourceMappingURL=frontend.js.map

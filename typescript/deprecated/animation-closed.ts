@@ -1,4 +1,6 @@
-/* Optional - retired. .closed used to drop out of the grid, so the swap was instant. */
+/*
+ * Planned removal: 4.0.0. Date: 2026-11-01.
+ Optional - retired. .closed used to drop out of the grid, so the swap was instant. */
 
 import { css } from 'lit';
 

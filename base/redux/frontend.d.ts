@@ -5,13 +5,6 @@ export declare const initialState: {
     drawer: boolean;
     registerOne: boolean;
     registerTwo: boolean;
-    userId: string;
-    customer: string;
-    profileChoice: string;
-    name: string;
-    photoURL: string;
-    phone: string;
-    email: string;
 };
 export declare const userSlice: import("@reduxjs/toolkit").Slice<{
     settings: string;
@@ -19,13 +12,6 @@ export declare const userSlice: import("@reduxjs/toolkit").Slice<{
     drawer: boolean;
     registerOne: boolean;
     registerTwo: boolean;
-    userId: string;
-    customer: string;
-    profileChoice: string;
-    name: string;
-    photoURL: string;
-    phone: string;
-    email: string;
 }, {
     navigateAuth: (state: {
         settings: string;
@@ -33,13 +19,6 @@ export declare const userSlice: import("@reduxjs/toolkit").Slice<{
         drawer: boolean;
         registerOne: boolean;
         registerTwo: boolean;
-        userId: string;
-        customer: string;
-        profileChoice: string;
-        name: string;
-        photoURL: string;
-        phone: string;
-        email: string;
     }, action: PayloadAction<string>) => void;
     userAuth: (state: {
         settings: string;
@@ -47,13 +26,6 @@ export declare const userSlice: import("@reduxjs/toolkit").Slice<{
         drawer: boolean;
         registerOne: boolean;
         registerTwo: boolean;
-        userId: string;
-        customer: string;
-        profileChoice: string;
-        name: string;
-        photoURL: string;
-        phone: string;
-        email: string;
     }, action: PayloadAction<boolean>) => void;
     toggleSign: (state: {
         settings: string;
@@ -61,13 +33,6 @@ export declare const userSlice: import("@reduxjs/toolkit").Slice<{
         drawer: boolean;
         registerOne: boolean;
         registerTwo: boolean;
-        userId: string;
-        customer: string;
-        profileChoice: string;
-        name: string;
-        photoURL: string;
-        phone: string;
-        email: string;
     }) => void;
     openSign: (state: {
         settings: string;
@@ -75,13 +40,6 @@ export declare const userSlice: import("@reduxjs/toolkit").Slice<{
         drawer: boolean;
         registerOne: boolean;
         registerTwo: boolean;
-        userId: string;
-        customer: string;
-        profileChoice: string;
-        name: string;
-        photoURL: string;
-        phone: string;
-        email: string;
     }) => void;
     closeSign: (state: {
         settings: string;
@@ -89,27 +47,6 @@ export declare const userSlice: import("@reduxjs/toolkit").Slice<{
         drawer: boolean;
         registerOne: boolean;
         registerTwo: boolean;
-        userId: string;
-        customer: string;
-        profileChoice: string;
-        name: string;
-        photoURL: string;
-        phone: string;
-        email: string;
-    }) => void;
-    signUpAction: (state: {
-        settings: string;
-        login: boolean;
-        drawer: boolean;
-        registerOne: boolean;
-        registerTwo: boolean;
-        userId: string;
-        customer: string;
-        profileChoice: string;
-        name: string;
-        photoURL: string;
-        phone: string;
-        email: string;
     }) => void;
     universalToggle: (state: {
         settings: string;
@@ -117,55 +54,6 @@ export declare const userSlice: import("@reduxjs/toolkit").Slice<{
         drawer: boolean;
         registerOne: boolean;
         registerTwo: boolean;
-        userId: string;
-        customer: string;
-        profileChoice: string;
-        name: string;
-        photoURL: string;
-        phone: string;
-        email: string;
-    }, action: PayloadAction<string>) => void;
-    signUpClose: (state: {
-        settings: string;
-        login: boolean;
-        drawer: boolean;
-        registerOne: boolean;
-        registerTwo: boolean;
-        userId: string;
-        customer: string;
-        profileChoice: string;
-        name: string;
-        photoURL: string;
-        phone: string;
-        email: string;
-    }, action: PayloadAction<boolean>) => void;
-    iconAuth: (state: {
-        settings: string;
-        login: boolean;
-        drawer: boolean;
-        registerOne: boolean;
-        registerTwo: boolean;
-        userId: string;
-        customer: string;
-        profileChoice: string;
-        name: string;
-        photoURL: string;
-        phone: string;
-        email: string;
-    }, action: PayloadAction<string>) => void;
-    nameAuth: (state: {
-        settings: string;
-        login: boolean;
-        drawer: boolean;
-        registerOne: boolean;
-        registerTwo: boolean;
-        userId: string;
-        customer: string;
-        profileChoice: string;
-        name: string;
-        photoURL: string;
-        phone: string;
-        email: string;
     }, action: PayloadAction<string>) => void;
 }, "user", "user", import("@reduxjs/toolkit").SliceSelectors<{
     settings: string;
@@ -173,28 +61,14 @@ export declare const userSlice: import("@reduxjs/toolkit").Slice<{
     drawer: boolean;
     registerOne: boolean;
     registerTwo: boolean;
-    userId: string;
-    customer: string;
-    profileChoice: string;
-    name: string;
-    photoURL: string;
-    phone: string;
-    email: string;
 }>>;
-export declare const universalToggle: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "user/universalToggle">, navigateAuth: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "user/navigateAuth">, iconAuth: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "user/iconAuth">, nameAuth: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "user/nameAuth">, userAuth: import("@reduxjs/toolkit").ActionCreatorWithPayload<boolean, "user/userAuth">, toggleSign: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"user/toggleSign">, openSign: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"user/openSign">, closeSign: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"user/closeSign">, signUpAction: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"user/signUpAction">, signUpClose: import("@reduxjs/toolkit").ActionCreatorWithPayload<boolean, "user/signUpClose">;
+export declare const universalToggle: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "user/universalToggle">, navigateAuth: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "user/navigateAuth">, userAuth: import("@reduxjs/toolkit").ActionCreatorWithPayload<boolean, "user/userAuth">, toggleSign: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"user/toggleSign">, openSign: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"user/openSign">, closeSign: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"user/closeSign">;
 declare const _default: import("redux").Reducer<{
     settings: string;
     login: boolean;
     drawer: boolean;
     registerOne: boolean;
     registerTwo: boolean;
-    userId: string;
-    customer: string;
-    profileChoice: string;
-    name: string;
-    photoURL: string;
-    phone: string;
-    email: string;
 }>;
 export default _default;
 //# sourceMappingURL=frontend.d.ts.map

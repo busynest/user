@@ -1,20 +1,10 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-// import { frontendAuth } from "./object";
-
-// Object Initializer Notation
-export const initialState/*: frontendAuth*/ = {
+export const initialState = {
   settings:         'profile',            // Page Navigation
   login:            false,                // Login State
   drawer:           false,                // Drawer State
   registerOne:      false,                // Registration Drawer State
-  registerTwo:      false,                 // Registration Page State
-  userId:           "user",               // User Name Holder
-  customer:         '',                   // Customer Name Holder
-  profileChoice:    'unChosen',           // Profile Initialization State
-  name:             '',                   // Customer Name Loaded
-  photoURL:         '',                   // User Photo Loaded
-  phone:            '(...) ... - ....',   // User Phone Loaded
-  email:            ''                    // User E-mail Loaded
+  registerTwo:      false                 // Registration Page State
 }
 
 // Create a slice for the AppState
@@ -64,15 +54,6 @@ export const userSlice = createSlice({
         state.drawer = false;
       },
 
-      // Sign-up State
-      signUpAction: ( state ) => {
-
-        if ( state.registerOne === false)   { state.registerOne = true; }
-        else                                { state.registerOne = false; }
-
-       },
-
-      // Sign-up State
       universalToggle: ( state, action: PayloadAction<string> ) => {
 
         if (action.payload === 'drawer') {
@@ -87,57 +68,11 @@ export const userSlice = createSlice({
 
         }
 
-       },
-
-        // Sign-up State
-     // initialSignUp: ( state, action: PayloadAction<boolean>  ) => {
-
-        // state.register = action.payload ? !state.register : state.register;
-
-        /*
-
-        function toggleBoolean(initialState, toggle) {
-          return toggle ? !initialState : initialState;
-        }
-
-        toggleBoolean(true, false)  returns true
-        toggleBoolean(true, true)   returns false
-        toggleBoolean(false, false) returns false
-        toggleBoolean(false, true)  returns true
-
-        */
-
-       //},
-
-      signUpClose: ( state, action: PayloadAction<boolean> ) => { 
-        state.registerOne = action.payload;
-       }, 
-        
-      // Profile Image
-      iconAuth:    ( state, action: PayloadAction<string> ) => { 
-        state.photoURL = action.payload
-       },
-
-      // Username
-      nameAuth:     ( state, action: PayloadAction<string> ) => { 
-        state.name = action.payload;
        }
 
           }
 });
 
-export const { universalToggle, navigateAuth, iconAuth, nameAuth, userAuth, toggleSign, openSign, closeSign, signUpAction, signUpClose } = userSlice.actions;
+export const { universalToggle, navigateAuth, userAuth, toggleSign, openSign, closeSign } = userSlice.actions;
 
 export default userSlice.reducer;
-
-
-
-/*
-      setUserX:     ( state, action: PayloadAction<string> ) => { 
-        state.setUser = action.payload;
-       },
-
-      profileX:     ( state, action: PayloadAction<string> ) => { 
-        state.settings = action.payload
-       },     { profileType:  string };
-*/

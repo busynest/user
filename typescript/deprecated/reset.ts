@@ -1,4 +1,6 @@
-/* Optional - retired. email-reset no longer renders an unlabeled phone field. */
+/*
+ * Planned removal: 4.0.0. Date: 2026-11-01.
+ Optional - retired. email-reset no longer renders an unlabeled phone field. */
 /* Optional - retired. The send below alerted success and did not emit pwa-reset-sent. */
 
 import { sendPasswordResetEmail } from 'firebase/auth';

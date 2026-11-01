@@ -2,6 +2,19 @@ Change Log
 ==========
 All notable changes to pwa-auth.js will be documented in this file.
 
+# [Unreleased]
+
+## Deprecated
+- `pwaDrawerToggle()` — use `closeDrawer()`. Removed in 4.0.0.
+- `userEmailChanged` — use `pwa-email-changed`. Removed in 4.0.0.
+- `user` — use `getCurrentUser()`. Removed in 4.0.0.
+- `--pwa_drawer_background_color`, `--pwa_settings_background_color`, and `--section_background_color` — use `--pwa_background`. Removed in 4.0.0.
+
+## Removed
+- Unused internal Redux fields and actions (phone, anon, message token, uid copy, and the second name/photo copy).
+- Re-exports nothing imported: the old font stylesheet, image lister, drawer slice, and state types.
+- Page leftovers: the `login` attribute on `user-login`, and `--pwa_divider_color` (nothing reads it).
+
 # [3.6.0] - 2026-11-01
 
 ## Added

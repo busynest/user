@@ -1,4 +1,6 @@
-/* Optional - retired. initialize() in firebase/authentication.ts replaces import-time setup. */
+/*
+ * Planned removal: 4.0.0. Date: 2026-11-01.
+ Optional - retired. initialize() in firebase/authentication.ts replaces import-time setup. */
 
 import { initializeApp }    from 'firebase/app';
 import { getFirestore }     from 'firebase/firestore';

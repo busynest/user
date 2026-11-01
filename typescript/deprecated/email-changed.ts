@@ -1,6 +1,7 @@
+/* Planned removal: 4.0.0. Date: 2026-11-01. */
 import type { PwaEmailChangedDetail } from '../events/types.js';
 
-/** @deprecated Optional - window event userEmailChanged. Required - listen for pwa-email-changed. */
+/** @deprecated Listen for pwa-email-changed. Removed in 4.0.0. */
 export const userEmailChanged = 'userEmailChanged';
 
 /** @deprecated Optional - kept so pages that already listen keep working. */

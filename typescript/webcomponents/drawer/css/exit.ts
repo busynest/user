@@ -29,16 +29,6 @@ export const exitStyle: CSSResult = css`
     text-transform:         uppercase;
     opacity:                .6;
   }
-/*
-  .exit > .refresh {
-    background-color:       transparent;
-    border:                 0px;
-    fill:                   blue;
-    height:                 36px;
-    width:                  36px;
-    padding:                0px;
-  }
-*/
   .close {
     min-height:             var(--pwa_tap, 44px); /* Required - minimum tap target */
     min-width:              var(--pwa_tap, 44px);

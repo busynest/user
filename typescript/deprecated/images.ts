@@ -1,4 +1,6 @@
-/* Optional - retired. Profile photos upload from contact-photo. */
+/*
+ * Planned removal: 4.0.0. Date: 2026-11-01.
+ Optional - retired. Profile photos upload from contact-photo. */
 
 import { ref } from "firebase/storage";
 import { storage } from "../../../firebase/authentication.js";
