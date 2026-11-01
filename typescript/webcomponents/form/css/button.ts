@@ -32,6 +32,8 @@ export const buttonStyle: CSSResult = css`
     color:                var(--pwa_action_text_color, #fff);
     background-color:     var(--pwa_action_background_color, #2a6b45);
     border-color:         var(--pwa_action_border_color, #214f34);
+    align-self:           start; /* Required - stay under the field when a tab changes height */
+    justify-self:         end;
   }
 
   /* Required - fit 320px */

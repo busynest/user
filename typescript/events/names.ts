@@ -28,6 +28,9 @@ export const pwaResetSent = 'pwa-reset-sent';
 /** Required - element. Drawer open flag changed. The string is pwa-drawer-toggle. */
 export const pwaDrawerToggleName = 'pwa-drawer-toggle';
 
+/** Required - element. Settings was chosen. url is empty when the host has no route. */
+export const pwaSettings = 'pwa-settings';
+
 /** Required - window. An account action failed. */
 export const pwaAuthError = 'pwa-auth-error';
 
@@ -49,6 +52,7 @@ export const eventName = {
   passwordChanged:  pwaPasswordChanged,
   resetSent:        pwaResetSent,
   drawerToggle:     pwaDrawerToggleName,
+  settings:         pwaSettings,
   authError:        pwaAuthError,
   verificationSent: pwaVerificationSent,
   emailVerified:    pwaEmailVerified

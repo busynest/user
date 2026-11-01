@@ -37,10 +37,15 @@ declare const UserLogin_base: (new (...args: any[]) => {
 export declare class UserLogin extends UserLogin_base {
     subscribe: boolean;
     private _name;
+    private _email;
+    private _verified;
+    private _notice;
     private _log;
     private _sign;
+    private stopNotice;
     constructor();
     connectedCallback(): void;
+    disconnectedCallback(): void;
     stateChanged(state: AppState): void;
     static get styles(): CSSResultArray;
     protected render(): import("lit-html").TemplateResult<1>;

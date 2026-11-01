@@ -3,7 +3,7 @@ const initialState = {
     verified: false,
     anon: false,
     userId: '',
-    name: 'John Doe',
+    name: '',
     email: '',
     photoURL: '',
     phone: '',

@@ -105,9 +105,9 @@ The button that opens the drawer.
 | Attribute | |
 |---|---|
 | `subscribe` | Logged-out label is Subscribe. Without it, the label is Login. |
-| `empty` | Image URL used when the account has no photo. |
+| `empty` | Image URL used when the account has no photo and no name or email to initial. |
 
-Logged in, the button shows the photo. The click opens or closes the drawer. Style it with `user-icon::part(button)` and `user-icon::part(photo)`.
+Logged in, the button shows the photo. With no photo, it shows initials from the display name, or from the email. `empty` is the last fallback. The click opens or closes the drawer. Style it with `user-icon::part(button)`, `user-icon::part(photo)`, and `user-icon::part(initials)`.
 
 ### `<user-drawer>`
 
@@ -116,17 +116,39 @@ Drops open from the top. Timing is in [Drawer behaviour](#drawer-behaviour).
 | Attribute | |
 |---|---|
 | `subscribe` | Starts on the sign-up form. Without it, starts on sign-in. |
-| `url` | `href` of the Settings link shown after sign-in. Point it at the page that hosts `<user-settings>`. |
+| `url` | `href` of the Settings control shown after sign-in. Set it only when that page is a real route. Leave it unset when `<user-settings>` is already on this page. |
 | `drawer` | Reflects the open state. Redux overwrites it. Do not treat it as an input. |
 
-Logged out, the header reads Subscribe or Login to match the form. Logged in, the header shows the display name, then:
+Logged out, the header reads Subscribe or Login to match the form. The slots are in the signed-in block, so they are not shown until someone is signed in. Logged in, the header shows the display name, or the email when the account has no name, then, in this order:
 
-- slot `before`
-- the Settings link
-- the default slot
-- Log out
+1. slot `before`
+2. Settings (`url`, or the button that stays on this page)
+3. the default slot
+4. Log out
 
 There is no slot named `within`. The second slot is the default slot.
+
+Each slot has fallback text so the host can see where a link will sit: `slotted - before` in the before slot, `slotted - default` in the default slot. Pass a link or a button and that marker is replaced.
+
+```html
+<user-drawer>
+  <a slot="before" href="/account">Account</a>
+  <a href="/archive" aria-current="page">Archive</a>
+</user-drawer>
+```
+
+`::slotted(a)` and `::slotted(button)` share one style: a full-width row, the line colour, and a 44px tap target. `aria-current` on either one uses the nav highlight. A click on a slotted link or button closes the drawer, the same as Settings. Call `preventDefault()` on that click to leave the drawer open.
+
+`url` is only the Settings control. It is not the slot. Leave `url` unset when `<user-settings>` is on this page. Set `url` when Settings is a real route. Slotted links are the host's own pages.
+
+Slotted links can flash before the element upgrades. Hide them:
+
+```css
+/* Optional - hide slotted links until user-drawer upgrades */
+user-drawer:not(:defined) { display: none; }
+```
+
+Settings does not assume a `/settings` route. With `url` unset, it is a button. The click closes the drawer, scrolls to `<user-settings>` when that element is on the page, and dispatches `pwa-settings` with `{ url: '' }`. The event is cancelable. Call `preventDefault()` to keep the drawer open and skip the scroll. With `url` set, Settings is a link to that href, and the same event carries `{ url }`.
 
 ### `<user-login>`
 
@@ -136,7 +158,13 @@ The same forms, in the page instead of the drawer.
 |---|---|
 | `subscribe` | Starts on sign-up. Without it, starts on sign-in. |
 
-Sign-in calls `signInWithEmailAndPassword`. Sign-in and sign-up reject a password shorter than 6 characters. Logged in, the forms are replaced by slot `content`.
+Sign-in calls `signInWithEmailAndPassword` and sends the password as typed. Sign-up rejects a new password shorter than 8 characters or longer than 128. Spaces and other characters are allowed. The field hint reads "At least 8 characters. A passphrase works well." A failed sign-in or sign-up writes one sentence into an `aria-live` region (`::part(status)`). The button is disabled and reads Signing in… or Creating account… while the request is in flight.
+
+Forgot password? sits on the sign-in form. It calls `sendPasswordResetEmail` for the address already in the email field. Success shows the same sentence as `<email-reset>`: "If an account uses that email, a reset link is on its way." A missing account gets that sentence too. The page dispatches `pwa-reset-sent`.
+
+Sign-up calls `sendEmailVerification`. `actionCodeSettings` from `initialize` is passed through when it is set. The form shows "Check your inbox for the verification email. You can still sign in." The same notice stays on `<user-login>` and in the drawer until the address is verified.
+
+Each password field has a Show control. Logged in, the forms are replaced by slot `content`.
 
 ```html
 <user-login>
@@ -154,23 +182,32 @@ Four tabs: Icon, Profile, Password, Delete.
 |---|---|
 | `empty` | Fallback photo, passed through to the uploader as `emptyArtwork`. |
 
-Profile updates the display name.
+Signed out, the element shows one line: sign in to change the photo, name, email, or password. The tabs and fields are not in the tree.
+
+Profile saves the display name with `updateProfile`. The icon, the drawer, and this panel read that name back. A saved name is still there after the next sign-in.
+
+The photo uploads to `pwa-auth/{uid}/`. On completion the status reads Photo saved. and the same URL is the account photo. Initials stand in until a photo exists.
+
+A failed action writes a sentence into that tab's `aria-live` region and dispatches `pwa-auth-error`. The Update, Delete, and upload controls disable and read a busy label while the request is in flight.
 
 When the signed-in address is unverified:
 
-- That tab shows a notice (`::part(notice)`) and a Resend verification email button (`::part(verify-submit)`).
+- That tab shows the address, the words Not verified (`::part(unverified)`), and a Resend verification email button (`::part(verify-submit)`).
+- The same words and the same button are in the drawer, next to the name or email.
 - The status (`::part(verify-status)`) is an `aria-live` region.
-- The button reads Sending… while the request is in flight, then waits 45 seconds.
-- `auth/too-many-requests` and `auth/network-request-failed` alert a short sentence and dispatch `pwa-auth-error`.
-- A verified address reads Email verified.
+- The button reads Sending… while the request is in flight, then waits 45 seconds. The confirmation is "Check your inbox for the verification email."
+- `auth/too-many-requests` and `auth/network-request-failed` write a short sentence into the status region and dispatch `pwa-auth-error`.
+- A verified address shows a check (`::part(verified)`, aria-label Email verified) beside the email in settings and beside the name or email in the drawer. The colour is `--pwa_verified_color`.
+- Opening the drawer, or focusing the window, calls `user.reload()`. When that reload sees the address become verified, the page fires `pwa-email-verified`.
 - Sign-in is not blocked either way.
+- Changing the email calls `verifyBeforeUpdateEmail`. `actionCodeSettings` from `initialize` is passed through. If the address still on the account is unverified, `sendEmailVerification` runs as well.
 
 Email, password, and delete ask for the current password and call `reauthenticate` first.
 
 - Email then calls `verifyBeforeUpdateEmail`. On success the page dispatches `pwa-email-changed` on `window` with `{ email }`. The old `userEmailChanged` event still fires and is deprecated.
-- Password requires the verify field to match and rejects a new password shorter than 6 characters, the same rule as sign-in and sign-up. On success the page dispatches `pwa-password-changed` on `window` with `{ uid }`.
+- Password requires the verify field to match. A new password is 8 to 128 characters, the same rule as sign-up. On success the page dispatches `pwa-password-changed` on `window` with `{ uid }`.
 - Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user. It does not delete `users/{uid}`. See [Data ownership](#data-ownership).
-- A failed action alerts a short sentence and dispatches `pwa-auth-error`.
+- A failed action writes a short sentence into the status region and dispatches `pwa-auth-error`.
 
 ### `<email-reset>`
 
@@ -178,7 +215,7 @@ Sends a password reset for the address in the field. The address is checked befo
 
 While the request is in flight the button is disabled and reads Sending…. Success shows one sentence either way, including when Firebase returns `auth/user-not-found`: "If an account uses that email, a reset link is on its way." The page dispatches `pwa-reset-sent` on `window` with `{ email }`. The button then waits 45 seconds.
 
-`auth/invalid-email`, `auth/too-many-requests`, and `auth/network-request-failed` alert a short sentence and dispatch `pwa-auth-error`. The event still carries the Firebase code.
+`auth/invalid-email`, `auth/too-many-requests`, and `auth/network-request-failed` write a short sentence into the status region and dispatch `pwa-auth-error`. The event still carries the Firebase code.
 
 If a sign-in form on the page already has an email, the field starts with that address until someone types in the reset field. Back to sign in opens `<user-drawer>` on the sign-in form. With no drawer, it shows the sign-in form in `<user-login>`.
 
@@ -202,16 +239,16 @@ If a sign-in form on the page already has an email, the field starts with that a
 
 <body>
   <header>
-    <user-icon subscribe empty="./images/empty.jpg"></user-icon>
+    <user-icon subscribe></user-icon>
   </header>
 
-  <user-drawer subscribe url="./settings">
-    <a slot="before" href="./settings">Settings</a>
+  <user-drawer subscribe>
+    <a slot="before" href="#settings">Settings</a>
     <a href="./elsewhere">Another link</a>
   </user-drawer>
 
   <main>
-    <user-settings empty="./images/empty.jpg"></user-settings>
+    <user-settings id="settings"></user-settings>
   </main>
 </body>
 ```
@@ -221,7 +258,7 @@ If a sign-in form on the page already has an email, the field starts with that a
 ```html
 <body>
   <header>
-    <user-icon empty="./images/empty.jpg" subscribe></user-icon>
+    <user-icon subscribe></user-icon>
   </header>
 
   <main>
@@ -231,7 +268,7 @@ If a sign-in form on the page already has an email, the field starts with that a
       </div>
     </user-login>
 
-    <user-settings empty="./images/empty.jpg"></user-settings>
+    <user-settings></user-settings>
   </main>
 </body>
 ```
@@ -250,6 +287,7 @@ Global events fire on `window`. `pwa-drawer-toggle` fires on `<user-drawer>`, bu
 - `pwa-password-changed` — `updatePassword` succeeded. Detail: `{ uid }`. The new password is not included.
 - `pwa-reset-sent` — `sendPasswordResetEmail` finished, or the address has no account. Detail: `{ email }`. The same event either way.
 - `pwa-drawer-toggle` — the drawer open flag changed. Detail: `{ open }`
+- `pwa-settings` — Settings was chosen. Detail: `{ url }`. `url` is empty when the control stays on this page. Cancel the event to handle it yourself.
 - `pwa-auth-error` — an account action failed. Detail: `{ code, message }`
 - `pwa-verification-sent` — `sendEmailVerification` accepted the message. Detail: `{ email }`
 - `pwa-email-verified` — a reload saw `emailVerified` become true. Detail: `{ user }` with `user.emailVerified === true`
@@ -314,7 +352,7 @@ window.addEventListener(eventName.login, (event) => {
 | `closeDrawer()` | Closes the drawer. |
 | `toggleDrawer()` | Flips the drawer. |
 | `eventName` | The `pwa-` strings. `eventName.drawerToggle` is `pwa-drawer-toggle`. |
-| `pwaAuthChanged`, `pwaLogin`, `pwaLogout`, `pwaSignup`, `pwaAccountDeleted`, `pwaProfileUpdated`, `pwaEmailChanged`, `pwaPasswordChanged`, `pwaResetSent`, `pwaDrawerToggleName`, `pwaAuthError` | The same strings, one constant each. `pwaDrawerToggleName` is the event. `pwaDrawerToggle()` is the older close function. |
+| `pwaAuthChanged`, `pwaLogin`, `pwaLogout`, `pwaSignup`, `pwaAccountDeleted`, `pwaProfileUpdated`, `pwaEmailChanged`, `pwaPasswordChanged`, `pwaResetSent`, `pwaDrawerToggleName`, `pwaSettings`, `pwaAuthError` | The same strings, one constant each. `pwaDrawerToggleName` is the event. `pwaDrawerToggle()` is the older close function. `pwaSettings` is `pwa-settings`. |
 
 `import { store } from 'pwa-auth'` is not a public export. Use `getCurrentUser`, `onUserChanged`, and the events. Account fields stay inside the package.
 
@@ -402,6 +440,9 @@ The published sheet is `node_modules/pwa-auth/source/pwa-styles.css`.
   --pwa_action_text_color:         #fff;
   --pwa_action_background_color:   #2a6b45;
   --pwa_action_border_color:       #214f34;
+
+  /* Email verified check */
+  --pwa_verified_color:            #2a6b45;
 }
 ```
 
@@ -411,10 +452,10 @@ The published sheet is `node_modules/pwa-auth/source/pwa-styles.css`.
 
 Hosts style the controls with `::part`. Nested fields are forwarded with `exportparts`, so the host does not enter a shadow root.
 
-- `user-icon`: `button`, `photo`
-- `user-drawer`: `panel`, `header`, `title`, `close`, `settings`, `logout`, `login-email`, `login-password`, `login-submit`, `login-switch`, `signup-email`, `signup-password`, `signup-submit`, `signup-switch`
-- `user-login`: `panel`, `header`, `title`, and the same `login-*` and `signup-*` field parts
-- `user-settings`: `tab`, `panel`, `name`, `name-submit`, `email`, `email-submit`, `password`, `verify`, `password-submit`, `progress`, `file`, `preview`, `delete`
+- `user-icon`: `button`, `photo`, `initials`
+- `user-drawer`: `panel`, `header`, `title`, `close`, `settings`, `notice`, `verified`, `unverified`, `verify-submit`, `verify-status`, `logout`, `login-email`, `login-password`, `login-submit`, `login-switch`, `login-forgot`, `login-status`, `login-reveal`, `signup-email`, `signup-password`, `signup-submit`, `signup-switch`, `signup-status`, `signup-reveal`, `signup-notice`
+- `user-login`: `panel`, `header`, `title`, `notice`, and the same `login-*` and `signup-*` field parts
+- `user-settings`: `tab`, `panel`, `signed-out`, `name`, `name-submit`, `email`, `email-submit`, `verified`, `unverified`, `verify-submit`, `verify-status`, `password`, `verify`, `password-submit`, `progress`, `file`, `preview`, `delete`
 - `email-reset`: `email`, `submit`, `status`, `back`
 
 ```css

@@ -9,8 +9,8 @@ export { logOut, logAccount, logAccountDelete, deleteDocument, pwaDrawerToggle, 
 export { getCurrentUser, onUserChanged } from '../api/user.js';
 export { sendVerification, isEmailVerified } from '../api/verify.js';
 export { openDrawer, closeDrawer, toggleDrawer } from '../api/drawer.js';
-export { pwaAuthChanged, pwaLogin, pwaLogout, pwaSignup, pwaAccountDeleted, pwaProfileUpdated, pwaEmailChanged, pwaPasswordChanged, pwaResetSent, pwaDrawerToggleName, pwaAuthError, eventName } from '../events/names.js';
-export type { PwaUser, PwaAuthChangedDetail, PwaLoginDetail, PwaLogoutDetail, PwaSignupDetail, PwaAccountDeletedDetail, PwaProfileUpdatedDetail, PwaEmailChangedDetail, PwaPasswordChangedDetail, PwaResetSentDetail, PwaDrawerToggleDetail, PwaAuthErrorDetail, PwaEventMap } from '../events/types.js';
+export { pwaAuthChanged, pwaLogin, pwaLogout, pwaSignup, pwaAccountDeleted, pwaProfileUpdated, pwaEmailChanged, pwaPasswordChanged, pwaResetSent, pwaDrawerToggleName, pwaSettings, pwaAuthError, eventName } from '../events/names.js';
+export type { PwaUser, PwaAuthChangedDetail, PwaLoginDetail, PwaLogoutDetail, PwaSignupDetail, PwaAccountDeletedDetail, PwaProfileUpdatedDetail, PwaEmailChangedDetail, PwaPasswordChangedDetail, PwaResetSentDetail, PwaDrawerToggleDetail, PwaSettingsDetail, PwaAuthErrorDetail, PwaEventMap } from '../events/types.js';
 export { userEmailChanged } from '../deprecated/email-changed.js';
 export { pwaVerificationSent, pwaEmailVerified } from '../events/names.js';
 export type { PwaVerificationSentDetail, PwaEmailVerifiedDetail } from '../events/types.js';

@@ -16,21 +16,35 @@ import { sendVerification } from '../../api/verify.js';
 import { pwaAuthError, pwaSignup } from '../../events/names.js';
 import { emitWindow, toAuthError, toPwaUser } from '../../events/emit.js';
 import { userMessage } from '../../firebase/message.js';
+import { newPasswordIssue, passwordHint, passwordMax, passwordMin } from '../../firebase/password.js';
 import { buttonStyle } from './css/button.js';
 import { labelStyle } from './css/label.js';
 import { inputStyle } from './css/input.js';
 import { listStyle } from './css/list.js';
 import { toggleStyle } from './css/toggle.js';
+import { statusStyle, liveStatus } from './css/status.js';
+import { noticeStyle } from './css/notice.js';
 import { tapStyle } from '../css/tap.js';
+import { revealControl } from './reveal.js';
+import { markVerificationNotice } from './notice.js';
 import store from '../../store.js';
 import { universalToggle } from '../../redux/frontend.js';
+const sentMessage = 'Check your inbox for the verification email. You can still sign in.';
 let FormSignup = class FormSignup extends LitElement {
     constructor() {
         super();
         this.source = '';
         this.email = '';
         this.password = '';
+        this.status = '';
+        this.tone = '';
+        this.busy = false;
+        this.showPassword = false;
+        this.notice = '';
         this.newAccount = async (email, password) => {
+            this.busy = true;
+            this.tone = '';
+            this.status = '';
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 await logAccount();
@@ -39,14 +53,19 @@ let FormSignup = class FormSignup extends LitElement {
                     emitWindow(pwaSignup, { user: person });
                 try {
                     await sendVerification();
+                    this.notice = sentMessage;
+                    markVerificationNotice(email);
                 }
                 catch (error) {
-                    alert(userMessage(error));
+                    this.tone = 'error';
+                    this.status = userMessage(error);
                 }
             }
             catch (error) {
-                emitWindow(pwaAuthError, toAuthError(error));
-                alert(userMessage(error));
+                this.show(toAuthError(error));
+            }
+            finally {
+                this.busy = false;
             }
         };
     }
@@ -57,6 +76,8 @@ let FormSignup = class FormSignup extends LitElement {
             inputStyle,
             buttonStyle,
             toggleStyle,
+            statusStyle,
+            noticeStyle,
             tapStyle,
             css `
 
@@ -76,43 +97,67 @@ let FormSignup = class FormSignup extends LitElement {
     }
     ;
     render() {
+        const emailId = `${this.source}-signup-email`;
+        const passId = `${this.source}-signup-pass`;
+        const hintId = `${this.source || 'page'}-signup-password-hint`;
+        const statusId = `${this.source || 'page'}-signup-status`;
         return html `
   
       <!-- Sign Up State-->
       <form
         @submit=            ${this._handleSubmit}
         autocomplete=       "on"
+        aria-busy=          "${this.busy ? 'true' : 'false'}"
         novalidate>
         
         <ul>
 
           <li>
 
-            <label>Email
+            <label for="${emailId}">Email
 
               <input
-                id=           "${this.source}-signup-email"
+                id=           "${emailId}"
+                name=         "email"
                 part=         "email"
                 type=         "email"
                 autocomplete= "email"
+                inputmode=    "email"
+                autocapitalize="off"
+                spellcheck=   "false"
+                aria-invalid= "${this.tone === 'error' ? 'true' : 'false'}"
+                aria-describedby="${statusId}"
+                @input=       "${this.handleEmail}"
                 @change=      "${this.handleEmail}">
 
             </label>
 
           </li>
 
-              <!-- <label><input   id="verifyEmail"      type="email"      >Verify Email</label> -->
-
           <li>
 
-            <label>Password
+            <label for="${passId}">Password
               
-              <input
-                id=           "${this.source}-signup-pass"
-                part=         "password"
-                type=         "password"
-                autocomplete= "new-password"
-                @change=      "${this.handlePassword}">
+              <span class="pair">
+
+                <input
+                  id=           "${passId}"
+                  name=         "new-password"
+                  part=         "password"
+                  type=         "${this.showPassword ? 'text' : 'password'}"
+                  autocomplete= "new-password"
+                  minlength=    "${passwordMin}"
+                  maxlength=    "${passwordMax}"
+                  aria-invalid= "${this.tone === 'error' ? 'true' : 'false'}"
+                  aria-describedby="${hintId} ${statusId}"
+                  @input=       "${this.handlePassword}"
+                  @change=      "${this.handlePassword}">
+
+                ${revealControl(this.showPassword, () => { this.showPassword = !this.showPassword; })}
+
+              </span>
+
+              <p id="${hintId}" class="hint" part="hint">${passwordHint}</p>
 
             </label>
 
@@ -120,25 +165,22 @@ let FormSignup = class FormSignup extends LitElement {
 
           <li>
 
+            ${liveStatus(statusId, this.status, this.tone)}
+
             <button
               type=         "submit"
               part=         "submit"
-              class=        "newUser action-button">Sign up</button>
+              class=        "newUser action-button"
+              aria-busy=    "${this.busy ? 'true' : 'false'}"
+              ?disabled=    "${this.busy}">${this.busy ? 'Creating account…' : 'Sign up'}</button>
 
           </li>
 
-          <!-- <label><input   id="veriftPassword"   type="password"   >Verify Password</label> -->
-
-          <!-- Change State 
-          <li>
-
-            <p class=       "divider">Or</p>
-
-
-
-          </li> -->
-
         </ul>
+
+        ${this.notice ? html `
+          <p class="notice" part="notice" role="status" aria-live="polite">${this.notice}</p>
+        ` : ''}
 
         <button
           type="button"
@@ -153,15 +195,20 @@ let FormSignup = class FormSignup extends LitElement {
     change() {
         store.dispatch(universalToggle(this.source));
     }
+    show(detail) {
+        this.tone = 'error';
+        this.status = userMessage(detail);
+        emitWindow(pwaAuthError, detail);
+    }
     readFields() {
         const email = this.renderRoot.querySelector('input[type="email"]');
-        const password = this.renderRoot.querySelector('input[type="password"]');
+        const password = this.renderRoot.querySelector('input[name="new-password"]');
         this.email = email?.value ?? '';
         this.password = password?.value ?? '';
     }
     _handleSubmit(event) {
         event.preventDefault();
-        this.signUp();
+        void this.signUp();
     }
     handleEmail(event) {
         const input = event.target;
@@ -171,21 +218,20 @@ let FormSignup = class FormSignup extends LitElement {
         const input = event.target;
         this.password = input.value;
     }
-    signUp() {
+    async signUp() {
+        if (this.busy)
+            return;
         this.readFields();
         if (this.email.length < 4) {
-            const detail = { code: 'pwa/missing-email', message: 'Enter an email address.' };
-            emitWindow(pwaAuthError, detail);
-            alert(userMessage(detail));
+            this.show({ code: 'pwa/missing-email', message: 'Enter an email address.' });
             return;
         }
-        if (this.password.length < 6) {
-            const detail = { code: 'pwa/short-password', message: 'Password must be at least 6 characters.' };
-            emitWindow(pwaAuthError, detail);
-            alert(userMessage(detail));
+        const issue = newPasswordIssue(this.password);
+        if (issue) {
+            this.show(issue);
             return;
         }
-        this.newAccount(this.email, this.password);
+        await this.newAccount(this.email, this.password);
     }
 };
 __decorate([
@@ -200,6 +246,26 @@ __decorate([
     state(),
     __metadata("design:type", Object)
 ], FormSignup.prototype, "password", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], FormSignup.prototype, "status", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], FormSignup.prototype, "tone", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], FormSignup.prototype, "busy", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], FormSignup.prototype, "showPassword", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], FormSignup.prototype, "notice", void 0);
 FormSignup = __decorate([
     customElement('form-signup'),
     __metadata("design:paramtypes", [])

@@ -37,12 +37,15 @@ export declare class UserIcon extends UserIcon_base {
     empty: string;
     private _user;
     private _photoURL;
+    private _name;
+    private _email;
     constructor();
     connectedCallback(): void;
     protected firstUpdated(): void;
     stateChanged(state: AppState): void;
     static get styles(): CSSResultArray;
     protected render(): import("lit-html").TemplateResult<1>;
+    private face;
 }
 declare global {
     interface HTMLElementTagNameMap {

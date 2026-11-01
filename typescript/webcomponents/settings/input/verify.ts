@@ -7,6 +7,7 @@ import { sendVerification } from '../../../api/verify.js';
 import { userMessage } from '../../../firebase/message.js';
 import { buttonStyle } from '../../form/css/button.js';
 import { tapStyle } from '../../css/tap.js';
+import { verifiedMark, verifiedStyle } from '../../form/verified.js';
 
 /** Required - seconds before another verification email. Matches email-reset. */
 const verifyWait = 45;
@@ -45,6 +46,7 @@ export class EmailVerify extends connect(store)(LitElement) {
     return [
       buttonStyle,
       tapStyle,
+      verifiedStyle,
       css`
 
         :host { display: block; }
@@ -62,6 +64,20 @@ export class EmailVerify extends connect(store)(LitElement) {
           margin:               0;
           font-size:            0.95rem;
           line-height:          1.45;
+        }
+
+        .row {
+          display:              flex;
+          align-items:          center;
+          justify-content:      center;
+          gap:                  8px;
+          flex-wrap:            wrap;
+          margin:               0 0 8px;
+        }
+
+        .mail {
+          font-weight:          600;
+          overflow-wrap:        anywhere;
         }
 
         .notice.ok {
@@ -129,7 +145,12 @@ export class EmailVerify extends connect(store)(LitElement) {
 
     if (this.verified) {
       return html`
-        <p class="notice ok" part="notice" role="status" aria-live="polite">Email verified.</p>
+        <div class="notice ok" part="notice">
+          <p class="row">
+            <span class="mail">${this.email}</span>
+            ${verifiedMark}
+          </p>
+        </div>
       `;
     }
 
@@ -137,6 +158,11 @@ export class EmailVerify extends connect(store)(LitElement) {
 
     return html`
       <div class="notice" part="notice">
+
+        <p class="row">
+          <span class="mail">${this.email}</span>
+          <span class="unverified" part="unverified">Not verified</span>
+        </p>
 
         <p class="lead">${this.lead()}</p>
 
@@ -194,7 +220,6 @@ export class EmailVerify extends connect(store)(LitElement) {
     this.status = sentMessage;
     this.cooldown = verifyWait;
     this.armCooldown();
-    alert(sentMessage);
     void this.updateComplete.then(() => { this.focusStatus(); });
 
   }
@@ -204,7 +229,6 @@ export class EmailVerify extends connect(store)(LitElement) {
 
     this.tone = 'error';
     this.status = userMessage(error);
-    alert(this.status);
     void this.updateComplete.then(() => { this.focusStatus(); });
 
   }

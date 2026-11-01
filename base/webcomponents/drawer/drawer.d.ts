@@ -1,5 +1,6 @@
 import { CSSResultArray, LitElement, PropertyValues } from 'lit';
 import { AppState } from '../../store.js';
+import '../settings/input/verify.js';
 import '../form/login.js';
 import '../form/signup.js';
 declare const UserDrawer_base: (new (...args: any[]) => {
@@ -39,20 +40,28 @@ export declare class UserDrawer extends UserDrawer_base {
     drawer: boolean;
     subscribe: boolean;
     private name;
+    private email;
+    private verified;
+    private notice;
     private user;
     private signup;
     private wasOpen;
     private sawOpen;
     private returnFocus;
+    private stopNotice;
     constructor();
     connectedCallback(): void;
     disconnectedCallback(): void;
     stateChanged(state: AppState): void;
     protected updated(changed: PropertyValues): void;
     private onKey;
+    private onLightClick;
     protected firstUpdated(): void;
     static get styles(): CSSResultArray;
     protected render(): import("lit-html").TemplateResult<1>;
+    private destination;
+    private settingsControl;
+    private onSettings;
 }
 declare global {
     interface HTMLElementTagNameMap {

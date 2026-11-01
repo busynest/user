@@ -1,38 +1,46 @@
 import { CSSResultArray, LitElement, css, html } from "lit";
-import { property, state }    from "lit/decorators.js";
+import { state }    from "lit/decorators.js";
 import { connect }            from "pwa-helpers";
 import { store, AppState }    from "../../../store.js";
 import { updateProfile }      from "firebase/auth";
 import { accName }            from "../../../redux/backend.js";
+import { nameAuth }           from "../../../redux/frontend.js";
 import { auth }               from "../../../firebase/authentication.js";
 import { labelStyle }         from "../../form/css/label.js";
 import { inputStyle }         from "../../form/css/input.js";
 import { buttonStyle }        from "../../form/css/button.js";
+import { statusStyle, liveStatus } from "../../form/css/status.js";
 import { pwaAuthError, pwaProfileUpdated } from "../../../events/names.js";
 import { emitWindow, toAuthError } from "../../../events/emit.js";
 import { userMessage } from "../../../firebase/message.js";
 
 export class InputName extends connect(store)(LitElement) {
 
-  /** @attr value */
-  @property({ type: String, reflect: true}) public value = '';
+  @state() private login = false;
+  @state() private draft = '';
+  @state() private busy = false;
+  @state() private status = '';
+  @state() private tone = '';
 
-  @state() private login : boolean = false;
+  private dirty = false;
 
   constructor() { super(); }
 
   stateChanged(state: AppState) {
-    this.login  = state.frontend!.login;
-    this.value  = state.backend!.name;  // user-name
+    const signedIn = Boolean(state.frontend?.login);
+    if (signedIn !== this.login) this.dirty = false;
+    this.login = signedIn;
+    if (!this.dirty) this.draft = state.backend?.name ?? '';
   }
 
   static get styles(): CSSResultArray { return [
     labelStyle,
     inputStyle,
     buttonStyle,
+    statusStyle,
     css`
 
-      :host, form { display: grid; }
+      :host, form { display: grid; align-content: start; }
 
     ` ]; }
 
@@ -40,30 +48,33 @@ export class InputName extends connect(store)(LitElement) {
     return html`
 
       <form
+        autocomplete="on"
+        aria-busy="${this.busy ? 'true' : 'false'}"
         @submit="${this.default}">
   
         <label
-          for="pwa-name">Name:
+          for="pwa-name">Name
 
           <input
             id            = "pwa-name"
-            name          = "username"
+            name          = "name"
             part          = "name"
             type          = "text"
             autocomplete  = "name"
-            data-label    = "Contact Name"
+            aria-describedby = "pwa-name-status"
             @input        = "${ this.handleInput }"
-            .value        = "${ this.value }" />
+            .value        = "${ this.draft }" />
 
           </label>
+
+        ${liveStatus('pwa-name-status', this.status, this.tone)}
     
-        <!-- Save to Database -->
         <button
           class="action-button save"
           part="submit"
-          type="button"
-          @click="${this.alertProfile}"
-          ?disabled="${this.login === false}">Update</button>
+          type="submit"
+          aria-busy="${this.busy ? 'true' : 'false'}"
+          ?disabled="${this.login === false || this.busy}">${this.busy ? 'Saving…' : 'Update'}</button>
 
       </form>
 
@@ -71,48 +82,59 @@ export class InputName extends connect(store)(LitElement) {
   }
 
   /* Form Default */
-  private default = (e:Event) => {
-    e.preventDefault();
+  private default = (event: Event) => {
+    event.preventDefault();
+    void this.alertProfile();
   }
 
-  // Handle input changes to keep the password property in sync
   private handleInput(event: Event) {
     const input   = event.target as HTMLInputElement;
-    this.value    = input.value; // Update the property with the input value
+    this.dirty    = true;
+    this.draft    = input.value;
+  }
+
+  private show(detail: { code: string; message: string }) {
+    this.tone = 'error';
+    this.status = userMessage(detail);
+    emitWindow(pwaAuthError, detail);
   }
 
   private alertProfile = async () => {
 
-    // Dispatch the Information to Firestore Function
+    if (this.busy) return;
+
+    const input = this.renderRoot.querySelector('#pwa-name') as HTMLInputElement | null;
+    const name = (input?.value ?? this.draft).trim();
     const current = auth.currentUser;
 
-    if (current) {
-
-      await updateProfile(current, { displayName: this.value })
-      .then( () => { store.dispatch(accName(this.value)) })
-      .then( () => {
-        emitWindow(pwaProfileUpdated, {
-          uid:          current.uid,
-          displayName:  this.value,
-          photoURL:     current.photoURL
-        });
-        alert('Name saved: ' + this.value);
-      })
-      .catch((error: unknown) => {
-        emitWindow(pwaAuthError, toAuthError(error));
-        alert(userMessage(error));
-      });
-
-    } else {
-      const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
-      emitWindow(pwaAuthError, detail);
-      alert(userMessage(detail));
+    if (!current) {
+      this.show({ code: 'pwa/signed-out', message: 'Sign in first.' });
+      return;
     }
-  
-  }
 
-  
-// Redux Dispatch Updated Information
+    this.busy = true;
+    this.tone = '';
+    this.status = '';
+
+    try {
+      await updateProfile(current, { displayName: name });
+      this.dirty = false;
+      this.draft = name;
+      store.dispatch(accName(name));
+      store.dispatch(nameAuth(name));
+      this.status = 'Name saved.';
+      emitWindow(pwaProfileUpdated, {
+        uid:          current.uid,
+        displayName:  name,
+        photoURL:     current.photoURL
+      });
+    } catch (error) {
+      this.show(toAuthError(error));
+    } finally {
+      this.busy = false;
+    }
+
+  }
 
 }
 

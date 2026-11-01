@@ -52,6 +52,7 @@ export const animation = css `
     transform:                              translate3d(0, 0, 0);
     visibility:                             visible;
     position:                               relative; /* Required - this form sets the panel height */
+    align-self:                             start; /* Required - keep the Update button under its field */
     z-index:                                3;
     transition:
       transform calc(var(--pwa_slide_time, 1.4s) * 1.429) var(--pwa_slide_ease, ease-in-out),
@@ -67,6 +68,9 @@ export const animation = css `
     top:                                    0;
     left:                                   0;
     width:                                  100%;
+    height:                                 auto; /* Required - a stretched row pulls Update to the top */
+    align-self:                             start;
+    justify-self:                           start;
     z-index:                                2;
 }
 

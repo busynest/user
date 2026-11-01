@@ -8,63 +8,84 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { LitElement, css, html } from "lit";
-import { property, state } from "lit/decorators.js";
+import { state } from "lit/decorators.js";
 import { connect } from "pwa-helpers";
 import { store } from "../../../store.js";
 import { updateProfile } from "firebase/auth";
 import { accName } from "../../../redux/backend.js";
+import { nameAuth } from "../../../redux/frontend.js";
 import { auth } from "../../../firebase/authentication.js";
 import { labelStyle } from "../../form/css/label.js";
 import { inputStyle } from "../../form/css/input.js";
 import { buttonStyle } from "../../form/css/button.js";
+import { statusStyle, liveStatus } from "../../form/css/status.js";
 import { pwaAuthError, pwaProfileUpdated } from "../../../events/names.js";
 import { emitWindow, toAuthError } from "../../../events/emit.js";
 import { userMessage } from "../../../firebase/message.js";
 export class InputName extends connect(store)(LitElement) {
     constructor() {
         super();
-        this.value = '';
         this.login = false;
-        this.default = (e) => {
-            e.preventDefault();
+        this.draft = '';
+        this.busy = false;
+        this.status = '';
+        this.tone = '';
+        this.dirty = false;
+        this.default = (event) => {
+            event.preventDefault();
+            void this.alertProfile();
         };
         this.alertProfile = async () => {
+            if (this.busy)
+                return;
+            const input = this.renderRoot.querySelector('#pwa-name');
+            const name = (input?.value ?? this.draft).trim();
             const current = auth.currentUser;
-            if (current) {
-                await updateProfile(current, { displayName: this.value })
-                    .then(() => { store.dispatch(accName(this.value)); })
-                    .then(() => {
-                    emitWindow(pwaProfileUpdated, {
-                        uid: current.uid,
-                        displayName: this.value,
-                        photoURL: current.photoURL
-                    });
-                    alert('Name saved: ' + this.value);
-                })
-                    .catch((error) => {
-                    emitWindow(pwaAuthError, toAuthError(error));
-                    alert(userMessage(error));
+            if (!current) {
+                this.show({ code: 'pwa/signed-out', message: 'Sign in first.' });
+                return;
+            }
+            this.busy = true;
+            this.tone = '';
+            this.status = '';
+            try {
+                await updateProfile(current, { displayName: name });
+                this.dirty = false;
+                this.draft = name;
+                store.dispatch(accName(name));
+                store.dispatch(nameAuth(name));
+                this.status = 'Name saved.';
+                emitWindow(pwaProfileUpdated, {
+                    uid: current.uid,
+                    displayName: name,
+                    photoURL: current.photoURL
                 });
             }
-            else {
-                const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
-                emitWindow(pwaAuthError, detail);
-                alert(userMessage(detail));
+            catch (error) {
+                this.show(toAuthError(error));
+            }
+            finally {
+                this.busy = false;
             }
         };
     }
     stateChanged(state) {
-        this.login = state.frontend.login;
-        this.value = state.backend.name;
+        const signedIn = Boolean(state.frontend?.login);
+        if (signedIn !== this.login)
+            this.dirty = false;
+        this.login = signedIn;
+        if (!this.dirty)
+            this.draft = state.backend?.name ?? '';
     }
     static get styles() {
         return [
             labelStyle,
             inputStyle,
             buttonStyle,
+            statusStyle,
             css `
 
-      :host, form { display: grid; }
+      :host, form { display: grid; align-content: start; }
 
     `
         ];
@@ -73,30 +94,33 @@ export class InputName extends connect(store)(LitElement) {
         return html `
 
       <form
+        autocomplete="on"
+        aria-busy="${this.busy ? 'true' : 'false'}"
         @submit="${this.default}">
   
         <label
-          for="pwa-name">Name:
+          for="pwa-name">Name
 
           <input
             id            = "pwa-name"
-            name          = "username"
+            name          = "name"
             part          = "name"
             type          = "text"
             autocomplete  = "name"
-            data-label    = "Contact Name"
+            aria-describedby = "pwa-name-status"
             @input        = "${this.handleInput}"
-            .value        = "${this.value}" />
+            .value        = "${this.draft}" />
 
           </label>
+
+        ${liveStatus('pwa-name-status', this.status, this.tone)}
     
-        <!-- Save to Database -->
         <button
           class="action-button save"
           part="submit"
-          type="button"
-          @click="${this.alertProfile}"
-          ?disabled="${this.login === false}">Update</button>
+          type="submit"
+          aria-busy="${this.busy ? 'true' : 'false'}"
+          ?disabled="${this.login === false || this.busy}">${this.busy ? 'Saving…' : 'Update'}</button>
 
       </form>
 
@@ -104,16 +128,34 @@ export class InputName extends connect(store)(LitElement) {
     }
     handleInput(event) {
         const input = event.target;
-        this.value = input.value;
+        this.dirty = true;
+        this.draft = input.value;
+    }
+    show(detail) {
+        this.tone = 'error';
+        this.status = userMessage(detail);
+        emitWindow(pwaAuthError, detail);
     }
 }
 __decorate([
-    property({ type: String, reflect: true }),
+    state(),
     __metadata("design:type", Object)
-], InputName.prototype, "value", void 0);
+], InputName.prototype, "login", void 0);
 __decorate([
     state(),
-    __metadata("design:type", Boolean)
-], InputName.prototype, "login", void 0);
+    __metadata("design:type", Object)
+], InputName.prototype, "draft", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], InputName.prototype, "busy", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], InputName.prototype, "status", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], InputName.prototype, "tone", void 0);
 customElements.define('input-name', InputName);
 //# sourceMappingURL=name.js.map

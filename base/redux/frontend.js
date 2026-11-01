@@ -6,9 +6,9 @@ export const initialState = {
     registerOne: false,
     registerTwo: false,
     userId: "user",
-    customer: "John Doe",
+    customer: '',
     profileChoice: 'unChosen',
-    name: 'Modern Business',
+    name: '',
     photoURL: '',
     phone: '(...) ... - ....',
     email: ''

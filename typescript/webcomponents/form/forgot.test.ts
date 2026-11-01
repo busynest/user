@@ -194,7 +194,7 @@ describe('email-reset', () => {
       code: 'pwa/missing-email',
       message: 'Enter an email address.'
     });
-    expect(window.alert).toHaveBeenCalledWith('Enter an email address.');
+    expect(window.alert).not.toHaveBeenCalled();
     expect(status(el).textContent).toBe('Enter an email address.');
     expect(input.getAttribute('aria-invalid')).toBe('true');
     expect(focus).toHaveBeenCalled();
@@ -263,7 +263,7 @@ describe('email-reset', () => {
     expect(sent.seen[0].composed).toBe(true);
     expect(errors.seen).toHaveLength(0);
     expect(live.textContent).toBe(sentMessage);
-    expect(window.alert).toHaveBeenCalledWith(sentMessage);
+    expect(window.alert).not.toHaveBeenCalled();
     expect(focus).toHaveBeenCalled();
     expect(submitButton(el).disabled).toBe(true);
     sent.stop();
@@ -284,8 +284,8 @@ describe('email-reset', () => {
     expect(sent.seen[0].detail).toEqual({ email: 'missing@example.com' });
     expect(errors.seen).toHaveLength(0);
     expect(status(el).textContent).toBe(sentMessage);
-    expect(window.alert).toHaveBeenCalledWith(sentMessage);
-    expect(window.alert).not.toHaveBeenCalledWith('No account uses that email.');
+    expect(window.alert).not.toHaveBeenCalled();
+    expect(status(el).textContent).not.toContain('No account uses that email.');
     sent.stop();
     errors.stop();
   });
@@ -311,7 +311,7 @@ describe('email-reset', () => {
       expect(detail.code).toBe(code);
       expect(detail.message).toContain(code);
       expect(status(el).textContent).toBe(sentence);
-      expect(window.alert).toHaveBeenCalledWith(sentence);
+      expect(window.alert).not.toHaveBeenCalled();
       expect(emailField(el).getAttribute('aria-invalid')).toBe(invalid ? 'true' : 'false');
       expect(submitButton(el).disabled).toBe(false);
       el.remove();

@@ -92,6 +92,12 @@ initialize({
 | `application` | The Firebase app from `initialize` or from `FIREBASE_CONFIG`. |
 | `firebaseConfig` | The parsed config object. |
 
+## Password
+
+Firebase Auth's own minimum is 6 characters. Sign-up and a password change in `<user-settings>` ask for 8 to 128. Spaces and other characters are allowed. There is no requirement for a number or a symbol. The sentence under the field is "At least 8 characters. A passphrase works well." A short password reads "Use at least 8 characters."
+
+In the Firebase console, open Authentication and turn on the password policy. Set the minimum to 8 so the server uses the same rule. This package does not change that policy.
+
 ## Emulators
 
 ```bash

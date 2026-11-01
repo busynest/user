@@ -1,4 +1,5 @@
 import { toAuthError } from '../events/emit.js';
+import { passwordLong, passwordMismatch, passwordShort } from './password.js';
 
 /** Required - plain sentences for the codes the forms actually hit. */
 const known: Record<string, string> = {
@@ -6,26 +7,30 @@ const known: Record<string, string> = {
   'auth/user-not-found':          'No account uses that email.',
   'auth/wrong-password':          'That password is wrong.',
   'auth/invalid-credential':      'That email or password is wrong.',
+  'auth/invalid-login-credentials': 'That email or password is wrong.',
+  'auth/user-token-expired':      'This account is no longer available.',
+  'auth/invalid-user-token':      'This account is no longer available.',
+  'auth/user-disabled':           'This account is disabled.',
   'auth/email-already-in-use':    'An account already uses that email.',
-  'auth/weak-password':           'Use at least 8 characters with letters and numbers.',
+  'auth/weak-password':           passwordShort,
   'auth/too-many-requests':       'Too many tries. Wait and try again.',
   'auth/network-request-failed':  'Network problem. Try again.',
   'auth/requires-recent-login':   'Sign in again, then retry.',
-  'auth/user-disabled':           'This account is disabled.',
   'pwa/missing-email':            'Enter an email address.',
   'pwa/invalid-email':            'Enter a valid email address.',
   'pwa/missing-password':         'Enter a password.',
-  'pwa/short-password':           'Password must be at least 6 characters.',
+  'pwa/short-password':           passwordShort,
+  'pwa/long-password':            passwordLong,
   'pwa/current-password':         'Enter your current password.',
-  'pwa/password-mismatch':        'Those passwords do not match.',
-  'pwa/weak-password':            'Use at least 8 characters with letters and numbers.',
+  'pwa/password-mismatch':        passwordMismatch,
+  'pwa/weak-password':            passwordShort,
   'pwa/signed-out':               'Sign in first.',
   'pwa/missing-file':             'Choose a photo first.',
   'pwa/not-ready':                'Sign-in is not ready yet.',
   'pwa/unknown':                  'Something went wrong. Try again.'
 };
 
-/** Required - sentence for an alert. The event still carries the raw code. */
+/** Required - sentence for the form. The event still carries the raw code. */
 export function userMessage(error: unknown): string {
   const detail = toAuthError(error);
   return known[detail.code] ?? 'Something went wrong. Try again.';

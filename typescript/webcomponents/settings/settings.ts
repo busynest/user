@@ -14,6 +14,7 @@ import { listStyle } from '../form/css/list.js';
 import { animation } from '../css/animation.js';
 import { tapStyle } from '../css/tap.js';
 import { applyFirebaseConfig } from '../../firebase/attribute.js';
+import { accountTitle } from '../form/letters.js';
 
 @customElement('user-settings')
 export class UserSettings extends connect(store)(LitElement) {
@@ -23,41 +24,26 @@ export class UserSettings extends connect(store)(LitElement) {
 
   @state() private profileTopic = '';
   @state() private name = '';
+  @state() private email = '';
+  @state() private login = false;
 
   constructor() { super(); }
+
 
   override connectedCallback(): void {
     applyFirebaseConfig(this);
     super.connectedCallback();
+    /* Required - cancel native form submit */
+    this.addEventListener('submit', this.onSubmit);
   }
 
-  protected firstUpdated() {
+  override disconnectedCallback(): void {
+    this.removeEventListener('submit', this.onSubmit);
+    super.disconnectedCallback();
+  }
 
-    /* Required - cancel native form submit */
-    this.addEventListener('submit', (event: Event) => {
-      event.preventDefault();
-    });
-
-    /* 1 */
-    this.shadowRoot!.querySelector('button[value=profile]')!.addEventListener('click', () => {
-      store.dispatch(navigateAuth('profile'));
-    } );
-    
-    /* 2 */
-    this.shadowRoot!.querySelector('button[value=verification]')!.addEventListener('click', () => {
-      store.dispatch(navigateAuth('verification'));
-    } );
-    
-    /* 3 */
-    this.shadowRoot!.querySelector('button[value=password]')!.addEventListener('click', () => {
-      store.dispatch(navigateAuth('password'));
-    } );
-    
-    /* 4 */
-    this.shadowRoot!.querySelector('button[value=delete]')!.addEventListener('click', () => {
-      store.dispatch(navigateAuth('delete'));
-    } );
-
+  private onSubmit = (event: Event) => {
+    event.preventDefault();
   }
 
   // Required - move across the four tabs from the keyboard
@@ -74,8 +60,10 @@ export class UserSettings extends connect(store)(LitElement) {
   }
 
   stateChanged(state: AppState) {
-    this.profileTopic   = state.frontend!.settings;       // Page String
-    this.name           = state.backend!.name;            // Username
+    this.profileTopic   = state.frontend!.settings;
+    this.login          = Boolean(state.frontend?.login);
+    this.name           = state.backend!.name;
+    this.email          = state.backend!.email;
   }
 
   static get styles():CSSResultArray { return [
@@ -98,6 +86,15 @@ export class UserSettings extends connect(store)(LitElement) {
 
       .pageTitle { margin: 0; }
 
+      .signed-out {
+        margin:           0;
+        padding:          20px 16px;
+        text-align:       center;
+        color:            var(--pwa_label_text_color, #1c2430);
+        font-size:        0.95rem;
+        line-height:      1.45;
+      }
+
       /* up to 576 pixels */
       @media only screen and (max-width: 576px) {
         h2 {
@@ -108,7 +105,18 @@ export class UserSettings extends connect(store)(LitElement) {
     `
     ]; }
 
+  private openTab(name: string) {
+    store.dispatch(navigateAuth(name));
+  }
+
   protected render() {
+    if (!this.login) {
+      return html`
+        <p class="signed-out" part="signed-out" role="status">Sign in to change the photo, name, email, or password.</p>
+      `;
+    }
+
+    const title = accountTitle(this.name, this.email);
     return html`
     
       <!-- Page Menu -->
@@ -123,7 +131,8 @@ export class UserSettings extends connect(store)(LitElement) {
               part="tab"
               value="profile"
               aria-selected="${this.profileTopic === 'profile'}"
-              ?on="${ this.profileTopic === 'profile'}">Icon
+              ?on="${ this.profileTopic === 'profile'}"
+              @click="${() => this.openTab('profile')}">Icon
             </button>
           </li>
 
@@ -134,7 +143,8 @@ export class UserSettings extends connect(store)(LitElement) {
               part="tab"
               value="verification"
               aria-selected="${this.profileTopic === 'verification'}"
-              ?on="${ this.profileTopic === 'verification'}">Profile
+              ?on="${ this.profileTopic === 'verification'}"
+              @click="${() => this.openTab('verification')}">Profile
             </button>
           </li>
 
@@ -145,7 +155,8 @@ export class UserSettings extends connect(store)(LitElement) {
               part="tab"
               value="password"
               aria-selected="${this.profileTopic === 'password'}"
-              ?on="${ this.profileTopic === 'password'}">Password
+              ?on="${ this.profileTopic === 'password'}"
+              @click="${() => this.openTab('password')}">Password
             </button>
           </li>
 
@@ -156,7 +167,8 @@ export class UserSettings extends connect(store)(LitElement) {
               part="tab"
               value="delete"
               aria-selected="${this.profileTopic === 'delete'}"
-              ?on="${ this.profileTopic === 'delete'}">Delete
+              ?on="${ this.profileTopic === 'delete'}"
+              @click="${() => this.openTab('delete')}">Delete
             </button>
           </li>
 
@@ -178,7 +190,7 @@ export class UserSettings extends connect(store)(LitElement) {
             class="content ${ this.profileTopic === 'profile' ? 'opened' : 'closed'}">
 
             <!-- Display Username -->
-            <h2>${this.name}</h2>
+            <h2>${title}</h2>
 
             <!-- Custom Image Element - Display / Upload -->
             <contact-photo emptyArtwork="${this.empty}" exportparts="progress, file, preview"></contact-photo>
@@ -197,7 +209,7 @@ export class UserSettings extends connect(store)(LitElement) {
             <h2>Contact Information</h2>
 
             <!-- Required - unverified notice. Sign-in stays open. -->
-            <email-verify exportparts="notice, status: verify-status, submit: verify-submit"></email-verify>
+            <email-verify exportparts="notice, status: verify-status, submit: verify-submit, verified, unverified"></email-verify>
 
             <!-- Custom - Username -->
             <input-name exportparts="name, submit: name-submit"></input-name>

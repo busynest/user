@@ -20,6 +20,7 @@ const firebase = vi.hoisted(() => {
     listeners,
     currentUser: null as null | ReturnType<typeof make>,
     sendEmailVerification: vi.fn(async () => undefined),
+    verifyBeforeUpdateEmail: vi.fn(async () => undefined),
     createUserWithEmailAndPassword: vi.fn(async (_auth: unknown, email: string) => {
       const user = make(email, false);
       firebase.currentUser = user;
@@ -55,8 +56,8 @@ vi.mock('firebase/auth', () => ({
   signOut: vi.fn(),
   updateProfile: vi.fn(),
   updatePassword: vi.fn(),
-  verifyBeforeUpdateEmail: vi.fn(),
-  reauthenticateWithCredential: vi.fn(),
+  verifyBeforeUpdateEmail: firebase.verifyBeforeUpdateEmail,
+  reauthenticateWithCredential: vi.fn(async () => undefined),
   EmailAuthProvider: { credential: vi.fn() }
 }));
 
@@ -86,10 +87,12 @@ vi.mock('firebase/analytics', () => ({
 import { initialize } from '../../base/firebase/authentication.js';
 import { getCurrentUser } from '../../base/api/user.js';
 import { isEmailVerified, sendVerification } from '../../base/api/verify.js';
+import { openDrawer } from '../../base/api/drawer.js';
 import { pwaAuthError, pwaEmailVerified, pwaSignup, pwaVerificationSent } from '../../base/events/names.js';
 import '../../base/firebase/interface.js';
 import '../../base/webcomponents/form/signup.js';
 import '../../base/webcomponents/settings/settings.js';
+import '../../base/webcomponents/drawer/drawer.js';
 
 const sentMessage = 'Check your inbox for the verification email.';
 
@@ -148,6 +151,7 @@ describe('email verification', () => {
     firebase.sendEmailVerification.mockReset();
     firebase.sendEmailVerification.mockResolvedValue(undefined);
     firebase.createUserWithEmailAndPassword.mockClear();
+    firebase.verifyBeforeUpdateEmail.mockClear();
     firebase.currentUser = null;
     window.alert = vi.fn();
     document.body.replaceChildren();
@@ -191,9 +195,31 @@ describe('email verification', () => {
     expect(sent.seen[0].composed).toBe(true);
     expect(errors.seen).toHaveLength(0);
     expect(getCurrentUser()).toMatchObject({ email: 'ada@example.com', emailVerified: false });
+    expect(firebase.sendEmailVerification.mock.calls[0][0]).toMatchObject({ email: 'ada@example.com' });
     signups.stop();
     sent.stop();
     errors.stop();
+  });
+
+  it('sign-up passes actionCodeSettings into sendEmailVerification', async () => {
+    initialize({
+      actionCodeSettings: { url: 'https://contractorscentre.com/verified' }
+    });
+    const el = document.createElement('form-signup') as VerifyEl;
+    document.body.append(el);
+    await el.updateComplete;
+
+    const email = el.shadowRoot!.querySelector('input[type="email"]') as HTMLInputElement;
+    const password = el.shadowRoot!.querySelector('input[name="new-password"]') as HTMLInputElement;
+    email.value = 'ada@example.com';
+    password.value = 'secret12';
+    el.shadowRoot!.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await flush(el);
+
+    expect(firebase.sendEmailVerification).toHaveBeenCalledWith(
+      expect.objectContaining({ email: 'ada@example.com' }),
+      { url: 'https://contractorscentre.com/verified' }
+    );
   });
 
   it('still emits pwa-signup when the verification mail fails', async () => {
@@ -215,7 +241,8 @@ describe('email verification', () => {
     expect(signups.seen).toHaveLength(1);
     expect(sent.seen).toHaveLength(0);
     expect(errors.seen[0].detail.code).toBe('auth/network-request-failed');
-    expect(window.alert).toHaveBeenCalledWith('Network problem. Try again.');
+    expect(el.shadowRoot!.textContent).toContain('Network problem. Try again.');
+    expect(window.alert).not.toHaveBeenCalled();
     signups.stop();
     sent.stop();
     errors.stop();
@@ -321,6 +348,7 @@ describe('email verification', () => {
     expect(notice).toBeTruthy();
     await notice.updateComplete;
 
+    expect(notice.shadowRoot!.textContent).toContain('Not verified');
     expect(notice.shadowRoot!.textContent).toContain('ada@example.com is not verified yet. You can still sign in.');
     expect(button(notice).textContent).toContain('Resend verification email');
     expect(button(notice).classList.contains('action-button')).toBe(true);
@@ -337,7 +365,8 @@ describe('email verification', () => {
     firebase.emit(firebase.make('ada@example.com', true));
     const verified = verifyEl();
     await verified.updateComplete;
-    expect(verified.shadowRoot!.textContent).toContain('Email verified.');
+    const mark = verified.shadowRoot!.querySelector('[part="verified"]') as HTMLElement;
+    expect(mark.getAttribute('aria-label')).toBe('Email verified');
     expect(verified.shadowRoot!.querySelector('button')).toBeNull();
   });
 
@@ -367,7 +396,7 @@ describe('email verification', () => {
     expect(firebase.sendEmailVerification).toHaveBeenCalledOnce();
     expect(sent.seen[0].detail).toEqual({ email: 'ada@example.com' });
     expect(live.textContent).toBe(sentMessage);
-    expect(window.alert).toHaveBeenCalledWith(sentMessage);
+    expect(window.alert).not.toHaveBeenCalled();
     expect(focus).toHaveBeenCalled();
     expect(button(el).disabled).toBe(true);
     expect(button(el).textContent).toContain('Send again in 45s');
@@ -395,7 +424,7 @@ describe('email verification', () => {
       expect(detail.message).toContain(code);
       expect(status(el).textContent).toBe(sentence);
       expect(status(el).classList.contains('error')).toBe(true);
-      expect(window.alert).toHaveBeenCalledWith(sentence);
+      expect(window.alert).not.toHaveBeenCalled();
       expect(button(el).disabled).toBe(false);
       expect(button(el).textContent).toContain('Resend verification email');
       el.remove();
@@ -434,6 +463,69 @@ describe('email verification', () => {
     submit(el);
     await flush(el);
     expect(firebase.sendEmailVerification).toHaveBeenCalledTimes(2);
+  });
+
+  it('shows Not verified and Resend in the drawer, then the check', async () => {
+    firebase.emit(firebase.make('ada@example.com', false));
+    const drawer = document.createElement('user-drawer') as VerifyEl;
+    document.body.append(drawer);
+    await drawer.updateComplete;
+
+    expect(drawer.shadowRoot!.textContent).toContain('Not verified');
+    const nested = drawer.shadowRoot!.querySelector('email-verify') as VerifyEl;
+    await nested.updateComplete;
+    expect(nested.shadowRoot!.textContent).toContain('Resend verification email');
+    expect(drawer.shadowRoot!.querySelector('[part="verified"]')).toBeNull();
+
+    firebase.emit(firebase.make('ada@example.com', true));
+    await drawer.updateComplete;
+    const mark = drawer.shadowRoot!.querySelector('[part="verified"]') as HTMLElement;
+    expect(mark.getAttribute('aria-label')).toBe('Email verified');
+  });
+
+  it('reloads the user when the drawer opens and when the window focuses', async () => {
+    const user = firebase.make('ada@example.com', false);
+    firebase.emit(user);
+    const drawer = document.createElement('user-drawer') as VerifyEl;
+    document.body.append(drawer);
+    await drawer.updateComplete;
+    user.reload.mockClear();
+
+    openDrawer();
+    await flush(drawer);
+    expect(user.reload).toHaveBeenCalled();
+
+    user.reload.mockClear();
+    window.dispatchEvent(new Event('focus'));
+    await flush();
+    expect(user.reload).toHaveBeenCalled();
+  });
+
+  it('sends verification after an email change, with actionCodeSettings', async () => {
+    initialize({
+      actionCodeSettings: { url: 'https://contractorscentre.com/verified' }
+    });
+    firebase.emit(firebase.make('ada@example.com', false));
+    const settings = document.createElement('user-settings') as VerifyEl;
+    document.body.append(settings);
+    await settings.updateComplete;
+    const mail = settings.shadowRoot!.querySelector('contact-email') as VerifyEl;
+    await mail.updateComplete;
+
+    (mail.shadowRoot!.querySelector('#pwa-email') as HTMLInputElement).value = 'new@example.com';
+    (mail.shadowRoot!.querySelector('#pwa-current-email-password') as HTMLInputElement).value = 'secret12';
+    mail.shadowRoot!.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await flush(mail);
+
+    expect(firebase.verifyBeforeUpdateEmail).toHaveBeenCalledWith(
+      expect.objectContaining({ email: 'ada@example.com' }),
+      'new@example.com',
+      { url: 'https://contractorscentre.com/verified' }
+    );
+    expect(firebase.sendEmailVerification).toHaveBeenCalledWith(
+      expect.objectContaining({ email: 'ada@example.com' }),
+      { url: 'https://contractorscentre.com/verified' }
+    );
   });
 
 });

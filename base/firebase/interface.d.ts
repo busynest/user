@@ -1,3 +1,7 @@
+export declare function takeAuthFailure(): {
+    code: string;
+    message: string;
+} | null;
 export declare const pwaDrawerToggle: () => void;
 export declare const reauthenticate: (password: string) => Promise<boolean>;
 export declare const logOut: () => Promise<void>;

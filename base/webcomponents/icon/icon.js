@@ -14,6 +14,7 @@ import { store } from '../../store.js';
 import { iconStyles } from './css/icon.js';
 import { toggleSign } from '../../redux/frontend.js';
 import { applyFirebaseConfig } from '../../firebase/attribute.js';
+import { lettersFor } from '../form/letters.js';
 let UserIcon = class UserIcon extends connect(store)(LitElement) {
     constructor() {
         super();
@@ -21,6 +22,8 @@ let UserIcon = class UserIcon extends connect(store)(LitElement) {
         this.empty = '';
         this._user = false;
         this._photoURL = '';
+        this._name = '';
+        this._email = '';
     }
     connectedCallback() {
         applyFirebaseConfig(this);
@@ -34,6 +37,8 @@ let UserIcon = class UserIcon extends connect(store)(LitElement) {
     stateChanged(state) {
         this._user = state.frontend.login;
         this._photoURL = state.backend.photoURL;
+        this._name = state.backend.name;
+        this._email = state.backend.email;
     }
     static get styles() { return [iconStyles, css `:host { border-radius: 10px; }`]; }
     render() {
@@ -46,17 +51,24 @@ let UserIcon = class UserIcon extends connect(store)(LitElement) {
         class="${this._user ? 'icon' : 'login'} toggles"
         aria-label="${this._user ? 'Account' : this.subscribe ? 'Subscribe' : 'Login'}">
         
-        ${this._user ? html `
-            <img
-              class="userImage"
-              part="photo"
-              alt=""
-              src="${this._photoURL ? this._photoURL : this.empty}">
-          ` : this.subscribe ? 'Subscribe' : 'Login'}
+        ${this._user ? this.face() : this.subscribe ? 'Subscribe' : 'Login'}
 
       </button>
 
     `;
+    }
+    face() {
+        if (this._photoURL) {
+            return html `<img class="userImage" part="photo" alt="" src="${this._photoURL}">`;
+        }
+        const letters = lettersFor(this._name, this._email);
+        if (letters) {
+            return html `<span class="initials" part="initials" aria-hidden="true">${letters}</span>`;
+        }
+        if (this.empty) {
+            return html `<img class="userImage" part="photo" alt="" src="${this.empty}">`;
+        }
+        return html `<span class="initials" part="initials" aria-hidden="true">?</span>`;
     }
 };
 __decorate([
@@ -75,6 +87,14 @@ __decorate([
     state(),
     __metadata("design:type", Object)
 ], UserIcon.prototype, "_photoURL", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserIcon.prototype, "_name", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserIcon.prototype, "_email", void 0);
 UserIcon = __decorate([
     customElement('user-icon'),
     __metadata("design:paramtypes", [])

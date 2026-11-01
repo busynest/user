@@ -1,4 +1,3 @@
-
 import { CSSResultArray, LitElement, css, html } from "lit";
 import { state }            from "lit/decorators.js";
 import { connect }          from "pwa-helpers";
@@ -7,17 +6,26 @@ import { auth }             from "../../../firebase/authentication.js";
 import { labelStyle }       from "../../form/css/label.js";
 import { inputStyle }       from "../../form/css/input.js";
 import { buttonStyle  }     from "../../form/css/button.js";
+import { toggleStyle }      from "../../form/css/toggle.js";
+import { statusStyle, liveStatus } from "../../form/css/status.js";
+import { revealControl }    from "../../form/reveal.js";
 import { updatePassword }   from "firebase/auth";
-import { reauthenticate }   from "../../../firebase/interface.js";
+import { reauthenticate, takeAuthFailure } from "../../../firebase/interface.js";
 import { pwaAuthError, pwaPasswordChanged } from "../../../events/names.js";
 import { emitWindow, toAuthError } from "../../../events/emit.js";
 import { userMessage } from "../../../firebase/message.js";
+import { newPasswordIssue, passwordHint, passwordMax, passwordMin, passwordMismatch } from "../../../firebase/password.js";
 
 export class InputPassword extends connect(store)(LitElement) {
 
   @state() private message    : string    = '';
+  @state() private tone       : string    = '';
   @state() private password   : string    = '';
   @state() private login      : boolean   = false;
+  @state() private busy       : boolean   = false;
+  @state() private showCurrent = false;
+  @state() private showNext = false;
+  @state() private showVerify = false;
 
   constructor() { super(); }
 
@@ -25,117 +33,139 @@ export class InputPassword extends connect(store)(LitElement) {
       this.login = state.frontend!.login;
     }
 
-  // Handle input changes to keep the password property in sync
   private handleInputChange(event: Event) {
     const input = event.target as HTMLInputElement;
-    this.password = input.value; // Update the property with the input value
+    this.password = input.value;
   }
 
   static get styles(): CSSResultArray { return [
     labelStyle,
     inputStyle,
     buttonStyle,
+    toggleStyle,
+    statusStyle,
     css`
 
       :host{
         display:        grid;
+        align-content:  start;
       }
 
-      form { display: grid; }
+      form { display: grid; align-content: start; }
 
-      p.error { color: red; }
-    
     ` ]; }
 
   render() {
     return html`
 
       <form
-        autocomplete="off"
+        autocomplete="on"
+        aria-busy="${this.busy ? 'true' : 'false'}"
         @submit="${this.default}">
 
-        <!-- Required - recent login -->
         <div>
 
           <label for="pwa-current-password">Current Password
 
-            <input
-              id      = "pwa-current-password"
-              name    = "current_password"
-              type    = "password"
-              autocomplete = "current-password">
+            <span class="pair">
+
+              <input
+                id      = "pwa-current-password"
+                name    = "current_password"
+                type    = "${this.showCurrent ? 'text' : 'password'}"
+                autocomplete = "current-password"
+                aria-describedby = "pwa-password-status">
+
+              ${revealControl(this.showCurrent, () => { this.showCurrent = !this.showCurrent; })}
+
+            </span>
 
           </label>
 
         </div>
 
-        <!-- Input - 1 -->
         <div>
           
           <label for="pwa-new-password">New Password
 
-            <input
-              id      = "pwa-new-password"
-              name    = "new_password"
-              part    = "password"
-              type    = "password"
-              autocomplete = "new-password"
-              .value  = "${this.password}"
-              @input  = "${this.handleInputChange}"
-              aria-describedby = "password-help">
+            <span class="pair">
+
+              <input
+                id      = "pwa-new-password"
+                name    = "new_password"
+                part    = "password"
+                type    = "${this.showNext ? 'text' : 'password'}"
+                autocomplete = "new-password"
+                minlength    = "${passwordMin}"
+                maxlength    = "${passwordMax}"
+                .value  = "${this.password}"
+                @input  = "${this.handleInputChange}"
+                aria-describedby = "pwa-new-password-hint pwa-password-status">
+
+              ${revealControl(this.showNext, () => { this.showNext = !this.showNext; })}
+
+            </span>
+
+            <p id="pwa-new-password-hint" class="hint" part="hint">${passwordHint}</p>
 
           </label>
 
         </div>
 
-        <!-- Input - 2 -->
         <div>
 
           <label for="pwa-verify-password">Verify Password
 
-            <input
-              id      = "pwa-verify-password"
-              name    = "verify_password"
-              part    = "verify"
-              type    = "password"
-              autocomplete = "new-password">
+            <span class="pair">
+
+              <input
+                id      = "pwa-verify-password"
+                name    = "verify_password"
+                part    = "verify"
+                type    = "${this.showVerify ? 'text' : 'password'}"
+                autocomplete = "new-password"
+                minlength    = "${passwordMin}"
+                maxlength    = "${passwordMax}"
+                aria-describedby = "pwa-password-status">
+
+              ${revealControl(this.showVerify, () => { this.showVerify = !this.showVerify; })}
+
+            </span>
 
           </label>
 
-          ${this.message ? html`
-
-            <p
-              class=${this.message.includes('Password entered') ? '' : 'error'}
-              aria-live="polite">
-
-              ${this.message}
-
-            </p>
-
-          ` : '' }
-
         </div>
 
-        <!-- Submit -->
+        ${liveStatus('pwa-password-status', this.message, this.tone)}
+
         <button
           type="submit"
           part="submit"
           class="action-button pass"
-          ?disabled="${this.login === false}">Update</button>
+          aria-busy="${this.busy ? 'true' : 'false'}"
+          ?disabled="${this.login === false || this.busy}">${this.busy ? 'Saving…' : 'Update'}</button>
 
       </form>
 
     `;
   }
 
+  private show(detail: { code: string; message: string }) {
+    this.tone = 'error';
+    this.message = userMessage(detail);
+    emitWindow(pwaAuthError, detail);
+  }
+
   /* Required - read both passwords on submit */
-  private default = (e:Event) => {
-    e.preventDefault();
-    this.alertPassword();
+  private default = (event: Event) => {
+    event.preventDefault();
+    void this.alertPassword();
   }
 
   /* Update Password */
-  private alertPassword() {
+  private async alertPassword() {
+
+    if (this.busy) return;
 
     const currentPassword = (this.shadowRoot!.querySelector('#pwa-current-password') as HTMLInputElement).value;
     const entered = (this.shadowRoot!.querySelector('#pwa-new-password') as HTMLInputElement).value;
@@ -143,54 +173,63 @@ export class InputPassword extends connect(store)(LitElement) {
     this.password = entered;
 
     if (currentPassword.length < 6) {
-      this.message = 'Enter your current password';
-      emitWindow(pwaAuthError, { code: 'pwa/current-password', message: 'Enter your current password.' });
+      this.show({ code: 'pwa/current-password', message: 'Enter your current password.' });
       return;
     }
 
-    if (!this.password) {
-      this.message = 'Please enter a password';
-      emitWindow(pwaAuthError, { code: 'pwa/missing-password', message: this.message });
-    } else if (this.password !== verify) {
-      this.message = 'Passwords do not match';
-      emitWindow(pwaAuthError, { code: 'pwa/password-mismatch', message: this.message });
-    } else if (this.password.length < 6) {
-      this.message = 'Password must be at least 6 characters.';
-      emitWindow(pwaAuthError, { code: 'pwa/short-password', message: this.message });
-    } else {
-      this.message = `Password entered:`;
-
-      if (auth.currentUser)     { this.updatePass(currentPassword, this.password); }
-      else {
-        const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
-        emitWindow(pwaAuthError, detail);
-        alert(userMessage(detail));
-      }
-
+    const issue = newPasswordIssue(this.password);
+    if (issue) {
+      this.show(issue);
+      return;
     }
-    
+
+    if (this.password !== verify) {
+      this.show({ code: 'pwa/password-mismatch', message: passwordMismatch });
+      return;
+    }
+
+    if (!auth.currentUser) {
+      this.show({ code: 'pwa/signed-out', message: 'Sign in first.' });
+      return;
+    }
+
+    await this.updatePass(currentPassword, this.password);
+
   }
 
-  // Firebase Password Function
   private updatePass = async (currentPassword: string, newPassword: string) => {
 
     const current = auth.currentUser;
     if (!current) {
-      const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
-      emitWindow(pwaAuthError, detail);
-      alert(userMessage(detail));
+      this.show({ code: 'pwa/signed-out', message: 'Sign in first.' });
       return;
     }
 
+    this.busy = true;
+    this.tone = '';
+    this.message = '';
+
     const ok = await reauthenticate(currentPassword);
-    if (!ok) { return; }
+    if (!ok) {
+      const detail = takeAuthFailure();
+      this.tone = 'error';
+      this.message = userMessage(detail ?? { code: 'pwa/unknown', message: 'Something went wrong. Try again.' });
+      this.busy = false;
+      return;
+    }
 
     try {
       await updatePassword(current, newPassword);
+      this.tone = '';
+      this.message = 'Password saved.';
       emitWindow(pwaPasswordChanged, { uid: current.uid });
     } catch (error) {
-      emitWindow(pwaAuthError, toAuthError(error));
-      alert(userMessage(error));
+      const detail = toAuthError(error);
+      this.tone = 'error';
+      this.message = userMessage(error);
+      emitWindow(pwaAuthError, detail);
+    } finally {
+      this.busy = false;
     }
 
   }
@@ -204,6 +243,3 @@ declare global {
     'input-password': InputPassword;
   }
 }
-
-
-// grid-template-rows: auto auto auto auto auto;

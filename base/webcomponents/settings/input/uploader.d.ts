@@ -35,17 +35,21 @@ declare const ContactPhoto_base: (new (...args: any[]) => {
 export declare class ContactPhoto extends ContactPhoto_base {
     photo: string | void | any;
     emptyArtwork: string;
-    private user;
     private login;
+    private person;
+    private mail;
     private progress;
     private error;
     private status;
+    private tone;
+    private busy;
     constructor();
     stateChanged(state: AppState): void;
     static get styles(): CSSResultArray;
+    private letters;
     protected render(): import("lit-html").TemplateResult<1>;
+    private fail;
     private saveImage;
-    private dispatchPhoto;
 }
 declare global {
     interface HTMLElementTagNameMap {

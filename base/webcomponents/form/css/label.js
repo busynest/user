@@ -13,5 +13,13 @@ export const labelStyle = css `
     padding:              0 16px 14px; /* Required - field inset */
   }
 
+  .hint {
+    margin:               6px 0 0;
+    color:                var(--pwa_nav_button_color, #4e5b6a);
+    font-size:            0.85rem;
+    font-weight:          500;
+    line-height:          1.4;
+  }
+
 `;
 //# sourceMappingURL=label.js.map

@@ -28,7 +28,20 @@ import { application, auth, db, isReady, onReady, storage } from './authenticati
 
 import { pwaAuthChanged, pwaAuthError, pwaLogout } from '../events/names.js';
 import { emitWindow, toAuthError, toPwaUser } from '../events/emit.js';
-import { userMessage } from './message.js';
+
+/** Required - the form reads this after reauthenticate returns false. */
+let failed: { code: string; message: string } | null = null;
+
+export function takeAuthFailure(): { code: string; message: string } | null {
+  const found = failed;
+  failed = null;
+  return found;
+}
+
+function noteFailure(detail: { code: string; message: string }) {
+  failed = detail;
+  emitWindow(pwaAuthError, detail);
+}
 
 
 
@@ -84,7 +97,7 @@ onReady(() => {
 
     // Backend Data Redux - Firebase User Information - account redux
     store.dispatch( accID     ( user.uid ) );
-    store.dispatch( accName   ( user.displayName || 'John Doe' ) );
+    store.dispatch( accName   ( user.displayName ?? '' ) );
     store.dispatch( accEmail  ( user.email || '' ) );
     store.dispatch( accImage  ( user.photoURL || '' ) );
     store.dispatch( accVerified( user.emailVerified === true ) );
@@ -93,7 +106,7 @@ onReady(() => {
     // store.dispatch( accAnon   ( user.isAnonymous ) );
 
     // Frontend Data Redux - Firebase User Information - user redux
-    store.dispatch( nameAuth   ( user.displayName || 'John Doe' ) );
+    store.dispatch( nameAuth   ( user.displayName ?? '' ) );
     store.dispatch( iconAuth   ( user.photoURL || '' ) );
 
     // Existing Redux Profile Object
@@ -113,7 +126,7 @@ onReady(() => {
 
     // Backend Data Redux - Firebase User Information - account redux
     store.dispatch( accID     ( '' ) );
-    store.dispatch( accName   ( 'John Doe' ) );
+    store.dispatch( accName   ( '' ) );
     store.dispatch( accEmail  ( '' ) );
     store.dispatch( accImage  ( '' ) );
     store.dispatch( accVerified( false ) );
@@ -122,7 +135,7 @@ onReady(() => {
     // store.dispatch( accPhone  ( '(000) 000-0000' ) );
 
     // Frontend Data Redux - Firebase User Information - user redux
-    store.dispatch( nameAuth   ( 'John Doe' ) );
+    store.dispatch( nameAuth   ( '' ) );
     store.dispatch( iconAuth   ( '' ) );
 
     // Dispatch Information
@@ -149,9 +162,7 @@ export const reauthenticate = async (password: string) => {
   const current = auth.currentUser;
 
   if (!current || !current.email) {
-    const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
-    emitWindow(pwaAuthError, detail);
-    alert(userMessage(detail));
+    noteFailure({ code: 'pwa/signed-out', message: 'Sign in first.' });
     return false;
   }
 
@@ -160,8 +171,7 @@ export const reauthenticate = async (password: string) => {
     await reauthenticateWithCredential(current, credential);
     return true;
   } catch (error) {
-    emitWindow(pwaAuthError, toAuthError(error));
-    alert(userMessage(error));
+    noteFailure(toAuthError(error));
     return false;
   }
 

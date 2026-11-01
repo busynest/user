@@ -23,33 +23,27 @@ import { listStyle } from '../form/css/list.js';
 import { animation } from '../css/animation.js';
 import { tapStyle } from '../css/tap.js';
 import { applyFirebaseConfig } from '../../firebase/attribute.js';
+import { accountTitle } from '../form/letters.js';
 let UserSettings = class UserSettings extends connect(store)(LitElement) {
     constructor() {
         super();
         this.empty = '';
         this.profileTopic = '';
         this.name = '';
+        this.email = '';
+        this.login = false;
+        this.onSubmit = (event) => {
+            event.preventDefault();
+        };
     }
     connectedCallback() {
         applyFirebaseConfig(this);
         super.connectedCallback();
+        this.addEventListener('submit', this.onSubmit);
     }
-    firstUpdated() {
-        this.addEventListener('submit', (event) => {
-            event.preventDefault();
-        });
-        this.shadowRoot.querySelector('button[value=profile]').addEventListener('click', () => {
-            store.dispatch(navigateAuth('profile'));
-        });
-        this.shadowRoot.querySelector('button[value=verification]').addEventListener('click', () => {
-            store.dispatch(navigateAuth('verification'));
-        });
-        this.shadowRoot.querySelector('button[value=password]').addEventListener('click', () => {
-            store.dispatch(navigateAuth('password'));
-        });
-        this.shadowRoot.querySelector('button[value=delete]').addEventListener('click', () => {
-            store.dispatch(navigateAuth('delete'));
-        });
+    disconnectedCallback() {
+        this.removeEventListener('submit', this.onSubmit);
+        super.disconnectedCallback();
     }
     onTabKey(event) {
         if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft')
@@ -65,7 +59,9 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
     }
     stateChanged(state) {
         this.profileTopic = state.frontend.settings;
+        this.login = Boolean(state.frontend?.login);
         this.name = state.backend.name;
+        this.email = state.backend.email;
     }
     static get styles() {
         return [
@@ -88,6 +84,15 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
 
       .pageTitle { margin: 0; }
 
+      .signed-out {
+        margin:           0;
+        padding:          20px 16px;
+        text-align:       center;
+        color:            var(--pwa_label_text_color, #1c2430);
+        font-size:        0.95rem;
+        line-height:      1.45;
+      }
+
       /* up to 576 pixels */
       @media only screen and (max-width: 576px) {
         h2 {
@@ -98,7 +103,16 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
     `
         ];
     }
+    openTab(name) {
+        store.dispatch(navigateAuth(name));
+    }
     render() {
+        if (!this.login) {
+            return html `
+        <p class="signed-out" part="signed-out" role="status">Sign in to change the photo, name, email, or password.</p>
+      `;
+        }
+        const title = accountTitle(this.name, this.email);
         return html `
     
       <!-- Page Menu -->
@@ -113,7 +127,8 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
               part="tab"
               value="profile"
               aria-selected="${this.profileTopic === 'profile'}"
-              ?on="${this.profileTopic === 'profile'}">Icon
+              ?on="${this.profileTopic === 'profile'}"
+              @click="${() => this.openTab('profile')}">Icon
             </button>
           </li>
 
@@ -124,7 +139,8 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
               part="tab"
               value="verification"
               aria-selected="${this.profileTopic === 'verification'}"
-              ?on="${this.profileTopic === 'verification'}">Profile
+              ?on="${this.profileTopic === 'verification'}"
+              @click="${() => this.openTab('verification')}">Profile
             </button>
           </li>
 
@@ -135,7 +151,8 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
               part="tab"
               value="password"
               aria-selected="${this.profileTopic === 'password'}"
-              ?on="${this.profileTopic === 'password'}">Password
+              ?on="${this.profileTopic === 'password'}"
+              @click="${() => this.openTab('password')}">Password
             </button>
           </li>
 
@@ -146,7 +163,8 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
               part="tab"
               value="delete"
               aria-selected="${this.profileTopic === 'delete'}"
-              ?on="${this.profileTopic === 'delete'}">Delete
+              ?on="${this.profileTopic === 'delete'}"
+              @click="${() => this.openTab('delete')}">Delete
             </button>
           </li>
 
@@ -168,7 +186,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             class="content ${this.profileTopic === 'profile' ? 'opened' : 'closed'}">
 
             <!-- Display Username -->
-            <h2>${this.name}</h2>
+            <h2>${title}</h2>
 
             <!-- Custom Image Element - Display / Upload -->
             <contact-photo emptyArtwork="${this.empty}" exportparts="progress, file, preview"></contact-photo>
@@ -187,7 +205,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             <h2>Contact Information</h2>
 
             <!-- Required - unverified notice. Sign-in stays open. -->
-            <email-verify exportparts="notice, status: verify-status, submit: verify-submit"></email-verify>
+            <email-verify exportparts="notice, status: verify-status, submit: verify-submit, verified, unverified"></email-verify>
 
             <!-- Custom - Username -->
             <input-name exportparts="name, submit: name-submit"></input-name>
@@ -247,6 +265,14 @@ __decorate([
     state(),
     __metadata("design:type", Object)
 ], UserSettings.prototype, "name", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserSettings.prototype, "email", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserSettings.prototype, "login", void 0);
 UserSettings = __decorate([
     customElement('user-settings'),
     __metadata("design:paramtypes", [])

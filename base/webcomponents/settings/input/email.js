@@ -15,8 +15,13 @@ import { auth } from "../../../firebase/authentication.js";
 import { labelStyle } from "../../form/css/label.js";
 import { inputStyle } from "../../form/css/input.js";
 import { buttonStyle } from "../../form/css/button.js";
+import { toggleStyle } from "../../form/css/toggle.js";
+import { statusStyle, liveStatus } from "../../form/css/status.js";
+import { revealControl } from "../../form/reveal.js";
 import { verifyBeforeUpdateEmail } from "firebase/auth";
-import { reauthenticate } from "../../../firebase/interface.js";
+import { emailActionCodeSettings } from "../../../firebase/authentication.js";
+import { sendVerification } from "../../../api/verify.js";
+import { reauthenticate, takeAuthFailure } from "../../../firebase/interface.js";
 import { pwaAuthError, pwaEmailChanged } from "../../../events/names.js";
 import { emitWindow, toAuthError } from "../../../events/emit.js";
 import { emitLegacyEmailChanged } from "../../../deprecated/email-changed.js";
@@ -27,13 +32,17 @@ export class ContactEmail extends connect(store)(LitElement) {
         this.email = '';
         this.login = false;
         this.mail = "";
+        this.busy = false;
+        this.status = '';
+        this.tone = '';
+        this.showPassword = false;
         this.saveEmail = async (event) => {
             event.preventDefault();
+            if (this.busy)
+                return;
             const current = auth.currentUser;
             if (!current) {
-                const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
-                emitWindow(pwaAuthError, detail);
-                alert(userMessage(detail));
+                this.show({ code: 'pwa/signed-out', message: 'Sign in first.' });
                 return;
             }
             const currentPassword = this.shadowRoot?.querySelector('#pwa-current-email-password')?.value ?? '';
@@ -42,25 +51,46 @@ export class ContactEmail extends connect(store)(LitElement) {
                 return;
             }
             if (currentPassword.length < 6) {
-                const detail = { code: 'pwa/current-password', message: 'Enter your current password.' };
-                emitWindow(pwaAuthError, detail);
-                alert(userMessage(detail));
+                this.show({ code: 'pwa/current-password', message: 'Enter your current password.' });
                 return;
             }
+            this.busy = true;
+            this.tone = '';
+            this.status = '';
             const ok = await reauthenticate(currentPassword);
             if (!ok) {
+                const detail = takeAuthFailure();
+                this.tone = 'error';
+                this.status = userMessage(detail ?? { code: 'pwa/unknown', message: 'Something went wrong. Try again.' });
+                this.busy = false;
                 return;
             }
             try {
-                await verifyBeforeUpdateEmail(current, contactMail.value);
+                const settings = emailActionCodeSettings();
+                if (settings)
+                    await verifyBeforeUpdateEmail(current, contactMail.value, settings);
+                else
+                    await verifyBeforeUpdateEmail(current, contactMail.value);
                 const detail = { email: contactMail.value };
                 emitWindow(pwaEmailChanged, detail);
                 emitLegacyEmailChanged(detail);
-                alert('Check your inbox to confirm the new address.');
+                this.tone = '';
+                this.status = 'Check your inbox to confirm the new address.';
+                if (!current.emailVerified) {
+                    try {
+                        await sendVerification();
+                    }
+                    catch { }
+                }
             }
             catch (error) {
-                emitWindow(pwaAuthError, toAuthError(error));
-                alert(userMessage(error));
+                const detail = toAuthError(error);
+                this.tone = 'error';
+                this.status = userMessage(error);
+                emitWindow(pwaAuthError, detail);
+            }
+            finally {
+                this.busy = false;
             }
         };
     }
@@ -77,9 +107,11 @@ export class ContactEmail extends connect(store)(LitElement) {
             labelStyle,
             inputStyle,
             buttonStyle,
+            toggleStyle,
+            statusStyle,
             css `
     
-      :host, form { display: grid; }
+      :host, form { display: grid; align-content: start; }
 
     `
         ];
@@ -88,20 +120,28 @@ export class ContactEmail extends connect(store)(LitElement) {
         return html `
 
     <form
-      autocomplete="off"
+      autocomplete="on"
+      aria-busy="${this.busy ? 'true' : 'false'}"
       @submit="${this.saveEmail}">
 
       <label for="pwa-current-email-password">Current password
 
-        <input
-          id            = "pwa-current-email-password"
-          name          = "current_password"
-          type          = "password"
-          autocomplete  = "current-password"/>
+        <span class="pair">
+
+          <input
+            id            = "pwa-current-email-password"
+            name          = "current_password"
+            type          = "${this.showPassword ? 'text' : 'password'}"
+            autocomplete  = "current-password"
+            aria-describedby = "pwa-email-status"/>
+
+          ${revealControl(this.showPassword, () => { this.showPassword = !this.showPassword; })}
+
+        </span>
 
       </label>
 
-      <label for="pwa-email" >E-mail:
+      <label for="pwa-email" >E-mail
 
         <input
           id            = "pwa-email"
@@ -109,24 +149,33 @@ export class ContactEmail extends connect(store)(LitElement) {
           part          = "email"
           type          = "email"
           autocomplete  = "email"
+          inputmode     = "email"
+          autocapitalize= "off"
+          spellcheck    = "false"
           class         = "email"
-          data-label    = "Account Email"
+          aria-describedby = "pwa-email-status"
           @input        = "${this.handleEmail}"
           .value        = "${this.mail}"/>
 
-        <span class="verified"></span>
-
       </label>
+
+      ${liveStatus('pwa-email-status', this.status, this.tone)}
 
       <button
         type          = "submit"
         class         = "action-button"
         part          = "submit"
-        ?disabled     = "${this.login === false}">Update</button>
+        aria-busy     = "${this.busy ? 'true' : 'false'}"
+        ?disabled     = "${this.login === false || this.busy}">${this.busy ? 'Saving…' : 'Update'}</button>
 
     </form>
 
     `;
+    }
+    show(detail) {
+        this.tone = 'error';
+        this.status = userMessage(detail);
+        emitWindow(pwaAuthError, detail);
     }
 }
 __decorate([
@@ -141,5 +190,21 @@ __decorate([
     state(),
     __metadata("design:type", String)
 ], ContactEmail.prototype, "mail", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], ContactEmail.prototype, "busy", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], ContactEmail.prototype, "status", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], ContactEmail.prototype, "tone", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], ContactEmail.prototype, "showPassword", void 0);
 customElements.define('contact-email', ContactEmail);
 //# sourceMappingURL=email.js.map

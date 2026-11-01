@@ -35,11 +35,15 @@ declare const DeleteUser_base: (new (...args: any[]) => {
 export declare class DeleteUser extends DeleteUser_base {
     private login;
     private email;
+    private busy;
+    private status;
+    private tone;
+    private showPassword;
     constructor();
-    protected firstUpdated(): void;
     stateChanged(state: AppState): void;
     static get styles(): CSSResultArray;
     render(): import("lit-html").TemplateResult<1>;
+    private show;
     private alertDelete;
     private officialDelete;
 }
