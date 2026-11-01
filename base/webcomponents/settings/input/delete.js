@@ -101,6 +101,9 @@ export class DeleteUser extends connect(store)(LitElement) {
       display:                  grid;
       grid-template-rows:       auto auto auto auto;
       align-content:            start;
+      box-sizing:               border-box;
+      width:                    100%;
+      padding-inline:           var(--pwa_inset, 0px);
     }
     
     p.lead {

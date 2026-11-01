@@ -8,11 +8,6 @@ export const authStyles: CSSResultGroup = [hostCollapse, css`
     display:                block;
   }
 
-  .wrapper {
-    padding-inline:         var(--pwa_inset, 0px);
-    box-sizing:             border-box;
-  }
-
   .spec[on] {
     display:                grid;
   }

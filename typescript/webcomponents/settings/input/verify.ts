@@ -52,8 +52,10 @@ export class EmailVerify extends connect(store)(LitElement) {
         :host {
           display:            block;
           box-sizing:         border-box;
+          width:              100%;
           min-width:          0;
           max-width:          100%;
+          padding-inline:     var(--pwa_inset, 0px);
         }
 
         .notice {

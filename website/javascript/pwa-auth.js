@@ -126,11 +126,6 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     display:                block;
   }
 
-  .wrapper {
-    padding-inline:         var(--pwa_inset, 0px);
-    box-sizing:             border-box;
-  }
-
   .spec[on] {
     display:                grid;
   }
@@ -302,8 +297,19 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
   :host {
     box-sizing:           border-box;
+    width:                100%;
     min-width:            0;
     max-width:            100%;
+  }
+
+  /* Required - inset lives inside the form, so the form keeps the host width. */
+  form {
+    box-sizing:           border-box;
+    width:                100%;
+    max-width:            100%;
+    min-width:            0;
+    margin:               0;
+    padding-inline:       var(--pwa_inset, 0px);
   }
 
   label {
@@ -806,14 +812,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
   }
 
   .userDrawer > .spec > .wrapper {
-    margin: 20px 0 12px; /* Required - space under the header. No side gap of our own. */
-    padding-inline: var(--pwa_inset, 0px);
-    box-sizing: border-box;
-  }
-
-  .spec.setLog {
-    padding-inline: var(--pwa_inset, 0px);
-    box-sizing: border-box;
+    margin: 20px 0 12px; /* Required - space under the header. Side gap is --pwa_inset on the form. */
   }
 
   .userDrawer,
@@ -917,7 +916,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     box-sizing:     border-box;
     width:          auto;
     padding:        12px 16px;
-    margin:         12px 0;
+    margin:         12px var(--pwa_inset, 0px);
     border:         1px solid var(--pwa_line_color, #e3daca);
     border-radius:  10px;
     color:          var(--pwa_drawer_text_color, #1c2430);
@@ -936,7 +935,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     box-sizing:     border-box;
     cursor:         pointer;
     padding:        12px 16px;
-    margin:         8px 0 16px;
+    margin:         8px var(--pwa_inset, 0px) 16px;
     border:         1px solid var(--pwa_line_color, #e3daca);
     border-radius:  10px;
     background:     transparent;
@@ -991,8 +990,10 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
         :host {
           display:            block;
           box-sizing:         border-box;
+          width:              100%;
           min-width:          0;
           max-width:          100%;
+          padding-inline:     var(--pwa_inset, 0px);
         }
 
         .notice {
@@ -1160,7 +1161,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
       text-decoration:          none;
       appearance:               none;
       padding:                  12px 16px;
-      margin:                   12px 0;
+      margin:                   12px var(--pwa_inset, 0px);
       border:                   1px solid var(--pwa_line_color, #e3daca);
       border-radius:            10px;
       box-sizing:               border-box;
@@ -1336,7 +1337,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     font-weight:      600;
     font-size:        1.35rem;
     margin:           0;
-    padding:          20px 0 4px;
+    padding:          20px var(--pwa_inset, 0px) 4px;
   }
 
 `;var vb=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},Ib=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};class Tb extends(wt(bn)(it)){constructor(){super(),this.photo="",this.emptyArtwork="",this.login=!1,this.person="",this.mail="",this.progress=0,this.error="",this.status="",this.tone="",this.busy=!1,this.saveImage=t=>{const e=t.target,n=e?.files?.[0],s=sE.currentUser;if(this.error="",this.tone="",!s)return void this.fail({code:"pwa/signed-out",message:"Sign in first."});if(!n)return void this.fail({code:"pwa/missing-file",message:"Choose a photo first."});this.busy=!0,this.progress=0,this.status="Uploading…";const r=Ky(Yy(nE,"pwa-auth/"+s.uid+"/"+n.name),n,{cacheControl:"public,max-age=300",contentType:n.type||"application/octet-stream"});r.on("state_changed",t=>{const e=t.totalBytes>0?t.bytesTransferred/t.totalBytes*100:0;this.progress=isFinite(e)?e:0,"paused"===t.state?this.status="Upload is paused":this.status=`Uploading… ${Math.round(this.progress)}%`},t=>{this.busy=!1,this.progress=0,this.fail(t)},async()=>{try{const t=await function(t){return Gy(t=os(t))}(r.snapshot.ref),e=sE.currentUser;if(!e)return void this.fail({code:"pwa/signed-out",message:"Sign in first."});await Uo(e,{photoURL:t}),bn.dispatch(En(t)),bn.dispatch(an(t)),this.photo=t,this.progress=100,this.tone="",this.error="",this.status="Photo saved.",gE(NE,{uid:e.uid,displayName:e.displayName,photoURL:t})}catch(t){this.fail(t)}finally{this.busy=!1}})}}stateChanged(t){this.login=t.frontend.login,this.photo=t.backend.photoURL,this.person=t.backend.name,this.mail=t.backend.email}static get styles(){return[WE,ZE,i`
@@ -1349,6 +1350,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
         grid-template-rows:       auto auto auto;
         grid-template-columns:    1fr;
         width:                    100%;
+        padding-inline:           var(--pwa_inset, 0px);
         align-content:            start;
       }
 
@@ -1641,6 +1643,9 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
       display:                  grid;
       grid-template-rows:       auto auto auto auto;
       align-content:            start;
+      box-sizing:               border-box;
+      width:                    100%;
+      padding-inline:           var(--pwa_inset, 0px);
     }
     
     p.lead {
@@ -1704,7 +1709,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
       .settings-sheet {
         display:          block;
         height:           auto;
-        padding-inline:   var(--pwa_inset, 0px);
+        width:            100%;
         box-sizing:       border-box;
       }
 
@@ -1951,11 +1956,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
       </button>
 
     `}face(){if(this._photoURL)return U`<img class="userImage" part="photo" alt="" src="${this._photoURL}">`;const t=sb(this._name,this._email);return t?U`<span class="initials" part="initials" aria-hidden="true">${t}</span>`:this.empty?U`<img class="userImage" part="photo" alt="" src="${this.empty}">`:U`<span class="initials" part="initials" aria-hidden="true">?</span>`}};Jb([lt({type:Boolean,reflect:!0}),qb("design:type",Object)],zb.prototype,"subscribe",void 0),Jb([lt({type:String,reflect:!0}),qb("design:type",Object)],zb.prototype,"empty",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_user",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_photoURL",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_name",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_email",void 0),zb=Jb([at("user-icon"),qb("design:paramtypes",[])],zb);var Kb=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},Qb=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};class Wb extends it{constructor(){super(),this.active=!1}shouldUpdate(){return this.active}}function Yb(){bn.dispatch(un())}function Xb(){bn.dispatch(hn())}function Zb(){bn.dispatch(ln())}Kb([lt({type:Boolean}),Qb("design:type",Boolean)],Wb.prototype,"active",void 0);var tv=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},ev=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let nv=class extends Wb{constructor(){super(),this.userEmail="",this.status="",this.tone="",this.invalid=!1,this.busy=!1,this.cooldown=0,this.touched=!1,this.timer=0,this.stopDraft=null,this.resetPassword=async t=>{if(t.preventDefault(),this.busy||this.cooldown>0)return;const e=this.renderRoot.querySelector(".email");this.userEmail=(e?e.value:this.userEmail).trim(),e&&e.value!==this.userEmail&&(e.value=this.userEmail);const n=(s=this.userEmail).length<4?{code:"pwa/missing-email",message:"Enter an email address."}:/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)?null:{code:"pwa/invalid-email",message:"Enter a valid email address."};var s;if(n)this.showError(n,"email");else{this.busy=!0,this.tone="",this.status="";try{await Po(sE,this.userEmail),this.showSent()}catch(t){!function(t){return"auth/user-not-found"===mE(t).code}(t)?this.showFirebase(t):this.showSent()}finally{this.busy=!1}}},this.backToSignIn=()=>{const t=document.querySelector("user-drawer");if(t){const e=t.hasAttribute("subscribe");return Boolean(bn.getState().frontend?.registerOne)!==e&&bn.dispatch(rn("drawer")),void Yb()}const e=document.querySelector("user-login");if(!e)return;const n=e.hasAttribute("subscribe");Boolean(bn.getState().frontend?.registerTwo)!==n&&bn.dispatch(rn("page")),e.scrollIntoView({block:"nearest"})}}static{this.styles=[WE,YE,QE,XE,i`
-      :host {
-        display:                block;
-        box-sizing:             border-box;
-        padding-inline:         var(--pwa_inset, 0px);
-      }
+      :host { display: block; }
 
       /* Required - live region stays in the tree. Idle layout stays put. */
       .status {

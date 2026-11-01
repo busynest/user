@@ -105,11 +105,7 @@ let EmailReset = class EmailReset extends LazyLoader {
         buttonStyle,
         toggleStyle,
         css `
-      :host {
-        display:                block;
-        box-sizing:             border-box;
-        padding-inline:         var(--pwa_inset, 0px);
-      }
+      :host { display: block; }
 
       /* Required - live region stays in the tree. Idle layout stays put. */
       .status {

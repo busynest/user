@@ -410,7 +410,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       text-decoration:          none;
       appearance:               none;
       padding:                  12px 16px;
-      margin:                   12px 0;
+      margin:                   12px var(--pwa_inset, 0px);
       border:                   1px solid var(--pwa_line_color, #e3daca);
       border-radius:            10px;
       box-sizing:               border-box;

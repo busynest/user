@@ -4,8 +4,19 @@ export const labelStyle : CSSResult = css`
 
   :host {
     box-sizing:           border-box;
+    width:                100%;
     min-width:            0;
     max-width:            100%;
+  }
+
+  /* Required - inset lives inside the form, so the form keeps the host width. */
+  form {
+    box-sizing:           border-box;
+    width:                100%;
+    max-width:            100%;
+    min-width:            0;
+    margin:               0;
+    padding-inline:       var(--pwa_inset, 0px);
   }
 
   label {

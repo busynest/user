@@ -105,7 +105,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
       .settings-sheet {
         display:          block;
         height:           auto;
-        padding-inline:   var(--pwa_inset, 0px);
+        width:            100%;
         box-sizing:       border-box;
       }
 
