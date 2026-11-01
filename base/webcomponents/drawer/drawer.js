@@ -32,7 +32,7 @@ import { verifiedMark, verifiedStyle } from '../form/verified.js';
 import '../settings/input/verify.js';
 import '../form/login.js';
 import '../form/signup.js';
-import { animation } from '../css/animation.js';
+import { animation, drawerShell } from '../css/animation.js';
 import { tapStyle } from '../css/tap.js';
 let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
     constructor() {
@@ -184,6 +184,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         return [
             show,
             animation,
+            drawerShell,
             drawerStyle,
             exitStyle,
             linkStyle,

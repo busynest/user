@@ -30,7 +30,7 @@ import '../settings/input/verify.js';
 
 import '../form/login.js';
 import '../form/signup.js';
-import { animation } from '../css/animation.js';
+import { animation, drawerShell } from '../css/animation.js';
 import { tapStyle } from '../css/tap.js';
 
 @customElement('user-drawer')
@@ -173,6 +173,7 @@ export class UserDrawer extends connect(store)(LitElement) {
   static get styles(): CSSResultArray { return [
     show,
     animation,
+    drawerShell,
     drawerStyle,
     exitStyle,
     linkStyle,

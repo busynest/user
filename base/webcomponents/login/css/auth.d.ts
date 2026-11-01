@@ -1,3 +1,3 @@
-import { CSSResult } from "lit";
-export declare const authStyles: CSSResult;
+import { CSSResultGroup } from "lit";
+export declare const authStyles: CSSResultGroup;
 //# sourceMappingURL=auth.d.ts.map

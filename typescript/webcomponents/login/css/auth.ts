@@ -1,9 +1,9 @@
-import { css, CSSResult } from "lit";
+import { css, CSSResultGroup } from "lit";
+import { hostCollapse } from "../../css/animation.js";
 
-export const authStyles: CSSResult = css`
+export const authStyles: CSSResultGroup = [hostCollapse, css`
 
   :host {
-    transition:             max-height 1.4s ease-out;
     overflow:               hidden;
     display:                grid;
   }
@@ -23,12 +23,6 @@ export const authStyles: CSSResult = css`
     background-color:       var(--section_background_color, #fffdf8);
   }
 
-  :host([animation]) {       
-    transition-duration:    1.4s;
-    max-height:             100%;
-    transition:             max-height 1.4s ease-out;
-  }
-
   h3 {
     margin:                 0;
     padding:                18px 16px 14px;
@@ -37,7 +31,7 @@ export const authStyles: CSSResult = css`
     border-bottom:          1px solid var(--pwa_line_color, #e3daca);
   }
 
-`;
+`];
 
 /*
 padding-top:            env(safe-area-inset-top);

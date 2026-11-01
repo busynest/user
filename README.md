@@ -26,6 +26,7 @@ Peers: `lit` ^3.3.0 and `firebase` ^12.0.0. The package is ESM (`"type": "module
 - [Theme](#theme)
 - [Parts](#parts)
 - [Drawer behaviour](#drawer-behaviour)
+- [Slides](docs/sliders.md)
 - [Data ownership](#data-ownership)
 - [Contributing](#contributing)
 - [Feedback](#feedback)
@@ -414,11 +415,6 @@ The published sheet is `node_modules/pwa-auth/source/pwa-styles.css`.
   --pwa_icon_height:           44px; /* logged out, sync to diameter */
   --pwa_icon_diameter:         44px; /* logged in, sync to height */
 
-  /* Optional - master beat. See Drawer behaviour for the ratios. */
-  --pwa_slide_time: 1.4s;
-  /* Optional - shared ease for the drawer and the form swap */
-  --pwa_slide_ease: ease-in-out;
-
   /* <user-drawer> */
   --pwa_drawer_position:         absolute;
   --pwa_drawer_background_color: #fffdf8;
@@ -472,14 +468,7 @@ The drawer loads hidden at the top (`max-height: 0`). A press on `user-icon` sli
 
 Sign-in and sign-up share one grid area, `pages`. They slide past each other. The closed form is translated `translate3d(0, -100%, 0)`, `visibility: hidden`, and `inert`.
 
-`--pwa_slide_time` is the master beat. Default `1.4s`. `--pwa_slide_ease` is the shared curve. Default `ease-in-out`. Durations are multiples of the beat:
-
-- drawer max-height, and the close visibility delay: 1x (`1.4s`)
-- `.spec-in`: 1.071x (about `1.5s`)
-- `.spec-out`: 1.571x (about `2.2s`). The forms follow the drawer down
-- form swap, and the closed-form visibility delay: 1.429x (about `2s`)
-
-Set `--pwa_slide_time: 0.7s` to halve every one of those. `prefers-reduced-motion: reduce` sets the beat to `0s`.
+The slide is shared. See [Slides](docs/sliders.md). Max-height is `1.4s` `ease-in-out`. Transform times stay `1.5s`, `2.2s`, and `2s`. `prefers-reduced-motion: reduce` sets those durations to `0s`.
 
 While the drawer is open it covers `user-icon`. Close it with the ✕ button or Escape. The drawer is a dialog. Tab stays inside while it is open, and focus returns to the control that opened it. Off-screen forms are `inert`. The panel is `inert` while it is closed.
 
