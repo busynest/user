@@ -21,6 +21,7 @@ import './input/delete.js';
 import './input/verify.js';
 import { listStyle } from '../form/css/list.js';
 import { animation } from '../css/animation.js';
+import { measureSheet, playRoll, releaseRoll, rollStyle } from '../css/roll.js';
 import { tapStyle } from '../css/tap.js';
 import { applyFirebaseConfig } from '../../firebase/attribute.js';
 import { accountTitle } from '../form/letters.js';
@@ -32,8 +33,20 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         this.name = '';
         this.email = '';
         this.login = false;
+        this.heldHeight = null;
         this.onSubmit = (event) => {
             event.preventDefault();
+        };
+        this.onRoll = (event) => {
+            if (!(event instanceof TransitionEvent) || (event.propertyName !== 'max-height' && event.propertyName !== 'height'))
+                return;
+            if (event.propertyName === 'height')
+                return;
+            const clip = event.currentTarget;
+            const sheet = clip.querySelector('.roll-sheet');
+            if (!sheet)
+                return;
+            releaseRoll(clip, sheet);
         };
     }
     connectedCallback() {
@@ -68,6 +81,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             navigation,
             listStyle,
             animation,
+            rollStyle,
             tapStyle,
             css `
 
@@ -105,6 +119,34 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
     }
     openTab(name) {
         store.dispatch(navigateAuth(name));
+    }
+    willUpdate(changed) {
+        if (!changed.has('profileTopic') || !this.login)
+            return;
+        const clip = this.shadowRoot?.querySelector('.roll');
+        const sheet = clip?.querySelector('.roll-sheet');
+        if (!clip || !sheet || (clip.style.maxHeight !== 'none' && clip.style.maxHeight !== ''))
+            return;
+        this.heldHeight = Math.ceil(sheet.getBoundingClientRect().height);
+    }
+    updated(changed) {
+        if (!changed.has('profileTopic') && !changed.has('login'))
+            return;
+        const clip = this.shadowRoot?.querySelector('.roll');
+        const sheet = clip?.querySelector('.roll-sheet');
+        if (!clip || !sheet)
+            return;
+        if (this.heldHeight == null) {
+            releaseRoll(clip, sheet);
+            return;
+        }
+        const from = this.heldHeight;
+        this.heldHeight = null;
+        const to = measureSheet(clip, sheet);
+        if (Math.abs(to - from) > 1)
+            playRoll(clip, sheet, from, to, to);
+        else
+            releaseRoll(clip, sheet);
     }
     render() {
         if (!this.login) {
@@ -174,7 +216,8 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
 
       
       <div class=     "wrapper">
-        <div class=   "inner">
+        <div class="inner roll" @transitionend="${this.onRoll}">
+          <div class="roll-sheet">
 
 
           <!-- Page 1: Profile -->
@@ -183,7 +226,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             role="tabpanel"
             aria-hidden="${this.profileTopic === 'profile' ? 'false' : 'true'}"
             ?inert="${this.profileTopic !== 'profile'}"
-            class="content ${this.profileTopic === 'profile' ? 'opened' : 'closed'}">
+            ?hidden="${this.profileTopic !== 'profile'}">
 
             <!-- Display Username -->
             <h2>${title}</h2>
@@ -199,7 +242,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             role="tabpanel"
             aria-hidden="${this.profileTopic === 'verification' ? 'false' : 'true'}"
             ?inert="${this.profileTopic !== 'verification'}"
-            class="content ${this.profileTopic === 'verification' ? 'opened' : 'closed'}">
+            ?hidden="${this.profileTopic !== 'verification'}">
 
             <!-- Page Title -->
             <h2>Contact Information</h2>
@@ -221,7 +264,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             role="tabpanel"
             aria-hidden="${this.profileTopic === 'password' ? 'false' : 'true'}"
             ?inert="${this.profileTopic !== 'password'}"
-            class="content ${this.profileTopic === 'password' ? 'opened' : 'closed'}">
+            ?hidden="${this.profileTopic !== 'password'}">
 
             <!-- Page Title -->
             <h2>Password</h2>
@@ -237,7 +280,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             role="tabpanel"
             aria-hidden="${this.profileTopic === 'delete' ? 'false' : 'true'}"
             ?inert="${this.profileTopic !== 'delete'}"
-            class="content ${this.profileTopic === 'delete' ? 'opened' : 'closed'}">
+            ?hidden="${this.profileTopic !== 'delete'}">
 
             <!-- Page Title -->
             <h2>Delete Account</h2>
@@ -247,6 +290,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
 
           </section>
 
+          </div>
         </div>
       </div>
 

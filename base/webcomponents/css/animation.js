@@ -2,7 +2,8 @@ import { css } from "lit";
 export const animation = css `
 
 :host {
-    --pwa_slide:                            2s; /* Required - one duration for every slide */
+    /* Required - the only duration. Roll clip, roll sheet, and form swap all read it. */
+    --pwa_slide:                            2s;
 }
 
 .wrapper {
@@ -90,8 +91,8 @@ export const drawerShell = css `
     min-height:             0px; /* Required - the box must be allowed to grow from 0 */
     visibility:             hidden;
     pointer-events:         none;
-    transition:             max-height var(--pwa_slide, 2s) ease-in-out;
-    -webkit-transition:     max-height var(--pwa_slide, 2s) ease-in-out;
+    transition:             height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out;
+    -webkit-transition:     height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out;
   }
 
   :host([sliding]) {
@@ -100,9 +101,8 @@ export const drawerShell = css `
   }
 
   .userDrawer {
+    /* Required - parked above the clip. :host([drawer]) rolls it to 0. */
     transform:              translate3d(0, -100%, 0);
-    transition:             transform var(--pwa_slide, 2s) ease-in-out;
-    -webkit-transition:     transform var(--pwa_slide, 2s) ease-in-out;
   }
 
   :host([drawer]) .userDrawer {

@@ -31,6 +31,7 @@ import '../settings/input/verify.js';
 import '../form/login.js';
 import '../form/signup.js';
 import { animation, drawerShell } from '../css/animation.js';
+import { measureSheet, playRoll, reducedMotion, releaseRoll, rollStyle } from '../css/roll.js';
 import { tapStyle } from '../css/tap.js';
 
 @customElement('user-drawer')
@@ -63,7 +64,6 @@ export class UserDrawer extends connect(store)(LitElement) {
   private returnFocus: HTMLElement | null = null;
   private stopNotice: (() => void) | null = null;
   private heldHeight: number | null = null;
-  private reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   
   constructor() { super(); }
 
@@ -92,7 +92,7 @@ export class UserDrawer extends connect(store)(LitElement) {
     this.email        = state.backend!.email;
     this.verified     = Boolean(state.backend?.verified);
     if (open) this.sliding = true;
-    else if (this.reduceMotion.matches) this.sliding = false;
+    else if (reducedMotion()) this.sliding = false;
     this.drawer       = open;
     this.user         = state.frontend!.login;          // Logged in-out State
     this.signup       = state.frontend!.registerOne;    // Sign-up State
@@ -108,19 +108,24 @@ export class UserDrawer extends connect(store)(LitElement) {
 
   protected willUpdate(changed: PropertyValues): void {
     if (!changed.has('signup') || !this.drawer || this.style.maxHeight !== 'none') return;
-    this.heldHeight = Math.ceil(this.getBoundingClientRect().height);
+    const sheet = this.sheet();
+    if (!sheet) return;
+    this.heldHeight = Math.ceil(sheet.getBoundingClientRect().height);
   }
 
   protected updated(changed: PropertyValues): void {
     if (changed.has('drawer')) {
       this.heldHeight = null;
-      if (this.drawer) this.unroll(this.contentHeight());
+      if (this.drawer) this.unroll();
       else this.rollUp();
     } else if (this.heldHeight != null && this.drawer) {
       const from = this.heldHeight;
       this.heldHeight = null;
-      const to = this.contentHeight();
-      if (Math.abs(to - from) > 1) this.glide(from, to);
+      const sheet = this.sheet();
+      if (sheet) {
+        const to = measureSheet(this, sheet);
+        if (Math.abs(to - from) > 1) playRoll(this, sheet, from, to, to);
+      }
     }
     if (!changed.has('drawer')) return;
     if (this.drawer) {
@@ -134,41 +139,25 @@ export class UserDrawer extends connect(store)(LitElement) {
     this.returnFocus = null;
   }
 
-  // Full border-box height with the cap released. Synchronous, so it does not paint.
-  private contentHeight(): number {
-    const transition = this.style.transition;
-    const maxHeight = this.style.maxHeight;
-    this.style.transition = 'none';
-    this.style.maxHeight = 'none';
-    const height = Math.ceil(this.getBoundingClientRect().height);
-    this.style.maxHeight = maxHeight;
-    this.style.transition = transition;
-    return height;
+  private sheet(): HTMLElement | null {
+    return this.shadowRoot?.querySelector('.userDrawer') ?? null;
   }
 
-  // Required - from and to are both px, so the 2s ease covers the real distance.
-  private glide(from: number, to: number): void {
-    if (this.reduceMotion.matches) {
-      this.style.transition = 'none';
-      this.style.maxHeight = to === 0 ? '0px' : 'none';
-      this.style.transition = '';
-      if (to === 0) this.sliding = false;
-      return;
-    }
-    this.style.transition = 'none';
-    this.style.maxHeight = `${from}px`;
-    void this.offsetHeight;
-    this.style.transition = '';
-    this.style.maxHeight = `${to}px`;
-  }
-
-  private unroll(target: number): void {
+  // Required - clip and sheet start together. Open from 0 is translate -100% → 0.
+  private unroll(): void {
+    const sheet = this.sheet();
+    if (!sheet) return;
     this.scrollTop = 0;
-    this.glide(0, target);
+    const target = measureSheet(this, sheet);
+    playRoll(this, sheet, 0, target, target);
   }
 
   private rollUp(): void {
-    this.glide(Math.ceil(this.getBoundingClientRect().height), 0);
+    const sheet = this.sheet();
+    if (!sheet) return;
+    const current = Math.ceil(sheet.getBoundingClientRect().height);
+    playRoll(this, sheet, current, 0, current);
+    if (reducedMotion()) this.sliding = false;
   }
 
   // Required - visibility, pointer-events, and inert drop when the close reaches 0.
@@ -176,13 +165,17 @@ export class UserDrawer extends connect(store)(LitElement) {
     if (!(event instanceof TransitionEvent)) return;
     if (event.target !== this) return;
     if (event.propertyName !== 'max-height') return;
+    const sheet = this.sheet();
+    if (!sheet) return;
     if (this.drawer) {
-      this.style.maxHeight = 'none';
+      releaseRoll(this, sheet);
       return;
     }
     if (this.getBoundingClientRect().height > 1) return;
     this.sliding = false;
+    this.style.height = '';
     this.style.maxHeight = '';
+    sheet.style.transform = '';
   };
 
   // Required - Escape closes. Tab stays inside the open drawer.
@@ -251,6 +244,7 @@ export class UserDrawer extends connect(store)(LitElement) {
   static get styles(): CSSResultArray { return [
     show,
     animation,
+    rollStyle,
     drawerShell,
     drawerStyle,
     exitStyle,
@@ -322,7 +316,7 @@ export class UserDrawer extends connect(store)(LitElement) {
       aria-labelledby="pwa-drawer-title"
       aria-hidden="${this.sliding ? 'false' : 'true'}"
       ?inert="${!this.sliding}"
-      class="userDrawer">
+      class="userDrawer roll-sheet">
 
       <!-- Exit Button -->
       <header class="exit" part="header">

@@ -52,15 +52,13 @@ export declare class UserDrawer extends UserDrawer_base {
     private returnFocus;
     private stopNotice;
     private heldHeight;
-    private reduceMotion;
     constructor();
     connectedCallback(): void;
     disconnectedCallback(): void;
     stateChanged(state: AppState): void;
     protected willUpdate(changed: PropertyValues): void;
     protected updated(changed: PropertyValues): void;
-    private contentHeight;
-    private glide;
+    private sheet;
     private unroll;
     private rollUp;
     private onUnrollEnd;

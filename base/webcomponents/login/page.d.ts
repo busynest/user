@@ -1,4 +1,4 @@
-import { CSSResultArray, LitElement } from 'lit';
+import { CSSResultArray, LitElement, PropertyValues } from 'lit';
 import { AppState } from '../../store.js';
 import '../form/login.js';
 import '../form/signup.js';
@@ -44,10 +44,15 @@ export declare class UserLogin extends UserLogin_base {
     private _log;
     private _sign;
     private stopNotice;
+    private heldHeight;
     constructor();
     connectedCallback(): void;
     disconnectedCallback(): void;
     stateChanged(state: AppState): void;
+    protected willUpdate(changed: PropertyValues): void;
+    protected updated(changed: PropertyValues): void;
+    private sheet;
+    private onRoll;
     static get styles(): CSSResultArray;
     protected render(): import("lit-html").TemplateResult<1>;
 }

@@ -1,4 +1,4 @@
-import { CSSResultArray, LitElement } from 'lit';
+import { CSSResultArray, LitElement, PropertyValues } from 'lit';
 import { AppState } from '../../store.js';
 import './input/uploader.js';
 import './input/name.js';
@@ -44,6 +44,7 @@ export declare class UserSettings extends UserSettings_base {
     private name;
     private email;
     private login;
+    private heldHeight;
     constructor();
     connectedCallback(): void;
     disconnectedCallback(): void;
@@ -52,6 +53,9 @@ export declare class UserSettings extends UserSettings_base {
     stateChanged(state: AppState): void;
     static get styles(): CSSResultArray;
     private openTab;
+    protected willUpdate(changed: PropertyValues): void;
+    protected updated(changed: PropertyValues): void;
+    private onRoll;
     protected render(): import("lit-html").TemplateResult<1>;
 }
 declare global {

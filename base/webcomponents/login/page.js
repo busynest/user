@@ -15,6 +15,7 @@ import { authStyles } from './css/auth.js';
 import { linkStyle } from './css/link.js';
 import { lineStyle } from './css/paragraph.js';
 import { animation } from '../css/animation.js';
+import { measureSheet, playRoll, releaseRoll, rollStyle } from '../css/roll.js';
 import { listStyle } from '../form/css/list.js';
 import '../form/login.js';
 import '../form/signup.js';
@@ -35,14 +36,27 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
         this._log = false;
         this._sign = false;
         this.stopNotice = null;
+        this.heldHeight = null;
+        this.onRoll = (event) => {
+            if (!(event instanceof TransitionEvent) || event.propertyName !== 'max-height')
+                return;
+            if (event.target !== this)
+                return;
+            const sheet = this.sheet();
+            if (!sheet)
+                return;
+            releaseRoll(this, sheet);
+        };
     }
     connectedCallback() {
         applyFirebaseConfig(this);
         super.connectedCallback();
         this._notice = verificationNotice();
         this.stopNotice = onVerificationNotice(() => { this._notice = verificationNotice(); });
+        this.addEventListener('transitionend', this.onRoll);
     }
     disconnectedCallback() {
+        this.removeEventListener('transitionend', this.onRoll);
         this.stopNotice?.();
         this.stopNotice = null;
         super.disconnectedCallback();
@@ -54,6 +68,35 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
         this._log = state.frontend.login;
         this._sign = state.frontend.registerTwo;
     }
+    willUpdate(changed) {
+        if (!changed.has('_sign') && !changed.has('_log'))
+            return;
+        const sheet = this.sheet();
+        if (!sheet || (this.style.maxHeight !== 'none' && this.style.maxHeight !== ''))
+            return;
+        this.heldHeight = Math.ceil(sheet.getBoundingClientRect().height);
+    }
+    updated(changed) {
+        if (!changed.has('_sign') && !changed.has('_log'))
+            return;
+        const sheet = this.sheet();
+        if (!sheet)
+            return;
+        if (this.heldHeight == null) {
+            releaseRoll(this, sheet);
+            return;
+        }
+        const from = this.heldHeight;
+        this.heldHeight = null;
+        const to = measureSheet(this, sheet);
+        if (Math.abs(to - from) > 1)
+            playRoll(this, sheet, from, to, to);
+        else
+            releaseRoll(this, sheet);
+    }
+    sheet() {
+        return this.shadowRoot?.querySelector('.service') ?? null;
+    }
     static get styles() {
         return [
             authStyles,
@@ -61,6 +104,7 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
             lineStyle,
             listStyle,
             animation,
+            rollStyle,
             tapStyle,
             noticeStyle
         ];
@@ -69,7 +113,7 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
     render() {
         return html `
 
-    <section class="service" part="panel">
+    <section class="service roll-sheet" part="panel">
 
       <header part="header">
         <h3 part="title">${this._log ? accountTitle(this._name, this._email) : this._sign === this.subscribe ? 'Login' : 'Subscribe'}</h3>

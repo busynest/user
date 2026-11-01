@@ -33,6 +33,7 @@ import '../settings/input/verify.js';
 import '../form/login.js';
 import '../form/signup.js';
 import { animation, drawerShell } from '../css/animation.js';
+import { measureSheet, playRoll, reducedMotion, releaseRoll, rollStyle } from '../css/roll.js';
 import { tapStyle } from '../css/tap.js';
 let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
     constructor() {
@@ -53,7 +54,6 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.returnFocus = null;
         this.stopNotice = null;
         this.heldHeight = null;
-        this.reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
         this.onUnrollEnd = (event) => {
             if (!(event instanceof TransitionEvent))
                 return;
@@ -61,14 +61,19 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
                 return;
             if (event.propertyName !== 'max-height')
                 return;
+            const sheet = this.sheet();
+            if (!sheet)
+                return;
             if (this.drawer) {
-                this.style.maxHeight = 'none';
+                releaseRoll(this, sheet);
                 return;
             }
             if (this.getBoundingClientRect().height > 1)
                 return;
             this.sliding = false;
+            this.style.height = '';
             this.style.maxHeight = '';
+            sheet.style.transform = '';
         };
         this.onKey = (event) => {
             if (!this.drawer)
@@ -159,7 +164,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.verified = Boolean(state.backend?.verified);
         if (open)
             this.sliding = true;
-        else if (this.reduceMotion.matches)
+        else if (reducedMotion())
             this.sliding = false;
         this.drawer = open;
         this.user = state.frontend.login;
@@ -174,22 +179,28 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
     willUpdate(changed) {
         if (!changed.has('signup') || !this.drawer || this.style.maxHeight !== 'none')
             return;
-        this.heldHeight = Math.ceil(this.getBoundingClientRect().height);
+        const sheet = this.sheet();
+        if (!sheet)
+            return;
+        this.heldHeight = Math.ceil(sheet.getBoundingClientRect().height);
     }
     updated(changed) {
         if (changed.has('drawer')) {
             this.heldHeight = null;
             if (this.drawer)
-                this.unroll(this.contentHeight());
+                this.unroll();
             else
                 this.rollUp();
         }
         else if (this.heldHeight != null && this.drawer) {
             const from = this.heldHeight;
             this.heldHeight = null;
-            const to = this.contentHeight();
-            if (Math.abs(to - from) > 1)
-                this.glide(from, to);
+            const sheet = this.sheet();
+            if (sheet) {
+                const to = measureSheet(this, sheet);
+                if (Math.abs(to - from) > 1)
+                    playRoll(this, sheet, from, to, to);
+            }
         }
         if (!changed.has('drawer'))
             return;
@@ -203,37 +214,25 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.returnFocus?.focus();
         this.returnFocus = null;
     }
-    contentHeight() {
-        const transition = this.style.transition;
-        const maxHeight = this.style.maxHeight;
-        this.style.transition = 'none';
-        this.style.maxHeight = 'none';
-        const height = Math.ceil(this.getBoundingClientRect().height);
-        this.style.maxHeight = maxHeight;
-        this.style.transition = transition;
-        return height;
+    sheet() {
+        return this.shadowRoot?.querySelector('.userDrawer') ?? null;
     }
-    glide(from, to) {
-        if (this.reduceMotion.matches) {
-            this.style.transition = 'none';
-            this.style.maxHeight = to === 0 ? '0px' : 'none';
-            this.style.transition = '';
-            if (to === 0)
-                this.sliding = false;
+    unroll() {
+        const sheet = this.sheet();
+        if (!sheet)
             return;
-        }
-        this.style.transition = 'none';
-        this.style.maxHeight = `${from}px`;
-        void this.offsetHeight;
-        this.style.transition = '';
-        this.style.maxHeight = `${to}px`;
-    }
-    unroll(target) {
         this.scrollTop = 0;
-        this.glide(0, target);
+        const target = measureSheet(this, sheet);
+        playRoll(this, sheet, 0, target, target);
     }
     rollUp() {
-        this.glide(Math.ceil(this.getBoundingClientRect().height), 0);
+        const sheet = this.sheet();
+        if (!sheet)
+            return;
+        const current = Math.ceil(sheet.getBoundingClientRect().height);
+        playRoll(this, sheet, current, 0, current);
+        if (reducedMotion())
+            this.sliding = false;
     }
     firstUpdated() {
         this.shadowRoot.querySelector('.close').addEventListener('click', () => {
@@ -261,6 +260,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         return [
             show,
             animation,
+            rollStyle,
             drawerShell,
             drawerStyle,
             exitStyle,
@@ -333,7 +333,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       aria-labelledby="pwa-drawer-title"
       aria-hidden="${this.sliding ? 'false' : 'true'}"
       ?inert="${!this.sliding}"
-      class="userDrawer">
+      class="userDrawer roll-sheet">
 
       <!-- Exit Button -->
       <header class="exit" part="header">

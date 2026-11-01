@@ -1,4 +1,4 @@
-import { CSSResultArray, html, LitElement }   from 'lit';
+import { CSSResultArray, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property, state }     from 'lit/decorators.js';
 import { connect }                            from 'pwa-helpers/connect-mixin.js';
 import { store, AppState }                    from '../../store.js';
@@ -6,7 +6,8 @@ import { store, AppState }                    from '../../store.js';
 import { authStyles }   from './css/auth.js';
 import { linkStyle }    from './css/link.js';
 import { lineStyle }    from './css/paragraph.js'; 
-import { animation }    from '../css/animation.js'; 
+import { animation }    from '../css/animation.js';
+import { measureSheet, playRoll, releaseRoll, rollStyle } from '../css/roll.js'; 
 
 import { listStyle }    from '../form/css/list.js';
 
@@ -35,6 +36,7 @@ export class UserLogin extends connect(store)(LitElement) {
   @state() private _sign        = false; // Sign-up State
 
   private stopNotice: (() => void) | null = null;
+  private heldHeight: number | null = null;
   
   constructor() { super(); }
 
@@ -43,9 +45,11 @@ export class UserLogin extends connect(store)(LitElement) {
     super.connectedCallback();
     this._notice = verificationNotice();
     this.stopNotice = onVerificationNotice(() => { this._notice = verificationNotice(); });
+    this.addEventListener('transitionend', this.onRoll);
   }
 
   override disconnectedCallback(): void {
+    this.removeEventListener('transitionend', this.onRoll);
     this.stopNotice?.();
     this.stopNotice = null;
     super.disconnectedCallback();
@@ -59,7 +63,39 @@ export class UserLogin extends connect(store)(LitElement) {
     this._sign        = state.frontend!.registerTwo;   // Sign-up State - register
   }
 
-  // protected firstUpdated() { }
+  protected willUpdate(changed: PropertyValues): void {
+    if (!changed.has('_sign') && !changed.has('_log')) return;
+    const sheet = this.sheet();
+    if (!sheet || (this.style.maxHeight !== 'none' && this.style.maxHeight !== '')) return;
+    this.heldHeight = Math.ceil(sheet.getBoundingClientRect().height);
+  }
+
+  protected updated(changed: PropertyValues): void {
+    if (!changed.has('_sign') && !changed.has('_log')) return;
+    const sheet = this.sheet();
+    if (!sheet) return;
+    if (this.heldHeight == null) {
+      releaseRoll(this, sheet);
+      return;
+    }
+    const from = this.heldHeight;
+    this.heldHeight = null;
+    const to = measureSheet(this, sheet);
+    if (Math.abs(to - from) > 1) playRoll(this, sheet, from, to, to);
+    else releaseRoll(this, sheet);
+  }
+
+  private sheet(): HTMLElement | null {
+    return this.shadowRoot?.querySelector('.service') ?? null;
+  }
+
+  private onRoll = (event: Event) => {
+    if (!(event instanceof TransitionEvent) || event.propertyName !== 'max-height') return;
+    if (event.target !== this) return;
+    const sheet = this.sheet();
+    if (!sheet) return;
+    releaseRoll(this, sheet);
+  };
 
   static get styles(): CSSResultArray { return [
     authStyles,
@@ -67,6 +103,7 @@ export class UserLogin extends connect(store)(LitElement) {
     lineStyle,
     listStyle,
     animation,
+    rollStyle,
     tapStyle,
     noticeStyle
   ] };
@@ -74,7 +111,7 @@ export class UserLogin extends connect(store)(LitElement) {
   protected render() {
     return html`
 
-    <section class="service" part="panel">
+    <section class="service roll-sheet" part="panel">
 
       <header part="header">
         <h3 part="title">${this._log ? accountTitle(this._name, this._email) : this._sign === this.subscribe ? 'Login' : 'Subscribe'}</h3>

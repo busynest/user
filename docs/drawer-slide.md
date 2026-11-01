@@ -38,32 +38,75 @@ These do not run the form swap:
 - Classes `spec-in` and `spec-out` follow the open flag. They do not transform.
 - Attribute `on` on `.spec` is `display`. It shows the logged-out block. It is not a slide.
 
-## How the drawer opens and closes
+## The roll
 
-`:host` is the clip. `section.userDrawer` is the sheet (header, both `.spec` blocks, `.wrapper`, `.inner`, forms). `.wrapper` does not include the header, so it is not the roller.
+What you see: the drawer's bottom edge moves down on open and up on close. The last control stays on that edge, like the roller of a scroll. The title and the top of the form come into view from above the clip, and leave the same way. The page heading does not move.
 
-1. The clip's `max-height` eases from `0px` to the measured content height, and back to `0px`. `overflow: hidden` hides whatever is above the clip.
-2. The sheet translates `translate3d(0, -100%, 0)` → `translate3d(0, 0, 0)` on open, and the reverse on close. `:host([drawer])` selects the open transform. The attribute flips in the same turn as the `max-height` write.
+Two boxes, one clock.
 
-Same duration and `ease-in-out` (`--pwa_slide`) on both. A percentage translate is the sheet's own height. At progress `p` the clip is `p` times that height and the sheet is shifted `(p - 1)` times its height, so the sheet's bottom stays on the clip's bottom. The bottom controls ride that edge. The top of the sheet is what the clip hides and reveals.
+```
+clip  :host          overflow hidden, max-height eases
+sheet section.userDrawer   translateY eases, holds header + forms
+```
 
-`0` to `100dvh` would finish the visible motion early. JS measures pixels. `none` is not a length, so it is applied only after the open `transitionend`, and the close measures again before easing back to `0px`.
+`.wrapper` starts under the header. Rolling only `.inner` would leave the title stuck while the form rode the edge. The sheet is the whole `section.userDrawer`.
 
-`sliding` turns on with the open (`visibility`, `pointer-events`, not `inert`). It turns off when the host's `max-height` `transitionend` finds the box at 0. Those three drop together.
+`--pwa_slide` (`2s`, `ease-in-out`) is set on `:host` in `animation.ts`. The clip's `max-height` transition and the sheet's `transform` transition both use it. So does the form swap inside `.inner`. Do not add a second duration.
 
-A form swap does not re-roll the sheet (`transform` stays `0` while `drawer` is set). If the open form changes the height, `max-height` glides between the two measured px values on `--pwa_slide`, then returns to `none`. The form transform inside `.inner` is unchanged.
+### Lockstep at progress p
 
-`.in`, `.out`, `.spec-in`, and `.spec-out` are removed. Nothing styled them.
+`p` runs 0 → 1 with `ease-in-out`. `H` is the sheet's height in px. Open from a closed drawer:
 
-The same `opened` / `closed` rules slide the page login (`typescript/webcomponents/login/page.ts`, state `registerTwo`) and the four settings panels. A change to `.closed` changes all three.
+- clip height = `p * H`
+- sheet `translateY` = `(p - 1) * H`  (start `-H`, which is `-100%`, end `0`)
+- sheet bottom = clip top + translateY + H = clip top + `p * H` = clip bottom
+
+Close swaps the ends: translateY runs `0` → `-H` while the clip runs `H` → `0`. The same identity holds.
+
+A height change that does not start at 0 (a taller form, a settings tab) uses the sheet's real height `S` and clip ends `A` → `B`:
+
+- clip = `A + (B - A) * p`
+- translateY = clip − S
+- start `A - S`, end `B - S`
+
+When the new sheet is the thing on screen, `S = B`, so it finishes at `translateY: 0` and starts at `A - B`. `playRoll` in `typescript/webcomponents/css/roll.ts` writes those pixel values. Open from 0 is the `-100%` case of the same formula.
+
+### Why the px value has to be measured
+
+`max-height` only eases between two lengths, and it only caps. It cannot hold a box open taller than its content, so a shrink would drop the bottom immediately. `playRoll` sets `height` and `max-height` to the same px value. `none` and `auto` have no midpoint, so they snap. A cap of `100dvh` or `9999px` does ease, but the timing function is spread across that whole range. A 480px drawer inside a 1000px range is fully open at 48% of the time, and the named ease is not what you see. `measureSheet` reads the sheet with the cap released (no paint), and that integer is the end of the animation. After the open `transitionend`, `releaseRoll` sets `height: auto` and `max-height: none` so a later reflow is not stuck. The next close, or the next height change, measures again.
+
+### Visibility, inert, reduced motion
+
+`sliding` turns on in the same turn as the open. `visibility` and `pointer-events` come on with it, and `inert` comes off. It turns off only when the clip's `max-height` `transitionend` sees a box shorter than 2px. That is the close, not a second timer. `prefers-reduced-motion: reduce` sets `--pwa_slide` to `0s` and `playRoll` snaps to the end state.
+
+### Where it is used
+
+| Place | Clip | Sheet | When it rolls |
+|---|---|---|---|
+| `user-drawer` | `:host` | `section.userDrawer` | open, close, and a form swap that changes height |
+| `user-login` | `:host` | `section.service` | `registerTwo` (login ↔ sign-up) and sign-in ↔ signed-in |
+| `user-settings` | `.inner.roll` | `.roll-sheet` | tab change. The nav stays put |
+
+The drawer's login/sign-up pair still slides inside `.inner` with `.opened` / `.closed`. That is a different motion (two forms, one cell). The page login keeps that inner swap and also rolls the card. Settings tabs do not use `.opened` / `.closed`; the roll is the only motion. `.in`, `.out`, `.spec-in`, and `.spec-out` are gone.
+
+### Apply it to a new component
+
+1. Import `rollStyle`, `measureSheet`, `playRoll`, and `releaseRoll` from `css/roll.ts`. The host must already get `--pwa_slide` (import `animation`).
+2. Mark the clip `class="roll"` (or use `:host` if the component itself is the clip) and the moving content `class="roll-sheet"`. The clip needs `overflow: hidden`.
+3. On the change, remember the sheet height while `max-height` is `none` or unset. After render, `measureSheet`, then `playRoll(clip, sheet, from, to, to)`.
+4. On the clip's `max-height` `transitionend`, `releaseRoll` so the next measure is honest.
+5. Do not put a second duration on `.wrapper`, `.inner`, or `.spec`. Do not translate a sheet that does not include every element that should ride the edge.
 
 ### Files
 
-- `typescript/webcomponents/css/animation.ts` — `.content`, `.opened`, `.closed`, and the `2s` transition. Also `drawerShell` for the open and close.
-- `typescript/webcomponents/drawer/drawer.ts` — markup, classes, `inert`.
+- `typescript/webcomponents/css/roll.ts` — `playRoll`, `measureSheet`, `releaseRoll`, `.roll` / `.roll-sheet`.
+- `typescript/webcomponents/css/animation.ts` — `--pwa_slide`, form-swap `.opened` / `.closed`, drawer clip.
+- `typescript/webcomponents/drawer/drawer.ts` — open, close, form-swap height.
+- `typescript/webcomponents/login/page.ts` — page card (`registerTwo`).
+- `typescript/webcomponents/settings/settings.ts` — tab panels.
 - `typescript/webcomponents/form/login.ts` and `signup.ts` — the switch buttons.
-- `typescript/redux/frontend.ts` — `universalToggle` and `registerOne`.
-- Built copies: `base/webcomponents/css/animation.js`, `source/pwa-auth.js`, `website/javascript/pwa-auth.js`.
+- `typescript/redux/frontend.ts` — `universalToggle`, `registerOne`, `registerTwo`, `navigateAuth`.
+- Built copies: `base/webcomponents/css/animation.js`, `base/webcomponents/css/roll.js`, `source/pwa-auth.js`, `website/javascript/pwa-auth.js`.
 
 `@keyframes slide-out` is still in the file. It is not applied. Do not put it on `.closed`.
 

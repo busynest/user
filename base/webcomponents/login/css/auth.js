@@ -3,8 +3,8 @@ import { hostCollapse } from "../../css/animation.js";
 export const authStyles = [hostCollapse, css `
 
   :host {
-    overflow:               hidden;
-    display:                grid;
+    overflow:               hidden; /* Required - clip the roll. Height eases on the host. */
+    display:                block;
   }
 
   .spec[on] {

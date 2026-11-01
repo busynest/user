@@ -1,6 +1,6 @@
 # Slides
 
-The slide is one module: `typescript/webcomponents/css/animation.ts`. `user-drawer`, `user-login`, and `user-settings` import it. One custom property, `--pwa_slide` (`2s`), times every motion. The login and sign-up swap, the drawer open and close, and why `max-height` must not ease are written up in [Drawer login and sign-up slide](drawer-slide.md).
+The slide is one module: `typescript/webcomponents/css/animation.ts`, plus the shared roll in `typescript/webcomponents/css/roll.ts`. `user-drawer`, `user-login`, and `user-settings` import them. One custom property, `--pwa_slide` (`2s`), times every motion. The full roll write-up is [The roll](drawer-slide.md#the-roll).
 
 Two motions, one duration.
 
@@ -13,11 +13,11 @@ Two motions, one duration.
 
 JS measures the height in px and writes `max-height`. The stylesheet eases that and the sheet transform with `--pwa_slide` and `ease-in-out`. The range is the real height, so the ease is not crushed into the start of a huge range. At progress `p` the clip is `p` times the height and the sheet is shifted `(p - 1)` times its height.
 
-After the open `transitionend`, `max-height` becomes `none`. Closing measures again, locks that px, and eases both `max-height` to `0` and the transform back to `-100%`. A form swap while open glides `max-height` between the two measured heights and leaves the sheet transform at `0`.
+After the open `transitionend`, `max-height` becomes `none`. Closing measures again, locks that px, and eases both `max-height` to `0` and the transform back to `-100%`. A form swap while open, a page-login switch, and a settings tab all call `playRoll` so the new sheet's bottom stays on the clip. The full write-up is [The roll](drawer-slide.md#the-roll).
 
 `sliding` turns on as the open starts. It turns off on the host's `max-height` `transitionend` once the box is at 0. That same moment drops `visibility`, `pointer-events`, and `inert`. On the way in, those are on immediately.
 
-Login, sign-up, and the settings panels still slide inside the cell, on the same duration. The open panel is `position: relative` and sets the height. The closed panel is `position: absolute` at the same origin, so it does not stretch the row, and it translates up by its own height. The leaving panel stays visible until that transform ends. `.inner` clips it.
+The drawer and the page login still swap login and sign-up inside `.inner`. That pair shares one grid cell: the open form is `position: relative` and sets the height, the closed form is absolute and translated up. `.inner` clips it. Settings tabs do not use that pair. Their panel area is a roll.
 
 `@keyframes slide-out` only changes `max-height`. It is not the form swap. Playing it on `.closed`, or leaving `.closed` in flow with `position: relative`, moves the row while the transform runs and the forms snap instead of sliding past each other.
 
@@ -35,16 +35,16 @@ On the drawer, inside `.userDrawer`:
 |---|---|---|
 | Clip | `:host` `max-height` | `0px` ↔ measured px, `--pwa_slide` |
 | Sheet | `section.userDrawer` | `translate3d(0, -100%, 0)` ↔ `0`, same clock |
-| Forms and settings panels | `.content` with `opened` / `closed` | `transform` `--pwa_slide`, then `visibility` |
+| Drawer and page forms | `.content` with `opened` / `closed` | `transform` `--pwa_slide`, then `visibility` |
+| Settings panels | `.inner.roll` / `.roll-sheet` | same roll as the drawer, `--pwa_slide` |
+| Page login card | `user-login` host / `section.service` | same roll, on `registerTwo` |
 
-Page login uses `spec` / `wrapper` / `inner` / `content` for the form swap. It has no collapsing shell. The four settings panels (`profile`, `verification`, `password`, `delete`) are `.content` inside `wrapper` / `inner`. They have no `.spec`.
-
-`user-login` does not slide. Nothing sets its `animation` attribute, and that host does not ease `max-height`.
+Page login uses `spec` / `wrapper` / `inner` / `content` for the form swap, and rolls `section.service` inside the host when that swap changes the card height. The four settings panels (`profile`, `verification`, `password`, `delete`) sit in `.roll-sheet`. The inactive ones are `hidden`. The nav is outside the roll.
 
 ## Triggers
 
 - Attribute `drawer` on `user-drawer` rolls the sheet open or closed (`:host([drawer]) .userDrawer` is `translate3d(0, 0, 0)`). Attribute `sliding` holds `visibility`, `pointer-events`, and `inert` until the `max-height` `transitionend`.
-- Classes `opened` and `closed` on `.content`. Drawer and page forms follow sign-in versus sign-up. Settings panels follow the tab.
+- Classes `opened` and `closed` on `.content`. Drawer and page forms follow sign-in versus sign-up. Settings panels follow the tab by rolling `.inner`, not by those classes.
 - Attribute `on` on `.spec` is `display`. It is not a slide.
 
 ## Timings
