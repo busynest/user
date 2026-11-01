@@ -27,6 +27,7 @@ Peers: `lit` ^3.3.0 and `firebase` ^12.0.0. The package is ESM (`"type": "module
 - [Parts](#parts)
 - [Drawer behaviour](#drawer-behaviour)
 - [Slides](docs/sliders.md)
+- [Drawer slide](docs/drawer-slide.md)
 - [Data ownership](#data-ownership)
 - [Contributing](#contributing)
 - [Feedback](#feedback)
@@ -470,7 +471,7 @@ The drawer loads hidden at the top (`max-height: 0`). A press on `user-icon` sli
 
 Sign-in and sign-up share one grid area, `pages`. They slide past each other. The closed form is translated `translate3d(0, -100%, 0)`, `visibility: hidden`, and `inert`.
 
-The slide is shared. See [Slides](docs/sliders.md). Max-height is `1.4s` `ease-in-out`. Transform times stay `1.5s`, `2.2s`, and `2s`. `prefers-reduced-motion: reduce` sets those durations to `0s`.
+The slide is shared. See [Slides](docs/sliders.md) and [Drawer slide](docs/drawer-slide.md). Max-height is `1.4s` `ease-in-out`. Transform times stay `1.5s`, `2.2s`, and `2s`. `prefers-reduced-motion: reduce` sets those durations to `0s`.
 
 While the drawer is open it covers `user-icon`. Close it with the ✕ button or Escape. The drawer is a dialog. Tab stays inside while it is open, and focus returns to the control that opened it. Off-screen forms are `inert`. The panel is `inert` while it is closed.
 

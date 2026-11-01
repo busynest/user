@@ -1,6 +1,6 @@
 # Slides
 
-The slide is one module: `typescript/webcomponents/css/animation.ts`. `user-drawer`, `user-login`, and `user-settings` import it.
+The slide is one module: `typescript/webcomponents/css/animation.ts`. `user-drawer`, `user-login`, and `user-settings` import it. The login and sign-up swap, including why `max-height` is not that slide, is written up in [Drawer login and sign-up slide](drawer-slide.md).
 
 Three parts.
 
