@@ -13,7 +13,7 @@ All notable changes to pwa-auth.js will be documented in this file.
 - Drawer login and sign-up slide past each other again. The closed form is absolute, and the transform is 2s.
 
 ### Changed
-- The drawer unrolls and rolls up on `--pwa_slide` (`2s` `ease-in-out`). `max-height` runs from `0px` to the measured height, then back. The top edge stays put.
+- The drawer rolls open and closed on `--pwa_slide` (`2s` `ease-in-out`). `max-height` runs `0px` ↔ the measured height, and the sheet translates with it so the bottom edge and the controls stay together.
 
 ### Added
 - `sendEmailVerification` after sign-up, then `pwa-verification-sent` `{ email }`

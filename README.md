@@ -467,7 +467,7 @@ user-drawer::part(login-submit) { letter-spacing: 0.02em; }
 
 ## Drawer behaviour
 
-The drawer loads at `max-height: 0`. A press on `user-icon` unrolls it downward: the top stays put and the bottom edge grows.
+The drawer loads at `max-height: 0` with the sheet translated up by its own height. A press on `user-icon` rolls it down: the bottom edge grows, and the controls ride that edge.
 
 Sign-in and sign-up share one grid area, `pages`. They slide past each other. The closed form is translated `translate3d(0, -100%, 0)`, `visibility: hidden`, and `inert`.
 

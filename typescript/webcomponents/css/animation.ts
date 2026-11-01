@@ -89,12 +89,13 @@ export const animation : CSSResult = css`
 `;
 
 /* Drawer shell. Imported by user-drawer only.
-   JS writes max-height in px (0 ↔ measured content). The range is the real height, so ease-in-out is not skewed. */
+   :host is the clip (max-height 0 ↔ measured px). .userDrawer translates
+   -100% → 0 on the same --pwa_slide so its bottom stays on the clip's bottom. */
 export const drawerShell : CSSResult = css`
 
   :host {
     max-height:             0px;
-    min-height:             0px; /* Required - the grid must be allowed to unroll from 0 */
+    min-height:             0px; /* Required - the box must be allowed to grow from 0 */
     visibility:             hidden;
     pointer-events:         none;
     transition:             max-height var(--pwa_slide, 2s) ease-in-out;
@@ -104,6 +105,16 @@ export const drawerShell : CSSResult = css`
   :host([sliding]) {
     visibility:             visible;
     pointer-events:         auto;
+  }
+
+  .userDrawer {
+    transform:              translate3d(0, -100%, 0);
+    transition:             transform var(--pwa_slide, 2s) ease-in-out;
+    -webkit-transition:     transform var(--pwa_slide, 2s) ease-in-out;
+  }
+
+  :host([drawer]) .userDrawer {
+    transform:              translate3d(0, 0, 0);
   }
 
 `;

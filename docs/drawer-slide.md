@@ -1,6 +1,6 @@
 # Drawer login and sign-up slide
 
-The form swap is a transform. The drawer open and close is an unroll: `max-height` eases between `0px` and the measured content height. Both use `--pwa_slide` (`2s`, `ease-in-out`), set on `:host` in `typescript/webcomponents/css/animation.ts`.
+The form swap is a transform inside `.inner`. The drawer rolls open and closed: `:host` `max-height` eases between `0px` and the measured content height, and `section.userDrawer` translates from `-100%` to `0` on that same clock so the sheet's bottom stays on the clip's bottom. Both use `--pwa_slide` (`2s`, `ease-in-out`), set on `:host` in `typescript/webcomponents/css/animation.ts`.
 
 ## How the form swap works
 
@@ -40,20 +40,20 @@ These do not run the form swap:
 
 ## How the drawer opens and closes
 
-The drawer unrolls. The top edge stays fixed. The bottom edge grows down. Header, `.spec`, wrapper, `.inner`, and the forms stay where they are; `overflow: hidden` on `:host` reveals them. They do not translate with the shell.
+`:host` is the clip. `section.userDrawer` is the sheet (header, both `.spec` blocks, `.wrapper`, `.inner`, forms). `.wrapper` does not include the header, so it is not the roller.
 
-A whole-sheet `translate3d` moves every pixel, including the top. A `clip-path` inset can fake the reveal, but the border box is already full height, so the shadow and the rounded bottom sit at the final position while the picture is still opening. `max-height` animated between `0px` and the measured content height grows the border box itself. Radius and shadow on `:host` travel with the bottom edge. That is the unroll.
+1. The clip's `max-height` eases from `0px` to the measured content height, and back to `0px`. `overflow: hidden` hides whatever is above the clip.
+2. The sheet translates `translate3d(0, -100%, 0)` → `translate3d(0, 0, 0)` on open, and the reverse on close. `:host([drawer])` selects the open transform. The attribute flips in the same turn as the `max-height` write.
 
-The range has to be the real height. `0` to `100dvh` (or any cap taller than the content) spends most of the `2s` past the point where the box is already fully open, so `ease-in-out` looks fast and early. JS measures the height and writes that many pixels.
+Same duration and `ease-in-out` (`--pwa_slide`) on both. A percentage translate is the sheet's own height. At progress `p` the clip is `p` times that height and the sheet is shifted `(p - 1)` times its height, so the sheet's bottom stays on the clip's bottom. The bottom controls ride that edge. The top of the sheet is what the clip hides and reveals.
 
-1. Open. `sliding` turns on, so `visibility` and `pointer-events` are on and `inert` is off. `contentHeight()` releases `max-height` to `none` for one synchronous read (no paint), then `glide(0, measured)` eases `max-height` over `--pwa_slide`.
-2. Open ends. The host's `max-height` `transitionend` sets `max-height: none`, so a later font or viewport change is not stuck at the old px.
-3. Close. Measure the current border box, lock that px with `transition: none`, then ease to `0px`. Re-measuring matters because a form swap may have changed the height after the open.
-4. Close ends. The same `transitionend`, once the box is at 0, clears the inline height and drops `sliding`. `visibility`, `pointer-events`, and `inert` drop with it. Not a second timer.
+`0` to `100dvh` would finish the visible motion early. JS measures pixels. `none` is not a length, so it is applied only after the open `transitionend`, and the close measures again before easing back to `0px`.
 
-A form swap while `max-height` is `none` records the old height in `willUpdate`, then glides to the new measured height on `--pwa_slide`, and releases to `none` again when that ends.
+`sliding` turns on with the open (`visibility`, `pointer-events`, not `inert`). It turns off when the host's `max-height` `transitionend` finds the box at 0. Those three drop together.
 
-`spec-in` and `spec-out` do not transform. The old shell ran `max-height` for `1.4s` plus spec transforms at `1.5s` and `2.2s`. One clock now.
+A form swap does not re-roll the sheet (`transform` stays `0` while `drawer` is set). If the open form changes the height, `max-height` glides between the two measured px values on `--pwa_slide`, then returns to `none`. The form transform inside `.inner` is unchanged.
+
+`.in`, `.out`, `.spec-in`, and `.spec-out` are removed. Nothing styled them.
 
 The same `opened` / `closed` rules slide the page login (`typescript/webcomponents/login/page.ts`, state `registerTwo`) and the four settings panels. A change to `.closed` changes all three.
 
@@ -97,7 +97,7 @@ On the way open, the panel appears to finish early, and the named ease is not th
 
 ### What the drawer open and close uses
 
-`drawerShell` sets `transition: max-height var(--pwa_slide, 2s) ease-in-out` on `:host`, and parks it at `0px`. `drawer.ts` writes the measured pixel targets. After the open (and after a form-swap glide) the inline value becomes `none`, which does not animate. The timings table in [Slides](sliders.md) lists the one duration.
+`drawerShell` eases `:host` `max-height` and `.userDrawer` `transform` with `var(--pwa_slide, 2s) ease-in-out`. The sheet transform is `translate3d(0, -100%, 0)` unless `:host([drawer])`. `drawer.ts` writes the measured pixel `max-height`. After the open (and after a form-swap glide) that inline value becomes `none`, which does not animate. The timings table in [Slides](sliders.md) lists the one duration.
 
 ## Pitfalls
 
@@ -107,7 +107,7 @@ On the way open, the panel appears to finish early, and the named ease is not th
 - Do not fake the form swap with a large `max-height`. The visible motion will be shorter than the duration, and the ease will look wrong.
 - The visibility delay on `.content` must be `var(--pwa_slide)`, not a different literal. Shorter, and the leaving form vanishes mid-slide. Longer, and it stays painted after it is off screen. The visibility duration stays `0s`. It snaps. It does not fade.
 - `.opened` must set its own transition with a `0s` visibility delay. If it inherits the close delay, the arriving form is invisible for the whole slide.
-- Do not give `.spec`, `.inner`, or the wrapper their own height duration. The host `max-height` is the unroll. A second clock drifts.
+- Do not give `.spec`, `.inner`, or `.wrapper` their own height or transform duration. The clip is `:host`. The roller is `.userDrawer`. A second clock drifts. The header is outside `.wrapper`, so rolling only `.inner` leaves the header behind.
 - Do not animate `max-height` to `none`, `auto`, or a viewport-sized cap. Measure px, ease between those two lengths, then set `none` only after `transitionend`.
 - `sliding` has to stay up until the close `max-height` reaches 0. Clearing it when `drawer` flips hides the roll-up.
 - Focusing a control inside the unrolling box scrolls it. `.focus({ preventScroll: true })` keeps the header at the top edge. Reset `scrollTop` when the open starts.

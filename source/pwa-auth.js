@@ -91,7 +91,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
 
   :host {
     max-height:             0px;
-    min-height:             0px; /* Required - the grid must be allowed to unroll from 0 */
+    min-height:             0px; /* Required - the box must be allowed to grow from 0 */
     visibility:             hidden;
     pointer-events:         none;
     transition:             max-height var(--pwa_slide, 2s) ease-in-out;
@@ -101,6 +101,16 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
   :host([sliding]) {
     visibility:             visible;
     pointer-events:         auto;
+  }
+
+  .userDrawer {
+    transform:              translate3d(0, -100%, 0);
+    transition:             transform var(--pwa_slide, 2s) ease-in-out;
+    -webkit-transition:     transform var(--pwa_slide, 2s) ease-in-out;
+  }
+
+  :host([drawer]) .userDrawer {
+    transform:              translate3d(0, 0, 0);
   }
 
 `,En=[i`
@@ -730,8 +740,8 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     width:                  100%;
     box-sizing:             border-box;
     -webkit-box-sizing:     border-box;
-    display:                block; /* Required - a grid item overflows upward and clips the header */
-    padding-top:            env(safe-area-inset-top);
+    display:                block; /* Required - the child must start at the top of the clip */
+    /* padding-top lives on .userDrawer so the clip height matches the translating sheet */
     max-width:              100%; /* Required - fit 320px */
     min-width:              0;
   }
@@ -773,6 +783,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
     background-color:       var(--pwa_drawer_background_color, #fffdf8);
     color:                  var(--pwa_drawer_text_color, #1c2430);
     border-radius:          var(--pwa_drawer_border-radius, 0 0 18px 18px);
+    padding-top:            env(safe-area-inset-top);
   }
 
 `,rb=i`
@@ -1094,7 +1105,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
       aria-labelledby="pwa-drawer-title"
       aria-hidden="${this.sliding?"false":"true"}"
       ?inert="${!this.sliding}"
-      class="userDrawer ${this.drawer?"out":"in"}">
+      class="userDrawer">
 
       <!-- Exit Button -->
       <header class="exit" part="header">
@@ -1108,7 +1119,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
 
       <!-- Logged-out State -->
       <div
-        class="spec ${this.drawer?"spec-out":"spec-in"}"
+        class="spec"
         ?on="${!1===this.user}">
 
         <div class=     "wrapper">

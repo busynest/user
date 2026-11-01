@@ -333,7 +333,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       aria-labelledby="pwa-drawer-title"
       aria-hidden="${this.sliding ? 'false' : 'true'}"
       ?inert="${!this.sliding}"
-      class="userDrawer ${this.drawer ? 'out' : 'in'}">
+      class="userDrawer">
 
       <!-- Exit Button -->
       <header class="exit" part="header">
@@ -347,7 +347,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
 
       <!-- Logged-out State -->
       <div
-        class="spec ${this.drawer ? 'spec-out' : 'spec-in'}"
+        class="spec"
         ?on="${this.user === false}">
 
         <div class=     "wrapper">

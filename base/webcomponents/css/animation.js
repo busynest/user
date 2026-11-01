@@ -87,7 +87,7 @@ export const drawerShell = css `
 
   :host {
     max-height:             0px;
-    min-height:             0px; /* Required - the grid must be allowed to unroll from 0 */
+    min-height:             0px; /* Required - the box must be allowed to grow from 0 */
     visibility:             hidden;
     pointer-events:         none;
     transition:             max-height var(--pwa_slide, 2s) ease-in-out;
@@ -97,6 +97,16 @@ export const drawerShell = css `
   :host([sliding]) {
     visibility:             visible;
     pointer-events:         auto;
+  }
+
+  .userDrawer {
+    transform:              translate3d(0, -100%, 0);
+    transition:             transform var(--pwa_slide, 2s) ease-in-out;
+    -webkit-transition:     transform var(--pwa_slide, 2s) ease-in-out;
+  }
+
+  :host([drawer]) .userDrawer {
+    transform:              translate3d(0, 0, 0);
   }
 
 `;
