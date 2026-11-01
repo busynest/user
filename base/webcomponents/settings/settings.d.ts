@@ -44,6 +44,10 @@ export declare class UserSettings extends UserSettings_base {
     private name;
     private email;
     private login;
+    private clipHeight;
+    private sheetShift;
+    private rollMotion;
+    private booted;
     private heldHeight;
     constructor();
     connectedCallback(): void;
@@ -55,7 +59,14 @@ export declare class UserSettings extends UserSettings_base {
     private openTab;
     protected willUpdate(changed: PropertyValues): void;
     protected updated(changed: PropertyValues): void;
-    private onRoll;
+    private clip;
+    private sheet;
+    private reduced;
+    private rest;
+    private clipStyle;
+    private sheetStyle;
+    private rollBetween;
+    private onClipEnd;
     protected render(): import("lit-html").TemplateResult<1>;
 }
 declare global {

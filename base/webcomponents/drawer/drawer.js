@@ -9,6 +9,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../store.js';
 import { close } from '../css/svg.js';
@@ -33,7 +35,6 @@ import '../settings/input/verify.js';
 import '../form/login.js';
 import '../form/signup.js';
 import { animation, drawerShell } from '../css/animation.js';
-import { measureSheet, playRoll, reducedMotion, releaseRoll, rollStyle } from '../css/roll.js';
 import { tapStyle } from '../css/tap.js';
 let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
     constructor() {
@@ -49,31 +50,34 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.user = false;
         this.signup = false;
         this.sliding = false;
+        this.motion = false;
+        this.clipHeight = '0px';
+        this.sheetShift = 'translate3d(0, -100%, 0)';
+        this.rollMotion = false;
+        this.booted = false;
         this.wasOpen = false;
         this.sawOpen = false;
         this.returnFocus = null;
         this.stopNotice = null;
         this.heldHeight = null;
-        this.onUnrollEnd = (event) => {
+        this.onClipEnd = (event) => {
             if (!(event instanceof TransitionEvent))
                 return;
-            if (event.target !== this)
+            if (event.target !== event.currentTarget)
                 return;
             if (event.propertyName !== 'max-height')
                 return;
-            const sheet = this.sheet();
-            if (!sheet)
+            const clip = event.currentTarget;
+            if (!(clip instanceof HTMLElement))
                 return;
             if (this.drawer) {
-                releaseRoll(this, sheet);
+                this.restOpen();
                 return;
             }
-            if (this.getBoundingClientRect().height > 1)
+            if (clip.getBoundingClientRect().height > 1)
                 return;
             this.sliding = false;
-            this.style.height = '';
-            this.style.maxHeight = '';
-            sheet.style.transform = '';
+            this.restShut();
         };
         this.onKey = (event) => {
             if (!this.drawer)
@@ -145,12 +149,10 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         super.connectedCallback();
         this.addEventListener('keydown', this.onKey);
         this.addEventListener('click', this.onLightClick);
-        this.addEventListener('transitionend', this.onUnrollEnd);
         this.notice = verificationNotice();
         this.stopNotice = onVerificationNotice(() => { this.notice = verificationNotice(); });
     }
     disconnectedCallback() {
-        this.removeEventListener('transitionend', this.onUnrollEnd);
         this.removeEventListener('keydown', this.onKey);
         this.removeEventListener('click', this.onLightClick);
         this.stopNotice?.();
@@ -164,7 +166,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.verified = Boolean(state.backend?.verified);
         if (open)
             this.sliding = true;
-        else if (reducedMotion())
+        else if (this.reduced())
             this.sliding = false;
         this.drawer = open;
         this.user = state.frontend.login;
@@ -177,31 +179,48 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.sawOpen = true;
     }
     willUpdate(changed) {
-        if (!changed.has('signup') || !this.drawer || this.style.maxHeight !== 'none')
+        if (!this.booted) {
+            if (this.drawer)
+                this.restOpen();
             return;
-        const sheet = this.sheet();
-        if (!sheet)
+        }
+        if (changed.has('signup'))
+            this.motion = true;
+        if (changed.has('drawer') || !changed.has('signup') || !this.drawer)
             return;
-        this.heldHeight = Math.ceil(sheet.getBoundingClientRect().height);
+        const clip = this.clip();
+        if (!clip)
+            return;
+        this.heldHeight = Math.ceil(clip.getBoundingClientRect().height);
+        this.rollMotion = false;
+        this.clipHeight = `${this.heldHeight}px`;
+        this.sheetShift = 'translate3d(0, 0, 0)';
     }
     updated(changed) {
-        if (changed.has('drawer')) {
+        const boot = !this.booted;
+        this.booted = true;
+        if (!boot && changed.has('drawer')) {
             this.heldHeight = null;
             if (this.drawer)
                 this.unroll();
             else
                 this.rollUp();
         }
-        else if (this.heldHeight != null && this.drawer) {
+        else if (!boot && this.heldHeight != null && this.drawer) {
             const from = this.heldHeight;
             this.heldHeight = null;
+            const clip = this.clip();
             const sheet = this.sheet();
-            if (sheet) {
-                const to = measureSheet(this, sheet);
+            if (clip && sheet) {
+                const to = Math.ceil(sheet.getBoundingClientRect().height);
                 if (Math.abs(to - from) > 1)
-                    playRoll(this, sheet, from, to, to);
+                    this.rollBetween(clip, sheet, from, to, to);
+                else
+                    this.restOpen();
             }
         }
+        if (boot)
+            requestAnimationFrame(() => { this.motion = true; });
         if (!changed.has('drawer'))
             return;
         if (this.drawer) {
@@ -214,25 +233,103 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.returnFocus?.focus();
         this.returnFocus = null;
     }
+    clip() {
+        return this.shadowRoot?.querySelector('.drawer-clip') ?? null;
+    }
     sheet() {
         return this.shadowRoot?.querySelector('.userDrawer') ?? null;
     }
+    reduced() {
+        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+    restShut() {
+        this.rollMotion = false;
+        this.clipHeight = '0px';
+        this.sheetShift = 'translate3d(0, -100%, 0)';
+    }
+    restOpen() {
+        this.rollMotion = false;
+        this.clipHeight = 'auto';
+        this.sheetShift = 'none';
+    }
+    clipStyle() {
+        const travel = this.rollMotion && !this.reduced();
+        return {
+            height: this.clipHeight,
+            maxHeight: this.clipHeight === 'auto' ? 'none' : this.clipHeight,
+            transition: travel
+                ? 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out'
+                : 'none',
+        };
+    }
+    sheetStyle() {
+        const travel = this.rollMotion && !this.reduced();
+        return {
+            transform: this.sheetShift,
+            transition: travel ? 'transform var(--pwa_slide, 2s) ease-in-out' : 'none',
+        };
+    }
     unroll() {
+        const clip = this.clip();
         const sheet = this.sheet();
-        if (!sheet)
+        if (!clip || !sheet)
             return;
         this.scrollTop = 0;
-        const target = measureSheet(this, sheet);
-        playRoll(this, sheet, 0, target, target);
+        const target = this.sheetPx(clip, sheet);
+        const from = Math.ceil(clip.getBoundingClientRect().height);
+        this.rollBetween(clip, sheet, from, target, target);
     }
     rollUp() {
+        const clip = this.clip();
         const sheet = this.sheet();
-        if (!sheet)
+        if (!clip || !sheet)
             return;
         const current = Math.ceil(sheet.getBoundingClientRect().height);
-        playRoll(this, sheet, current, 0, current);
-        if (reducedMotion())
+        const from = Math.ceil(clip.getBoundingClientRect().height);
+        this.rollBetween(clip, sheet, from, 0, current);
+        if (this.reduced())
             this.sliding = false;
+    }
+    sheetPx(clip, sheet) {
+        const transition = clip.style.transition;
+        const maxHeight = clip.style.maxHeight;
+        const height = clip.style.height;
+        clip.style.transition = 'none';
+        clip.style.maxHeight = 'none';
+        clip.style.height = 'auto';
+        const px = Math.ceil(sheet.getBoundingClientRect().height);
+        clip.style.height = height;
+        clip.style.maxHeight = maxHeight;
+        clip.style.transition = transition;
+        return px;
+    }
+    rollBetween(clip, sheet, from, to, sheetHeight) {
+        const start = from - sheetHeight;
+        const end = to - sheetHeight;
+        const shift = (px) => `translate3d(0, ${px}px, 0)`;
+        if (this.reduced() || Math.abs(to - from) <= 1) {
+            if (to === 0)
+                this.restShut();
+            else
+                this.restOpen();
+            return;
+        }
+        const travel = 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out';
+        const move = 'transform var(--pwa_slide, 2s) ease-in-out';
+        clip.style.transition = 'none';
+        sheet.style.transition = 'none';
+        clip.style.height = `${Math.max(0, from)}px`;
+        clip.style.maxHeight = `${Math.max(0, from)}px`;
+        sheet.style.transform = shift(start);
+        void clip.offsetHeight;
+        clip.style.transition = travel;
+        sheet.style.transition = move;
+        clip.style.height = `${Math.max(0, to)}px`;
+        clip.style.maxHeight = `${Math.max(0, to)}px`;
+        sheet.style.transform = shift(end);
+        this.rollMotion = true;
+        this.clipHeight = `${Math.max(0, to)}px`;
+        this.sheetShift = shift(end);
     }
     firstUpdated() {
         this.shadowRoot.querySelector('.close').addEventListener('click', () => {
@@ -260,7 +357,6 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         return [
             show,
             animation,
-            rollStyle,
             drawerShell,
             drawerStyle,
             exitStyle,
@@ -271,6 +367,18 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             noticeStyle,
             verifiedStyle,
             css `
+    /* Required - this drawer's roll only. display:block so the sheet is not stretched. */
+    .drawer-clip {
+      display:                block;
+      overflow:               hidden;
+      min-height:             0;
+    }
+
+    .drawer-clip > .userDrawer {
+      height:                 auto;
+      align-self:             start;
+    }
+
     .exit > h3 {
       display:                flex;
       align-items:            center;
@@ -325,7 +433,13 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
     render() {
         return html `
 
-    <!-- Drawer Wrapper -->
+    <!-- Clip. The first render binds shut, with no transition. -->
+    <div
+      class="drawer-clip"
+      style=${styleMap(this.clipStyle())}
+      @transitionend=${this.onClipEnd}>
+
+    <!-- Drawer Wrapper. Its translate is bound here, not by a shared class. -->
     <section
       part="panel"
       role="dialog"
@@ -333,7 +447,8 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       aria-labelledby="pwa-drawer-title"
       aria-hidden="${this.sliding ? 'false' : 'true'}"
       ?inert="${!this.sliding}"
-      class="userDrawer roll-sheet">
+      class="userDrawer"
+      style=${styleMap(this.sheetStyle())}>
 
       <!-- Exit Button -->
       <header class="exit" part="header">
@@ -351,7 +466,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         ?on="${this.user === false}">
 
         <div class=     "wrapper">
-          <div class=   "inner">
+          <div class=${classMap({ inner: true, motion: this.motion })}>
 
             <!-- Log-in State -->
             <form-login
@@ -359,10 +474,11 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
               ?hide-google="${this.hideGoogle}"
               exportparts="email: login-email, password: login-password, submit: login-submit, switch: login-switch, forgot: login-forgot, status: login-status, reveal: login-reveal, google: login-google"
               ?inert="${this.signup !== this.subscribe}"
-              class="content ${this.signup ===
-            this.subscribe ?
-            'opened' :
-            'closed'} ">
+              class=${classMap({
+            content: true,
+            opened: this.signup === this.subscribe,
+            closed: this.signup !== this.subscribe,
+        })}>
             </form-login>
 
             <!-- Sign-up State -->
@@ -371,7 +487,11 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
               ?hide-google="${this.hideGoogle}"
               exportparts="email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch, status: signup-status, reveal: signup-reveal, notice: signup-notice, google: signup-google"
               ?inert="${this.signup === this.subscribe}"
-              class="content ${!this.signup === this.subscribe ? 'opened' : 'closed'} ">
+              class=${classMap({
+            content: true,
+            opened: !this.signup === this.subscribe,
+            closed: !this.signup !== this.subscribe,
+        })}>
             </form-signup>
 
           </div>
@@ -402,6 +522,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       </div>
 
     </section>
+    </div>
 
     `;
     }
@@ -460,6 +581,22 @@ __decorate([
     property({ type: Boolean, reflect: true }),
     __metadata("design:type", Object)
 ], UserDrawer.prototype, "sliding", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserDrawer.prototype, "motion", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserDrawer.prototype, "clipHeight", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserDrawer.prototype, "sheetShift", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserDrawer.prototype, "rollMotion", void 0);
 UserDrawer = __decorate([
     customElement('user-drawer'),
     __metadata("design:paramtypes", [])

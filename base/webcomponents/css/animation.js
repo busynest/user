@@ -2,7 +2,7 @@ import { css } from "lit";
 export const animation = css `
 
 :host {
-    /* Required - the only duration. Roll clip, roll sheet, and form swap all read it. */
+    /* Required - this host's clock. It does not inherit onto a sibling component. */
     --pwa_slide:                            2s;
 }
 
@@ -37,9 +37,9 @@ export const animation = css `
 
     backface-visibility:                    hidden;
 
-    /* Required - same duration as the drawer. Hide the leaving form when the transform ends. */
-    transition:                             transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear var(--pwa_slide, 2s);
-    -webkit-transition:                     transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear var(--pwa_slide, 2s);
+    /* Required - no transition on the first paint. .motion on .inner arms it after boot. */
+    transition:                             none;
+    -webkit-transition:                     none;
 
     position:relative;
     z-index: 1;
@@ -57,6 +57,16 @@ export const animation = css `
     position:                               relative; /* Required - this form sets the panel height */
     align-self:                             start; /* Required - keep the Update button under its field */
     z-index:                                3;
+}
+
+/* Required - arm the swap only after the first paint. Closed stays put until then.
+   The class lives on this component's .inner, so another component cannot set it. */
+.motion .content {
+    transition:                             transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear var(--pwa_slide, 2s);
+    -webkit-transition:                     transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear var(--pwa_slide, 2s);
+}
+
+.motion .opened {
     /* Required - show the arriving form immediately. The duration matches --pwa_slide. */
     transition:                             transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear 0s;
     -webkit-transition:                     transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear 0s;
@@ -91,22 +101,12 @@ export const drawerShell = css `
     min-height:             0px; /* Required - the box must be allowed to grow from 0 */
     visibility:             hidden;
     pointer-events:         none;
-    transition:             height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out;
-    -webkit-transition:     height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out;
   }
 
   :host([sliding]) {
+    max-height:             none;
     visibility:             visible;
     pointer-events:         auto;
-  }
-
-  .userDrawer {
-    /* Required - parked above the clip. :host([drawer]) rolls it to 0. */
-    transform:              translate3d(0, -100%, 0);
-  }
-
-  :host([drawer]) .userDrawer {
-    transform:              translate3d(0, 0, 0);
   }
 
 `;

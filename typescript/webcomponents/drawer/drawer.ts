@@ -1,5 +1,7 @@
 import { css, CSSResultArray, html, LitElement, PropertyValues }   from 'lit';
 import { customElement, property, state }     from 'lit/decorators.js';
+import { classMap }                           from 'lit/directives/class-map.js';
+import { styleMap }                           from 'lit/directives/style-map.js';
 import { connect }                            from 'pwa-helpers/connect-mixin.js';
 
 import { store, AppState }  from '../../store.js';
@@ -31,7 +33,6 @@ import '../settings/input/verify.js';
 import '../form/login.js';
 import '../form/signup.js';
 import { animation, drawerShell } from '../css/animation.js';
-import { measureSheet, playRoll, reducedMotion, releaseRoll, rollStyle } from '../css/roll.js';
 import { tapStyle } from '../css/tap.js';
 
 @customElement('user-drawer')
@@ -59,6 +60,19 @@ export class UserDrawer extends connect(store)(LitElement) {
   /** True while the panel is open or still rolling shut. Drops on transitionend. */
   @property({ type: Boolean, reflect: true }) private sliding = false;
 
+  /** Arms the form-swap transition. False on the first paint. */
+  @state() private motion = false;
+
+  /** Clip height. 0px is shut. auto is the resting open size. */
+  @state() private clipHeight = '0px';
+
+  /** Sheet translate. -100% parks the sheet above the clip. */
+  @state() private sheetShift = 'translate3d(0, -100%, 0)';
+
+  /** True only while this drawer's clip and sheet are easing. */
+  @state() private rollMotion = false;
+
+  private booted = false;
   private wasOpen = false;
   private sawOpen = false;
   private returnFocus: HTMLElement | null = null;
@@ -72,13 +86,11 @@ export class UserDrawer extends connect(store)(LitElement) {
     super.connectedCallback();
     this.addEventListener('keydown', this.onKey);
     this.addEventListener('click', this.onLightClick);
-    this.addEventListener('transitionend', this.onUnrollEnd);
     this.notice = verificationNotice();
     this.stopNotice = onVerificationNotice(() => { this.notice = verificationNotice(); });
   }
 
   override disconnectedCallback(): void {
-    this.removeEventListener('transitionend', this.onUnrollEnd);
     this.removeEventListener('keydown', this.onKey);
     this.removeEventListener('click', this.onLightClick);
     this.stopNotice?.();
@@ -92,7 +104,7 @@ export class UserDrawer extends connect(store)(LitElement) {
     this.email        = state.backend!.email;
     this.verified     = Boolean(state.backend?.verified);
     if (open) this.sliding = true;
-    else if (reducedMotion()) this.sliding = false;
+    else if (this.reduced()) this.sliding = false;
     this.drawer       = open;
     this.user         = state.frontend!.login;          // Logged in-out State
     this.signup       = state.frontend!.registerOne;    // Sign-up State
@@ -107,26 +119,39 @@ export class UserDrawer extends connect(store)(LitElement) {
   }
 
   protected willUpdate(changed: PropertyValues): void {
-    if (!changed.has('signup') || !this.drawer || this.style.maxHeight !== 'none') return;
-    const sheet = this.sheet();
-    if (!sheet) return;
-    this.heldHeight = Math.ceil(sheet.getBoundingClientRect().height);
+    if (!this.booted) {
+      if (this.drawer) this.restOpen();
+      return;
+    }
+    if (changed.has('signup')) this.motion = true;
+    if (changed.has('drawer') || !changed.has('signup') || !this.drawer) return;
+    const clip = this.clip();
+    if (!clip) return;
+    this.heldHeight = Math.ceil(clip.getBoundingClientRect().height);
+    this.rollMotion = false;
+    this.clipHeight = `${this.heldHeight}px`;
+    this.sheetShift = 'translate3d(0, 0, 0)';
   }
 
   protected updated(changed: PropertyValues): void {
-    if (changed.has('drawer')) {
+    const boot = !this.booted;
+    this.booted = true;
+    if (!boot && changed.has('drawer')) {
       this.heldHeight = null;
       if (this.drawer) this.unroll();
       else this.rollUp();
-    } else if (this.heldHeight != null && this.drawer) {
+    } else if (!boot && this.heldHeight != null && this.drawer) {
       const from = this.heldHeight;
       this.heldHeight = null;
+      const clip = this.clip();
       const sheet = this.sheet();
-      if (sheet) {
-        const to = measureSheet(this, sheet);
-        if (Math.abs(to - from) > 1) playRoll(this, sheet, from, to, to);
+      if (clip && sheet) {
+        const to = Math.ceil(sheet.getBoundingClientRect().height);
+        if (Math.abs(to - from) > 1) this.rollBetween(clip, sheet, from, to, to);
+        else this.restOpen();
       }
     }
+    if (boot) requestAnimationFrame(() => { this.motion = true; });
     if (!changed.has('drawer')) return;
     if (this.drawer) {
       const active = deepActive();
@@ -139,43 +164,130 @@ export class UserDrawer extends connect(store)(LitElement) {
     this.returnFocus = null;
   }
 
+  private clip(): HTMLElement | null {
+    return this.shadowRoot?.querySelector('.drawer-clip') ?? null;
+  }
+
   private sheet(): HTMLElement | null {
     return this.shadowRoot?.querySelector('.userDrawer') ?? null;
   }
 
+  private reduced(): boolean {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  // Required - closed, no transition. The first render binds this.
+  private restShut(): void {
+    this.rollMotion = false;
+    this.clipHeight = '0px';
+    this.sheetShift = 'translate3d(0, -100%, 0)';
+  }
+
+  // Required - open at content size. No transition, so it does not ease.
+  private restOpen(): void {
+    this.rollMotion = false;
+    this.clipHeight = 'auto';
+    this.sheetShift = 'none';
+  }
+
+  private clipStyle() {
+    const travel = this.rollMotion && !this.reduced();
+    return {
+      height: this.clipHeight,
+      maxHeight: this.clipHeight === 'auto' ? 'none' : this.clipHeight,
+      transition: travel
+        ? 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out'
+        : 'none',
+    };
+  }
+
+  private sheetStyle() {
+    const travel = this.rollMotion && !this.reduced();
+    return {
+      transform: this.sheetShift,
+      transition: travel ? 'transform var(--pwa_slide, 2s) ease-in-out' : 'none',
+    };
+  }
+
   // Required - clip and sheet start together. Open from 0 is translate -100% → 0.
   private unroll(): void {
+    const clip = this.clip();
     const sheet = this.sheet();
-    if (!sheet) return;
+    if (!clip || !sheet) return;
     this.scrollTop = 0;
-    const target = measureSheet(this, sheet);
-    playRoll(this, sheet, 0, target, target);
+    const target = this.sheetPx(clip, sheet);
+    const from = Math.ceil(clip.getBoundingClientRect().height);
+    this.rollBetween(clip, sheet, from, target, target);
   }
 
   private rollUp(): void {
+    const clip = this.clip();
     const sheet = this.sheet();
-    if (!sheet) return;
+    if (!clip || !sheet) return;
     const current = Math.ceil(sheet.getBoundingClientRect().height);
-    playRoll(this, sheet, current, 0, current);
-    if (reducedMotion()) this.sliding = false;
+    const from = Math.ceil(clip.getBoundingClientRect().height);
+    this.rollBetween(clip, sheet, from, 0, current);
+    if (this.reduced()) this.sliding = false;
+  }
+
+  // Sheet height in px. The clip cap is released for the read and put back. No paint.
+  private sheetPx(clip: HTMLElement, sheet: HTMLElement): number {
+    const transition = clip.style.transition;
+    const maxHeight = clip.style.maxHeight;
+    const height = clip.style.height;
+    clip.style.transition = 'none';
+    clip.style.maxHeight = 'none';
+    clip.style.height = 'auto';
+    const px = Math.ceil(sheet.getBoundingClientRect().height);
+    clip.style.height = height;
+    clip.style.maxHeight = maxHeight;
+    clip.style.transition = transition;
+    return px;
+  }
+
+  // Ease the clip from → to. translateY = clip − sheetHeight, so the bottom stays glued.
+  private rollBetween(clip: HTMLElement, sheet: HTMLElement, from: number, to: number, sheetHeight: number): void {
+    const start = from - sheetHeight;
+    const end = to - sheetHeight;
+    const shift = (px: number) => `translate3d(0, ${px}px, 0)`;
+    if (this.reduced() || Math.abs(to - from) <= 1) {
+      if (to === 0) this.restShut();
+      else this.restOpen();
+      return;
+    }
+    const travel = 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out';
+    const move = 'transform var(--pwa_slide, 2s) ease-in-out';
+    clip.style.transition = 'none';
+    sheet.style.transition = 'none';
+    clip.style.height = `${Math.max(0, from)}px`;
+    clip.style.maxHeight = `${Math.max(0, from)}px`;
+    sheet.style.transform = shift(start);
+    void clip.offsetHeight;
+    clip.style.transition = travel;
+    sheet.style.transition = move;
+    clip.style.height = `${Math.max(0, to)}px`;
+    clip.style.maxHeight = `${Math.max(0, to)}px`;
+    sheet.style.transform = shift(end);
+    this.rollMotion = true;
+    this.clipHeight = `${Math.max(0, to)}px`;
+    this.sheetShift = shift(end);
   }
 
   // Required - visibility, pointer-events, and inert drop when the close reaches 0.
-  private onUnrollEnd = (event: Event) => {
+  // Only this clip. A form transition inside the sheet does not count.
+  private onClipEnd = (event: Event) => {
     if (!(event instanceof TransitionEvent)) return;
-    if (event.target !== this) return;
+    if (event.target !== event.currentTarget) return;
     if (event.propertyName !== 'max-height') return;
-    const sheet = this.sheet();
-    if (!sheet) return;
+    const clip = event.currentTarget;
+    if (!(clip instanceof HTMLElement)) return;
     if (this.drawer) {
-      releaseRoll(this, sheet);
+      this.restOpen();
       return;
     }
-    if (this.getBoundingClientRect().height > 1) return;
+    if (clip.getBoundingClientRect().height > 1) return;
     this.sliding = false;
-    this.style.height = '';
-    this.style.maxHeight = '';
-    sheet.style.transform = '';
+    this.restShut();
   };
 
   // Required - Escape closes. Tab stays inside the open drawer.
@@ -244,7 +356,6 @@ export class UserDrawer extends connect(store)(LitElement) {
   static get styles(): CSSResultArray { return [
     show,
     animation,
-    rollStyle,
     drawerShell,
     drawerStyle,
     exitStyle,
@@ -255,6 +366,18 @@ export class UserDrawer extends connect(store)(LitElement) {
     noticeStyle,
     verifiedStyle,
     css`
+    /* Required - this drawer's roll only. display:block so the sheet is not stretched. */
+    .drawer-clip {
+      display:                block;
+      overflow:               hidden;
+      min-height:             0;
+    }
+
+    .drawer-clip > .userDrawer {
+      height:                 auto;
+      align-self:             start;
+    }
+
     .exit > h3 {
       display:                flex;
       align-items:            center;
@@ -308,7 +431,13 @@ export class UserDrawer extends connect(store)(LitElement) {
   protected render() {
     return html`
 
-    <!-- Drawer Wrapper -->
+    <!-- Clip. The first render binds shut, with no transition. -->
+    <div
+      class="drawer-clip"
+      style=${styleMap(this.clipStyle())}
+      @transitionend=${this.onClipEnd}>
+
+    <!-- Drawer Wrapper. Its translate is bound here, not by a shared class. -->
     <section
       part="panel"
       role="dialog"
@@ -316,7 +445,8 @@ export class UserDrawer extends connect(store)(LitElement) {
       aria-labelledby="pwa-drawer-title"
       aria-hidden="${this.sliding ? 'false' : 'true'}"
       ?inert="${!this.sliding}"
-      class="userDrawer roll-sheet">
+      class="userDrawer"
+      style=${styleMap(this.sheetStyle())}>
 
       <!-- Exit Button -->
       <header class="exit" part="header">
@@ -334,7 +464,7 @@ export class UserDrawer extends connect(store)(LitElement) {
         ?on="${ this.user === false }">
 
         <div class=     "wrapper">
-          <div class=   "inner">
+          <div class=${classMap({ inner: true, motion: this.motion })}>
 
             <!-- Log-in State -->
             <form-login
@@ -342,12 +472,11 @@ export class UserDrawer extends connect(store)(LitElement) {
               ?hide-google="${this.hideGoogle}"
               exportparts="email: login-email, password: login-password, submit: login-submit, switch: login-switch, forgot: login-forgot, status: login-status, reveal: login-reveal, google: login-google"
               ?inert="${this.signup !== this.subscribe}"
-              class="content ${
-                this.signup        ===     /* If true, sign-up state */
-                this.subscribe    ?       /* If true, subscribe state */
-                'opened'          :
-                'closed'
-              } ">
+              class=${classMap({
+                content: true,
+                opened: this.signup === this.subscribe,
+                closed: this.signup !== this.subscribe,
+              })}>
             </form-login>
 
             <!-- Sign-up State -->
@@ -356,7 +485,11 @@ export class UserDrawer extends connect(store)(LitElement) {
               ?hide-google="${this.hideGoogle}"
               exportparts="email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch, status: signup-status, reveal: signup-reveal, notice: signup-notice, google: signup-google"
               ?inert="${this.signup === this.subscribe}"
-              class="content ${ !this.signup === this.subscribe ? 'opened' : 'closed' } ">
+              class=${classMap({
+                content: true,
+                opened: !this.signup === this.subscribe,
+                closed: !this.signup !== this.subscribe,
+              })}>
             </form-signup>
 
           </div>
@@ -387,6 +520,7 @@ export class UserDrawer extends connect(store)(LitElement) {
       </div>
 
     </section>
+    </div>
 
     `;
   }

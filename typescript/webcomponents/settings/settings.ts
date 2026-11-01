@@ -1,5 +1,6 @@
 import { css, CSSResultArray, html, LitElement, PropertyValues } from 'lit';
 import { state, customElement, property }           from 'lit/decorators.js';
+import { styleMap }                       from 'lit/directives/style-map.js';
 import { connect }                        from 'pwa-helpers/connect-mixin.js';
 import { store, AppState }                from '../../store.js';
 import { navigateAuth }                   from '../../redux/frontend.js';
@@ -11,8 +12,6 @@ import './input/password.js';
 import './input/delete.js';
 import './input/verify.js';
 import { listStyle } from '../form/css/list.js';
-import { animation } from '../css/animation.js';
-import { measureSheet, playRoll, releaseRoll, rollStyle } from '../css/roll.js';
 import { tapStyle } from '../css/tap.js';
 import { applyFirebaseConfig } from '../../firebase/attribute.js';
 import { accountTitle } from '../form/letters.js';
@@ -28,6 +27,16 @@ export class UserSettings extends connect(store)(LitElement) {
   @state() private email = '';
   @state() private login = false;
 
+  /** Clip size. auto is the resting panel. A px value is mid-roll. */
+  @state() private clipHeight = 'auto';
+
+  /** Sheet translate. none keeps the panel's bottom on the clip. */
+  @state() private sheetShift = 'none';
+
+  /** True only while this settings clip and sheet are easing. */
+  @state() private rollMotion = false;
+
+  private booted = false;
   private heldHeight: number | null = null;
 
   constructor() { super(); }
@@ -72,14 +81,30 @@ export class UserSettings extends connect(store)(LitElement) {
   static get styles():CSSResultArray { return [
     navigation,
     listStyle,
-    animation,
-    rollStyle,
     tapStyle,
     css`
 
       :host {
         display:          grid;
+        /* Required - this component's clock. It is not the drawer or the page login. */
+        --pwa_slide:      2s;
         background-color: var(--pwa_settings_background_color, #fffdf8);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        :host { --pwa_slide: 0s; }
+      }
+
+      /* Required - this settings roll only. Block, so the sheet is not stretched. */
+      .settings-clip {
+        display:          block;
+        overflow:         hidden;
+        min-height:       0;
+      }
+
+      .settings-sheet {
+        display:          block;
+        height:           auto;
       }
 
       form {
@@ -114,36 +139,101 @@ export class UserSettings extends connect(store)(LitElement) {
   }
 
   protected willUpdate(changed: PropertyValues): void {
-    if (!changed.has('profileTopic') || !this.login) return;
-    const clip = this.shadowRoot?.querySelector<HTMLElement>('.roll');
-    const sheet = clip?.querySelector<HTMLElement>('.roll-sheet');
-    if (!clip || !sheet || (clip.style.maxHeight !== 'none' && clip.style.maxHeight !== '')) return;
-    this.heldHeight = Math.ceil(sheet.getBoundingClientRect().height);
+    if (!this.booted || !this.login || changed.has('login')) return;
+    if (!changed.has('profileTopic')) return;
+    const clip = this.clip();
+    if (!clip) return;
+    this.heldHeight = Math.ceil(clip.getBoundingClientRect().height);
+    this.rollMotion = false;
+    this.clipHeight = `${this.heldHeight}px`;
+    this.sheetShift = 'translate3d(0, 0, 0)';
   }
 
   protected updated(changed: PropertyValues): void {
-    if (!changed.has('profileTopic') && !changed.has('login')) return;
-    const clip = this.shadowRoot?.querySelector<HTMLElement>('.roll');
-    const sheet = clip?.querySelector<HTMLElement>('.roll-sheet');
-    if (!clip || !sheet) return;
-    if (this.heldHeight == null) {
-      releaseRoll(clip, sheet);
-      return;
-    }
+    const boot = !this.booted;
+    this.booted = true;
+    if (boot || !changed.has('profileTopic') || !this.login || changed.has('login')) return;
+    const clip = this.clip();
+    const sheet = this.sheet();
+    if (!clip || !sheet || this.heldHeight == null) return;
     const from = this.heldHeight;
     this.heldHeight = null;
-    const to = measureSheet(clip, sheet);
-    if (Math.abs(to - from) > 1) playRoll(clip, sheet, from, to, to);
-    else releaseRoll(clip, sheet);
+    const to = Math.ceil(sheet.getBoundingClientRect().height);
+    if (Math.abs(to - from) > 1) this.rollBetween(clip, sheet, from, to, to);
+    else this.rest();
   }
 
-  private onRoll = (event: Event) => {
-    if (!(event instanceof TransitionEvent) || (event.propertyName !== 'max-height' && event.propertyName !== 'height')) return;
-    if (event.propertyName === 'height') return;
-    const clip = event.currentTarget as HTMLElement;
-    const sheet = clip.querySelector<HTMLElement>('.roll-sheet');
-    if (!sheet) return;
-    releaseRoll(clip, sheet);
+  private clip(): HTMLElement | null {
+    return this.shadowRoot?.querySelector('.settings-clip') ?? null;
+  }
+
+  private sheet(): HTMLElement | null {
+    return this.shadowRoot?.querySelector('.settings-sheet') ?? null;
+  }
+
+  private reduced(): boolean {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  // Required - resting panel. The first paint binds this, with no transition.
+  private rest(): void {
+    this.rollMotion = false;
+    this.clipHeight = 'auto';
+    this.sheetShift = 'none';
+  }
+
+  private clipStyle() {
+    const travel = this.rollMotion && !this.reduced();
+    return {
+      height: this.clipHeight,
+      maxHeight: this.clipHeight === 'auto' ? 'none' : this.clipHeight,
+      transition: travel
+        ? 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out'
+        : 'none',
+    };
+  }
+
+  private sheetStyle() {
+    const travel = this.rollMotion && !this.reduced();
+    return {
+      transform: this.sheetShift,
+      transition: travel ? 'transform var(--pwa_slide, 2s) ease-in-out' : 'none',
+    };
+  }
+
+  // Ease the clip from → to. translateY = clip − sheetHeight, so the bottom stays glued.
+  private rollBetween(clip: HTMLElement, sheet: HTMLElement, from: number, to: number, sheetHeight: number): void {
+    const start = from - sheetHeight;
+    const end = to - sheetHeight;
+    const shift = (px: number) => `translate3d(0, ${px}px, 0)`;
+    if (this.reduced() || Math.abs(to - from) <= 1) {
+      this.rest();
+      return;
+    }
+    const travel = 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out';
+    const move = 'transform var(--pwa_slide, 2s) ease-in-out';
+    clip.style.transition = 'none';
+    sheet.style.transition = 'none';
+    clip.style.height = `${Math.max(0, from)}px`;
+    clip.style.maxHeight = `${Math.max(0, from)}px`;
+    sheet.style.transform = shift(start);
+    void clip.offsetHeight;
+    clip.style.transition = travel;
+    sheet.style.transition = move;
+    clip.style.height = `${Math.max(0, to)}px`;
+    clip.style.maxHeight = `${Math.max(0, to)}px`;
+    sheet.style.transform = shift(end);
+    this.rollMotion = true;
+    this.clipHeight = `${Math.max(0, to)}px`;
+    this.sheetShift = shift(end);
+  }
+
+  // Only this clip. Nothing in another component, and no child form, ends the roll.
+  private onClipEnd = (event: Event) => {
+    if (!(event instanceof TransitionEvent)) return;
+    if (event.target !== event.currentTarget) return;
+    if (event.propertyName !== 'max-height') return;
+    this.rest();
   };
 
   protected render() {
@@ -214,9 +304,11 @@ export class UserSettings extends connect(store)(LitElement) {
       </nav>
 
       
-      <div class=     "wrapper">
-        <div class="inner roll" @transitionend="${this.onRoll}">
-          <div class="roll-sheet">
+      <div
+        class="settings-clip"
+        style=${styleMap(this.clipStyle())}
+        @transitionend=${this.onClipEnd}>
+          <div class="settings-sheet" style=${styleMap(this.sheetStyle())}>
 
 
           <!-- Page 1: Profile -->
@@ -290,7 +382,6 @@ export class UserSettings extends connect(store)(LitElement) {
           </section>
 
           </div>
-        </div>
       </div>
 
     `

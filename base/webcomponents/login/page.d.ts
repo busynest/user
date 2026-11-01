@@ -43,6 +43,11 @@ export declare class UserLogin extends UserLogin_base {
     private _notice;
     private _log;
     private _sign;
+    private motion;
+    private clipHeight;
+    private sheetShift;
+    private rollMotion;
+    private booted;
     private stopNotice;
     private heldHeight;
     constructor();
@@ -51,8 +56,14 @@ export declare class UserLogin extends UserLogin_base {
     stateChanged(state: AppState): void;
     protected willUpdate(changed: PropertyValues): void;
     protected updated(changed: PropertyValues): void;
+    private clip;
     private sheet;
-    private onRoll;
+    private reduced;
+    private rest;
+    private clipStyle;
+    private sheetStyle;
+    private rollBetween;
+    private onClipEnd;
     static get styles(): CSSResultArray;
     protected render(): import("lit-html").TemplateResult<1>;
 }

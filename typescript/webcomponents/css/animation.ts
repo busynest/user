@@ -1,12 +1,15 @@
 import { css, CSSResult } from "lit";
 
-/* --pwa_slide is the only duration. The drawer unrolls with max-height over its
-   measured height. Forms still translate inside the cell. slide-out is not used. */
+/* --pwa_slide is the form-swap duration on this host only.
+   The drawer, page login, and settings each roll themselves.
+   Nothing here transitions :host height. slide-out is not used.
+   .content has no transition until .inner also has .motion,
+   so the first paint is the resting open/closed pair. */
 
 export const animation : CSSResult = css`
 
 :host {
-    /* Required - the only duration. Roll clip, roll sheet, and form swap all read it. */
+    /* Required - this host's clock. It does not inherit onto a sibling component. */
     --pwa_slide:                            2s;
 }
 
@@ -41,9 +44,9 @@ export const animation : CSSResult = css`
 
     backface-visibility:                    hidden;
 
-    /* Required - same duration as the drawer. Hide the leaving form when the transform ends. */
-    transition:                             transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear var(--pwa_slide, 2s);
-    -webkit-transition:                     transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear var(--pwa_slide, 2s);
+    /* Required - no transition on the first paint. .motion on .inner arms it after boot. */
+    transition:                             none;
+    -webkit-transition:                     none;
 
     position:relative;
     z-index: 1;
@@ -61,6 +64,16 @@ export const animation : CSSResult = css`
     position:                               relative; /* Required - this form sets the panel height */
     align-self:                             start; /* Required - keep the Update button under its field */
     z-index:                                3;
+}
+
+/* Required - arm the swap only after the first paint. Closed stays put until then.
+   The class lives on this component's .inner, so another component cannot set it. */
+.motion .content {
+    transition:                             transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear var(--pwa_slide, 2s);
+    -webkit-transition:                     transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear var(--pwa_slide, 2s);
+}
+
+.motion .opened {
     /* Required - show the arriving form immediately. The duration matches --pwa_slide. */
     transition:                             transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear 0s;
     -webkit-transition:                     transform var(--pwa_slide, 2s) ease-in-out, visibility 0s linear 0s;
@@ -90,8 +103,9 @@ export const animation : CSSResult = css`
 `;
 
 /* Drawer shell. Imported by user-drawer only.
-   :host is the clip (max-height 0 ↔ measured px). .userDrawer translates
-   -100% → 0 on the same --pwa_slide so its bottom stays on the clip's bottom. */
+   No height or transform transition here. The clip's style binding does that,
+   and only after a user change. max-height: 0 with no transition is the
+   closed backstop, so the first paint cannot ease shut. */
 export const drawerShell : CSSResult = css`
 
   :host {
@@ -99,22 +113,12 @@ export const drawerShell : CSSResult = css`
     min-height:             0px; /* Required - the box must be allowed to grow from 0 */
     visibility:             hidden;
     pointer-events:         none;
-    transition:             height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out;
-    -webkit-transition:     height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out;
   }
 
   :host([sliding]) {
+    max-height:             none;
     visibility:             visible;
     pointer-events:         auto;
-  }
-
-  .userDrawer {
-    /* Required - parked above the clip. :host([drawer]) rolls it to 0. */
-    transform:              translate3d(0, -100%, 0);
-  }
-
-  :host([drawer]) .userDrawer {
-    transform:              translate3d(0, 0, 0);
   }
 
 `;

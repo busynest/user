@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { css, html, LitElement } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../store.js';
 import { navigateAuth } from '../../redux/frontend.js';
@@ -20,8 +21,6 @@ import './input/password.js';
 import './input/delete.js';
 import './input/verify.js';
 import { listStyle } from '../form/css/list.js';
-import { animation } from '../css/animation.js';
-import { measureSheet, playRoll, releaseRoll, rollStyle } from '../css/roll.js';
 import { tapStyle } from '../css/tap.js';
 import { applyFirebaseConfig } from '../../firebase/attribute.js';
 import { accountTitle } from '../form/letters.js';
@@ -33,20 +32,22 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         this.name = '';
         this.email = '';
         this.login = false;
+        this.clipHeight = 'auto';
+        this.sheetShift = 'none';
+        this.rollMotion = false;
+        this.booted = false;
         this.heldHeight = null;
         this.onSubmit = (event) => {
             event.preventDefault();
         };
-        this.onRoll = (event) => {
-            if (!(event instanceof TransitionEvent) || (event.propertyName !== 'max-height' && event.propertyName !== 'height'))
+        this.onClipEnd = (event) => {
+            if (!(event instanceof TransitionEvent))
                 return;
-            if (event.propertyName === 'height')
+            if (event.target !== event.currentTarget)
                 return;
-            const clip = event.currentTarget;
-            const sheet = clip.querySelector('.roll-sheet');
-            if (!sheet)
+            if (event.propertyName !== 'max-height')
                 return;
-            releaseRoll(clip, sheet);
+            this.rest();
         };
     }
     connectedCallback() {
@@ -80,14 +81,30 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         return [
             navigation,
             listStyle,
-            animation,
-            rollStyle,
             tapStyle,
             css `
 
       :host {
         display:          grid;
+        /* Required - this component's clock. It is not the drawer or the page login. */
+        --pwa_slide:      2s;
         background-color: var(--pwa_settings_background_color, #fffdf8);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        :host { --pwa_slide: 0s; }
+      }
+
+      /* Required - this settings roll only. Block, so the sheet is not stretched. */
+      .settings-clip {
+        display:          block;
+        overflow:         hidden;
+        min-height:       0;
+      }
+
+      .settings-sheet {
+        display:          block;
+        height:           auto;
       }
 
       form {
@@ -121,32 +138,90 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         store.dispatch(navigateAuth(name));
     }
     willUpdate(changed) {
-        if (!changed.has('profileTopic') || !this.login)
+        if (!this.booted || !this.login || changed.has('login'))
             return;
-        const clip = this.shadowRoot?.querySelector('.roll');
-        const sheet = clip?.querySelector('.roll-sheet');
-        if (!clip || !sheet || (clip.style.maxHeight !== 'none' && clip.style.maxHeight !== ''))
+        if (!changed.has('profileTopic'))
             return;
-        this.heldHeight = Math.ceil(sheet.getBoundingClientRect().height);
+        const clip = this.clip();
+        if (!clip)
+            return;
+        this.heldHeight = Math.ceil(clip.getBoundingClientRect().height);
+        this.rollMotion = false;
+        this.clipHeight = `${this.heldHeight}px`;
+        this.sheetShift = 'translate3d(0, 0, 0)';
     }
     updated(changed) {
-        if (!changed.has('profileTopic') && !changed.has('login'))
+        const boot = !this.booted;
+        this.booted = true;
+        if (boot || !changed.has('profileTopic') || !this.login || changed.has('login'))
             return;
-        const clip = this.shadowRoot?.querySelector('.roll');
-        const sheet = clip?.querySelector('.roll-sheet');
-        if (!clip || !sheet)
+        const clip = this.clip();
+        const sheet = this.sheet();
+        if (!clip || !sheet || this.heldHeight == null)
             return;
-        if (this.heldHeight == null) {
-            releaseRoll(clip, sheet);
-            return;
-        }
         const from = this.heldHeight;
         this.heldHeight = null;
-        const to = measureSheet(clip, sheet);
+        const to = Math.ceil(sheet.getBoundingClientRect().height);
         if (Math.abs(to - from) > 1)
-            playRoll(clip, sheet, from, to, to);
+            this.rollBetween(clip, sheet, from, to, to);
         else
-            releaseRoll(clip, sheet);
+            this.rest();
+    }
+    clip() {
+        return this.shadowRoot?.querySelector('.settings-clip') ?? null;
+    }
+    sheet() {
+        return this.shadowRoot?.querySelector('.settings-sheet') ?? null;
+    }
+    reduced() {
+        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+    rest() {
+        this.rollMotion = false;
+        this.clipHeight = 'auto';
+        this.sheetShift = 'none';
+    }
+    clipStyle() {
+        const travel = this.rollMotion && !this.reduced();
+        return {
+            height: this.clipHeight,
+            maxHeight: this.clipHeight === 'auto' ? 'none' : this.clipHeight,
+            transition: travel
+                ? 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out'
+                : 'none',
+        };
+    }
+    sheetStyle() {
+        const travel = this.rollMotion && !this.reduced();
+        return {
+            transform: this.sheetShift,
+            transition: travel ? 'transform var(--pwa_slide, 2s) ease-in-out' : 'none',
+        };
+    }
+    rollBetween(clip, sheet, from, to, sheetHeight) {
+        const start = from - sheetHeight;
+        const end = to - sheetHeight;
+        const shift = (px) => `translate3d(0, ${px}px, 0)`;
+        if (this.reduced() || Math.abs(to - from) <= 1) {
+            this.rest();
+            return;
+        }
+        const travel = 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out';
+        const move = 'transform var(--pwa_slide, 2s) ease-in-out';
+        clip.style.transition = 'none';
+        sheet.style.transition = 'none';
+        clip.style.height = `${Math.max(0, from)}px`;
+        clip.style.maxHeight = `${Math.max(0, from)}px`;
+        sheet.style.transform = shift(start);
+        void clip.offsetHeight;
+        clip.style.transition = travel;
+        sheet.style.transition = move;
+        clip.style.height = `${Math.max(0, to)}px`;
+        clip.style.maxHeight = `${Math.max(0, to)}px`;
+        sheet.style.transform = shift(end);
+        this.rollMotion = true;
+        this.clipHeight = `${Math.max(0, to)}px`;
+        this.sheetShift = shift(end);
     }
     render() {
         if (!this.login) {
@@ -215,9 +290,11 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
       </nav>
 
       
-      <div class=     "wrapper">
-        <div class="inner roll" @transitionend="${this.onRoll}">
-          <div class="roll-sheet">
+      <div
+        class="settings-clip"
+        style=${styleMap(this.clipStyle())}
+        @transitionend=${this.onClipEnd}>
+          <div class="settings-sheet" style=${styleMap(this.sheetStyle())}>
 
 
           <!-- Page 1: Profile -->
@@ -291,7 +368,6 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
           </section>
 
           </div>
-        </div>
       </div>
 
     `;
@@ -317,6 +393,18 @@ __decorate([
     state(),
     __metadata("design:type", Object)
 ], UserSettings.prototype, "login", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserSettings.prototype, "clipHeight", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserSettings.prototype, "sheetShift", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserSettings.prototype, "rollMotion", void 0);
 UserSettings = __decorate([
     customElement('user-settings'),
     __metadata("design:paramtypes", [])
