@@ -33,14 +33,19 @@ declare const InputName_base: (new (...args: any[]) => {
     readonly isConnected: boolean;
 }) & typeof LitElement;
 export declare class InputName extends InputName_base {
-    value: string;
     private login;
+    private draft;
+    private busy;
+    private status;
+    private tone;
+    private dirty;
     constructor();
     stateChanged(state: AppState): void;
     static get styles(): CSSResultArray;
     render(): import("lit-html").TemplateResult<1>;
     private default;
     private handleInput;
+    private show;
     private alertProfile;
 }
 declare global {

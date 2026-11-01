@@ -42,12 +42,16 @@ export declare class UserSettings extends UserSettings_base {
     empty: string;
     private profileTopic;
     private name;
+    private email;
+    private login;
     constructor();
     connectedCallback(): void;
-    protected firstUpdated(): void;
+    disconnectedCallback(): void;
+    private onSubmit;
     private onTabKey;
     stateChanged(state: AppState): void;
     static get styles(): CSSResultArray;
+    private openTab;
     protected render(): import("lit-html").TemplateResult<1>;
 }
 declare global {

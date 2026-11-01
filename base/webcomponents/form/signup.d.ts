@@ -3,10 +3,16 @@ export declare class FormSignup extends LitElement {
     source: string;
     private email;
     private password;
+    private status;
+    private tone;
+    private busy;
+    private showPassword;
+    private notice;
     constructor();
     static get styles(): import("lit").CSSResult[];
     protected render(): import("lit-html").TemplateResult<1>;
     private change;
+    private show;
     private readFields;
     private _handleSubmit;
     private handleEmail;

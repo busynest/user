@@ -8,7 +8,7 @@ const initialState/*: backendAuth*/ = {
   anon:             false,
 
   userId:           '',
-  name:             'John Doe',
+  name:             '',
   email:            '',
   photoURL:         '',
   phone:            '',

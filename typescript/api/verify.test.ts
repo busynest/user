@@ -215,7 +215,8 @@ describe('email verification', () => {
     expect(signups.seen).toHaveLength(1);
     expect(sent.seen).toHaveLength(0);
     expect(errors.seen[0].detail.code).toBe('auth/network-request-failed');
-    expect(window.alert).toHaveBeenCalledWith('Network problem. Try again.');
+    expect(el.shadowRoot!.textContent).toContain('Network problem. Try again.');
+    expect(window.alert).not.toHaveBeenCalled();
     signups.stop();
     sent.stop();
     errors.stop();
@@ -367,7 +368,7 @@ describe('email verification', () => {
     expect(firebase.sendEmailVerification).toHaveBeenCalledOnce();
     expect(sent.seen[0].detail).toEqual({ email: 'ada@example.com' });
     expect(live.textContent).toBe(sentMessage);
-    expect(window.alert).toHaveBeenCalledWith(sentMessage);
+    expect(window.alert).not.toHaveBeenCalled();
     expect(focus).toHaveBeenCalled();
     expect(button(el).disabled).toBe(true);
     expect(button(el).textContent).toContain('Send again in 45s');
@@ -395,7 +396,7 @@ describe('email verification', () => {
       expect(detail.message).toContain(code);
       expect(status(el).textContent).toBe(sentence);
       expect(status(el).classList.contains('error')).toBe(true);
-      expect(window.alert).toHaveBeenCalledWith(sentence);
+      expect(window.alert).not.toHaveBeenCalled();
       expect(button(el).disabled).toBe(false);
       expect(button(el).textContent).toContain('Resend verification email');
       el.remove();

@@ -59,6 +59,11 @@ export interface PwaDrawerToggleDetail {
   open: boolean;
 }
 
+/** Required - pwa-settings. url is empty when Settings stays on this page. */
+export interface PwaSettingsDetail {
+  url: string;
+}
+
 /** Required - pwa-auth-error. */
 export interface PwaAuthErrorDetail {
   code:     string;
@@ -77,6 +82,7 @@ export interface PwaEventMap {
   'pwa-password-changed': CustomEvent<PwaPasswordChangedDetail>;
   'pwa-reset-sent':       CustomEvent<PwaResetSentDetail>;
   'pwa-drawer-toggle':    CustomEvent<PwaDrawerToggleDetail>;
+  'pwa-settings':         CustomEvent<PwaSettingsDetail>;
   'pwa-auth-error':       CustomEvent<PwaAuthErrorDetail>;
 }
 

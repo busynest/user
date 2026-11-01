@@ -51,6 +51,16 @@ export const iconStyles = css`
     width:                    100%;
     height:                   100%;
     margin:                   auto;
-  }  
+  }
+
+  .initials {
+    display:                  grid;
+    place-items:              center;
+    width:                    100%;
+    height:                   100%;
+    font-weight:              600;
+    font-size:                0.85rem;
+    letter-spacing:           0.04em;
+  }
   
 `;

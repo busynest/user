@@ -48,8 +48,8 @@
     </header>
 
     <!-- Drop-down drawer. subscribe starts on the sign-up form. -->
-    <user-drawer url="./settings" subscribe>
-      <a slot="before" href="./settings">settings</a>
+    <user-drawer subscribe>
+      <a slot="before" href="#settings">settings</a>
     </user-drawer>
 
     <main class="wrap">
@@ -59,7 +59,7 @@
         <h2>Subscribe, then a photo</h2>
         <p class="note">Signed out, this is the subscribe button. Signed in, it shows the account photo. Either state opens the drawer.</p>
         <div class="stage">
-          <user-icon empty="../source/empty.jpg" subscribe></user-icon>
+          <user-icon subscribe></user-icon>
         </div>
       </section>
 
@@ -81,12 +81,12 @@
         </div>
       </section>
 
-      <section class="card">
+      <section class="card" id="settings">
         <p class="kicker">Settings</p>
         <h2>Photo, profile, password, delete</h2>
         <p class="note">Four tabs. The photo falls back to the empty image until an upload lands in storage.</p>
         <div class="panel">
-          <user-settings empty="../source/empty.jpg"></user-settings>
+          <user-settings></user-settings>
         </div>
       </section>
 

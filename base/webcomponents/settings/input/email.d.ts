@@ -36,11 +36,16 @@ export declare class ContactEmail extends ContactEmail_base {
     email: string;
     private login;
     private mail;
+    private busy;
+    private status;
+    private tone;
+    private showPassword;
     constructor();
     stateChanged(state: AppState): void;
     private handleEmail;
     static get styles(): CSSResultArray;
     render(): import("lit-html").TemplateResult<1>;
+    private show;
     private saveEmail;
 }
 declare global {

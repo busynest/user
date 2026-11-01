@@ -18,9 +18,12 @@ import { closeSign }       from '../../redux/frontend.js';
 import { logOut }           from '../../firebase/interface.js';
 import { applyFirebaseConfig } from '../../firebase/attribute.js';
 
-import { pwaDrawerToggleName } from '../../events/names.js';
+import { pwaDrawerToggleName, pwaSettings } from '../../events/names.js';
 import { emitElement } from '../../events/emit.js';
 import { deepActive, focusable } from './keys.js';
+import { accountTitle } from '../form/letters.js';
+import { noticeStyle } from '../form/css/notice.js';
+import { onVerificationNotice, verificationNotice } from '../form/notice.js';
 
 import '../form/login.js';
 import '../form/signup.js';
@@ -40,12 +43,16 @@ export class UserDrawer extends connect(store)(LitElement) {
   @property({type:Boolean, attribute: true, reflect: true}) public subscribe = false; // Drawer State
   
   @state() private name         = "";     // String Username
+  @state() private email        = "";
+  @state() private verified     = false;
+  @state() private notice       = "";
   @state() private user         = false;  // True user is logged-in, false, user is logged-out, state
   @state() private signup       = false;  // True sign-up, false log-in, State
 
   private wasOpen = false;
   private sawOpen = false;
   private returnFocus: HTMLElement | null = null;
+  private stopNotice: (() => void) | null = null;
   
   constructor() { super(); }
 
@@ -53,16 +60,22 @@ export class UserDrawer extends connect(store)(LitElement) {
     applyFirebaseConfig(this);
     super.connectedCallback();
     this.addEventListener('keydown', this.onKey);
+    this.notice = verificationNotice();
+    this.stopNotice = onVerificationNotice(() => { this.notice = verificationNotice(); });
   }
 
   override disconnectedCallback(): void {
     this.removeEventListener('keydown', this.onKey);
+    this.stopNotice?.();
+    this.stopNotice = null;
     super.disconnectedCallback();
   }
 
   stateChanged(state: AppState) {
     const open        = state.frontend!.drawer;         // Drawer State
     this.name         = state.backend!.name;            // User Name
+    this.email        = state.backend!.email;
+    this.verified     = Boolean(state.backend?.verified);
     this.drawer       = open;
     this.user         = state.frontend!.login;          // Logged in-out State
     this.signup       = state.frontend!.registerOne;    // Sign-up State
@@ -148,9 +161,11 @@ export class UserDrawer extends connect(store)(LitElement) {
     lineStyle,
     listStyle,
     tapStyle,
+    noticeStyle,
     css`
     .close:focus-visible,
-    .leave:focus-visible {
+    .leave:focus-visible,
+    .settings:focus-visible {
       outline:                2px solid var(--pwa_action_border_color, #214f34);
       outline-offset:         2px;
     }
@@ -193,7 +208,7 @@ export class UserDrawer extends connect(store)(LitElement) {
       <!-- Exit Button -->
       <header class="exit" part="header">
         <div></div>
-        <h3 id="pwa-drawer-title" part="title">${ this.user === false ? this.signup === this.subscribe ? `Login` : `Subscribe` : this.name }</h3>
+        <h3 id="pwa-drawer-title" part="title">${ this.user === false ? this.signup === this.subscribe ? `Login` : `Subscribe` : accountTitle(this.name, this.email) }</h3>
         <button class="close" part="close" type="button" aria-label="Close">${close}</button>
       </header>
 
@@ -208,7 +223,7 @@ export class UserDrawer extends connect(store)(LitElement) {
             <!-- Log-in State -->
             <form-login
               source="drawer"
-              exportparts="email: login-email, password: login-password, submit: login-submit, switch: login-switch"
+              exportparts="email: login-email, password: login-password, submit: login-submit, switch: login-switch, forgot: login-forgot, status: login-status, reveal: login-reveal"
               ?inert="${this.signup !== this.subscribe}"
               class="content ${
                 this.signup        ===     /* If true, sign-up state */
@@ -221,7 +236,7 @@ export class UserDrawer extends connect(store)(LitElement) {
             <!-- Sign-up State -->
             <form-signup
               source="drawer"
-              exportparts="email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch"
+              exportparts="email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch, status: signup-status, reveal: signup-reveal, notice: signup-notice"
               ?inert="${this.signup === this.subscribe}"
               class="content ${ !this.signup === this.subscribe ? 'opened' : 'closed' } ">
             </form-signup>
@@ -236,11 +251,16 @@ export class UserDrawer extends connect(store)(LitElement) {
         class="spec setLog"
         ?on="${ this.user === true }">
 
+          <!-- Required - an empty slot renders nothing. No fallback text. -->
           <slot name="before"></slot>
 
-          <a href="${this.url}" part="settings">Settings</a>
+          ${this.settingsControl()}
 
           <slot></slot>
+
+          ${this.user && this.notice && !this.verified ? html`
+            <p class="notice" part="notice" role="status" aria-live="polite">Check your inbox for the verification email. You can still sign in.</p>
+          ` : ''}
 
           <button class="leave" part="logout" type="button" aria-label="Log out">Log out</button>
           
@@ -250,6 +270,38 @@ export class UserDrawer extends connect(store)(LitElement) {
 
     `;
   }
+
+  // Required - url is the href. Empty url stays on this page and tells the host.
+  private destination(): string {
+    return (this.url || '').trim();
+  }
+
+  private settingsControl() {
+    const url = this.destination();
+    if (url) {
+      return html`<a href="${url}" part="settings" @click="${this.onSettings}">Settings</a>`;
+    }
+    return html`<button type="button" class="settings" part="settings" @click="${this.onSettings}">Settings</button>`;
+  }
+
+  private onSettings = (event: Event) => {
+    const url = this.destination();
+    const proceed = this.dispatchEvent(new CustomEvent(pwaSettings, {
+      bubbles: true,
+      composed: true,
+      cancelable: true,
+      detail: { url }
+    }));
+    if (!proceed) {
+      event.preventDefault();
+      return;
+    }
+    store.dispatch(closeSign());
+    if (url) return;
+    event.preventDefault();
+    const settings = document.querySelector('user-settings');
+    if (settings instanceof HTMLElement) settings.scrollIntoView({ block: 'nearest' });
+  };
 
 }
 

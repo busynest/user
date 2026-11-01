@@ -29,6 +29,7 @@ vi.mock('firebase/auth', () => ({
     return () => undefined;
   }),
   signInWithEmailAndPassword: firebase.signInWithEmailAndPassword,
+  sendPasswordResetEmail: vi.fn(async () => undefined),
   signOut: firebase.signOut
 }));
 
@@ -96,10 +97,12 @@ describe('sign-in and sign-out', () => {
     email.value = 'a';
     password.value = 'secret';
     el.shadowRoot!.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await (el as unknown as { updateComplete: Promise<unknown> }).updateComplete;
 
     expect(firebase.signInWithEmailAndPassword).not.toHaveBeenCalled();
     expect(errors.seen[0].detail).toEqual({ code: 'pwa/missing-email', message: 'Enter an email address.' });
-    expect(window.alert).toHaveBeenCalledWith('Enter an email address.');
+    expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('Enter an email address.');
+    expect(window.alert).not.toHaveBeenCalled();
     errors.stop();
   });
 

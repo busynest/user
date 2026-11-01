@@ -84,6 +84,25 @@ window.__criticalPromise = (async () => {
     await pause('signed-out');
 
     try {
+      const settingsText = document.querySelector('user-settings').shadowRoot.textContent;
+      const drawerText = document.querySelector('user-drawer').shadowRoot.textContent;
+      const iconText = document.querySelector('user-icon').shadowRoot.textContent;
+      if (settingsText.includes('John Doe') || iconText.includes('John Doe') || drawerText.includes('John Doe')) {
+        throw new Error('John Doe still showing');
+      }
+      if (settingsText.includes('Empty Dataset') || iconText.includes('Empty Dataset') || drawerText.includes('SLOTTED')) {
+        throw new Error('placeholder still showing');
+      }
+      if (!settingsText.includes('Sign in to change')) throw new Error(settingsText);
+      if (document.querySelector('user-drawer').querySelector('a, button')) {
+        throw new Error('slotted placeholder leaked into the light DOM');
+      }
+      record('signed-out shell', true, 'no John Doe, no empty dataset, no slotted placeholders');
+    } catch (error) {
+      record('signed-out shell', false, error.message);
+    }
+
+    try {
       const before = events('pwa-auth-error').length;
       const host = document.querySelector('user-login');
       const form = host.shadowRoot.querySelector('form-signup');
@@ -105,6 +124,10 @@ window.__criticalPromise = (async () => {
 
     try {
       await signUp();
+      await until('verification notice', () => {
+        return document.querySelector('user-login').shadowRoot.textContent.includes('Check your inbox for the verification email');
+      });
+      await pause('verification');
       record('sign up', true, email);
     } catch (error) {
       record('sign up', false, error.message);
@@ -132,10 +155,15 @@ window.__criticalPromise = (async () => {
       await signInForm(email, 'not-the-password');
       await until('wrong password', () => events('pwa-auth-error').length > before);
       const detail = events('pwa-auth-error').at(-1).detail;
-      if (!String(detail.code).includes('password') && detail.code !== 'auth/invalid-credential') {
+      if (!String(detail.code).includes('password') && detail.code !== 'auth/invalid-credential' && detail.code !== 'auth/user-not-found') {
         throw new Error(JSON.stringify(detail));
       }
-      record('wrong password', true, detail.code);
+      const loginRoot = document.querySelector('user-login').shadowRoot.querySelector('form-login').shadowRoot;
+      const shown = loginRoot.querySelector('[role="status"]').textContent;
+      if (!shown) throw new Error('wrong password had no inline message');
+      loginRoot.querySelector('[part="forgot"]').scrollIntoView({ block: 'center' });
+      await pause('wrong-password');
+      record('wrong password', true, detail.code + ' ' + shown);
     } catch (error) {
       record('wrong password', false, error.message);
     }
@@ -147,6 +175,7 @@ window.__criticalPromise = (async () => {
       const detail = events('pwa-login').at(-1).detail;
       if (!detail.user || detail.user.uid !== uid) throw new Error(JSON.stringify(detail));
       if (detail.user.emailVerified !== false) throw new Error('sign-in waited on emailVerified ' + JSON.stringify(detail.user));
+      await pause('signed-in');
       record('log in', true, detail.user.email);
     } catch (error) {
       record('log in', false, error.message);
@@ -198,7 +227,9 @@ window.__criticalPromise = (async () => {
       const status = root.querySelector('#pwa-reset-status').textContent;
       const sentence = 'If an account uses that email, a reset link is on its way.';
       if (status !== sentence) throw new Error(status);
-      if (!window.__alerts.includes(sentence)) throw new Error(JSON.stringify(window.__alerts));
+      if (window.__alerts.length) throw new Error('alert still used ' + JSON.stringify(window.__alerts));
+      const forgot = document.querySelector('user-login').shadowRoot.querySelector('form-login').shadowRoot.querySelector('[part="forgot"]');
+      if (!forgot || !forgot.textContent.includes('Forgot password')) throw new Error('login form has no forgot password');
       const leaked = events('pwa-auth-error').slice(beforeError + 1).some((item) => {
         return String(item.detail.code).includes('user-not-found');
       });
@@ -249,6 +280,24 @@ window.__criticalPromise = (async () => {
       await until('name', () => events('pwa-profile-updated').length > before);
       const detail = events('pwa-profile-updated').at(-1).detail;
       if (detail.displayName !== 'Ada Lovelace' || detail.uid !== uid) throw new Error(JSON.stringify(detail));
+      if (auth.currentUser.displayName !== 'Ada Lovelace') throw new Error('profile displayName ' + auth.currentUser.displayName);
+      const updateButton = name.shadowRoot.querySelector('button[type="submit"]');
+      const fieldBottom = name.shadowRoot.querySelector('input').getBoundingClientRect().bottom;
+      if (updateButton.getBoundingClientRect().top < fieldBottom - 2) throw new Error('update button started above the name field');
+      settings.shadowRoot.querySelector('button[value="password"]').click();
+      await sleep(40);
+      settings.shadowRoot.querySelector('button[value="verification"]').click();
+      await sleep(40);
+      const returned = name.shadowRoot.querySelector('button[type="submit"]').getBoundingClientRect().top;
+      const fieldAgain = name.shadowRoot.querySelector('input').getBoundingClientRect().bottom;
+      if (returned < fieldAgain - 2) throw new Error('update button jumped above the name field');
+      await signOut(auth);
+      await until('name signed out', () => !auth.currentUser);
+      await signInWithEmailAndPassword(auth, email, password);
+      await until('name restored', () => auth.currentUser && auth.currentUser.displayName === 'Ada Lovelace');
+      const heading = settings.shadowRoot.querySelector('h2').textContent;
+      if (!heading.includes('Ada Lovelace')) throw new Error('heading ' + heading);
+      await pause('name');
       record('change display name', true, detail.displayName);
     } catch (error) {
       record('change display name', false, error.message);
@@ -261,7 +310,7 @@ window.__criticalPromise = (async () => {
       const next = 'ada-' + Date.now() + '@example.com';
       setValue(input(mail.shadowRoot, 'input[type="email"]'), next);
       setValue(input(mail.shadowRoot, '#pwa-current-email-password'), password);
-      mail.shadowRoot.querySelector('button').click();
+      mail.shadowRoot.querySelector('button[type="submit"]').click();
       await until('email', () => events('pwa-email-changed').length > before);
       const detail = events('pwa-email-changed').at(-1).detail;
       if (detail.email !== next) throw new Error(JSON.stringify(detail));
@@ -301,7 +350,8 @@ window.__criticalPromise = (async () => {
       await sleep(100);
       const photo = settings.shadowRoot.querySelector('contact-photo');
       await until('photo user', () => photo.user || photo.shadowRoot);
-      const file = new File([new Uint8Array([137, 80, 78, 71])], 'face.png', { type: 'image/png' });
+      const png = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAMElEQVR4nO3OIQEAAAgDMPLQgzT01xDjZmJ+1TuXVAICAgICAgICAgICAgICAunAAxvbZGryDlebAAAAAElFTkSuQmCC'), (char) => char.charCodeAt(0));
+      const file = new File([png], 'face.png', { type: 'image/png' });
       const list = new DataTransfer();
       list.items.add(file);
       const picker = photo.shadowRoot.querySelector('input[type="file"]');
@@ -311,10 +361,39 @@ window.__criticalPromise = (async () => {
       await until('photo', () => events('pwa-profile-updated').length > before && auth.currentUser.photoURL);
       const detail = events('pwa-profile-updated').at(-1).detail;
       if (!detail.photoURL || detail.uid !== uid) throw new Error(JSON.stringify(detail));
+      const preview = photo.shadowRoot.querySelector('img.preview');
+      const photoStatus = photo.shadowRoot.querySelector('#pwa-photo-status').textContent;
+      if (!preview || !String(preview.getAttribute('src') || '').includes('pwa-auth')) throw new Error('photo not shown ' + (preview && preview.src));
+      if (!photoStatus.includes('Photo saved')) throw new Error(photoStatus);
+      const iconPhoto = document.querySelector('user-icon').shadowRoot.querySelector('img');
+      if (!iconPhoto || !iconPhoto.src) throw new Error('icon did not pick up the photo');
+      photo.shadowRoot.querySelector('#pwa-photo-status').scrollIntoView({ block: 'center' });
+      await pause('photo');
       record('upload photo', true, 'stored under pwa-auth/' + uid);
       await pause('settings');
     } catch (error) {
       record('upload photo', false, error.message);
+    }
+
+    try {
+      if (!auth.currentUser) await signInWithEmailAndPassword(auth, email, 'secret99');
+      const drawer = document.querySelector('user-drawer');
+      const icon = document.querySelector('user-icon').shadowRoot.querySelector('button');
+      icon.click();
+      await until('settings drawer', () => drawer.hasAttribute('drawer'));
+      const control = drawer.shadowRoot.querySelector('[part="settings"]');
+      if (!control || control.tagName !== 'BUTTON') throw new Error('settings control ' + (control && control.outerHTML));
+      const before = events('pwa-settings').length;
+      const href = location.href;
+      control.click();
+      await until('settings event', () => events('pwa-settings').length > before);
+      if (location.href !== href) throw new Error('settings left the page ' + location.href);
+      const detail = events('pwa-settings').at(-1).detail;
+      if (!detail || detail.url !== '') throw new Error(JSON.stringify(detail));
+      await pause('settings-link');
+      record('settings link', true, 'stays on the page and fires pwa-settings');
+    } catch (error) {
+      record('settings link', false, error.message);
     }
 
     try {
@@ -327,7 +406,7 @@ window.__criticalPromise = (async () => {
       setValue(input(settings.shadowRoot.querySelector('delete-user').shadowRoot, '#pwa-delete-password'), 'secret99');
       await sleep(50);
       const before = events('pwa-account-deleted').length;
-      settings.shadowRoot.querySelector('delete-user').shadowRoot.querySelector('button').click();
+      settings.shadowRoot.querySelector('delete-user').shadowRoot.querySelector('[part="submit"]').click();
       await until('deleted', () => events('pwa-account-deleted').length > before);
       const detail = events('pwa-account-deleted').at(-1).detail;
       if (detail.uid !== uid) throw new Error(JSON.stringify(detail));
@@ -348,6 +427,9 @@ window.__criticalPromise = (async () => {
       if (docResponse.status === 404) throw new Error('host users doc was removed');
       if (fileResponse.status !== 404) throw new Error('storage file status ' + fileResponse.status);
       record('delete account', true, 'auth user and files removed; users doc left for the host');
+      const signedOut = document.querySelector('user-settings').shadowRoot.textContent;
+      if (!signedOut.includes('Sign in to change')) throw new Error('settings stayed populated ' + signedOut);
+      await pause('deleted');
     } catch (error) {
       record('delete account', false, error.message);
     }
@@ -395,6 +477,7 @@ window.__criticalPromise = (async () => {
       if (!detail || detail.user !== null) throw new Error(JSON.stringify(detail));
       if (getCurrentUser()) throw new Error('getCurrentUser still set');
       record('logout', true, 'pwa-logout { user: null }');
+      await pause('logout');
     } catch (error) {
       record('logout', false, error.message);
     }

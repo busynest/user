@@ -9,6 +9,7 @@ import {
   pwaEmailChanged,
   pwaPasswordChanged,
   pwaResetSent,
+  pwaSettings,
   pwaLogin,
   pwaLogout,
   pwaProfileUpdated,
@@ -34,6 +35,8 @@ describe('event names', () => {
     expect(eventName.passwordChanged).toBe(pwaPasswordChanged);
     expect(eventName.resetSent).toBe(pwaResetSent);
     expect(pwaDrawerToggleName).toBe('pwa-drawer-toggle');
+    expect(pwaSettings).toBe('pwa-settings');
+    expect(eventName.settings).toBe(pwaSettings);
     expect(pwaAuthError).toBe('pwa-auth-error');
     expect(eventName.drawerToggle).toBe(pwaDrawerToggleName);
     expect(userEmailChanged).toBe('userEmailChanged');

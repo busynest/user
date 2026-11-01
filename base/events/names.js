@@ -8,6 +8,7 @@ export const pwaEmailChanged = 'pwa-email-changed';
 export const pwaPasswordChanged = 'pwa-password-changed';
 export const pwaResetSent = 'pwa-reset-sent';
 export const pwaDrawerToggleName = 'pwa-drawer-toggle';
+export const pwaSettings = 'pwa-settings';
 export const pwaAuthError = 'pwa-auth-error';
 export const pwaVerificationSent = 'pwa-verification-sent';
 export const pwaEmailVerified = 'pwa-email-verified';
@@ -22,6 +23,7 @@ export const eventName = {
     passwordChanged: pwaPasswordChanged,
     resetSent: pwaResetSent,
     drawerToggle: pwaDrawerToggleName,
+    settings: pwaSettings,
     authError: pwaAuthError,
     verificationSent: pwaVerificationSent,
     emailVerified: pwaEmailVerified

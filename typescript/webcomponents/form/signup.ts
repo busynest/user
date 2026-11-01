@@ -27,10 +27,17 @@ import { labelStyle }     from './css/label.js';
 import { inputStyle }     from './css/input.js';
 import { listStyle }      from './css/list.js';
 import { toggleStyle }    from './css/toggle.js';
+import { statusStyle, liveStatus } from './css/status.js';
+import { noticeStyle }    from './css/notice.js';
 import { tapStyle }       from '../css/tap.js';
+import { revealControl }  from './reveal.js';
+import { markVerificationNotice } from './notice.js';
 
 import store                  from '../../store.js';
 import { universalToggle }    from '../../redux/frontend.js';
+
+/** Required - same sentence as the resend control in settings. */
+const sentMessage = 'Check your inbox for the verification email. You can still sign in.';
 
 @customElement('form-signup')
 export class FormSignup extends LitElement {
@@ -39,6 +46,11 @@ export class FormSignup extends LitElement {
   @property({type: String}) public source        = '';
   @state() private email        = '';
   @state() private password     = '';
+  @state() private status       = '';
+  @state() private tone         = '';
+  @state() private busy         = false;
+  @state() private showPassword = false;
+  @state() private notice       = '';
 
   constructor() { super(); }
 
@@ -48,6 +60,8 @@ export class FormSignup extends LitElement {
     inputStyle,
     buttonStyle,
     toggleStyle,
+    statusStyle,
+    noticeStyle,
     tapStyle,
     css`
 
@@ -66,43 +80,62 @@ export class FormSignup extends LitElement {
   ] };
 
   protected render() {
+    const emailId = `${this.source}-signup-email`;
+    const passId = `${this.source}-signup-pass`;
+    const statusId = `${this.source || 'page'}-signup-status`;
     return html`
   
       <!-- Sign Up State-->
       <form
         @submit=            ${this._handleSubmit}
         autocomplete=       "on"
+        aria-busy=          "${this.busy ? 'true' : 'false'}"
         novalidate>
         
         <ul>
 
           <li>
 
-            <label>Email
+            <label for="${emailId}">Email
 
               <input
-                id=           "${this.source}-signup-email"
+                id=           "${emailId}"
+                name=         "email"
                 part=         "email"
                 type=         "email"
                 autocomplete= "email"
+                inputmode=    "email"
+                autocapitalize="off"
+                spellcheck=   "false"
+                aria-invalid= "${this.tone === 'error' ? 'true' : 'false'}"
+                aria-describedby="${statusId}"
+                @input=       "${this.handleEmail}"
                 @change=      "${this.handleEmail}">
 
             </label>
 
           </li>
 
-              <!-- <label><input   id="verifyEmail"      type="email"      >Verify Email</label> -->
-
           <li>
 
-            <label>Password
+            <label for="${passId}">Password
               
-              <input
-                id=           "${this.source}-signup-pass"
-                part=         "password"
-                type=         "password"
-                autocomplete= "new-password"
-                @change=      "${this.handlePassword}">
+              <span class="pair">
+
+                <input
+                  id=           "${passId}"
+                  name=         "new-password"
+                  part=         "password"
+                  type=         "${this.showPassword ? 'text' : 'password'}"
+                  autocomplete= "new-password"
+                  aria-invalid= "${this.tone === 'error' ? 'true' : 'false'}"
+                  aria-describedby="${statusId}"
+                  @input=       "${this.handlePassword}"
+                  @change=      "${this.handlePassword}">
+
+                ${revealControl(this.showPassword, () => { this.showPassword = !this.showPassword; })}
+
+              </span>
 
             </label>
 
@@ -110,25 +143,22 @@ export class FormSignup extends LitElement {
 
           <li>
 
+            ${liveStatus(statusId, this.status, this.tone)}
+
             <button
               type=         "submit"
               part=         "submit"
-              class=        "newUser action-button">Sign up</button>
+              class=        "newUser action-button"
+              aria-busy=    "${this.busy ? 'true' : 'false'}"
+              ?disabled=    "${this.busy}">${this.busy ? 'Creating account…' : 'Sign up'}</button>
 
           </li>
 
-          <!-- <label><input   id="veriftPassword"   type="password"   >Verify Password</label> -->
-
-          <!-- Change State 
-          <li>
-
-            <p class=       "divider">Or</p>
-
-
-
-          </li> -->
-
         </ul>
+
+        ${this.notice ? html`
+          <p class="notice" part="notice" role="status" aria-live="polite">${this.notice}</p>
+        ` : ''}
 
         <button
           type="button"
@@ -145,10 +175,16 @@ export class FormSignup extends LitElement {
     store.dispatch(universalToggle(this.source));
   }
 
-  // Required - read the fields on submit
+  private show(detail: { code: string; message: string }) {
+    this.tone = 'error';
+    this.status = userMessage(detail);
+    emitWindow(pwaAuthError, detail);
+  }
+
+  // Required - read the fields on submit. Type toggles when the password is shown.
   private readFields() {
     const email     = this.renderRoot.querySelector('input[type="email"]') as HTMLInputElement | null;
-    const password  = this.renderRoot.querySelector('input[type="password"]') as HTMLInputElement | null;
+    const password  = this.renderRoot.querySelector('input[name="new-password"]') as HTMLInputElement | null;
     this.email      = email?.value ?? '';
     this.password   = password?.value ?? '';
   }
@@ -156,41 +192,42 @@ export class FormSignup extends LitElement {
   // Form Default Behavior
   private _handleSubmit(event: Event) {
     event.preventDefault();
-    this.signUp();
+    void this.signUp();
   }
 
   // Sync Email
   private handleEmail(event: Event) {
     const input =     event.target as HTMLInputElement;
-    this.email =      input.value; // Update the property with the input value
+    this.email =      input.value;
   }
 
   // Sync Password
   private handlePassword(event: Event) {
     const input =     event.target as HTMLInputElement;
-    this.password =   input.value; // Update the property with the input value
+    this.password =   input.value;
   }
 
   // Sign Up Action
-  private signUp() {
+  private async signUp() {
+    if (this.busy) return;
     this.readFields();
     if (this.email.length < 4) {
-      const detail = { code: 'pwa/missing-email', message: 'Enter an email address.' };
-      emitWindow(pwaAuthError, detail);
-      alert(userMessage(detail));
+      this.show({ code: 'pwa/missing-email', message: 'Enter an email address.' });
       return;
     }
     if (this.password.length < 6) {
-      const detail = { code: 'pwa/short-password', message: 'Password must be at least 6 characters.' };
-      emitWindow(pwaAuthError, detail);
-      alert(userMessage(detail));
+      this.show({ code: 'pwa/short-password', message: 'Password must be at least 6 characters.' });
       return;
     }
-    this.newAccount(this.email, this.password);  // Sign UP with email and password.
-}
+    await this.newAccount(this.email, this.password);
+  }
 
   // Create New Account using Email and Password
-  private newAccount = async (email:string, password:string) => {
+  private newAccount = async (email: string, password: string) => {
+
+    this.busy = true;
+    this.tone = '';
+    this.status = '';
 
     try {
 
@@ -202,31 +239,23 @@ export class FormSignup extends LitElement {
       // Required - the account exists even when the verification mail fails
       try {
         await sendVerification();
+        this.notice = sentMessage;
+        markVerificationNotice(email);
       } catch (error) {
-        alert(userMessage(error));
+        // Required - sendVerification already dispatched pwa-auth-error
+        this.tone = 'error';
+        this.status = userMessage(error);
       }
 
     } catch (error) {
 
-      emitWindow(pwaAuthError, toAuthError(error));
-      alert(userMessage(error));
+      this.show(toAuthError(error));
 
+    } finally {
+      this.busy = false;
     }
 
   }
-
-
-/* To Do: Integration
-
-// Google Tag Manager Conversion - Integrateion
-private gtag_report_conversion = async () => {
-
-  // @ts-ignore
-  gtag('event', 'conversion', {'send_to': 'AW-/'});
-
-}
-
-*/
 
 }
 

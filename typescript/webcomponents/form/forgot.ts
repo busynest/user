@@ -264,7 +264,6 @@ export class EmailReset extends LazyLoader {
     this.cooldown = resetWait;
     this.armCooldown();
     emitWindow(pwaResetSent, { email: this.userEmail });
-    alert(sentMessage);
     void this.updateComplete.then(() => { this.focusStatus(); });
 
   }
@@ -276,7 +275,6 @@ export class EmailReset extends LazyLoader {
     this.status = userMessage(detail);
     this.invalid = focus === 'email';
     emitWindow(pwaAuthError, detail);
-    alert(this.status);
     void this.updateComplete.then(() => { this.focusAfter(focus); });
 
   }
@@ -289,7 +287,6 @@ export class EmailReset extends LazyLoader {
     this.status = userMessage(error);
     this.invalid = detail.code === 'auth/invalid-email';
     emitWindow(pwaAuthError, detail);
-    alert(this.status);
     void this.updateComplete.then(() => {
       this.focusAfter(this.invalid ? 'email' : 'status');
     });

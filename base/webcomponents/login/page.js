@@ -20,20 +20,36 @@ import '../form/login.js';
 import '../form/signup.js';
 import { tapStyle } from '../css/tap.js';
 import { applyFirebaseConfig } from '../../firebase/attribute.js';
+import { accountTitle } from '../form/letters.js';
+import { noticeStyle } from '../form/css/notice.js';
+import { onVerificationNotice, verificationNotice } from '../form/notice.js';
 let UserLogin = class UserLogin extends connect(store)(LitElement) {
     constructor() {
         super();
         this.subscribe = false;
         this._name = "";
+        this._email = "";
+        this._verified = false;
+        this._notice = "";
         this._log = false;
         this._sign = false;
+        this.stopNotice = null;
     }
     connectedCallback() {
         applyFirebaseConfig(this);
         super.connectedCallback();
+        this._notice = verificationNotice();
+        this.stopNotice = onVerificationNotice(() => { this._notice = verificationNotice(); });
+    }
+    disconnectedCallback() {
+        this.stopNotice?.();
+        this.stopNotice = null;
+        super.disconnectedCallback();
     }
     stateChanged(state) {
         this._name = state.backend.name;
+        this._email = state.backend.email;
+        this._verified = Boolean(state.backend?.verified);
         this._log = state.frontend.login;
         this._sign = state.frontend.registerTwo;
     }
@@ -44,7 +60,8 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
             lineStyle,
             listStyle,
             animation,
-            tapStyle
+            tapStyle,
+            noticeStyle
         ];
     }
     ;
@@ -54,7 +71,7 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
     <section class="service" part="panel">
 
       <header part="header">
-        <h3 part="title">${this._log ? this._name : this._sign === this.subscribe ? 'Login' : 'Subscribe'}</h3>
+        <h3 part="title">${this._log ? accountTitle(this._name, this._email) : this._sign === this.subscribe ? 'Login' : 'Subscribe'}</h3>
       </header>
 
       <!-- Logged-out State -->
@@ -68,14 +85,14 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
             <!-- Required - subscribe chooses the open form -->
             <form-login
               source=       "page"
-              exportparts=  "email: login-email, password: login-password, submit: login-submit, switch: login-switch"
+              exportparts=  "email: login-email, password: login-password, submit: login-submit, switch: login-switch, forgot: login-forgot, status: login-status, reveal: login-reveal"
               ?inert=       "${this._sign !== this.subscribe}"
               class=        "content ${this._sign === this.subscribe ? 'opened' : 'closed'} "></form-login>
 
             <!-- Sign-up State -->
             <form-signup
               source=       "page"
-              exportparts=  "email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch"
+              exportparts=  "email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch, status: signup-status, reveal: signup-reveal, notice: signup-notice"
               ?inert=       "${this._sign === this.subscribe}"
               class=        "content ${!this._sign === this.subscribe ? 'opened' : 'closed'}"></form-signup>
 
@@ -88,6 +105,10 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
       <div
         class=          "spec setLog"
         ?on=            "${this._log === true}">
+
+          ${this._notice && !this._verified ? html `
+            <p class="notice" part="notice" role="status" aria-live="polite">Check your inbox for the verification email. You can still sign in.</p>
+          ` : ''}
 
           <slot name="content"></slot>
           
@@ -106,6 +127,18 @@ __decorate([
     state(),
     __metadata("design:type", Object)
 ], UserLogin.prototype, "_name", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserLogin.prototype, "_email", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserLogin.prototype, "_verified", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserLogin.prototype, "_notice", void 0);
 __decorate([
     state(),
     __metadata("design:type", Object)

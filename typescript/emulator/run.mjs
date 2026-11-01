@@ -99,7 +99,7 @@ const seen = new Set();
 let results = null;
 const start = Date.now();
 
-while (Date.now() - start < 90000) {
+while (Date.now() - start < 120000) {
   const pause = await evaluate('window.__pause || ""');
   if (pause && !seen.has(pause)) {
     seen.add(pause);

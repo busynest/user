@@ -39,11 +39,15 @@ export declare class UserDrawer extends UserDrawer_base {
     drawer: boolean;
     subscribe: boolean;
     private name;
+    private email;
+    private verified;
+    private notice;
     private user;
     private signup;
     private wasOpen;
     private sawOpen;
     private returnFocus;
+    private stopNotice;
     constructor();
     connectedCallback(): void;
     disconnectedCallback(): void;
@@ -53,6 +57,9 @@ export declare class UserDrawer extends UserDrawer_base {
     protected firstUpdated(): void;
     static get styles(): CSSResultArray;
     protected render(): import("lit-html").TemplateResult<1>;
+    private destination;
+    private settingsControl;
+    private onSettings;
 }
 declare global {
     interface HTMLElementTagNameMap {

@@ -37,6 +37,9 @@ export interface PwaResetSentDetail {
 export interface PwaDrawerToggleDetail {
     open: boolean;
 }
+export interface PwaSettingsDetail {
+    url: string;
+}
 export interface PwaAuthErrorDetail {
     code: string;
     message: string;
@@ -52,6 +55,7 @@ export interface PwaEventMap {
     'pwa-password-changed': CustomEvent<PwaPasswordChangedDetail>;
     'pwa-reset-sent': CustomEvent<PwaResetSentDetail>;
     'pwa-drawer-toggle': CustomEvent<PwaDrawerToggleDetail>;
+    'pwa-settings': CustomEvent<PwaSettingsDetail>;
     'pwa-auth-error': CustomEvent<PwaAuthErrorDetail>;
 }
 export interface PwaVerificationSentDetail {

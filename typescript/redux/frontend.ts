@@ -9,9 +9,9 @@ export const initialState/*: frontendAuth*/ = {
   registerOne:      false,                // Registration Drawer State
   registerTwo:      false,                 // Registration Page State
   userId:           "user",               // User Name Holder
-  customer:         "John Doe",           // Customer Name Holder
+  customer:         '',                   // Customer Name Holder
   profileChoice:    'unChosen',           // Profile Initialization State
-  name:             'Modern Business',    // Customer Name Loaded
+  name:             '',                   // Customer Name Loaded
   photoURL:         '',                   // User Photo Loaded
   phone:            '(...) ... - ....',   // User Phone Loaded
   email:            ''                    // User E-mail Loaded

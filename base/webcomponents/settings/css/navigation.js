@@ -63,7 +63,7 @@ export const navigation = css `
   }
 
   section {
-    grid-template-rows:     auto 1fr;
+    align-content:          start; /* Required - tabs keep each button under its fields */
     background-color:       var(--section_background_color, #fffdf8);
   }
 

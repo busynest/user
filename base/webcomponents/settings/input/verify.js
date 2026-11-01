@@ -185,13 +185,11 @@ export class EmailVerify extends connect(store)(LitElement) {
         this.status = sentMessage;
         this.cooldown = verifyWait;
         this.armCooldown();
-        alert(sentMessage);
         void this.updateComplete.then(() => { this.focusStatus(); });
     }
     showFirebase(error) {
         this.tone = 'error';
         this.status = userMessage(error);
-        alert(this.status);
         void this.updateComplete.then(() => { this.focusStatus(); });
     }
     focusStatus() {

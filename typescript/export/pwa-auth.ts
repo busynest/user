@@ -20,6 +20,7 @@ export {
   pwaPasswordChanged,
   pwaResetSent,
   pwaDrawerToggleName,
+  pwaSettings,
   pwaAuthError,
   eventName
 } from '../events/names.js';
@@ -35,6 +36,7 @@ export type {
   PwaPasswordChangedDetail,
   PwaResetSentDetail,
   PwaDrawerToggleDetail,
+  PwaSettingsDetail,
   PwaAuthErrorDetail,
   PwaEventMap
 } from '../events/types.js';

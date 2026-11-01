@@ -14,8 +14,11 @@ import store from "../../../store.js";
 import { buttonStyle } from "../../form/css/button.js";
 import { labelStyle } from "../../form/css/label.js";
 import { inputStyle } from "../../form/css/input.js";
+import { toggleStyle } from "../../form/css/toggle.js";
+import { statusStyle, liveStatus } from "../../form/css/status.js";
+import { revealControl } from "../../form/reveal.js";
 import { auth } from '../../../firebase/authentication.js';
-import { deleteUserFiles, logAccountDelete, reauthenticate } from '../../../firebase/interface.js';
+import { deleteUserFiles, logAccountDelete, reauthenticate, takeAuthFailure } from '../../../firebase/interface.js';
 import { pwaAccountDeleted, pwaAuthError } from '../../../events/names.js';
 import { emitWindow, toAuthError } from '../../../events/emit.js';
 import { userMessage } from '../../../firebase/message.js';
@@ -24,14 +27,43 @@ export class DeleteUser extends connect(store)(LitElement) {
         super();
         this.login = false;
         this.email = '';
+        this.busy = false;
+        this.status = '';
+        this.tone = '';
+        this.showPassword = false;
+        this.alertDelete = () => {
+            if (this.busy)
+                return;
+            const current = auth.currentUser;
+            if (!current) {
+                this.show({ code: 'pwa/signed-out', message: 'Sign in first.' });
+                return;
+            }
+            const password = this.shadowRoot.querySelector('#pwa-delete-password').value;
+            if (password.length < 6) {
+                this.show({ code: 'pwa/current-password', message: 'Enter your current password.' });
+                return;
+            }
+            const d = confirm("Delete Account?");
+            if (d == true)
+                void this.officialDelete(password);
+        };
         this.officialDelete = async (password) => {
+            this.busy = true;
+            this.tone = '';
+            this.status = '';
             const ok = await reauthenticate(password);
             if (!ok) {
+                const detail = takeAuthFailure();
+                this.tone = 'error';
+                this.status = userMessage(detail ?? { code: 'pwa/unknown', message: 'Something went wrong. Try again.' });
+                this.busy = false;
                 return;
             }
             const current = auth.currentUser;
             if (!current) {
-                alert('Please Sign-in');
+                this.show({ code: 'pwa/signed-out', message: 'Sign in first.' });
+                this.busy = false;
                 return;
             }
             try {
@@ -42,15 +74,15 @@ export class DeleteUser extends connect(store)(LitElement) {
                 emitWindow(pwaAccountDeleted, { uid });
             }
             catch (error) {
-                emitWindow(pwaAuthError, toAuthError(error));
-                alert(userMessage(error));
+                const detail = toAuthError(error);
+                this.tone = 'error';
+                this.status = userMessage(error);
+                emitWindow(pwaAuthError, detail);
+            }
+            finally {
+                this.busy = false;
             }
         };
-    }
-    firstUpdated() {
-        this.shadowRoot.querySelector('.deleteUser').addEventListener('click', () => {
-            this.alertDelete();
-        });
     }
     stateChanged(state) {
         this.login = state.frontend.login;
@@ -61,14 +93,17 @@ export class DeleteUser extends connect(store)(LitElement) {
             buttonStyle,
             labelStyle,
             inputStyle,
+            toggleStyle,
+            statusStyle,
             css `
 
     :host {
       display:                  grid;
-      grid-template-rows:       auto auto auto;
+      grid-template-rows:       auto auto auto auto;
+      align-content:            start;
     }
     
-    p {
+    p.lead {
       margin:               0;
       padding:              4px 20px 0;
       line-height:          1.5;
@@ -81,48 +116,41 @@ export class DeleteUser extends connect(store)(LitElement) {
     render() {
         return html `
 
-      <p>Permanently delete the user account and data related to: ${this.email}</p>
+      <p class="lead">Permanently delete the user account and data related to: ${this.email}</p>
 
       <label for="pwa-delete-password">Current password
 
-        <input
-          id="pwa-delete-password"
-          type="password"
-          autocomplete="current-password"/>
+        <span class="pair">
+
+          <input
+            id="pwa-delete-password"
+            name="current_password"
+            type="${this.showPassword ? 'text' : 'password'}"
+            autocomplete="current-password"
+            aria-describedby="pwa-delete-status"/>
+
+          ${revealControl(this.showPassword, () => { this.showPassword = !this.showPassword; })}
+
+        </span>
 
       </label>
+
+      ${liveStatus('pwa-delete-status', this.status, this.tone)}
 
       <button
         type="button"
         part="submit"
         class="action-button deleteUser"
-        ?disabled="${this.login === false}">Delete</button>
+        aria-busy="${this.busy ? 'true' : 'false'}"
+        ?disabled="${this.login === false || this.busy}"
+        @click="${this.alertDelete}">${this.busy ? 'Deleting…' : 'Delete'}</button>
 
     `;
     }
-    alertDelete() {
-        const current = auth.currentUser;
-        if (!current) {
-            const detail = { code: 'pwa/signed-out', message: 'Sign in first.' };
-            emitWindow(pwaAuthError, detail);
-            alert(userMessage(detail));
-            return;
-        }
-        const password = this.shadowRoot.querySelector('#pwa-delete-password').value;
-        if (password.length < 6) {
-            const detail = { code: 'pwa/current-password', message: 'Enter your current password.' };
-            emitWindow(pwaAuthError, detail);
-            alert(userMessage(detail));
-            return;
-        }
-        const d = confirm("Delete Account?");
-        if (d == true) {
-            this.officialDelete(password);
-            console.log("user gone");
-        }
-        else {
-            console.log("user here");
-        }
+    show(detail) {
+        this.tone = 'error';
+        this.status = userMessage(detail);
+        emitWindow(pwaAuthError, detail);
     }
 }
 __decorate([
@@ -133,5 +161,21 @@ __decorate([
     state(),
     __metadata("design:type", String)
 ], DeleteUser.prototype, "email", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], DeleteUser.prototype, "busy", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], DeleteUser.prototype, "status", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], DeleteUser.prototype, "tone", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], DeleteUser.prototype, "showPassword", void 0);
 customElements.define('delete-user', DeleteUser);
 //# sourceMappingURL=delete.js.map
