@@ -11,7 +11,7 @@
   "homepage": "https://pwa-authentic.firebaseapp.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/busynest/user"
+    "url": "git+https://github.com/busynest/user.git"
   },
   "bugs": {
     "url": "https://github.com/busynest/user/issues"
@@ -31,9 +31,11 @@
     "user-login",
     "user-settings",
     "email-reset",
-    "web components"
+    "web components",
+    "custom elements"
   ],
   "main": "./base/export/pwa-auth.js",
+  "module": "./base/export/pwa-auth.js",
   "types": "./base/export/pwa-auth.d.ts",
   "exports": {
     ".": {
@@ -41,34 +43,69 @@
       "import": "./base/export/pwa-auth.js",
       "default": "./base/export/pwa-auth.js"
     },
+    "./drawer": {
+      "types": "./base/export/drawer.d.ts",
+      "import": "./base/export/drawer.js",
+      "default": "./base/export/drawer.js"
+    },
+    "./login": {
+      "types": "./base/export/login.d.ts",
+      "import": "./base/export/login.js",
+      "default": "./base/export/login.js"
+    },
+    "./settings": {
+      "types": "./base/export/settings.d.ts",
+      "import": "./base/export/settings.js",
+      "default": "./base/export/settings.js"
+    },
+    "./icon": {
+      "types": "./base/export/icon.d.ts",
+      "import": "./base/export/icon.js",
+      "default": "./base/export/icon.js"
+    },
+    "./reset": {
+      "types": "./base/export/reset.d.ts",
+      "import": "./base/export/reset.js",
+      "default": "./base/export/reset.js"
+    },
     "./production": {
       "types": "./base/export/pwa-auth.d.ts",
       "import": "./source/pwa-auth.js",
       "default": "./source/pwa-auth.js"
     }
   },
-  "sideEffects": true,
+  "sideEffects": [
+    "./base/export/pwa-auth.js",
+    "./base/export/drawer.js",
+    "./base/export/login.js",
+    "./base/export/settings.js",
+    "./base/export/icon.js",
+    "./base/export/reset.js",
+    "./base/webcomponents/**/*.js",
+    "./source/pwa-auth.js"
+  ],
   "files": [
     "base",
     "source/pwa-auth.js",
     "source/pwa-styles.css",
     "source/empty.jpg",
     "README.md",
-    "intro.md",
-    "firebase.md",
-    "docs/sliders.md",
     "docs/drawer-slide.md",
+    "docs/sliders.md",
     "license",
     "LICENSES.txt"
   ],
   "typesVersions": {
     "*": {
-      "production": [
-        "./base/export/pwa-auth.d.ts"
-      ]
+      "drawer": ["./base/export/drawer.d.ts"],
+      "login": ["./base/export/login.d.ts"],
+      "settings": ["./base/export/settings.d.ts"],
+      "icon": ["./base/export/icon.d.ts"],
+      "reset": ["./base/export/reset.d.ts"],
+      "production": ["./base/export/pwa-auth.d.ts"]
     }
   },
-  "license": "SEE LICENSES.txt",
+  "license": "MIT",
   "scripts": {
     "server": "web-dev-server --node-resolve --watch --open",
     "demo": "web-dev-server --node-resolve --watch --open --app-index demonstration/index.html",
