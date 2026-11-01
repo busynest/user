@@ -35,6 +35,7 @@
   "include": ["typescript/export/*.ts"],
   "exclude": [
     "typescript/**/*.test.ts",
+    "typescript/deprecated/**",
     "typescript/emulator/**",
     "development/**",
     "demonstration/**",

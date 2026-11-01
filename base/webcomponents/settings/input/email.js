@@ -24,7 +24,7 @@ import { sendVerification } from "../../../api/verify.js";
 import { reauthenticate, takeAuthFailure } from "../../../firebase/interface.js";
 import { pwaAuthError, pwaEmailChanged } from "../../../events/names.js";
 import { emitWindow, toAuthError } from "../../../events/emit.js";
-import { emitLegacyEmailChanged } from "../../../deprecated/email-changed.js";
+import { emitLegacyEmailChanged } from "../../../events/legacy-email.js";
 import { userMessage } from "../../../firebase/message.js";
 export class ContactEmail extends connect(store)(LitElement) {
     constructor() {

@@ -86,6 +86,8 @@
   ],
   "files": [
     "base",
+    "!base/deprecated",
+    "!base/deprecated/**",
     "source/pwa-auth.js",
     "source/pwa-styles.css",
     "source/empty.jpg",

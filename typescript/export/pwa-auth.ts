@@ -40,6 +40,6 @@ export type {
   PwaAuthErrorDetail,
   PwaEventMap
 } from '../events/types.js';
-export { userEmailChanged } from '../deprecated/email-changed.js';
+export { userEmailChanged } from '../events/legacy-email.js';
 export { pwaVerificationSent, pwaEmailVerified } from '../events/names.js';
 export type { PwaVerificationSentDetail, PwaEmailVerifiedDetail } from '../events/types.js';

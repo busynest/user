@@ -6,4 +6,4 @@ export function emitLegacyEmailChanged(detail) {
         composed: true
     }));
 }
-//# sourceMappingURL=email-changed.js.map
+//# sourceMappingURL=legacy-email.js.map

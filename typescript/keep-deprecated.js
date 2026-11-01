@@ -13,6 +13,6 @@ const toggleMark = '/** @deprecated Use closeDrawer(). Removed in 4.0.0. This on
 
 restore('base/firebase/authentication.d.ts', 'export declare let user: User | null;', userMark);
 restore('base/firebase/authentication.d.ts', 'export declare const user: User | null;', userMark);
-restore('base/deprecated/email-changed.d.ts', 'export declare const userEmailChanged = "userEmailChanged";', emailMark);
-restore('base/deprecated/email-changed.d.ts', 'export declare const userEmailChanged: string;', emailMark);
+restore('base/events/legacy-email.d.ts', 'export declare const userEmailChanged = "userEmailChanged";', emailMark);
+restore('base/events/legacy-email.d.ts', 'export declare const userEmailChanged: string;', emailMark);
 restore('base/firebase/interface.d.ts', 'export declare const pwaDrawerToggle: () => void;', toggleMark);
