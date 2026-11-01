@@ -1,7 +1,7 @@
 import { css, CSSResult } from "lit";
 
-/* --pwa_slide is the only duration. Form swap and drawer open/close both use it.
-   Motion is transform. max-height does not ease. slide-out is not used. */
+/* --pwa_slide is the only duration. The drawer unrolls with max-height over its
+   measured height. Forms still translate inside the cell. slide-out is not used. */
 
 export const animation : CSSResult = css`
 
@@ -88,33 +88,22 @@ export const animation : CSSResult = css`
 
 `;
 
-/* Drawer shell. Imported by user-drawer only. The panel transform is the motion.
-   max-height only collapses the host after transitionend (attribute sliding). */
+/* Drawer shell. Imported by user-drawer only.
+   JS writes max-height in px (0 ↔ measured content). The range is the real height, so ease-in-out is not skewed. */
 export const drawerShell : CSSResult = css`
 
   :host {
-    max-height:             0px; /* Required - layout when parked. Not a transition. */
+    max-height:             0px;
+    min-height:             0px; /* Required - the grid must be allowed to unroll from 0 */
     visibility:             hidden;
     pointer-events:         none;
+    transition:             max-height var(--pwa_slide, 2s) ease-in-out;
+    -webkit-transition:     max-height var(--pwa_slide, 2s) ease-in-out;
   }
 
   :host([sliding]) {
-    max-height:             none; /* Required - hold the clip open. It does not ease. */
     visibility:             visible;
     pointer-events:         auto;
-  }
-
-  .userDrawer {
-    transition:             transform var(--pwa_slide, 2s) ease-in-out;
-    -webkit-transition:     transform var(--pwa_slide, 2s) ease-in-out;
-  }
-
-  .in {
-    transform:              translate3d(0, -100%, 0);
-  }
-
-  .out {
-    transform:              translate3d(0, 0, 0);
   }
 
 `;

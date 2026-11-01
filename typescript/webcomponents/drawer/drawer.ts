@@ -55,17 +55,14 @@ export class UserDrawer extends connect(store)(LitElement) {
   @state() private user         = false;  // True user is logged-in, false, user is logged-out, state
   @state() private signup       = false;  // True sign-up, false log-in, State
 
-  /** True while the panel is open or still sliding shut. Drops on transitionend. */
+  /** True while the panel is open or still rolling shut. Drops on transitionend. */
   @property({ type: Boolean, reflect: true }) private sliding = false;
-
-  /** Drives .out / .in. Set a frame after the clip opens so the transform can run. */
-  @state() private shown = false;
 
   private wasOpen = false;
   private sawOpen = false;
   private returnFocus: HTMLElement | null = null;
   private stopNotice: (() => void) | null = null;
-  private openFrame = 0;
+  private heldHeight: number | null = null;
   private reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   
   constructor() { super(); }
@@ -75,13 +72,13 @@ export class UserDrawer extends connect(store)(LitElement) {
     super.connectedCallback();
     this.addEventListener('keydown', this.onKey);
     this.addEventListener('click', this.onLightClick);
+    this.addEventListener('transitionend', this.onUnrollEnd);
     this.notice = verificationNotice();
     this.stopNotice = onVerificationNotice(() => { this.notice = verificationNotice(); });
   }
 
   override disconnectedCallback(): void {
-    cancelAnimationFrame(this.openFrame);
-    this.shadowRoot?.querySelector('.userDrawer')?.removeEventListener('transitionend', this.onSlideEnd);
+    this.removeEventListener('transitionend', this.onUnrollEnd);
     this.removeEventListener('keydown', this.onKey);
     this.removeEventListener('click', this.onLightClick);
     this.stopNotice?.();
@@ -95,11 +92,7 @@ export class UserDrawer extends connect(store)(LitElement) {
     this.email        = state.backend!.email;
     this.verified     = Boolean(state.backend?.verified);
     if (open) this.sliding = true;
-    else {
-      cancelAnimationFrame(this.openFrame);
-      if (this.reduceMotion.matches) this.sliding = false;
-    }
-    this.shown        = open && (this.reduceMotion.matches || this.shown);
+    else if (this.reduceMotion.matches) this.sliding = false;
     this.drawer       = open;
     this.user         = state.frontend!.login;          // Logged in-out State
     this.signup       = state.frontend!.registerOne;    // Sign-up State
@@ -113,15 +106,27 @@ export class UserDrawer extends connect(store)(LitElement) {
     this.sawOpen = true;
   }
 
+  protected willUpdate(changed: PropertyValues): void {
+    if (!changed.has('signup') || !this.drawer || this.style.maxHeight !== 'none') return;
+    this.heldHeight = Math.ceil(this.getBoundingClientRect().height);
+  }
+
   protected updated(changed: PropertyValues): void {
-    if (changed.has('drawer') && this.drawer && !this.shown && !this.reduceMotion.matches) {
-      this.armOpen();
+    if (changed.has('drawer')) {
+      this.heldHeight = null;
+      if (this.drawer) this.unroll(this.contentHeight());
+      else this.rollUp();
+    } else if (this.heldHeight != null && this.drawer) {
+      const from = this.heldHeight;
+      this.heldHeight = null;
+      const to = this.contentHeight();
+      if (Math.abs(to - from) > 1) this.glide(from, to);
     }
     if (!changed.has('drawer')) return;
     if (this.drawer) {
       const active = deepActive();
       this.returnFocus = active && !this.contains(active) ? active : this.returnFocus;
-      this.shadowRoot?.querySelector<HTMLElement>('.close')?.focus();
+      this.shadowRoot?.querySelector<HTMLElement>('.close')?.focus({ preventScroll: true });
       void refreshEmailVerified(false);
       return;
     }
@@ -129,23 +134,55 @@ export class UserDrawer extends connect(store)(LitElement) {
     this.returnFocus = null;
   }
 
-  // Paint the parked panel inside the open clip, then let .out run the 2s transform.
-  private armOpen(): void {
-    cancelAnimationFrame(this.openFrame);
-    this.openFrame = requestAnimationFrame(() => {
-      this.openFrame = requestAnimationFrame(() => {
-        if (this.drawer) this.shown = true;
-      });
-    });
+  // Full border-box height with the cap released. Synchronous, so it does not paint.
+  private contentHeight(): number {
+    const transition = this.style.transition;
+    const maxHeight = this.style.maxHeight;
+    this.style.transition = 'none';
+    this.style.maxHeight = 'none';
+    const height = Math.ceil(this.getBoundingClientRect().height);
+    this.style.maxHeight = maxHeight;
+    this.style.transition = transition;
+    return height;
   }
 
-  // Required - visibility, pointer-events, and inert wait until this transform ends.
-  private onSlideEnd = (event: Event) => {
+  // Required - from and to are both px, so the 2s ease covers the real distance.
+  private glide(from: number, to: number): void {
+    if (this.reduceMotion.matches) {
+      this.style.transition = 'none';
+      this.style.maxHeight = to === 0 ? '0px' : 'none';
+      this.style.transition = '';
+      if (to === 0) this.sliding = false;
+      return;
+    }
+    this.style.transition = 'none';
+    this.style.maxHeight = `${from}px`;
+    void this.offsetHeight;
+    this.style.transition = '';
+    this.style.maxHeight = `${to}px`;
+  }
+
+  private unroll(target: number): void {
+    this.scrollTop = 0;
+    this.glide(0, target);
+  }
+
+  private rollUp(): void {
+    this.glide(Math.ceil(this.getBoundingClientRect().height), 0);
+  }
+
+  // Required - visibility, pointer-events, and inert drop when the close reaches 0.
+  private onUnrollEnd = (event: Event) => {
     if (!(event instanceof TransitionEvent)) return;
-    if (event.propertyName !== 'transform') return;
-    if (event.target !== event.currentTarget) return;
-    if (this.drawer) return;
+    if (event.target !== this) return;
+    if (event.propertyName !== 'max-height') return;
+    if (this.drawer) {
+      this.style.maxHeight = 'none';
+      return;
+    }
+    if (this.getBoundingClientRect().height > 1) return;
     this.sliding = false;
+    this.style.maxHeight = '';
   };
 
   // Required - Escape closes. Tab stays inside the open drawer.
@@ -166,13 +203,13 @@ export class UserDrawer extends connect(store)(LitElement) {
     if (event.shiftKey) {
       if (!inside || active === first) {
         event.preventDefault();
-        last.focus();
+        last.focus({ preventScroll: true });
       }
       return;
     }
     if (!inside || active === last) {
       event.preventDefault();
-      first.focus();
+      first.focus({ preventScroll: true });
     }
   };
 
@@ -189,8 +226,6 @@ export class UserDrawer extends connect(store)(LitElement) {
   };
   
   protected firstUpdated() {
-
-    this.shadowRoot!.querySelector('.userDrawer')!.addEventListener('transitionend', this.onSlideEnd);
 
     this.shadowRoot!.querySelector('.close')!.addEventListener('click', () => {
        store.dispatch(closeSign());
@@ -287,7 +322,7 @@ export class UserDrawer extends connect(store)(LitElement) {
       aria-labelledby="pwa-drawer-title"
       aria-hidden="${this.sliding ? 'false' : 'true'}"
       ?inert="${!this.sliding}"
-      class="userDrawer ${this.shown ? 'out' : 'in'}">
+      class="userDrawer ${this.drawer ? 'out' : 'in'}">
 
       <!-- Exit Button -->
       <header class="exit" part="header">

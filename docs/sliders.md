@@ -2,18 +2,20 @@
 
 The slide is one module: `typescript/webcomponents/css/animation.ts`. `user-drawer`, `user-login`, and `user-settings` import it. One custom property, `--pwa_slide` (`2s`), times every motion. The login and sign-up swap, the drawer open and close, and why `max-height` must not ease are written up in [Drawer login and sign-up slide](drawer-slide.md).
 
-Two motions, both transforms.
+Two motions, one duration.
 
-- The drawer panel (`.userDrawer`) translates `translate3d(0, -100%, 0)` to `translate3d(0, 0, 0)`. `:host` clips it.
+- The drawer unrolls. `:host` `max-height` eases from `0px` to the measured content height, and back to `0px`. The top edge stays put. Content does not translate. `overflow: hidden` reveals it.
 - Closed forms and settings panels share the grid area. Class `closed` is `position: absolute` and translates `translate3d(0, -100%, 0)`. `visibility` waits out `--pwa_slide`, then hides.
 
 ## How it works
 
-The drawer opens and closes as one sheet. Class `out` is the resting open transform. Class `in` parks it above the clip. Both use `ease-in-out` and `--pwa_slide`. `max-height` on `:host` is `0px` when parked and `none` while attribute `sliding` is set. It snaps. It does not transition, so it cannot skew the ease.
+The drawer does not slide as a sheet. JS measures the host's height in px, writes that `max-height`, and the stylesheet eases it with `--pwa_slide` and `ease-in-out`. The animated range is the real height, so the ease is not crushed into the start of a huge range. Wrapper, header, `.spec`, `.inner`, and the forms are inside that one box. They have no second height animation.
 
-`sliding` turns on as the open starts. It turns off on the panel's `transform` `transitionend`, which is `--pwa_slide` later. That same moment drops `visibility`, `pointer-events`, and `inert`. On the way in, those are on immediately.
+After the open `transitionend`, `max-height` becomes `none` so a later resize is not stuck. Closing measures the current height again, locks that px without a transition, then eases to `0px`. A form swap while open does the same glide between the old measured height and the new one, on `--pwa_slide`.
 
-Login, sign-up, and the settings panels are a separate slide in the same grid cell, on the same duration. The open panel is `position: relative` and sets the height. The closed panel is `position: absolute` at the same origin, so it does not stretch the row, and it translates up by its own height. The leaving panel stays visible until that transform ends. `.inner` clips it.
+`sliding` turns on as the open starts. It turns off on the host's `max-height` `transitionend` once the box is at 0. That same moment drops `visibility`, `pointer-events`, and `inert`. On the way in, those are on immediately.
+
+Login, sign-up, and the settings panels still slide inside the cell, on the same duration. The open panel is `position: relative` and sets the height. The closed panel is `position: absolute` at the same origin, so it does not stretch the row, and it translates up by its own height. The leaving panel stays visible until that transform ends. `.inner` clips it.
 
 `@keyframes slide-out` only changes `max-height`. It is not the form swap. Playing it on `.closed`, or leaving `.closed` in flow with `position: relative`, moves the row while the transform runs and the forms snap instead of sliding past each other.
 
@@ -29,8 +31,7 @@ On the drawer, inside `.userDrawer`:
 
 | Piece | Element | What moves |
 |---|---|---|
-| Shell | `.userDrawer` with `in` / `out` | `transform` `--pwa_slide` |
-| Clip | `:host` while `sliding` | layout only (`max-height` snaps) |
+| Shell | `:host` `max-height` | `0px` ↔ measured px, `--pwa_slide` |
 | Forms and settings panels | `.content` with `opened` / `closed` | `transform` `--pwa_slide`, then `visibility` |
 
 Page login uses `spec` / `wrapper` / `inner` / `content` for the form swap. It has no collapsing shell. The four settings panels (`profile`, `verification`, `password`, `delete`) are `.content` inside `wrapper` / `inner`. They have no `.spec`.
@@ -39,7 +40,7 @@ Page login uses `spec` / `wrapper` / `inner` / `content` for the form swap. It h
 
 ## Triggers
 
-- Attribute `drawer` on `user-drawer` asks the shell to open or close. Class `out` or `in` on `.userDrawer` is the transform. Attribute `sliding` holds the clip, `visibility`, `pointer-events`, and `inert` until the transform `transitionend`.
+- Attribute `drawer` on `user-drawer` asks the shell to unroll or roll up. Attribute `sliding` holds `visibility`, `pointer-events`, and `inert` until the `max-height` `transitionend`.
 - Classes `spec-in` and `spec-out` on `.spec` follow the open flag. They do not transform.
 - Classes `opened` and `closed` on `.content`. Drawer and page forms follow sign-in versus sign-up. Settings panels follow the tab.
 - Attribute `on` on `.spec` is `display`. It is not a slide.
@@ -50,13 +51,13 @@ Page login uses `spec` / `wrapper` / `inner` / `content` for the form swap. It h
 
 | Piece | Duration | Easing |
 |---|---|---|
-| `.userDrawer` `in` / `out` transform | `--pwa_slide` (`2s`) | `ease-in-out` |
+| `:host` `max-height` unroll and roll-up | `--pwa_slide` (`2s`) | `ease-in-out` |
+| Form-swap height glide | `--pwa_slide` (`2s`) | `ease-in-out` |
 | `sliding` drop (`visibility`, `pointer-events`, `inert`) | `--pwa_slide`, on `transitionend` | n/a |
 | `.content` transform | `--pwa_slide` (`2s`) | `ease-in-out` |
 | `.content` visibility delay when closing | `--pwa_slide` (`2s`) | `linear` |
-| `:host` `max-height` | none (snaps) | n/a |
 
-The panel and the forms move from `translate3d(0, -100%, 0)` to `translate3d(0, 0, 0)`. Open and close are the same duration.
+The drawer box grows and shrinks. It does not translate. Open and close are the same duration. The forms still move from `translate3d(0, -100%, 0)` to `translate3d(0, 0, 0)`.
 
 ## Reduced motion
 

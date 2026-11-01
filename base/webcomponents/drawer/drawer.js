@@ -48,23 +48,27 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.user = false;
         this.signup = false;
         this.sliding = false;
-        this.shown = false;
         this.wasOpen = false;
         this.sawOpen = false;
         this.returnFocus = null;
         this.stopNotice = null;
-        this.openFrame = 0;
+        this.heldHeight = null;
         this.reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-        this.onSlideEnd = (event) => {
+        this.onUnrollEnd = (event) => {
             if (!(event instanceof TransitionEvent))
                 return;
-            if (event.propertyName !== 'transform')
+            if (event.target !== this)
                 return;
-            if (event.target !== event.currentTarget)
+            if (event.propertyName !== 'max-height')
                 return;
-            if (this.drawer)
+            if (this.drawer) {
+                this.style.maxHeight = 'none';
+                return;
+            }
+            if (this.getBoundingClientRect().height > 1)
                 return;
             this.sliding = false;
+            this.style.maxHeight = '';
         };
         this.onKey = (event) => {
             if (!this.drawer)
@@ -86,13 +90,13 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             if (event.shiftKey) {
                 if (!inside || active === first) {
                     event.preventDefault();
-                    last.focus();
+                    last.focus({ preventScroll: true });
                 }
                 return;
             }
             if (!inside || active === last) {
                 event.preventDefault();
-                first.focus();
+                first.focus({ preventScroll: true });
             }
         };
         this.onLightClick = (event) => {
@@ -136,12 +140,12 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         super.connectedCallback();
         this.addEventListener('keydown', this.onKey);
         this.addEventListener('click', this.onLightClick);
+        this.addEventListener('transitionend', this.onUnrollEnd);
         this.notice = verificationNotice();
         this.stopNotice = onVerificationNotice(() => { this.notice = verificationNotice(); });
     }
     disconnectedCallback() {
-        cancelAnimationFrame(this.openFrame);
-        this.shadowRoot?.querySelector('.userDrawer')?.removeEventListener('transitionend', this.onSlideEnd);
+        this.removeEventListener('transitionend', this.onUnrollEnd);
         this.removeEventListener('keydown', this.onKey);
         this.removeEventListener('click', this.onLightClick);
         this.stopNotice?.();
@@ -155,12 +159,8 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.verified = Boolean(state.backend?.verified);
         if (open)
             this.sliding = true;
-        else {
-            cancelAnimationFrame(this.openFrame);
-            if (this.reduceMotion.matches)
-                this.sliding = false;
-        }
-        this.shown = open && (this.reduceMotion.matches || this.shown);
+        else if (this.reduceMotion.matches)
+            this.sliding = false;
         this.drawer = open;
         this.user = state.frontend.login;
         this.signup = state.frontend.registerOne;
@@ -171,33 +171,71 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.wasOpen = open;
         this.sawOpen = true;
     }
+    willUpdate(changed) {
+        if (!changed.has('signup') || !this.drawer || this.style.maxHeight !== 'none')
+            return;
+        this.heldHeight = Math.ceil(this.getBoundingClientRect().height);
+    }
     updated(changed) {
-        if (changed.has('drawer') && this.drawer && !this.shown && !this.reduceMotion.matches) {
-            this.armOpen();
+        if (changed.has('drawer')) {
+            this.heldHeight = null;
+            if (this.drawer)
+                this.unroll(this.contentHeight());
+            else
+                this.rollUp();
+        }
+        else if (this.heldHeight != null && this.drawer) {
+            const from = this.heldHeight;
+            this.heldHeight = null;
+            const to = this.contentHeight();
+            if (Math.abs(to - from) > 1)
+                this.glide(from, to);
         }
         if (!changed.has('drawer'))
             return;
         if (this.drawer) {
             const active = deepActive();
             this.returnFocus = active && !this.contains(active) ? active : this.returnFocus;
-            this.shadowRoot?.querySelector('.close')?.focus();
+            this.shadowRoot?.querySelector('.close')?.focus({ preventScroll: true });
             void refreshEmailVerified(false);
             return;
         }
         this.returnFocus?.focus();
         this.returnFocus = null;
     }
-    armOpen() {
-        cancelAnimationFrame(this.openFrame);
-        this.openFrame = requestAnimationFrame(() => {
-            this.openFrame = requestAnimationFrame(() => {
-                if (this.drawer)
-                    this.shown = true;
-            });
-        });
+    contentHeight() {
+        const transition = this.style.transition;
+        const maxHeight = this.style.maxHeight;
+        this.style.transition = 'none';
+        this.style.maxHeight = 'none';
+        const height = Math.ceil(this.getBoundingClientRect().height);
+        this.style.maxHeight = maxHeight;
+        this.style.transition = transition;
+        return height;
+    }
+    glide(from, to) {
+        if (this.reduceMotion.matches) {
+            this.style.transition = 'none';
+            this.style.maxHeight = to === 0 ? '0px' : 'none';
+            this.style.transition = '';
+            if (to === 0)
+                this.sliding = false;
+            return;
+        }
+        this.style.transition = 'none';
+        this.style.maxHeight = `${from}px`;
+        void this.offsetHeight;
+        this.style.transition = '';
+        this.style.maxHeight = `${to}px`;
+    }
+    unroll(target) {
+        this.scrollTop = 0;
+        this.glide(0, target);
+    }
+    rollUp() {
+        this.glide(Math.ceil(this.getBoundingClientRect().height), 0);
     }
     firstUpdated() {
-        this.shadowRoot.querySelector('.userDrawer').addEventListener('transitionend', this.onSlideEnd);
         this.shadowRoot.querySelector('.close').addEventListener('click', () => {
             store.dispatch(closeSign());
         });
@@ -295,7 +333,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       aria-labelledby="pwa-drawer-title"
       aria-hidden="${this.sliding ? 'false' : 'true'}"
       ?inert="${!this.sliding}"
-      class="userDrawer ${this.shown ? 'out' : 'in'}">
+      class="userDrawer ${this.drawer ? 'out' : 'in'}">
 
       <!-- Exit Button -->
       <header class="exit" part="header">
@@ -422,10 +460,6 @@ __decorate([
     property({ type: Boolean, reflect: true }),
     __metadata("design:type", Object)
 ], UserDrawer.prototype, "sliding", void 0);
-__decorate([
-    state(),
-    __metadata("design:type", Object)
-], UserDrawer.prototype, "shown", void 0);
 UserDrawer = __decorate([
     customElement('user-drawer'),
     __metadata("design:paramtypes", [])

@@ -86,28 +86,17 @@ export const animation = css `
 export const drawerShell = css `
 
   :host {
-    max-height:             0px; /* Required - layout when parked. Not a transition. */
+    max-height:             0px;
+    min-height:             0px; /* Required - the grid must be allowed to unroll from 0 */
     visibility:             hidden;
     pointer-events:         none;
+    transition:             max-height var(--pwa_slide, 2s) ease-in-out;
+    -webkit-transition:     max-height var(--pwa_slide, 2s) ease-in-out;
   }
 
   :host([sliding]) {
-    max-height:             none; /* Required - hold the clip open. It does not ease. */
     visibility:             visible;
     pointer-events:         auto;
-  }
-
-  .userDrawer {
-    transition:             transform var(--pwa_slide, 2s) ease-in-out;
-    -webkit-transition:     transform var(--pwa_slide, 2s) ease-in-out;
-  }
-
-  .in {
-    transform:              translate3d(0, -100%, 0);
-  }
-
-  .out {
-    transform:              translate3d(0, 0, 0);
   }
 
 `;

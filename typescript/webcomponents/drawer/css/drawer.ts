@@ -10,7 +10,7 @@ export const drawerStyle: CSSResult = css`
     width:                  100%;
     box-sizing:             border-box;
     -webkit-box-sizing:     border-box;
-    display:                grid;
+    display:                block; /* Required - a grid item overflows upward and clips the header */
     padding-top:            env(safe-area-inset-top);
     max-width:              100%; /* Required - fit 320px */
     min-width:              0;
@@ -18,10 +18,13 @@ export const drawerStyle: CSSResult = css`
 
   :host([drawer]),
   :host([sliding]) {
-    /* Required - stay full width while the panel slides, including the close */
+    /* Required - the growing box. Top stays put; radius and shadow follow the bottom edge. */
     left:                   0;
     right:                  0;
     z-index:                5;
+    background-color:       var(--pwa_drawer_background_color, #fffdf8);
+    border-radius:          var(--pwa_drawer_border-radius, 0 0 18px 18px);
+    box-shadow:             0 18px 40px rgba(28, 36, 48, 0.16);
   }
 
   .userDrawer > .spec > .wrapper {
@@ -47,10 +50,9 @@ export const drawerStyle: CSSResult = css`
     height:                 auto;
     border-bottom:          var(--pwa_drawer_border, 0);
     z-index:                var(--pwa_drawer_z-index, 3);
-    background-color:       var(--pwa_drawer_background_color, #fffdf8); /* Required - opaque sheet, it travels with the transform */
+    background-color:       var(--pwa_drawer_background_color, #fffdf8);
     color:                  var(--pwa_drawer_text_color, #1c2430);
     border-radius:          var(--pwa_drawer_border-radius, 0 0 18px 18px);
-    box-shadow:             0 18px 40px rgba(28, 36, 48, 0.16);
   }
 
 `;
