@@ -1,4 +1,4 @@
-/* Optional - retired. Durations were literals. They now follow --pwa_slide_time. */
+/* Optional - retired. Not imported. Jack's older literal durations, including a transform token on .in and .out. */
 
 import { css } from 'lit';
 

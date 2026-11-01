@@ -43,7 +43,6 @@ export const drawerStyle: CSSResult = css`
  /* top:                    0;
     left:                   0;
     right:                  0; */
-    transition-duration:    var(--pwa_slide_time, 1.4s);
     overflow:               hidden;
     box-sizing:             border-box;
     height:                 auto;

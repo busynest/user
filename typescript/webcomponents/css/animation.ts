@@ -1,7 +1,6 @@
 import { css, CSSResult } from "lit";
 
-/* One slide. Max-height uses --pwa_slide_time (default 1.4s) and literal ease-in-out.
-   Transforms use literal durations. No calc() on a transform. */
+/* One slide. Max-height is 1.4s ease-in-out. Transforms are literals. */
 
 export const animation : CSSResult = css`
 
@@ -77,12 +76,10 @@ export const animation : CSSResult = css`
 }
 
 @media (prefers-reduced-motion: reduce) {
-    :host { --pwa_slide_time: 0s; }
+    :host,
     .content,
     .opened,
-    .closed,
-    .spec-in,
-    .spec-out {
+    .closed {
         transition-duration:                0s;
         animation-duration:                 0s;
     }
@@ -95,18 +92,18 @@ export const drawerShell : CSSResult = css`
 
   :host {
     max-height:             0px;
-    transition:             max-height var(--pwa_slide_time, 1.4s) ease-in-out;
+    transition:             max-height 1.4s ease-in-out;
   }
 
   :host([drawer]) {
     max-height:             100%;
-    transition:             max-height var(--pwa_slide_time, 1.4s) ease-in-out;
+    transition:             max-height 1.4s ease-in-out;
   }
 
   .in {
     max-height:             0px;
     visibility:             hidden;
-    transition:             max-height var(--pwa_slide_time, 1.4s) ease-in-out, visibility 0s linear var(--pwa_slide_time, 1.4s);
+    transition:             max-height 1.4s ease-in-out, visibility 0s linear 1.4s;
   }
 
   .spec-in {
@@ -119,7 +116,7 @@ export const drawerShell : CSSResult = css`
   .out {
     max-height:             100%;
     visibility:             visible;
-    transition:             max-height var(--pwa_slide_time, 1.4s) ease-in-out, visibility 0s;
+    transition:             max-height 1.4s ease-in-out, visibility 0s;
   }
 
   .spec-out {
@@ -130,8 +127,14 @@ export const drawerShell : CSSResult = css`
   }
 
   @media (prefers-reduced-motion: reduce) {
+    :host,
+    .in,
+    .out,
     .spec-in,
-    .spec-out { transition-duration: 0s; }
+    .spec-out {
+      transition-duration:  0s;
+      animation-duration:   0s;
+    }
   }
 
 `;
@@ -140,12 +143,12 @@ export const drawerShell : CSSResult = css`
 export const hostCollapse : CSSResult = css`
 
   :host {
-    transition:             max-height var(--pwa_slide_time, 1.4s) ease-in-out;
+    transition:             max-height 1.4s ease-in-out;
   }
 
   :host([animation]) {
     max-height:             100%;
-    transition:             max-height var(--pwa_slide_time, 1.4s) ease-in-out;
+    transition:             max-height 1.4s ease-in-out;
   }
 
 `;

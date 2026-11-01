@@ -40,7 +40,7 @@ Sign-in is not blocked when the email is unverified. The host gates on `emailVer
 - storage imports use firebase/storage
 - sign-in forms use novalidate so a short email reaches pwa-auth-error
 - sign-in uses signInWithEmailAndPassword. Sign-in and sign-up require 6 characters
-- drawer and form durations follow --pwa_slide_time, keeping the 1.4s / 1.5s / 2.2s / 2s ratios
+- drawer max-height is 1.4s ease-in-out. The sheet transforms are 1.5s and 2.2s. The form transform is 2s
 - delete removes Storage files and the auth user. The host deletes users/{uid}
 - prepublishOnly runs the build. Pushing master runs the publish workflow
 

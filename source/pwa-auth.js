@@ -78,12 +78,10 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
 }
 
 @media (prefers-reduced-motion: reduce) {
-    :host { --pwa_slide_time: 0s; }
+    :host,
     .content,
     .opened,
-    .closed,
-    .spec-in,
-    .spec-out {
+    .closed {
         transition-duration:                0s;
         animation-duration:                 0s;
     }
@@ -93,18 +91,18 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
 
   :host {
     max-height:             0px;
-    transition:             max-height var(--pwa_slide_time, 1.4s) ease-in-out;
+    transition:             max-height 1.4s ease-in-out;
   }
 
   :host([drawer]) {
     max-height:             100%;
-    transition:             max-height var(--pwa_slide_time, 1.4s) ease-in-out;
+    transition:             max-height 1.4s ease-in-out;
   }
 
   .in {
     max-height:             0px;
     visibility:             hidden;
-    transition:             max-height var(--pwa_slide_time, 1.4s) ease-in-out, visibility 0s linear var(--pwa_slide_time, 1.4s);
+    transition:             max-height 1.4s ease-in-out, visibility 0s linear 1.4s;
   }
 
   .spec-in {
@@ -117,7 +115,7 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
   .out {
     max-height:             100%;
     visibility:             visible;
-    transition:             max-height var(--pwa_slide_time, 1.4s) ease-in-out, visibility 0s;
+    transition:             max-height 1.4s ease-in-out, visibility 0s;
   }
 
   .spec-out {
@@ -128,19 +126,25 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
   }
 
   @media (prefers-reduced-motion: reduce) {
+    :host,
+    .in,
+    .out,
     .spec-in,
-    .spec-out { transition-duration: 0s; }
+    .spec-out {
+      transition-duration:  0s;
+      animation-duration:   0s;
+    }
   }
 
 `,En=[i`
 
   :host {
-    transition:             max-height var(--pwa_slide_time, 1.4s) ease-in-out;
+    transition:             max-height 1.4s ease-in-out;
   }
 
   :host([animation]) {
     max-height:             100%;
-    transition:             max-height var(--pwa_slide_time, 1.4s) ease-in-out;
+    transition:             max-height 1.4s ease-in-out;
   }
 
 `,i`
@@ -735,7 +739,6 @@ const e=globalThis,t=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
  /* top:                    0;
     left:                   0;
     right:                  0; */
-    transition-duration:    var(--pwa_slide_time, 1.4s);
     overflow:               hidden;
     box-sizing:             border-box;
     height:                 auto;

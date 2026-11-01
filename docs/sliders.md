@@ -36,25 +36,19 @@ Page login uses `spec` / `wrapper` / `inner` / `content` for the form swap. It h
 
 ## Timings
 
-The beat is `1.4s`. Leave it there.
+Durations are literals. The shell beat is `1.4s`. Leave it there.
 
 | Piece | Duration | Easing |
 |---|---|---|
-| Host and `.in` / `.out` `max-height` | `var(--pwa_slide_time, 1.4s)` | `ease-in-out` |
-| `.in` visibility delay | the same variable | `linear` |
+| Host and `.in` / `.out` `max-height` | `1.4s` | `ease-in-out` |
+| `.in` visibility delay | `1.4s` | `linear` |
 | `.spec-in` transform | `1.5s` | `ease` |
 | `.spec-out` transform | `2.2s` | `ease` |
 | `.content` transform | `2s` | `ease-in-out` |
 | `slide-out` on `.closed` | `2s` | `ease-out` |
 
-Transform durations are literals. They do not use `calc()`.
-
-## Custom properties
-
-`--pwa_slide_time` sets the max-height beat and the close visibility delay. Default `1.4s`. It does not change the `1.5s`, `2.2s`, or `2s` transforms.
-
-`--pwa_slide_ease` is not read. Max-height easing is the literal `ease-in-out`.
+No slide timing is a custom property. Hosts do not set one.
 
 ## Reduced motion
 
-`prefers-reduced-motion: reduce` sets `--pwa_slide_time` to `0s` on `:host`. It also sets transition and animation durations to `0s` on `.content`, `.opened`, `.closed`, `.spec-in`, and `.spec-out`. Only inside that media query.
+`prefers-reduced-motion: reduce` sets `transition-duration` and `animation-duration` to `0s` on the shell, the sheet, and `.content`. Only inside that media query. It does not go through a custom property.

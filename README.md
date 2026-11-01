@@ -413,11 +413,6 @@ The published sheet is `node_modules/pwa-auth/source/pwa-styles.css`.
   --pwa_icon_height:           44px; /* logged out, sync to diameter */
   --pwa_icon_diameter:         44px; /* logged in, sync to height */
 
-  /* Optional - master beat. See Drawer behaviour for the ratios. */
-  --pwa_slide_time: 1.4s;
-  /* Optional - shared ease for the drawer and the form swap */
-  --pwa_slide_ease: ease-in-out;
-
   /* <user-drawer> */
   --pwa_drawer_position:         absolute;
   --pwa_drawer_background_color: #fffdf8;
@@ -471,7 +466,7 @@ The drawer loads hidden at the top (`max-height: 0`). A press on `user-icon` sli
 
 Sign-in and sign-up share one grid area, `pages`. They slide past each other. The closed form is translated `translate3d(0, -100%, 0)`, `visibility: hidden`, and `inert`.
 
-The slide is shared. See [Slides](docs/sliders.md). `--pwa_slide_time` is the max-height beat. Default `1.4s`. Easing on that beat is `ease-in-out`. Transform times stay `1.5s`, `2.2s`, and `2s`. `prefers-reduced-motion: reduce` sets those to `0s`.
+The slide is shared. See [Slides](docs/sliders.md). Max-height is `1.4s` `ease-in-out`. Transform times stay `1.5s`, `2.2s`, and `2s`. `prefers-reduced-motion: reduce` sets those durations to `0s`.
 
 While the drawer is open it covers `user-icon`. Close it with the ✕ button or Escape. The drawer is a dialog. Tab stays inside while it is open, and focus returns to the control that opened it. Off-screen forms are `inert`. The panel is `inert` while it is closed.
 
