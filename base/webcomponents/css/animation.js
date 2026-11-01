@@ -23,7 +23,7 @@ export const animation = css `
     display:                                grid;
     grid-gap:                               20px;
     grid-area:                              pages;
-    padding:                                8px 0 20px; /* Required - room under the heading */
+    padding:                                8px 0 0; /* Required - room under the heading */
 
     box-sizing:                             border-box;
     -webkit-box-sizing:                     border-box;

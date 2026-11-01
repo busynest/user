@@ -72,13 +72,15 @@ export const drawerStyle: CSSResult = css`
     transition:
       max-height var(--pwa_slide_time, 1.4s) var(--pwa_slide_ease, ease-in-out),
       visibility 0s linear var(--pwa_slide_time, 1.4s),
-      transform var(--pwa_slide_time, 1.4s) var(--pwa_slide_ease, ease-in-out);
+      transform var(--pwa_slide_time, 1.4s) ease;
   }
 
   .spec-in {
     transform:              translate3d(0, -100%, 0);
-    transition:             transform calc(var(--pwa_slide_time, 1.4s) * 1.071) var(--pwa_slide_ease, ease-in-out);
+    /* Required - 1.5s when --pwa_slide_time is 1.4s. ease is the shorthand default. */
+    transition:             transform calc(var(--pwa_slide_time, 1.4s) * 15 / 14) ease;
     z-index:                -1;
+    animation-timing-function: linear;
   }
 
   .out {
@@ -87,14 +89,15 @@ export const drawerStyle: CSSResult = css`
     transition:
       max-height var(--pwa_slide_time, 1.4s) var(--pwa_slide_ease, ease-in-out),
       visibility 0s linear 0s,
-      transform var(--pwa_slide_time, 1.4s) var(--pwa_slide_ease, ease-in-out);
+      transform var(--pwa_slide_time, 1.4s) ease;
   }
   
   .spec-out {
     transform:              translate3d(0, 0, 0);
-    /* Required - forms follow the drawer. 1.4 * 1.571 is about 2.2s */
-    transition:             transform calc(var(--pwa_slide_time, 1.4s) * 1.571) var(--pwa_slide_ease, ease-in-out);
+    /* Required - forms follow the drawer. 2.2s when --pwa_slide_time is 1.4s. */
+    transition:             transform calc(var(--pwa_slide_time, 1.4s) * 11 / 7) ease;
     z-index:                -1;
+    animation-timing-function: linear;
   }
 
   @media (prefers-reduced-motion: reduce) {
