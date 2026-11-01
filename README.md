@@ -68,7 +68,7 @@ Works in current Chrome, Edge, Firefox, and Safari. The fields fit any layout, f
 
 ## Events
 
-Listen on `window`. `pwa-drawer-toggle` and `pwa-settings` also fire on `user-drawer`. Cancel `pwa-settings` to keep the drawer open. `userEmailChanged` is the old name for `pwa-email-changed`.
+Listen on `window`. `pwa-drawer-toggle` and `pwa-settings` also fire on `user-drawer`. Cancel `pwa-settings` to keep the drawer open.
 
 A user is `{ uid, displayName, email, photoURL, emailVerified }` or `null`.
 
@@ -88,7 +88,6 @@ A user is `{ uid, displayName, email, photoURL, emailVerified }` or `null`.
 | `pwa-auth-error` | `{ code, message }` |
 | `pwa-drawer-toggle` | `{ open }` |
 | `pwa-settings` | `{ url }`. `url` is empty when Settings stays on this page |
-| `userEmailChanged` | `{ email }`. Old name |
 
 `eventName` is those strings in one object. `PwaEventMap` pairs each name with its event.
 
@@ -113,13 +112,12 @@ import { initialize, getCurrentUser, onUserChanged, openDrawer, closeDrawer } fr
 | `logAccount()` | Counts a new account, if Analytics is on |
 | `logAccountDelete()` | Counts a deleted account, if Analytics is on |
 | `deleteDocument(collection, id)` | Deletes that Firestore document |
-| `pwaDrawerToggle()` | Closes the drawer |
 
-Also exported: `firebaseConfig`, `application`, `db`, `storage`, `auth`. `user` is only a snapshot from startup. Use `getCurrentUser()`.
+Also exported: `firebaseConfig`, `application`, `db`, `storage`, `auth`.
 
 ## Look
 
-Set these on the element. `--pwa_background` replaces the older background names `--pwa_drawer_background_color`, `--pwa_settings_background_color`, and `--section_background_color`.
+Set these on the element.
 
 | Variable | What it does | Default |
 | --- | --- | --- |
@@ -189,19 +187,6 @@ initialize({
 3. Or set `window.process.env.FIREBASE_CONFIG` to that JSON string before pwa-auth loads. If `window.process` is already there, add the value on it.
 
 Use one of these. Once Firebase is connected, another one leaves it as it is.
-
-## Deprecated
-
-These still work. They go away in 4.0.0.
-
-| Name | Use instead | Removed in |
-| --- | --- | --- |
-| `pwaDrawerToggle()` | `closeDrawer()` | 4.0.0 |
-| `userEmailChanged` | `pwa-email-changed` | 4.0.0 |
-| `user` | `getCurrentUser()` | 4.0.0 |
-| `--pwa_drawer_background_color` | `--pwa_background` | 4.0.0 |
-| `--pwa_settings_background_color` | `--pwa_background` | 4.0.0 |
-| `--section_background_color` | `--pwa_background` | 4.0.0 |
 
 ## License
 

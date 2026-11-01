@@ -52,7 +52,7 @@ vi.mock('firebase/analytics', () => ({
   logEvent: vi.fn()
 }));
 
-/* Required - the tsc emit. The test runner does not lower legacy decorators. */
+/* Required - the tsc emit. The test runner does not lower decorators. */
 import { initialize } from '../../../base/firebase/authentication.js';
 import { closeDrawer } from '../../../base/api/drawer.js';
 import store from '../../../base/store.js';

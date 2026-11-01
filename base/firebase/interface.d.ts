@@ -2,8 +2,6 @@ export declare function takeAuthFailure(): {
     code: string;
     message: string;
 } | null;
-/** @deprecated Use closeDrawer(). Removed in 4.0.0. This only closes the drawer. */
-export declare const pwaDrawerToggle: () => void;
 export declare const reauthenticate: (password: string) => Promise<boolean>;
 export declare const logOut: () => Promise<void>;
 export declare const logAccount: () => Promise<void>;

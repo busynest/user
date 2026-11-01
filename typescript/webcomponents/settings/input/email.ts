@@ -15,7 +15,6 @@ import { sendVerification } from "../../../api/verify.js";
 import { reauthenticate, takeAuthFailure } from "../../../firebase/interface.js";
 import { pwaAuthError, pwaEmailChanged } from "../../../events/names.js";
 import { emitWindow, toAuthError } from "../../../events/emit.js";
-import { emitLegacyEmailChanged } from "../../../events/legacy-email.js";
 import { userMessage } from "../../../firebase/message.js";
 
 export class ContactEmail extends connect(store)(LitElement) {
@@ -158,7 +157,6 @@ export class ContactEmail extends connect(store)(LitElement) {
 
       const detail = { email: contactMail.value };
       emitWindow(pwaEmailChanged, detail);
-      emitLegacyEmailChanged(detail);
       this.tone = '';
       this.status = 'Check your inbox to confirm the new address.';
 

@@ -100,7 +100,7 @@ let FormSignup = class FormSignup extends LitElement {
             css `
 
       :host {
-        background-color:           var(--pwa_background, var(--section_background_color, #fff));
+        background-color:           var(--pwa_background, #fff);
       }
     
       .double {

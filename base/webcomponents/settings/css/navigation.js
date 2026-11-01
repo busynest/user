@@ -64,7 +64,7 @@ export const navigation = css `
 
   section {
     align-content:          start; /* Required - tabs keep each button under its fields */
-    background-color:       var(--pwa_background, var(--section_background_color, #fff));
+    background-color:       var(--pwa_background, #fff);
   }
 
 

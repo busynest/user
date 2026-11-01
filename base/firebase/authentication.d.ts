@@ -1,7 +1,7 @@
 import { FirebaseApp, FirebaseOptions } from 'firebase/app';
 import { Firestore } from 'firebase/firestore';
 import { FirebaseStorage } from 'firebase/storage';
-import { User, Auth, type ActionCodeSettings } from 'firebase/auth';
+import { Auth, type ActionCodeSettings } from 'firebase/auth';
 export interface InitializeOptions {
     app?: FirebaseApp;
     config?: FirebaseOptions;
@@ -12,8 +12,6 @@ export declare let application: FirebaseApp;
 export declare let db: Firestore;
 export declare let storage: FirebaseStorage;
 export declare let auth: Auth;
-/** @deprecated Use getCurrentUser(). Removed in 4.0.0. This is only a snapshot from startup. */
-export declare let user: User | null;
 export declare function emailActionCodeSettings(): ActionCodeSettings | undefined;
 export declare function isReady(): boolean;
 export declare function onReady(fn: () => void): void;

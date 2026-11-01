@@ -7,7 +7,6 @@ export let application;
 export let db;
 export let storage;
 export let auth;
-export let user = null;
 let started = false;
 const waiters = [];
 let actionCodeSettings;
@@ -23,7 +22,7 @@ export function onReady(fn) {
     else
         waiters.push(fn);
 }
-function legacyConfig() {
+function envConfig() {
     const env = typeof process === 'undefined' ? undefined : process.env;
     const raw = env?.FIREBASE_CONFIG;
     if (!raw)
@@ -48,7 +47,7 @@ export function initialize(options) {
         firebaseConfig = application.options;
     }
     else {
-        const config = options?.config ?? legacyConfig();
+        const config = options?.config ?? envConfig();
         if (!config)
             throw new Error('pwa-auth: pass initialize({ config }) or set window.process.env.FIREBASE_CONFIG');
         firebaseConfig = config;
@@ -57,12 +56,11 @@ export function initialize(options) {
     db = getFirestore(application);
     storage = getStorage(application);
     auth = getAuth(application);
-    user = auth.currentUser;
     started = true;
     waiters.splice(0).forEach((fn) => fn());
     return application;
 }
-const legacy = legacyConfig();
-if (legacy)
-    initialize({ config: legacy });
+const fromEnv = envConfig();
+if (fromEnv)
+    initialize({ config: fromEnv });
 //# sourceMappingURL=authentication.js.map

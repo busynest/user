@@ -13,8 +13,7 @@ export const drawerStyle: CSSResult = css`
     -webkit-box-sizing:     border-box;
     max-width:              100%; /* Required - fit 320px */
     min-width:              0;
-    /* --pwa_drawer_background_color is deprecated. Use --pwa_background. Removed in 4.0.0. */
-    background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
+    background-color:       var(--pwa_background, #fff);
   }
 
   :host([drawer]),
@@ -46,8 +45,7 @@ export const drawerStyle: CSSResult = css`
     height:                 auto;
     border-bottom:          var(--pwa_drawer_border, 0);
     z-index:                var(--pwa_drawer_z-index, 3);
-    /* --pwa_drawer_background_color is deprecated. Use --pwa_background. Removed in 4.0.0. */
-    background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
+    background-color:       var(--pwa_background, #fff);
     color:                  var(--pwa_drawer_text_color, #1c2430);
     border-radius:          var(--pwa_drawer_border-radius, 0 0 18px 18px);
     padding-top:            env(safe-area-inset-top);

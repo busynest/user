@@ -430,8 +430,6 @@ window.__criticalPromise = (async () => {
       await until('email', () => events('pwa-email-changed').length > before);
       const detail = events('pwa-email-changed').at(-1).detail;
       if (detail.email !== next) throw new Error(JSON.stringify(detail));
-      const legacy = events('userEmailChanged').at(-1);
-      if (!legacy || legacy.detail.email !== next) throw new Error('legacy email event missing');
       record('change email', true, detail.email);
     } catch (error) {
       record('change email', false, error.message);

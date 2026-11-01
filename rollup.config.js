@@ -16,7 +16,7 @@ const outputs = [
     chunkFileNames:   '[name]-[hash].js',
     format:           'es',                   // Format Specification: system // umd // cjs // amd // iife // es fallback.
     globals:          { lodash: '_' },        // Lodash: Global _ for tree-shaking. //  jquery: 'jQuery',       // jQuery: Global $ assumed loaded externally.
-    interop:          'compat'                // Interop: Handles mixed exports; safe for legacy.
+    interop:          'compat'                // Interop: Handles mixed exports.
   },{
     dir:              './source',
     entryFileNames:   '[name].js',

@@ -39,7 +39,7 @@ export interface PwaProfileUpdatedDetail {
   photoURL:     string | null;
 }
 
-/** Required - pwa-email-changed. Same shape as the legacy window event. */
+/** Required - pwa-email-changed. Detail is the new address. */
 export interface PwaEmailChangedDetail {
   email: string;
 }

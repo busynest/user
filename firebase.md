@@ -60,7 +60,7 @@ initialize({ app: getApp() });
 
 | Export | |
 |---|---|
-| `initialize({ app, config, actionCodeSettings })` | Boot Firebase. `app` is a host app. `config` is a host config. `actionCodeSettings` is optional and is passed to the verification email. The legacy `FIREBASE_CONFIG` script still works. |
+| `initialize({ app, config, actionCodeSettings })` | Boot Firebase. `app` is a host app. `config` is a host config. `actionCodeSettings` is optional and is passed to the verification email. The `FIREBASE_CONFIG` script still works. |
 
 ## firebase-config attribute
 

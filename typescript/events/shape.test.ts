@@ -18,7 +18,6 @@ import {
   pwaEmailVerified
 } from './names.js';
 import { emitElement, emitWindow } from './emit.js';
-import { userEmailChanged } from './legacy-email.js';
 
 describe('event names', () => {
 
@@ -39,7 +38,6 @@ describe('event names', () => {
     expect(eventName.settings).toBe(pwaSettings);
     expect(pwaAuthError).toBe('pwa-auth-error');
     expect(eventName.drawerToggle).toBe(pwaDrawerToggleName);
-    expect(userEmailChanged).toBe('userEmailChanged');
     expect(pwaVerificationSent).toBe('pwa-verification-sent');
     expect(pwaEmailVerified).toBe('pwa-email-verified');
     expect(eventName.verificationSent).toBe(pwaVerificationSent);

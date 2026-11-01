@@ -65,12 +65,6 @@ let analyticsReady: Promise<void> = Promise.resolve();
 
 
 
-/** @deprecated Use closeDrawer(). Removed in 4.0.0. This only closes the drawer. */
-export const pwaDrawerToggle = () => {
-    store.dispatch( closeSign() );
-}
-
-
 // Required - redux, analytics, and pwa-auth-changed once the app exists
 onReady(() => {
 

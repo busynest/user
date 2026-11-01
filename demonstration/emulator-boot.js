@@ -21,8 +21,7 @@ const names = [
   'pwa-settings',
   'pwa-auth-error',
   'pwa-verification-sent',
-  'pwa-email-verified',
-  'userEmailChanged'
+  'pwa-email-verified'
 ];
 
 window.__events = [];

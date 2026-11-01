@@ -1,7 +1,7 @@
 import { initializeApp, FirebaseApp, FirebaseOptions }  from 'firebase/app';
 import { getFirestore, Firestore }                      from 'firebase/firestore';
 import { getStorage, FirebaseStorage }                  from 'firebase/storage';
-import { getAuth, User, Auth, type ActionCodeSettings } from 'firebase/auth';
+import { getAuth, Auth, type ActionCodeSettings } from 'firebase/auth';
 
 export interface InitializeOptions {
   /** Optional - an app the host already created. */
@@ -17,9 +17,6 @@ export let application!: FirebaseApp;
 export let db!: Firestore;
 export let storage!: FirebaseStorage;
 export let auth!: Auth;
-
-/** @deprecated Use getCurrentUser(). Removed in 4.0.0. This is only a snapshot from startup. */
-export let user: User | null = null;
 
 let started = false;
 const waiters: Array<() => void> = [];
@@ -41,8 +38,8 @@ export function onReady(fn: () => void): void {
   else waiters.push(fn);
 }
 
-/** Optional - window.process.env.FIREBASE_CONFIG, the original boot path. */
-function legacyConfig(): FirebaseOptions | null {
+/** Optional - window.process.env.FIREBASE_CONFIG, read before the module runs. */
+function envConfig(): FirebaseOptions | null {
 
   const env = typeof process === 'undefined' ? undefined : process.env;
   const raw = env?.FIREBASE_CONFIG;
@@ -57,7 +54,7 @@ function legacyConfig(): FirebaseOptions | null {
 
 }
 
-/** Required - host app, host config, or the legacy FIREBASE_CONFIG. First call wins. */
+/** Required - host app, host config, or FIREBASE_CONFIG. First call wins. */
 export function initialize(options?: InitializeOptions): FirebaseApp {
 
   if (options && Object.prototype.hasOwnProperty.call(options, 'actionCodeSettings')) {
@@ -75,7 +72,7 @@ export function initialize(options?: InitializeOptions): FirebaseApp {
     application     = options.app;
     firebaseConfig  = application.options;
   } else {
-    const config = options?.config ?? legacyConfig();
+    const config = options?.config ?? envConfig();
     if (!config) throw new Error('pwa-auth: pass initialize({ config }) or set window.process.env.FIREBASE_CONFIG');
     firebaseConfig  = config;
     application     = initializeApp(firebaseConfig);
@@ -84,7 +81,6 @@ export function initialize(options?: InitializeOptions): FirebaseApp {
   db        = getFirestore(application);
   storage   = getStorage(application);
   auth      = getAuth(application);
-  user      = auth.currentUser;
   started   = true;
 
   waiters.splice(0).forEach((fn) => fn());
@@ -94,5 +90,5 @@ export function initialize(options?: InitializeOptions): FirebaseApp {
 }
 
 // Required - window.process.env.FIREBASE_CONFIG still boots the app at import
-const legacy = legacyConfig();
-if (legacy) initialize({ config: legacy });
+const fromEnv = envConfig();
+if (fromEnv) initialize({ config: fromEnv });

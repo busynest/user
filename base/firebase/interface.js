@@ -21,9 +21,6 @@ function noteFailure(detail) {
 }
 let analytics;
 let analyticsReady = Promise.resolve();
-export const pwaDrawerToggle = () => {
-    store.dispatch(closeSign());
-};
 onReady(() => {
     watchGoogleRedirect();
     getAuth(application).useDeviceLanguage();
