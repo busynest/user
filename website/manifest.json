@@ -11,7 +11,7 @@
     },
     {
       "src": "images/manifest/logo-512.png",
-      "sizes": "72x72",
+      "sizes": "512x512",
       "type": "image/png"
     },
     {
