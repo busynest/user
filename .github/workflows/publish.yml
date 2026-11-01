@@ -1,41 +1,75 @@
 name: Publish to npm
 
 on:
+  release:
+    types: [published]
   workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
+          check-latest: true
           registry-url: https://registry.npmjs.org
-          cache: npm
+          package-manager-cache: false
+
+      - name: Require npm 11.5.1 or newer
+        run: |
+          need="11.5.1"
+          have="$(npm --version)"
+          if ! printf '%s\n%s\n' "$need" "$have" | sort -C -V; then
+            echo "npm ${have} is older than ${need}. Installing npm@latest."
+            npm install -g npm@latest
+            have="$(npm --version)"
+            if ! printf '%s\n%s\n' "$need" "$have" | sort -C -V; then
+              echo "npm ${have} is still older than ${need}."
+              exit 1
+            fi
+          fi
+          echo "npm ${have}"
+
+      - name: Require the release tag to match package.json
+        if: github.event_name == 'release'
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          tag="${RELEASE_TAG#v}"
+          if [ "$tag" != "$version" ]; then
+            echo "Release tag ${RELEASE_TAG} does not match package.json version ${version}."
+            exit 1
+          fi
+          echo "Release tag ${RELEASE_TAG} matches package.json version ${version}."
 
       - name: Install
         run: npm ci
 
       - name: Build
-        run: npm run build && npm run rollup
+        run: npm run build
 
-      - name: Publish when the version is new
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Rollup
+        run: npm run rollup
+
+      - name: Test
+        run: npm test
+
+      - name: Publish
         run: |
           version="$(node -p "require('./package.json').version")"
           if npm view "pwa-auth@${version}" version >/dev/null 2>&1; then
-            echo "pwa-auth@${version} is already on npm"
+            echo "pwa-auth@${version} is already on npm. Skipping publish."
             exit 0
           fi
-          if [ -z "$NODE_AUTH_TOKEN" ]; then
-            echo "Add an npm automation token as the NPM_TOKEN repository secret"
-            exit 1
-          fi
-          npm publish --access public --ignore-scripts
+          echo "Publishing pwa-auth@${version}."
+          npm publish --provenance --access public

@@ -526,11 +526,17 @@ npm test               # vitest
 
 Auth, Firestore, and Storage emulators are in [firebase.md](firebase.md).
 
+A pull request runs `.github/workflows/ci.yml`: `npm ci`, `npm run build`, `npm run rollup`, `npm test`.
+
 ### Publish
 
-`npm publish` runs `prepublishOnly`, which is `npm run build` then `npm run rollup`.
+`npm publish` runs `prepublishOnly`, which is `npm run build` then `npm run rollup`. The action runs those two commands on their own as well, so the log shows them. No `NPM_TOKEN`.
 
-Publishing runs only when Jack starts `.github/workflows/publish.yml` by hand (`workflow_dispatch`). The action builds, then publishes when `package.json` has a version that is not already on npm. The repository secret `NPM_TOKEN` must be an npm automation token. A run that does not change the version is skipped.
+One-time setup on npmjs.com. Package settings, Trusted Publisher, GitHub Actions. Organization or user: `busynest`. Repository: `user`. Workflow filename: `publish.yml`. Leave the environment name empty. Allow direct `npm publish`. A trusted publisher created now only stages unless you allow publish. Merge `publish.yml` to `master` first. npm drops a publisher that has not published within two days.
+
+Release. Bump `version` in `package.json`. Tag that version (`v3.5.1` or `3.5.1`). Publish a GitHub release for the tag. The published release starts `.github/workflows/publish.yml`. The tag, without a leading `v`, must match `package.json`. The action runs `npm ci`, `npm run build`, `npm run rollup`, `npm test`, then `npm publish --provenance --access public`. A version already on npm is skipped. `workflow_dispatch` skips the tag check.
+
+`3.5.0` is staged from a CLI stage-only token. It is not live. Promote it on npm, or discard it and let this workflow publish `3.5.0`.
 
 ## Feedback
 
