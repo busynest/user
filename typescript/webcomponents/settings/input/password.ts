@@ -14,6 +14,7 @@ import { reauthenticate, takeAuthFailure } from "../../../firebase/interface.js"
 import { pwaAuthError, pwaPasswordChanged } from "../../../events/names.js";
 import { emitWindow, toAuthError } from "../../../events/emit.js";
 import { userMessage } from "../../../firebase/message.js";
+import { newPasswordIssue, passwordHint, passwordMax, passwordMin, passwordMismatch } from "../../../firebase/password.js";
 
 export class InputPassword extends connect(store)(LitElement) {
 
@@ -95,13 +96,17 @@ export class InputPassword extends connect(store)(LitElement) {
                 part    = "password"
                 type    = "${this.showNext ? 'text' : 'password'}"
                 autocomplete = "new-password"
+                minlength    = "${passwordMin}"
+                maxlength    = "${passwordMax}"
                 .value  = "${this.password}"
                 @input  = "${this.handleInputChange}"
-                aria-describedby = "pwa-password-status">
+                aria-describedby = "pwa-new-password-hint pwa-password-status">
 
               ${revealControl(this.showNext, () => { this.showNext = !this.showNext; })}
 
             </span>
+
+            <p id="pwa-new-password-hint" class="hint" part="hint">${passwordHint}</p>
 
           </label>
 
@@ -119,6 +124,8 @@ export class InputPassword extends connect(store)(LitElement) {
                 part    = "verify"
                 type    = "${this.showVerify ? 'text' : 'password'}"
                 autocomplete = "new-password"
+                minlength    = "${passwordMin}"
+                maxlength    = "${passwordMax}"
                 aria-describedby = "pwa-password-status">
 
               ${revealControl(this.showVerify, () => { this.showVerify = !this.showVerify; })}
@@ -170,18 +177,14 @@ export class InputPassword extends connect(store)(LitElement) {
       return;
     }
 
-    if (!this.password) {
-      this.show({ code: 'pwa/missing-password', message: 'Enter a password.' });
+    const issue = newPasswordIssue(this.password);
+    if (issue) {
+      this.show(issue);
       return;
     }
 
     if (this.password !== verify) {
-      this.show({ code: 'pwa/password-mismatch', message: 'Those passwords do not match.' });
-      return;
-    }
-
-    if (this.password.length < 6) {
-      this.show({ code: 'pwa/short-password', message: 'Password must be at least 6 characters.' });
+      this.show({ code: 'pwa/password-mismatch', message: passwordMismatch });
       return;
     }
 

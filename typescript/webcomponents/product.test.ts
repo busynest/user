@@ -18,6 +18,7 @@ const firebase = vi.hoisted(() => {
     updateProfile: vi.fn(async (person: typeof user, profile: { displayName?: string | null; photoURL?: string | null }) => {
       Object.assign(person, profile);
     }),
+    updatePassword: vi.fn(async () => undefined),
     signOut: vi.fn(async () => undefined)
   };
 });
@@ -41,6 +42,7 @@ vi.mock('firebase/auth', () => ({
   sendEmailVerification: firebase.sendEmailVerification,
   updateProfile: firebase.updateProfile,
   signOut: firebase.signOut,
+  updatePassword: firebase.updatePassword,
   EmailAuthProvider: { credential: vi.fn() },
   reauthenticateWithCredential: vi.fn()
 }));
@@ -74,6 +76,7 @@ import { accEmail, accImage, accName } from '../../base/redux/backend.js';
 import { lettersFor, accountTitle } from './form/letters.js';
 import { pwaAuthError, pwaResetSent, pwaSettings } from '../events/names.js';
 import { userMessage } from '../firebase/message.js';
+import { passwordHint, passwordMismatch, passwordShort } from '../firebase/password.js';
 import '../../base/webcomponents/form/login.js';
 import '../../base/webcomponents/form/signup.js';
 import '../../base/webcomponents/drawer/drawer.js';
@@ -294,6 +297,75 @@ describe('account product', () => {
     expect(firebase.updateProfile).toHaveBeenCalledWith(firebase.user, { displayName: 'Ada Lovelace' });
     expect(el.shadowRoot!.textContent).toContain('Name saved.');
     expect(window.alert).not.toHaveBeenCalled();
+  });
+
+  it('shows the sign-up hint and rejects a short password without cutting it', async () => {
+    const el = document.createElement('form-signup') as HTMLElement & { updateComplete: Promise<unknown> };
+    document.body.append(el);
+    await el.updateComplete;
+
+    const field = el.shadowRoot!.querySelector('input[name="new-password"]') as HTMLInputElement;
+    const hint = el.shadowRoot!.querySelector('.hint') as HTMLElement;
+    expect(hint.textContent).toBe(passwordHint);
+    expect(field.getAttribute('minlength')).toBe('8');
+    expect(field.getAttribute('maxlength')).toBe('128');
+    expect(field.getAttribute('autocomplete')).toBe('new-password');
+    expect(el.shadowRoot!.querySelector('button.reveal')).toBeTruthy();
+
+    const phrase = 'correct horse';
+    const email = el.shadowRoot!.querySelector('input[type="email"]') as HTMLInputElement;
+    email.value = 'ada@example.com';
+    field.value = 'seven!!';
+    el.shadowRoot!.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await flush(el);
+
+    expect(firebase.createUserWithEmailAndPassword).not.toHaveBeenCalled();
+    expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe(passwordShort);
+    expect(field.value).toBe('seven!!');
+
+    field.value = phrase;
+    email.value = 'ada@example.com';
+    firebase.createUserWithEmailAndPassword.mockResolvedValue({
+      user: { uid: '1', displayName: null, email: 'ada@example.com', photoURL: null, emailVerified: false }
+    });
+    firebase.currentUser = firebase.user;
+    el.shadowRoot!.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await flush(el);
+
+    expect(firebase.createUserWithEmailAndPassword).toHaveBeenCalledWith(expect.anything(), 'ada@example.com', phrase);
+  });
+
+  it('rejects a short new password and a mismatch in settings', async () => {
+    firebase.currentUser = firebase.user;
+    store.dispatch(userAuth(true));
+    const el = document.createElement('input-password') as HTMLElement & { updateComplete: Promise<unknown> };
+    document.body.append(el);
+    await el.updateComplete;
+
+    const next = el.shadowRoot!.querySelector('#pwa-new-password') as HTMLInputElement;
+    const verify = el.shadowRoot!.querySelector('#pwa-verify-password') as HTMLInputElement;
+    const current = el.shadowRoot!.querySelector('#pwa-current-password') as HTMLInputElement;
+    expect(el.shadowRoot!.querySelector('.hint')!.textContent).toBe(passwordHint);
+    expect(next.getAttribute('autocomplete')).toBe('new-password');
+    expect(next.getAttribute('minlength')).toBe('8');
+    expect(next.getAttribute('maxlength')).toBe('128');
+    expect(el.shadowRoot!.querySelectorAll('button.reveal').length).toBe(3);
+
+    current.value = 'secret12';
+    next.value = 'seven!!';
+    verify.value = 'seven!!';
+    el.shadowRoot!.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await flush(el);
+    expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe(passwordShort);
+    expect(firebase.updatePassword).not.toHaveBeenCalled();
+    expect(next.value).toBe('seven!!');
+
+    next.value = 'correct horse';
+    verify.value = 'correct horse.';
+    el.shadowRoot!.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await flush(el);
+    expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe(passwordMismatch);
+    expect(firebase.updatePassword).not.toHaveBeenCalled();
   });
 
 });

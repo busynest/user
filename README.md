@@ -140,7 +140,7 @@ The same forms, in the page instead of the drawer.
 |---|---|
 | `subscribe` | Starts on sign-up. Without it, starts on sign-in. |
 
-Sign-in calls `signInWithEmailAndPassword`. Sign-in and sign-up reject a password shorter than 6 characters. A failed sign-in or sign-up writes one sentence into an `aria-live` region (`::part(status)`). The button is disabled and reads Signing in… or Creating account… while the request is in flight.
+Sign-in calls `signInWithEmailAndPassword` and sends the password as typed. Sign-up rejects a new password shorter than 8 characters or longer than 128. Spaces and other characters are allowed. The field hint reads "At least 8 characters. A passphrase works well." A failed sign-in or sign-up writes one sentence into an `aria-live` region (`::part(status)`). The button is disabled and reads Signing in… or Creating account… while the request is in flight.
 
 Forgot password? sits on the sign-in form. It calls `sendPasswordResetEmail` for the address already in the email field. Success shows the same sentence as `<email-reset>`: "If an account uses that email, a reset link is on its way." A missing account gets that sentence too. The page dispatches `pwa-reset-sent`.
 
@@ -184,7 +184,7 @@ When the signed-in address is unverified:
 Email, password, and delete ask for the current password and call `reauthenticate` first.
 
 - Email then calls `verifyBeforeUpdateEmail`. On success the page dispatches `pwa-email-changed` on `window` with `{ email }`. The old `userEmailChanged` event still fires and is deprecated.
-- Password requires the verify field to match and rejects a new password shorter than 6 characters, the same rule as sign-in and sign-up. On success the page dispatches `pwa-password-changed` on `window` with `{ uid }`.
+- Password requires the verify field to match. A new password is 8 to 128 characters, the same rule as sign-up. On success the page dispatches `pwa-password-changed` on `window` with `{ uid }`.
 - Delete removes this user's files under `pwa-auth/{uid}`, calls `logAccountDelete`, then deletes the auth user. It does not delete `users/{uid}`. See [Data ownership](#data-ownership).
 - A failed action writes a short sentence into the status region and dispatches `pwa-auth-error`.
 

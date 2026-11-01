@@ -123,6 +123,45 @@ window.__criticalPromise = (async () => {
     }
 
     try {
+      const form = document.querySelector('user-login').shadowRoot.querySelector('form-signup');
+      const root = form.shadowRoot;
+      const field = input(root, 'input[name="new-password"]');
+      const hint = root.querySelector('.hint');
+      if (!hint || hint.textContent !== 'At least 8 characters. A passphrase works well.') {
+        throw new Error('hint ' + (hint && hint.textContent));
+      }
+      if (field.getAttribute('minlength') !== '8' || field.getAttribute('maxlength') !== '128') {
+        throw new Error('bounds ' + field.getAttribute('minlength') + ' ' + field.getAttribute('maxlength'));
+      }
+      if (field.getAttribute('autocomplete') !== 'new-password') throw new Error('autocomplete');
+      hint.scrollIntoView({ block: 'center' });
+      await pause('signup-hint');
+      record('password hint', true, hint.textContent);
+    } catch (error) {
+      record('password hint', false, error.message);
+    }
+
+    try {
+      const before = events('pwa-signup').length;
+      const form = document.querySelector('user-login').shadowRoot.querySelector('form-signup');
+      const root = form.shadowRoot;
+      setValue(input(root, 'input[type="email"]'), email);
+      setValue(input(root, 'input[name="new-password"]'), 'seven!!');
+      root.querySelector('form').requestSubmit();
+      await until('short password', () => {
+        const status = root.querySelector('[role="status"]');
+        return status && status.textContent === 'Use at least 8 characters.';
+      });
+      if (events('pwa-signup').length !== before) throw new Error('short password created an account');
+      if (input(root, 'input[name="new-password"]').value !== 'seven!!') throw new Error('password was cut');
+      root.querySelector('.hint').scrollIntoView({ block: 'center' });
+      await pause('signup-error');
+      record('short sign-up password', true, 'Use at least 8 characters.');
+    } catch (error) {
+      record('short sign-up password', false, error.message);
+    }
+
+    try {
       await signUp();
       await until('verification notice', () => {
         return document.querySelector('user-login').shadowRoot.textContent.includes('Check your inbox for the verification email');
@@ -328,6 +367,18 @@ window.__criticalPromise = (async () => {
       const box = settings.shadowRoot.querySelector('input-password');
       const root = box.shadowRoot;
       const before = events('pwa-password-changed').length;
+      setValue(input(root, '#pwa-current-password'), password);
+      setValue(input(root, '#pwa-new-password'), 'seven!!');
+      setValue(input(root, '#pwa-verify-password'), 'seven!!');
+      root.querySelector('button[type="submit"]').click();
+      await until('settings short password', () => {
+        const status = root.querySelector('[role="status"]');
+        return status && status.textContent === 'Use at least 8 characters.';
+      });
+      if (events('pwa-password-changed').length !== before) throw new Error('short password was saved');
+      await sleep(2200);
+      root.querySelector('[role="status"]').scrollIntoView({ block: 'center' });
+      await pause('settings-password');
       setValue(input(root, '#pwa-current-password'), password);
       setValue(input(root, '#pwa-new-password'), 'secret99');
       setValue(input(root, '#pwa-verify-password'), 'secret99');

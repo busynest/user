@@ -242,8 +242,8 @@ let FormLogin = class FormLogin extends LitElement {
             this.show({ code: 'pwa/missing-email', message: 'Enter an email address.' });
             return;
         }
-        if (this.password.length < 6) {
-            this.show({ code: 'pwa/short-password', message: 'Password must be at least 6 characters.' });
+        if (!this.password) {
+            this.show({ code: 'pwa/missing-password', message: 'Enter a password.' });
             return;
         }
         await this.signIn(this.email, this.password);

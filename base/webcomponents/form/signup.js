@@ -16,6 +16,7 @@ import { sendVerification } from '../../api/verify.js';
 import { pwaAuthError, pwaSignup } from '../../events/names.js';
 import { emitWindow, toAuthError, toPwaUser } from '../../events/emit.js';
 import { userMessage } from '../../firebase/message.js';
+import { newPasswordIssue, passwordHint, passwordMax, passwordMin } from '../../firebase/password.js';
 import { buttonStyle } from './css/button.js';
 import { labelStyle } from './css/label.js';
 import { inputStyle } from './css/input.js';
@@ -98,6 +99,7 @@ let FormSignup = class FormSignup extends LitElement {
     render() {
         const emailId = `${this.source}-signup-email`;
         const passId = `${this.source}-signup-pass`;
+        const hintId = `${this.source || 'page'}-signup-password-hint`;
         const statusId = `${this.source || 'page'}-signup-status`;
         return html `
   
@@ -144,14 +146,18 @@ let FormSignup = class FormSignup extends LitElement {
                   part=         "password"
                   type=         "${this.showPassword ? 'text' : 'password'}"
                   autocomplete= "new-password"
+                  minlength=    "${passwordMin}"
+                  maxlength=    "${passwordMax}"
                   aria-invalid= "${this.tone === 'error' ? 'true' : 'false'}"
-                  aria-describedby="${statusId}"
+                  aria-describedby="${hintId} ${statusId}"
                   @input=       "${this.handlePassword}"
                   @change=      "${this.handlePassword}">
 
                 ${revealControl(this.showPassword, () => { this.showPassword = !this.showPassword; })}
 
               </span>
+
+              <p id="${hintId}" class="hint" part="hint">${passwordHint}</p>
 
             </label>
 
@@ -220,8 +226,9 @@ let FormSignup = class FormSignup extends LitElement {
             this.show({ code: 'pwa/missing-email', message: 'Enter an email address.' });
             return;
         }
-        if (this.password.length < 6) {
-            this.show({ code: 'pwa/short-password', message: 'Password must be at least 6 characters.' });
+        const issue = newPasswordIssue(this.password);
+        if (issue) {
+            this.show(issue);
             return;
         }
         await this.newAccount(this.email, this.password);
