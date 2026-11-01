@@ -1,7 +1,7 @@
 /* Optional - retired. Profile photos upload from contact-photo. */
 
 import { ref } from "firebase/storage";
-import { storage } from "../../../firebase/authentication";
+import { storage } from "../../../firebase/authentication.js";
 /*
 export const uploadIcon = (uploader, file) => {
 

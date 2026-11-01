@@ -1,10 +1,10 @@
 import { css, CSSResultArray, html, LitElement }   from 'lit';
 import { customElement, property, state }     from 'lit/decorators.js';
 import { connect }                            from 'pwa-helpers/connect-mixin.js';
-import { store, AppState }                    from '../../store';
-import { iconStyles }                         from './css/icon';
-import { toggleSign }                         from '../../redux/frontend';
-import { applyFirebaseConfig }                from '../../firebase/attribute';
+import { store, AppState }                    from '../../store.js';
+import { iconStyles }                         from './css/icon.js';
+import { toggleSign }                         from '../../redux/frontend.js';
+import { applyFirebaseConfig }                from '../../firebase/attribute.js';
 // import { faceIcon }                           from '../../css/svg';
 
 @customElement('user-icon')

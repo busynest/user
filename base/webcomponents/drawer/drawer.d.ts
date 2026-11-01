@@ -1,7 +1,7 @@
 import { CSSResultArray, LitElement, PropertyValues } from 'lit';
-import { AppState } from '../../store';
-import '../form/login';
-import '../form/signup';
+import { AppState } from '../../store.js';
+import '../form/login.js';
+import '../form/signup.js';
 declare const UserDrawer_base: (new (...args: any[]) => {
     _storeUnsubscribe: import("redux").Unsubscribe;
     connectedCallback(): void;
@@ -60,3 +60,4 @@ declare global {
     }
 }
 export {};
+//# sourceMappingURL=drawer.d.ts.map

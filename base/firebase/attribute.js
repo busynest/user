@@ -1,6 +1,6 @@
-import { pwaAuthError } from '../events/names';
-import { emitWindow, toAuthError } from '../events/emit';
-import { initialize, isReady } from './authentication';
+import { pwaAuthError } from '../events/names.js';
+import { emitWindow, toAuthError } from '../events/emit.js';
+import { initialize, isReady } from './authentication.js';
 export function applyFirebaseConfig(host) {
     if (isReady())
         return;

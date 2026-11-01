@@ -64,3 +64,4 @@ export interface PwaEventMap {
     'pwa-verification-sent': CustomEvent<PwaVerificationSentDetail>;
     'pwa-email-verified': CustomEvent<PwaEmailVerifiedDetail>;
 }
+//# sourceMappingURL=types.d.ts.map

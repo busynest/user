@@ -1,11 +1,11 @@
 import { CSSResultArray, LitElement } from 'lit';
-import { AppState } from '../../store';
-import './input/uploader';
-import './input/name';
-import './input/email';
-import './input/password';
-import './input/delete';
-import './input/verify';
+import { AppState } from '../../store.js';
+import './input/uploader.js';
+import './input/name.js';
+import './input/email.js';
+import './input/password.js';
+import './input/delete.js';
+import './input/verify.js';
 declare const UserSettings_base: (new (...args: any[]) => {
     _storeUnsubscribe: import("redux").Unsubscribe;
     connectedCallback(): void;
@@ -56,3 +56,4 @@ declare global {
     }
 }
 export {};
+//# sourceMappingURL=settings.d.ts.map

@@ -1,6 +1,6 @@
-import { pwaAuthError } from '../events/names';
-import { emitWindow, toAuthError } from '../events/emit';
-import { initialize, isReady } from './authentication';
+import { pwaAuthError } from '../events/names.js';
+import { emitWindow, toAuthError } from '../events/emit.js';
+import { initialize, isReady } from './authentication.js';
 import type { FirebaseOptions } from 'firebase/app';
 
 /** Optional - firebase-config JSON on a host element, used when the app is not up yet. */

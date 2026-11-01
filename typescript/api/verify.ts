@@ -1,10 +1,10 @@
 import { onAuthStateChanged, sendEmailVerification } from 'firebase/auth';
 
-import { auth, emailActionCodeSettings, isReady, onReady } from '../firebase/authentication';
-import { pwaAuthError, pwaEmailVerified, pwaVerificationSent } from '../events/names';
-import { emitWindow, toAuthError, toPwaUser } from '../events/emit';
-import store from '../store';
-import { accVerified } from '../redux/backend';
+import { auth, emailActionCodeSettings, isReady, onReady } from '../firebase/authentication.js';
+import { pwaAuthError, pwaEmailVerified, pwaVerificationSent } from '../events/names.js';
+import { emitWindow, toAuthError, toPwaUser } from '../events/emit.js';
+import store from '../store.js';
+import { accVerified } from '../redux/backend.js';
 
 /** Required - last uid we have already announced, so a reload does not repeat the event. */
 let trackedUid = '';

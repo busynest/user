@@ -12,22 +12,22 @@ import {
 
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
-import { auth }           from '../../firebase/authentication';
+import { auth }           from '../../firebase/authentication.js';
 
-import { pwaAuthError, pwaLogin } from '../../events/names';
-import { emitWindow, toAuthError, toPwaUser } from '../../events/emit';
-import { userMessage } from '../../firebase/message';
+import { pwaAuthError, pwaLogin } from '../../events/names.js';
+import { emitWindow, toAuthError, toPwaUser } from '../../events/emit.js';
+import { userMessage } from '../../firebase/message.js';
 
-import { buttonStyle }    from './css/button';
-import { labelStyle }     from './css/label';
-import { inputStyle }     from './css/input';
-import { listStyle }      from './css/list';
-import { toggleStyle }    from './css/toggle';
-import { tapStyle }       from '../css/tap';
+import { buttonStyle }    from './css/button.js';
+import { labelStyle }     from './css/label.js';
+import { inputStyle }     from './css/input.js';
+import { listStyle }      from './css/list.js';
+import { toggleStyle }    from './css/toggle.js';
+import { tapStyle }       from '../css/tap.js';
 
-import store                  from '../../store';
-import { universalToggle }    from '../../redux/frontend';
-import { rememberEmail }      from './draft';
+import store                  from '../../store.js';
+import { universalToggle }    from '../../redux/frontend.js';
+import { rememberEmail }      from './draft.js';
 
 @customElement('form-login')
 export class FormLogin extends LitElement {

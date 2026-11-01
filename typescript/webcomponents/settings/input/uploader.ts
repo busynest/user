@@ -1,15 +1,15 @@
 
 import { html, css, LitElement, CSSResultArray }   from 'lit';
 import { property, state }          from 'lit/decorators.js';
-import { store, AppState }          from '../../../store';
+import { store, AppState }          from '../../../store.js';
 import { connect }                  from 'pwa-helpers';
-import { auth, storage }             from '../../../firebase/authentication';
+import { auth, storage }             from '../../../firebase/authentication.js';
 import { updateProfile }            from 'firebase/auth';
-import { accImage }                 from '../../../redux/backend';
+import { accImage }                 from '../../../redux/backend.js';
 import { ref, updateMetadata, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import { labelStyle } from '../../form/css/label';
-import { pwaAuthError, pwaProfileUpdated } from '../../../events/names';
-import { emitWindow, toAuthError } from '../../../events/emit';
+import { labelStyle } from '../../form/css/label.js';
+import { pwaAuthError, pwaProfileUpdated } from '../../../events/names.js';
+import { emitWindow, toAuthError } from '../../../events/emit.js';
 
 export class ContactPhoto extends connect(store)(LitElement) {
 

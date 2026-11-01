@@ -1,31 +1,31 @@
 import { css, CSSResultArray, html, LitElement, PropertyValues }   from 'lit';
 import { customElement, property, state }     from 'lit/decorators.js';
-import { connect }                            from 'pwa-helpers/connect-mixin';
+import { connect }                            from 'pwa-helpers/connect-mixin.js';
 
-import { store, AppState }  from '../../store';
+import { store, AppState }  from '../../store.js';
 
-import { close }            from '../css/svg';
-import { show }             from '../css/toggle';
+import { close }            from '../css/svg.js';
+import { show }             from '../css/toggle.js';
 
-import { listStyle }        from '../form/css/list';
+import { listStyle }        from '../form/css/list.js';
 
-import { drawerStyle }      from './css/drawer';
-import { exitStyle }        from './css/exit';
-import { linkStyle }        from './css/link';
-import { lineStyle }        from './css/paragraph';
+import { drawerStyle }      from './css/drawer.js';
+import { exitStyle }        from './css/exit.js';
+import { linkStyle }        from './css/link.js';
+import { lineStyle }        from './css/paragraph.js';
 
-import { closeSign }       from '../../redux/frontend'; 
-import { logOut }           from '../../firebase/interface';
-import { applyFirebaseConfig } from '../../firebase/attribute';
+import { closeSign }       from '../../redux/frontend.js'; 
+import { logOut }           from '../../firebase/interface.js';
+import { applyFirebaseConfig } from '../../firebase/attribute.js';
 
-import { pwaDrawerToggleName } from '../../events/names';
-import { emitElement } from '../../events/emit';
-import { deepActive, focusable } from './keys';
+import { pwaDrawerToggleName } from '../../events/names.js';
+import { emitElement } from '../../events/emit.js';
+import { deepActive, focusable } from './keys.js';
 
-import '../form/login';
-import '../form/signup';
-import { animation } from '../css/animation';
-import { tapStyle } from '../css/tap';
+import '../form/login.js';
+import '../form/signup.js';
+import { animation } from '../css/animation.js';
+import { tapStyle } from '../css/tap.js';
 
 @customElement('user-drawer')
 export class UserDrawer extends connect(store)(LitElement) {

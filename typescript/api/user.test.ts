@@ -44,8 +44,8 @@ vi.mock('firebase/storage', () => ({
   getStorage: vi.fn(() => ({}))
 }));
 
-import { initialize } from '../firebase/authentication';
-import { getCurrentUser, onUserChanged } from './user';
+import { initialize } from '../firebase/authentication.js';
+import { getCurrentUser, onUserChanged } from './user.js';
 
 describe('onUserChanged', () => {
 

@@ -15,9 +15,9 @@ import {
   pwaSignup,
   pwaVerificationSent,
   pwaEmailVerified
-} from './names';
-import { emitElement, emitWindow } from './emit';
-import { userEmailChanged } from '../deprecated/email-changed';
+} from './names.js';
+import { emitElement, emitWindow } from './emit.js';
+import { userEmailChanged } from '../deprecated/email-changed.js';
 
 describe('event names', () => {
 

@@ -18,3 +18,4 @@ export declare function emailActionCodeSettings(): ActionCodeSettings | undefine
 export declare function isReady(): boolean;
 export declare function onReady(fn: () => void): void;
 export declare function initialize(options?: InitializeOptions): FirebaseApp;
+//# sourceMappingURL=authentication.d.ts.map

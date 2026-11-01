@@ -1,25 +1,46 @@
 {
-  "$schema"   : "https://json.schemastore.org/tsconfig",
-  "type"      : "module",
-  "include"   : [ "./typescript/export/pwa-auth.ts" ],
-  "exclude"   : [ "demonstration/**/*.ts", "development/**/*.ts" ],
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "outDir":                             "base",
-    "target":                             "ES2022",
-    "module":                             "ESNext",
-    "moduleResolution":                   "node",
-    "lib":                                ["ES2022", "DOM", "DOM.Iterable"],
+    "target": "ES2022",
+    "module": "Node18",
+    "moduleResolution": "Node16",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
 
-    "strict":                             true,
-    "esModuleInterop":                    true,
-    "declaration":                        true,
-    "emitDecoratorMetadata":              true,
-    
-    "sourceMap":                          true,
+    "rootDir": "typescript",
+    "outDir": "base",
+    "noEmit": true,
 
-    "experimentalDecorators":             true,
-    "useDefineForClassFields":            false,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
 
-    "removeComments":                     true
-  }
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
+    "removeComments": true,
+
+    "types": ["node"]
+  },
+  "include": ["typescript/export/pwa-auth.ts"],
+  "exclude": [
+    "typescript/**/*.test.ts",
+    "typescript/emulator/**",
+    "development/**",
+    "demonstration/**",
+    "node_modules",
+    "base",
+    "website",
+    "source"
+  ]
 }

@@ -2,11 +2,11 @@ import { CSSResultArray, LitElement, css, html } from 'lit';
 import { state } from 'lit/decorators.js';
 import { connect } from 'pwa-helpers';
 
-import store, { AppState } from '../../../store';
-import { sendVerification } from '../../../api/verify';
-import { userMessage } from '../../../firebase/message';
-import { buttonStyle } from '../../form/css/button';
-import { tapStyle } from '../../css/tap';
+import store, { AppState } from '../../../store.js';
+import { sendVerification } from '../../../api/verify.js';
+import { userMessage } from '../../../firebase/message.js';
+import { buttonStyle } from '../../form/css/button.js';
+import { tapStyle } from '../../css/tap.js';
 
 /** Required - seconds before another verification email. Matches email-reset. */
 const verifyWait = 45;

@@ -1,17 +1,17 @@
 import { CSSResultArray, LitElement, css, html } from "lit";
 import { property, state }  from "lit/decorators.js";
 import { connect }          from "pwa-helpers";
-import store, { AppState }  from "../../../store";
-import { auth }             from "../../../firebase/authentication";
-import { labelStyle }       from "../../form/css/label";
-import { inputStyle }       from "../../form/css/input";
-import { buttonStyle }      from "../../form/css/button";
+import store, { AppState }  from "../../../store.js";
+import { auth }             from "../../../firebase/authentication.js";
+import { labelStyle }       from "../../form/css/label.js";
+import { inputStyle }       from "../../form/css/input.js";
+import { buttonStyle }      from "../../form/css/button.js";
 import { verifyBeforeUpdateEmail } from "firebase/auth";
-import { reauthenticate }   from "../../../firebase/interface";
-import { pwaAuthError, pwaEmailChanged } from "../../../events/names";
-import { emitWindow, toAuthError } from "../../../events/emit";
-import { emitLegacyEmailChanged } from "../../../deprecated/email-changed";
-import { userMessage } from "../../../firebase/message";
+import { reauthenticate }   from "../../../firebase/interface.js";
+import { pwaAuthError, pwaEmailChanged } from "../../../events/names.js";
+import { emitWindow, toAuthError } from "../../../events/emit.js";
+import { emitLegacyEmailChanged } from "../../../deprecated/email-changed.js";
+import { userMessage } from "../../../firebase/message.js";
 
 export class ContactEmail extends connect(store)(LitElement) {
 

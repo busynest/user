@@ -1,22 +1,6 @@
 {
-  "extends": "./tsconfig",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    
-    "types":                              ["node"],
-    "skipLibCheck":                       true,
-
-    "noUnusedLocals":                     true,
-    "noUnusedParameters":                 true,
-    "noImplicitReturns":                  true,
-    "noFallthroughCasesInSwitch":         true,
-    "strictFunctionTypes":                true,
-    "noImplicitThis":                     true,
-    "strictPropertyInitialization":       true,
-    "useUnknownInCatchVariables":         true,
-
-    "isolatedModules":                    true,
-    "allowSyntheticDefaultImports":       true,
-    "forceConsistentCasingInFileNames":   true,
-    "pretty":                             true
+    "noEmit": false
   }
 }

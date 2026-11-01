@@ -1,14 +1,14 @@
-export { UserLogin }            from '../webcomponents/login/page';
-export { UserDrawer }           from '../webcomponents/drawer/drawer';
-export { UserSettings }         from '../webcomponents/settings/settings';
-export { UserIcon }             from '../webcomponents/icon/icon';
-export { EmailReset }           from '../webcomponents/form/forgot';
-export { firebaseConfig, application, db, storage, auth, user, initialize } from '../firebase/authentication';
-export type { InitializeOptions } from '../firebase/authentication';
-export { logOut, logAccount, logAccountDelete, deleteDocument, pwaDrawerToggle, reauthenticate } from "../firebase/interface";
-export { getCurrentUser, onUserChanged } from '../api/user';
-export { sendVerification, isEmailVerified } from '../api/verify';
-export { openDrawer, closeDrawer, toggleDrawer } from '../api/drawer';
+export { UserLogin }            from '../webcomponents/login/page.js';
+export { UserDrawer }           from '../webcomponents/drawer/drawer.js';
+export { UserSettings }         from '../webcomponents/settings/settings.js';
+export { UserIcon }             from '../webcomponents/icon/icon.js';
+export { EmailReset }           from '../webcomponents/form/forgot.js';
+export { firebaseConfig, application, db, storage, auth, user, initialize } from '../firebase/authentication.js';
+export type { InitializeOptions } from '../firebase/authentication.js';
+export { logOut, logAccount, logAccountDelete, deleteDocument, pwaDrawerToggle, reauthenticate } from "../firebase/interface.js";
+export { getCurrentUser, onUserChanged } from '../api/user.js';
+export { sendVerification, isEmailVerified } from '../api/verify.js';
+export { openDrawer, closeDrawer, toggleDrawer } from '../api/drawer.js';
 export {
   pwaAuthChanged,
   pwaLogin,
@@ -22,7 +22,7 @@ export {
   pwaDrawerToggleName,
   pwaAuthError,
   eventName
-} from '../events/names';
+} from '../events/names.js';
 export type {
   PwaUser,
   PwaAuthChangedDetail,
@@ -37,7 +37,7 @@ export type {
   PwaDrawerToggleDetail,
   PwaAuthErrorDetail,
   PwaEventMap
-} from '../events/types';
-export { userEmailChanged } from '../deprecated/email-changed';
-export { pwaVerificationSent, pwaEmailVerified } from '../events/names';
-export type { PwaVerificationSentDetail, PwaEmailVerifiedDetail } from '../events/types';
+} from '../events/types.js';
+export { userEmailChanged } from '../deprecated/email-changed.js';
+export { pwaVerificationSent, pwaEmailVerified } from '../events/names.js';
+export type { PwaVerificationSentDetail, PwaEmailVerifiedDetail } from '../events/types.js';

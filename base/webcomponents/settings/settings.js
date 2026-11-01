@@ -10,19 +10,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { css, html, LitElement } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../../store';
-import { navigateAuth } from '../../redux/frontend';
-import { navigation } from './css/navigation';
-import './input/uploader';
-import './input/name';
-import './input/email';
-import './input/password';
-import './input/delete';
-import './input/verify';
-import { listStyle } from '../form/css/list';
-import { animation } from '../css/animation';
-import { tapStyle } from '../css/tap';
-import { applyFirebaseConfig } from '../../firebase/attribute';
+import { store } from '../../store.js';
+import { navigateAuth } from '../../redux/frontend.js';
+import { navigation } from './css/navigation.js';
+import './input/uploader.js';
+import './input/name.js';
+import './input/email.js';
+import './input/password.js';
+import './input/delete.js';
+import './input/verify.js';
+import { listStyle } from '../form/css/list.js';
+import { animation } from '../css/animation.js';
+import { tapStyle } from '../css/tap.js';
+import { applyFirebaseConfig } from '../../firebase/attribute.js';
 let UserSettings = class UserSettings extends connect(store)(LitElement) {
     constructor() {
         super();

@@ -7,9 +7,9 @@
 
 
 // Redux
-import { store } from '../store';
-import { closeSign, iconAuth, nameAuth, userAuth } from '../redux/frontend';
-import { accID, accEmail, accImage, accName, accVerified } from '../redux/backend';
+import { store } from '../store.js';
+import { closeSign, iconAuth, nameAuth, userAuth } from '../redux/frontend.js';
+import { accID, accEmail, accImage, accName, accVerified } from '../redux/backend.js';
 
 // Firebase Auth
 import { EmailAuthProvider, getAuth, onAuthStateChanged, reauthenticateWithCredential, signOut } from 'firebase/auth';
@@ -24,11 +24,11 @@ import { Analytics, getAnalytics, isSupported, logEvent } from "firebase/analyti
 import { deleteObject, listAll, ref } from "firebase/storage";
 
 // Start Authentication
-import { application, auth, db, isReady, onReady, storage } from './authentication'
+import { application, auth, db, isReady, onReady, storage } from './authentication.js'
 
-import { pwaAuthChanged, pwaAuthError, pwaLogout } from '../events/names';
-import { emitWindow, toAuthError, toPwaUser } from '../events/emit';
-import { userMessage } from './message';
+import { pwaAuthChanged, pwaAuthError, pwaLogout } from '../events/names.js';
+import { emitWindow, toAuthError, toPwaUser } from '../events/emit.js';
+import { userMessage } from './message.js';
 
 
 
