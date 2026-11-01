@@ -101,8 +101,6 @@ export class EmailReset extends LazyLoader {
 
       button.new {
         display:                block;
-        width:                  100%;
-        box-sizing:             border-box;
       }
     `
   ];

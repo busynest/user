@@ -10,6 +10,7 @@ export const listStyle: CSSResult = css`
 
   li {
     display:                  grid;
+    min-width:                0;
   }
 
   .divider {

@@ -27,7 +27,7 @@ export const drawerStyle = css `
   }
 
   .userDrawer > .spec > .wrapper {
-    margin: 20px 8px 12px; /* Required - space under the drawer header */
+    margin: 20px 0 12px; /* Required - space under the header. Fields bring their own 16px inset. */
   }
 
   .userDrawer,

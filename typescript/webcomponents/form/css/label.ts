@@ -2,6 +2,12 @@ import { css, CSSResult } from "lit";
 
 export const labelStyle : CSSResult = css`
 
+  :host {
+    box-sizing:           border-box;
+    min-width:            0;
+    max-width:            100%;
+  }
+
   label {
     display:              grid;
     gap:                  6px;

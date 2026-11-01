@@ -3,6 +3,14 @@ import { css, CSSResult } from "lit";
 export const toggleStyle: CSSResult = css`
   
   .new {
+    display:            block;
+    box-sizing:         border-box;
+    /* Required - same 16px column as the inputs and the Google button. */
+    width:              calc(100% - 32px);
+    max-width:          calc(100% - 32px);
+    min-width:          0;
+    margin-left:        16px;
+    margin-right:       16px;
     border:             0;
     border-top:         1px solid var(--pwa_line_color, #e3daca);
     padding:            14px 16px;

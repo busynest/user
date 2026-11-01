@@ -2,7 +2,7 @@ import { css } from 'lit';
 export const noticeStyle = css `
 
   .notice {
-    margin:               4px 16px 8px;
+    margin:               4px 16px 8px; /* Required - card border sits on the 16px column */
     padding:              14px 16px 16px;
     color:                var(--pwa_label_text_color, #1c2430);
     background:           var(--pwa_nav_on_background, #f3efe6);

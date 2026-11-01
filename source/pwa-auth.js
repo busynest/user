@@ -176,6 +176,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
   li {
     display:                  grid;
+    min-width:                0;
   }
 
   .divider {
@@ -195,10 +196,14 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
   }
 
   .action-button {
-    display:              inline-block;
+    display:              block;
     box-sizing:           border-box;
-    white-space:          nowrap;
-    margin:               8px 16px 20px auto;
+    white-space:          normal;
+    /* Required - same 16px column as the inputs. Margin box stays inside the host. */
+    width:                calc(100% - 32px);
+    max-width:            calc(100% - 32px);
+    min-width:            0;
+    margin:               8px 16px 20px;
     font-weight:          600;
     text-align:           center;
     vertical-align:       middle;
@@ -208,7 +213,6 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     font-size:            16px;
     min-height:           var(--pwa_tap, 44px); /* Required - minimum tap target */
     height:               auto;
-    max-width:            calc(100% - 32px); /* Required - fit 320px */
     line-height:          1.2;
     padding:              10px 18px;
     border-radius:        10px;
@@ -217,17 +221,8 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     color:                var(--pwa_action_text_color, #fff);
     background-color:     var(--pwa_action_background_color, #2a6b45);
     border-color:         var(--pwa_action_border_color, #214f34);
-    align-self:           start; /* Required - stay under the field when a tab changes height */
-    justify-self:         end;
-  }
-
-  /* Required - fit 320px */
-  @media (max-width: 320px) {
-    .action-button {
-      white-space:        normal;
-      margin-left:        16px;
-      margin-right:       16px;
-    }
+    align-self:           stretch;
+    justify-self:         stretch;
   }
 
   .saving{
@@ -241,14 +236,17 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
   }
 
   .google {
-    display:              inline-flex;
+    display:              flex;
     align-items:          center;
     justify-content:      center;
     gap:                  10px;
     box-sizing:           border-box;
-    width:                100%;
+    /* Required - same left and right as the inputs. The G mark does not set the width. */
+    width:                calc(100% - 32px);
+    max-width:            calc(100% - 32px);
+    min-width:            0;
     min-height:           var(--pwa_tap, 44px);
-    margin:               0 0 8px;
+    margin:               0 16px 8px;
     padding:              10px 18px;
     border-radius:        10px;
     border:               1px solid #747775;
@@ -283,17 +281,25 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
   .submit {
     box-sizing:         border-box;
-    width:              100%;
+    width:              calc(100% - 32px);
+    max-width:          calc(100% - 32px);
+    min-width:          0;
     background-color:   var(--pwa_action_background_color, #2a6b45);
     color:              white;
     padding:            14px 20px;
-    margin:             8px 0;
+    margin:             8px 16px;
     border:             none;
     border-radius:      4px;
     cursor:             pointer;
   }
 
 `,WE=i`
+
+  :host {
+    box-sizing:           border-box;
+    min-width:            0;
+    max-width:            100%;
+  }
 
   label {
     display:              grid;
@@ -340,6 +346,14 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 `,XE=i`
   
   .new {
+    display:            block;
+    box-sizing:         border-box;
+    /* Required - same 16px column as the inputs and the Google button. */
+    width:              calc(100% - 32px);
+    max-width:          calc(100% - 32px);
+    min-width:          0;
+    margin-left:        16px;
+    margin-right:       16px;
     border:             0;
     border-top:         1px solid var(--pwa_line_color, #e3daca);
     padding:            14px 16px;
@@ -404,10 +418,23 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
   .status.error { color: var(--pwa_close_color, #9a3b32); }
 
   .pair {
-    display:                grid;
-    grid-template-columns:  minmax(0, 1fr) auto;
-    gap:                    8px;
-    align-items:            center;
+    display:                block;
+    position:               relative;
+    min-width:              0;
+  }
+
+  /* Required - Show sits in the field so the input border matches the column. */
+  .pair > input {
+    padding-right:          4.75rem;
+  }
+
+  .pair > .reveal {
+    position:               absolute;
+    top:                    0;
+    right:                  6px;
+    height:                 48px;
+    min-height:             0;
+    margin:                 0;
   }
 
 `;function tD(t,e,n){return U`
@@ -555,7 +582,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     `}change(){bn.dispatch(rn(this.source))}async google(){if(!this.busy&&!this.resetBusy){this.busy=!0,this.tone="",this.status="";try{await bE()}catch(t){this.show(mE(t))}finally{this.busy=!1}}}show(t,e=!0){this.tone=e?"error":"",this.status=KE(t),e&&gE(PE,t)}handleEmail(t){const e=t.target;this.email=e.value,aD(this.email)}handlePassword(t){const e=t.target;this.password=e.value}readFields(){const t=this.renderRoot.querySelector('input[type="email"]'),e=this.renderRoot.querySelector('input[name="password"]');this.email=t?.value??"",this.password=e?.value??"",aD(this.email)}_handleSubmit(t){t.preventDefault(),this.login()}async login(){this.busy||(this.readFields(),this.email.length<4?this.show({code:"pwa/missing-email",message:"Enter an email address."}):this.password?await this.signIn(this.email,this.password):this.show({code:"pwa/missing-password",message:"Enter a password."}))}sent(t){this.tone="",this.status="If an account uses that email, a reset link is on its way.",gE(kE,{email:t})}};cD([lt({type:String}),lD("design:type",Object)],uD.prototype,"source",void 0),cD([lt({type:Boolean,attribute:"hide-google",reflect:!0}),lD("design:type",Object)],uD.prototype,"hideGoogle",void 0),cD([ut(),lD("design:type",Object)],uD.prototype,"email",void 0),cD([ut(),lD("design:type",Object)],uD.prototype,"password",void 0),cD([ut(),lD("design:type",Object)],uD.prototype,"status",void 0),cD([ut(),lD("design:type",Object)],uD.prototype,"tone",void 0),cD([ut(),lD("design:type",Object)],uD.prototype,"busy",void 0),cD([ut(),lD("design:type",Object)],uD.prototype,"resetBusy",void 0),cD([ut(),lD("design:type",Object)],uD.prototype,"showPassword",void 0),uD=cD([at("form-login"),lD("design:paramtypes",[])],uD);const hD="@firebase/installations",dD="0.6.24",pD=1e4,fD=`w:${dD}`,CD="FIS_v2",gD=36e5,mD=new Yn("installations","Installations",{"missing-app-config-values":'Missing App configuration value: "{$valueName}"',"not-registered":"Firebase Installation is not registered.","installation-not-found":"Firebase Installation not found.","request-failed":'{$requestName} request failed with error "{$serverCode} {$serverStatus}: {$serverMessage}"',"app-offline":"Could not process request. Application offline.","delete-pending-registration":"Can't delete installation while there is a pending registration request."});function wD(t){return t instanceof Wn&&t.code.includes("request-failed")}function yD({projectId:t}){return`https://firebaseinstallations.googleapis.com/v1/projects/${t}/installations`}function ED(t){return{token:t.token,requestStatus:2,expiresIn:(e=t.expiresIn,Number(e.replace("s","000"))),creationTime:Date.now()};var e}async function DD(t,e){const n=(await e.json()).error;return mD.create("request-failed",{requestName:t,serverCode:n.code,serverMessage:n.message,serverStatus:n.status})}function _D({apiKey:t}){return new Headers({"Content-Type":"application/json",Accept:"application/json","x-goog-api-key":t})}function bD(t,{refreshToken:e}){const n=_D(t);return n.append("Authorization",function(t){return`${CD} ${t}`}(e)),n}async function vD(t){const e=await t();return e.status>=500&&e.status<600?t():e}function ID(t){return new Promise(e=>{setTimeout(e,t)})}const TD=/^[cdef][\w-]{21}$/;function OD(){try{const t=new Uint8Array(17);(self.crypto||self.msCrypto).getRandomValues(t),t[0]=112+t[0]%16;const e=function(t){const e=(n=t,btoa(String.fromCharCode(...n)).replace(/\+/g,"-").replace(/\//g,"_"));var n;return e.substr(0,22)}(t);return TD.test(e)?e:""}catch{return""}}function AD(t){return`${t.appName}!${t.appId}`}const SD=new Map;function ND(t,e){const n=AD(t);RD(n,e),function(t,e){const n=function(){!xD&&"BroadcastChannel"in self&&(xD=new BroadcastChannel("[Firebase] FID Change"),xD.onmessage=t=>{RD(t.data.key,t.data.fid)});return xD}();n&&n.postMessage({key:t,fid:e});0===SD.size&&xD&&(xD.close(),xD=null)}(n,e)}function RD(t,e){const n=SD.get(t);if(n)for(const t of n)t(e)}let xD=null;const kD="firebase-installations-store";let LD=null;function FD(){return LD||(LD=Ns("firebase-installations-database",1,{upgrade:(t,e)=>{if(0===e)t.createObjectStore(kD)}})),LD}async function PD(t,e){const n=AD(t),s=(await FD()).transaction(kD,"readwrite"),r=s.objectStore(kD),i=await r.get(n);return await r.put(e,n),await s.done,i&&i.fid===e.fid||ND(t,e.fid),e}async function MD(t){const e=AD(t),n=(await FD()).transaction(kD,"readwrite");await n.objectStore(kD).delete(e),await n.done}async function GD(t,e){const n=AD(t),s=(await FD()).transaction(kD,"readwrite"),r=s.objectStore(kD),i=await r.get(n),o=e(i);return void 0===o?await r.delete(n):await r.put(o,n),await s.done,!o||i&&i.fid===o.fid||ND(t,o.fid),o}async function HD(t){let e;const n=await GD(t.appConfig,n=>{const s=function(t){const e=t||{fid:OD(),registrationStatus:0};return jD(e)}(n),r=function(t,e){if(0===e.registrationStatus){if(!navigator.onLine){return{installationEntry:e,registrationPromise:Promise.reject(mD.create("app-offline"))}}const n={fid:e.fid,registrationStatus:1,registrationTime:Date.now()},s=async function(t,e){try{const n=await async function({appConfig:t,heartbeatServiceProvider:e},{fid:n}){const s=yD(t),r=_D(t),i=e.getImmediate({optional:!0});if(i){const t=await i.getHeartbeatsHeader();t&&r.append("x-firebase-client",t)}const o={fid:n,authVersion:CD,appId:t.appId,sdkVersion:fD},a={method:"POST",headers:r,body:JSON.stringify(o)},B=await vD(()=>fetch(s,a));if(B.ok){const t=await B.json();return{fid:t.fid||n,registrationStatus:2,refreshToken:t.refreshToken,authToken:ED(t.authToken)}}throw await DD("Create Installation",B)}(t,e);return PD(t.appConfig,n)}catch(n){throw wD(n)&&409===n.customData.serverCode?await MD(t.appConfig):await PD(t.appConfig,{fid:e.fid,registrationStatus:0}),n}}(t,n);return{installationEntry:n,registrationPromise:s}}return 1===e.registrationStatus?{installationEntry:e,registrationPromise:UD(t)}:{installationEntry:e}}(t,s);return e=r.registrationPromise,r.installationEntry});return""===n.fid?{installationEntry:await e}:{installationEntry:n,registrationPromise:e}}async function UD(t){let e=await VD(t.appConfig);for(;1===e.registrationStatus;)await ID(100),e=await VD(t.appConfig);if(0===e.registrationStatus){const{installationEntry:e,registrationPromise:n}=await HD(t);return n||e}return e}function VD(t){return GD(t,t=>{if(!t)throw mD.create("installation-not-found");return jD(t)})}function jD(t){return 1===(e=t).registrationStatus&&e.registrationTime+pD<Date.now()?{fid:t.fid,registrationStatus:0}:t;var e}async function $D({appConfig:t,heartbeatServiceProvider:e},n){const s=function(t,{fid:e}){return`${yD(t)}/${e}/authTokens:generate`}(t,n),r=bD(t,n),i=e.getImmediate({optional:!0});if(i){const t=await i.getHeartbeatsHeader();t&&r.append("x-firebase-client",t)}const o={installation:{sdkVersion:fD,appId:t.appId}},a={method:"POST",headers:r,body:JSON.stringify(o)},B=await vD(()=>fetch(s,a));if(B.ok){return ED(await B.json())}throw await DD("Generate Auth Token",B)}async function JD(t,e=!1){let n;const s=await GD(t.appConfig,s=>{if(!zD(s))throw mD.create("not-registered");const r=s.authToken;if(!e&&function(t){return 2===t.requestStatus&&!function(t){const e=Date.now();return e<t.creationTime||t.creationTime+t.expiresIn<e+gD}(t)}(r))return s;if(1===r.requestStatus)return n=async function(t,e){let n=await qD(t.appConfig);for(;1===n.authToken.requestStatus;)await ID(100),n=await qD(t.appConfig);const s=n.authToken;return 0===s.requestStatus?JD(t,e):s}(t,e),s;{if(!navigator.onLine)throw mD.create("app-offline");const e=function(t){const e={requestStatus:1,requestTime:Date.now()};return{...t,authToken:e}}(s);return n=async function(t,e){try{const n=await $D(t,e),s={...e,authToken:n};return await PD(t.appConfig,s),n}catch(n){if(!wD(n)||401!==n.customData.serverCode&&404!==n.customData.serverCode){const n={...e,authToken:{requestStatus:0}};await PD(t.appConfig,n)}else await MD(t.appConfig);throw n}}(t,e),e}});return n?await n:s.authToken}function qD(t){return GD(t,t=>{if(!zD(t))throw mD.create("not-registered");const e=t.authToken;return 1===(n=e).requestStatus&&n.requestTime+pD<Date.now()?{...t,authToken:{requestStatus:0}}:t;var n})}function zD(t){return void 0!==t&&2===t.registrationStatus}async function KD(t,e=!1){const n=t;await async function(t){const{registrationPromise:e}=await HD(t);e&&await e}(n);return(await JD(n,e)).token}function QD(t){return mD.create("missing-app-config-values",{valueName:t})}const WD="installations",YD=t=>{const e=wr(t.getProvider("app").getImmediate(),WD).getImmediate();return{getId:()=>async function(t){const e=t,{installationEntry:n,registrationPromise:s}=await HD(e);return s?s.catch(console.error):JD(e).catch(console.error),n.fid}(e),getToken:t=>KD(e,t)}};mr(new cs(WD,t=>{const e=t.getProvider("app").getImmediate(),n=function(t){if(!t||!t.options)throw QD("App Configuration");if(!t.name)throw QD("App Name");const e=["projectId","apiKey","appId"];for(const n of e)if(!t.options[n])throw QD(n);return{appName:t.name,projectId:t.options.projectId,apiKey:t.options.apiKey,appId:t.options.appId}}(e);return{app:e,appConfig:n,heartbeatServiceProvider:wr(e,"heartbeat"),_delete:()=>Promise.resolve()}},"PUBLIC")),mr(new cs("installations-internal",YD,"PRIVATE")),Ir(hD,dD),Ir(hD,dD,"esm2020");const XD="analytics",ZD="https://www.googletagmanager.com/gtag/js",t_=new ms("@firebase/analytics"),e_=new Yn("analytics","Analytics",{"already-exists":"A Firebase Analytics instance with the appId {$id}  already exists. Only one Firebase Analytics instance can be created for each appId.","already-initialized":"initializeAnalytics() cannot be called again with different options than those it was initially called with. It can be called again with the same options to return the existing instance, or getAnalytics() can be used to get a reference to the already-initialized instance.","already-initialized-settings":"Firebase Analytics has already been initialized.settings() must be called before initializing any Analytics instanceor it will have no effect.","interop-component-reg-failed":"Firebase Analytics Interop Component failed to instantiate: {$reason}","invalid-analytics-context":"Firebase Analytics is not supported in this environment. Wrap initialization of analytics in analytics.isSupported() to prevent initialization in unsupported environments. Details: {$errorInfo}","indexeddb-unavailable":"IndexedDB unavailable or restricted in this environment. Wrap initialization of analytics in analytics.isSupported() to prevent initialization in unsupported environments. Details: {$errorInfo}","fetch-throttle":"The config fetch request timed out while in an exponential backoff state. Unix timestamp in milliseconds when fetch request throttling ends: {$throttleEndTimeMillis}.","config-fetch-failed":"Dynamic config fetch failed: [{$httpStatus}] {$responseMessage}","no-api-key":'The "apiKey" field is empty in the local Firebase config. Firebase Analytics requires this field tocontain a valid API key.',"no-app-id":'The "appId" field is empty in the local Firebase config. Firebase Analytics requires this field tocontain a valid app ID.',"no-client-id":'The "client_id" field is empty.',"invalid-gtag-resource":"Trusted Types detected an invalid gtag resource: {$gtagURL}."});function n_(t){if(!t.startsWith(ZD)){const e=e_.create("invalid-gtag-resource",{gtagURL:t});return t_.warn(e.message),""}return t}function s_(t){return Promise.all(t.map(t=>t.catch(t=>t)))}function r_(t,e){const n=function(t,e){let n;return window.trustedTypes&&(n=window.trustedTypes.createPolicy(t,e)),n}("firebase-js-sdk-policy",{createScriptURL:n_}),s=document.createElement("script"),r=`${ZD}?l=${t}&id=${e}`;s.src=n?n?.createScriptURL(r):r,s.async=!0,document.head.appendChild(s)}function i_(t,e,n,s){return async function(r,...i){try{if("event"===r){const[s,r]=i;await async function(t,e,n,s,r){try{let i=[];if(r&&r.send_to){let t=r.send_to;Array.isArray(t)||(t=[t]);const s=await s_(n);for(const n of t){const t=s.find(t=>t.measurementId===n),r=t&&e[t.appId];if(!r){i=[];break}i.push(r)}}0===i.length&&(i=Object.values(e)),await Promise.all(i),t("event",s,r||{})}catch(t){t_.error(t)}}(t,e,n,s,r)}else if("config"===r){const[r,o]=i;await async function(t,e,n,s,r,i){const o=s[r];try{if(o)await e[o];else{const t=(await s_(n)).find(t=>t.measurementId===r);t&&await e[t.appId]}}catch(t){t_.error(t)}t("config",r,i)}(t,e,n,s,r,o)}else if("consent"===r){const[e,n]=i;t("consent",e,n)}else if("get"===r){const[e,n,s]=i;t("get",e,n,s)}else if("set"===r){const[e]=i;t("set",e)}else t(r,...i)}catch(t){t_.error(t)}}}const o_=new class{constructor(t={},e=1e3){this.throttleMetadata=t,this.intervalMillis=e}getThrottleMetadata(t){return this.throttleMetadata[t]}setThrottleMetadata(t,e){this.throttleMetadata[t]=e}deleteThrottleMetadata(t){delete this.throttleMetadata[t]}};function a_(t){return new Headers({Accept:"application/json","x-goog-api-key":t})}async function B_(t,e=o_,n){const{appId:s,apiKey:r,measurementId:i}=t.options;if(!s)throw e_.create("no-app-id");if(!r){if(i)return{measurementId:i,appId:s};throw e_.create("no-api-key")}const o=e.getThrottleMetadata(s)||{backoffCount:0,throttleEndTimeMillis:Date.now()},a=new l_;return setTimeout(async()=>{a.abort()},6e4),c_({appId:s,apiKey:r,measurementId:i},o,a,e)}async function c_(t,{throttleEndTimeMillis:e,backoffCount:n},s,r=o_){const{appId:i,measurementId:o}=t;try{await function(t,e){return new Promise((n,s)=>{const r=Math.max(e-Date.now(),0),i=setTimeout(n,r);t.addEventListener(()=>{clearTimeout(i),s(e_.create("fetch-throttle",{throttleEndTimeMillis:e}))})})}(s,e)}catch(t){if(o)return t_.warn(`Timed out fetching this Firebase app's measurement ID from the server. Falling back to the measurement ID ${o} provided in the "measurementId" field in the local Firebase config. [${t?.message}]`),{appId:i,measurementId:o};throw t}try{const e=await async function(t){const{appId:e,apiKey:n}=t,s={method:"GET",headers:a_(n)},r="https://firebase.googleapis.com/v1alpha/projects/-/apps/{app-id}/webConfig".replace("{app-id}",e),i=await fetch(r,s);if(200!==i.status&&304!==i.status){let t="";try{const e=await i.json();e.error?.message&&(t=e.error.message)}catch(t){}throw e_.create("config-fetch-failed",{httpStatus:i.status,responseMessage:t})}return i.json()}(t);return r.deleteThrottleMetadata(i),e}catch(e){const a=e;if(!function(t){if(!(t instanceof Wn&&t.customData))return!1;const e=Number(t.customData.httpStatus);return 429===e||500===e||503===e||504===e}(a)){if(r.deleteThrottleMetadata(i),o)return t_.warn(`Failed to fetch this Firebase app's measurement ID from the server. Falling back to the measurement ID ${o} provided in the "measurementId" field in the local Firebase config. [${a?.message}]`),{appId:i,measurementId:o};throw e}const B=503===Number(a?.customData?.httpStatus)?is(n,r.intervalMillis,30):is(n,r.intervalMillis),c={throttleEndTimeMillis:Date.now()+B,backoffCount:n+1};return r.setThrottleMetadata(i,c),t_.debug(`Calling attemptFetch again in ${B} millis`),c_(t,c,s,r)}}class l_{constructor(){this.listeners=[]}addEventListener(t){this.listeners.push(t)}abort(){this.listeners.forEach(t=>t())}}async function u_(t,e,n,s,r,i,o){const a=B_(t);a.then(e=>{n[e.measurementId]=e.appId,t.options.measurementId&&e.measurementId!==t.options.measurementId&&t_.warn(`The measurement ID in the local Firebase config (${t.options.measurementId}) does not match the measurement ID fetched from the server (${e.measurementId}). To ensure analytics events are always sent to the correct Analytics property, update the measurement ID field in the local config or remove it from the local config.`)}).catch(t=>t_.error(t)),e.push(a);const B=async function(){if(!zn())return t_.warn(e_.create("indexeddb-unavailable",{errorInfo:"IndexedDB is not available in this environment."}).message),!1;try{await Kn()}catch(t){return t_.warn(e_.create("indexeddb-unavailable",{errorInfo:t?.toString()}).message),!1}return!0}().then(t=>t?s.getId():void 0),[c,l]=await Promise.all([a,B]);(function(t){const e=window.document.getElementsByTagName("script");for(const n of Object.values(e))if(n.src&&n.src.includes(ZD)&&n.src.includes(t))return n;return null})(i)||r_(i,c.measurementId),r("js",new Date);const u=o?.config??{};return u.origin="firebase",u.update=!0,null!=l&&(u.firebase_id=l),r("config",c.measurementId,u),c.measurementId}class h_{constructor(t){this.app=t}_delete(){return delete d_[this.app.options.appId],Promise.resolve()}}let d_={},p_=[];const f_={};let C_,g_,m_="dataLayer",w_=!1;function y_(t,e,n){!function(){const t=[];if(Jn()&&t.push("This is a browser extension environment."),Qn()||t.push("Cookies are not available."),t.length>0){const e=t.map((t,e)=>`(${e+1}) ${t}`).join(" "),n=e_.create("invalid-analytics-context",{errorInfo:e});t_.warn(n.message)}}();const s=t.options.appId;if(!s)throw e_.create("no-app-id");if(!t.options.apiKey){if(!t.options.measurementId)throw e_.create("no-api-key");t_.warn(`The "apiKey" field is empty in the local Firebase config. This is needed to fetch the latest measurement ID for this Firebase app. Falling back to the measurement ID ${t.options.measurementId} provided in the "measurementId" field in the local Firebase config.`)}if(null!=d_[s])throw e_.create("already-exists",{id:s});if(!w_){!function(t){let e=[];Array.isArray(window[t])?e=window[t]:window[t]=e}(m_);const{wrappedGtag:t,gtagCore:e}=function(t,e,n,s,r){let i=function(...t){window[s].push(arguments)};return window[r]&&"function"==typeof window[r]&&(i=window[r]),window[r]=i_(i,t,e,n),{gtagCore:i,wrappedGtag:window[r]}}(d_,p_,f_,m_,"gtag");g_=t,C_=e,w_=!0}d_[s]=u_(t,p_,f_,e,C_,m_,n);return new h_(t)}function E_(t=vr()){const e=wr(t=os(t),XD);return e.isInitialized()?e.getImmediate():function(t,e={}){const n=wr(t,XD);if(n.isInitialized()){const t=n.getImmediate();if(Xn(e,n.getOptions()))return t;throw e_.create("already-initialized")}const s=n.initialize({options:e});return s}(t)}function D_(t,e,n){t=os(t),async function(t,e,n,s){if(s&&s.global){const e={};for(const t of Object.keys(n))e[`user_properties.${t}`]=n[t];return t("set",e),Promise.resolve()}t("config",await e,{update:!0,user_properties:n})}(g_,d_[t.app.options.appId],e,n).catch(t=>t_.error(t))}function __(t,e,n,s){t=os(t),async function(t,e,n,s,r){if(r&&r.global)t("event",n,s);else{const r=await e;t("event",n,{...s,send_to:r})}}(g_,d_[t.app.options.appId],e,n,s).catch(t=>t_.error(t))}const b_="@firebase/analytics",v_="0.10.25";mr(new cs(XD,(t,{options:e})=>y_(t.getProvider("app").getImmediate(),t.getProvider("installations-internal").getImmediate(),e),"PUBLIC")),mr(new cs("analytics-internal",function(t){try{const e=t.getProvider(XD).getImmediate();return{logEvent:(t,n,s)=>__(e,t,n,s),setUserProperties:(t,n)=>D_(e,t,n)}}catch(t){throw e_.create("interop-component-reg-failed",{reason:t})}},"PRIVATE")),Ir(b_,v_),Ir(b_,v_,"esm2020");let I_,T_=null;function O_(){const t=T_;return T_=null,t}function A_(t){T_=t,gE(PE,t)}let S_=Promise.resolve();const N_=()=>{bn.dispatch(hn())};uE(()=>{vE(),nB(tE).useDeviceLanguage(),S_=(async()=>{await async function(){if(Jn())return!1;if(!Qn())return!1;if(!zn())return!1;try{return await Kn()}catch(t){return!1}}()&&(I_=E_(tE))})(),jo(sE,t=>{gE(IE,{user:CE(t)}),t?(bn.dispatch(cn(!0)),bn.dispatch(hn()),bn.dispatch(gn(t.uid)),bn.dispatch(mn(t.displayName??"")),bn.dispatch(yn(t.email||"")),bn.dispatch(En(t.photoURL||"")),bn.dispatch(Cn(!0===t.emailVerified)),bn.dispatch(Bn(t.displayName??"")),bn.dispatch(an(t.photoURL||""))):(bn.dispatch(cn(!1)),bn.dispatch(gn("")),bn.dispatch(mn("")),bn.dispatch(yn("")),bn.dispatch(En("")),bn.dispatch(Cn(!1)),bn.dispatch(Bn("")),bn.dispatch(an("")))})});const R_=async t=>{const e=sE.currentUser;if(!e||!e.email)return A_({code:"pwa/signed-out",message:"Sign in first."}),!1;try{const n=Eo.credential(e.email,t);return await async function(t,e){return xo(os(t),e)}(e,n),!0}catch(t){return A_(mE(t)),!1}},x_=async()=>{if(!lE()){const t={code:"pwa/not-ready",message:"Sign-in is not ready yet."};throw gE(PE,t),new Error(t.message)}try{await function(t){return os(t).signOut()}(sE),gE(OE,{user:null})}catch(t){throw gE(PE,mE(t)),t}},k_=async()=>{await S_,I_&&__(I_,"create_account")},L_=async()=>{await S_,I_&&__(I_,"delete_account")},F_=async(t,e)=>{await dw(Up(eE,t,e))};let P_="",M_=!1,G_=!1;function H_(t){if(!t)return P_="",M_=!1,!1;const e=!0===t.emailVerified;return t.uid!==P_?(P_=t.uid,M_=e,!1):!M_&&e?(M_=!0,!0):(M_=e,!1)}function U_(t){bn.dispatch(Cn(!0));const e=CE({...t,emailVerified:!0});e&&gE(GE,{user:e})}async function V_(t){if(!lE())return!1;const e=sE.currentUser;if(!e)return H_(null),!1;try{await e.reload()}catch(n){return t&&gE(PE,mE(n)),!0===e.emailVerified}return bn.dispatch(Cn(!0===e.emailVerified)),H_(e)&&U_(e),!0===e.emailVerified}function j_(){V_(!1)}function $_(){"visible"===document.visibilityState&&V_(!1)}function J_(t,e){const n={code:t,message:e};throw gE(PE,n),Object.assign(new Error(e),n)}async function q_(){lE()||J_("pwa/not-ready","Sign-in is not ready yet.");const t=sE.currentUser;if(t||J_("pwa/signed-out","Sign in first."),t.email||J_("pwa/missing-email","Enter an email address."),t.emailVerified)return!1;const e=cE();try{e?await Go(t,e):await Go(t)}catch(t){throw gE(PE,mE(t)),t}return gE(ME,{email:t.email}),!0}async function z_(){return V_(!0)}G_||(G_=!0,uE(()=>{jo(sE,t=>{t&&H_(t)&&U_(t),t||H_(null)}),"undefined"!=typeof window&&(window.addEventListener("focus",j_),document.addEventListener("visibilitychange",$_))}));const K_=i`
 
   .notice {
-    margin:               4px 16px 8px;
+    margin:               4px 16px 8px; /* Required - card border sits on the 16px column */
     padding:              14px 16px 16px;
     color:                var(--pwa_label_text_color, #1c2430);
     background:           var(--pwa_nav_on_background, #f3efe6);
@@ -775,7 +802,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
   }
 
   .userDrawer > .spec > .wrapper {
-    margin: 20px 8px 12px; /* Required - space under the drawer header */
+    margin: 20px 0 12px; /* Required - space under the header. Fields bring their own 16px inset. */
   }
 
   .userDrawer,
@@ -950,15 +977,26 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
 `;var mb=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},wb=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};class yb extends(wt(bn)(it)){constructor(){super(),this.login=!1,this.verified=!1,this.email="",this.status="",this.tone="",this.busy=!1,this.cooldown=0,this.timer=0,this.resend=async t=>{if(t.preventDefault(),!(this.busy||this.cooldown>0||this.verified)){this.busy=!0,this.tone="",this.status="";try{await q_()&&this.showSent()}catch(t){this.showFirebase(t)}finally{this.busy=!1}}}}disconnectedCallback(){this.clearWait(),super.disconnectedCallback()}stateChanged(t){this.login=Boolean(t.frontend?.login),this.verified=Boolean(t.backend?.verified),this.email=t.backend?.email??"",this.hidden=!this.login,this.verified&&this.clearWait()}static get styles(){return[QE,eD,gb,i`
 
-        :host { display: block; }
+        :host {
+          display:            block;
+          box-sizing:         border-box;
+          min-width:          0;
+          max-width:          100%;
+        }
 
         .notice {
-          margin:               4px 16px 8px;
-          padding:              14px 16px 16px;
+          margin:               4px 16px 8px; /* Required - card border on the same column as the fields */
+          padding:              14px 0 16px;
           color:                var(--pwa_label_text_color, #1c2430);
           background:           var(--pwa_nav_on_background, #f3efe6);
           border:               1px solid var(--pwa_line_color, #e3daca);
           border-radius:        10px;
+        }
+
+        .lead,
+        .row {
+          padding:              0 16px;
+          box-sizing:           border-box;
         }
 
         .lead {
@@ -1015,9 +1053,12 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
         }
 
         button.action-button {
-          display:              inline-block;
-          margin:               12px 0 0;
-          max-width:            100%;
+          display:              block;
+          /* Required - pull across the notice border so the button matches the field column. */
+          width:                calc(100% + 2px);
+          max-width:            none;
+          min-width:            0;
+          margin:               12px -1px 0;
         }
 
         button.action-button:disabled {
@@ -1593,7 +1634,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     
     p.lead {
       margin:               0;
-      padding:              4px 20px 0;
+      padding:              4px 16px 0;
       line-height:          1.5;
       color:                var(--pwa_label_text_color, #1c2430);
     }
@@ -1935,8 +1976,6 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
       button.new {
         display:                block;
-        width:                  100%;
-        box-sizing:             border-box;
       }
     `]}connectedCallback(){var t;super.connectedCallback(),this.stopDraft=(t=()=>{this.prefill()},oD.add(t),()=>{oD.delete(t)}),this.prefill()}disconnectedCallback(){window.clearInterval(this.timer),this.timer=0,this.stopDraft?.(),this.stopDraft=null,super.disconnectedCallback()}updated(){this.paintEmail()}prefill(){if(this.touched)return;const t=BD();t&&t!==this.userEmail&&(this.userEmail=t,this.paintEmail())}paintEmail(){if(this.touched)return;const t=this.renderRoot.querySelector(".email");t&&!t.value&&this.userEmail&&(t.value=this.userEmail)}handleEmail(t){const e=t.target;this.touched=!0,this.userEmail=e.value,this.invalid&&(this.invalid=!1)}buttonLabel(){return this.busy?"Sending…":this.cooldown>0?`Send again in ${this.cooldown}s`:"Send reset email"}render(){const t="pwa-reset-status";return U`
 
