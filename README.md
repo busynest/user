@@ -6,11 +6,11 @@ Five tags. They share one sign-in. MIT.
 
 ## Install
 
-Install `lit` and `firebase` alongside pwa-auth.
-
 ```bash
-npm install pwa-auth lit firebase
+npm install pwa-auth
 ```
+
+`lit` and `firebase` come along automatically as peer dependencies (npm 7+).
 
 ```javascript
 import 'pwa-auth';
