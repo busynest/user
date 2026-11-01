@@ -8,6 +8,16 @@ Three parts.
 - The moving child carries `transform`.
 - Closed content runs both. Class `closed` translates `translate3d(0, -102%, 0)` and plays `slide-out`, which animates `max-height`.
 
+## How it works
+
+The slide is two motions that run together. The container's `max-height` grows or shrinks the space. The child's `transform` slides the panel into that space. `inner` clips, so it looks like it comes from behind an edge.
+
+On close, visibility is held for `1.4s`, so the panel does not vanish before the motion ends.
+
+Closed content translates to `-102%` and runs `slide-out`, so height and position change together.
+
+If either motion loses its timing, they fall out of step and the slide snaps.
+
 ## Elements
 
 On the drawer, inside `.userDrawer`:
@@ -42,10 +52,12 @@ Durations are literals. The shell beat is `1.4s`. Leave it there.
 |---|---|---|
 | Host and `.in` / `.out` `max-height` | `1.4s` | `ease-in-out` |
 | `.in` visibility delay | `1.4s` | `linear` |
-| `.spec-in` transform | `1.5s` | `ease` |
-| `.spec-out` transform | `2.2s` | `ease` |
+| `.spec-out` transform, open | `2.2s` | `ease` |
+| `.spec-in` transform, close | `1.5s` | `ease` |
 | `.content` transform | `2s` | `ease-in-out` |
 | `slide-out` on `.closed` | `2s` | `ease-out` |
+
+The sheet moves from `translate3d(0, -100%, 0)` to `translate3d(0, 0, 0)`. Opening was measured at `2.2s` (`.spec-out`). Closing uses `.spec-in` at `1.5s`.
 
 No slide timing is a custom property. Hosts do not set one.
 
