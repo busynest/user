@@ -14,6 +14,7 @@ export const drawerStyle: CSSResult = css`
     /* padding-top lives on .userDrawer so the clip height matches the translating sheet */
     max-width:              100%; /* Required - fit 320px */
     min-width:              0;
+    background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
   }
 
   :host([drawer]),
@@ -22,7 +23,7 @@ export const drawerStyle: CSSResult = css`
     left:                   0;
     right:                  0;
     z-index:                5;
-    background-color:       var(--pwa_drawer_background_color, #fffdf8);
+    background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
     border-radius:          var(--pwa_drawer_border-radius, 0 0 18px 18px);
     box-shadow:             0 18px 40px rgba(28, 36, 48, 0.16);
   }
@@ -50,7 +51,7 @@ export const drawerStyle: CSSResult = css`
     height:                 auto;
     border-bottom:          var(--pwa_drawer_border, 0);
     z-index:                var(--pwa_drawer_z-index, 3);
-    background-color:       var(--pwa_drawer_background_color, #fffdf8);
+    background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
     color:                  var(--pwa_drawer_text_color, #1c2430);
     border-radius:          var(--pwa_drawer_border-radius, 0 0 18px 18px);
     padding-top:            env(safe-area-inset-top);

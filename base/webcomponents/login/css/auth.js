@@ -9,6 +9,7 @@ export const authStyles = [hostCollapse, css `
     width:                  100%;
     min-width:              0; /* Required - shrink inside a flex or grid track */
     max-width:              100%;
+    background-color:       var(--pwa_background, var(--section_background_color, #fff));
   }
 
   .spec[on] {
@@ -23,7 +24,7 @@ export const authStyles = [hostCollapse, css `
     display:                grid;
     overflow:               hidden;
     color:                  var(--pwa_drawer_text_color, #1c2430);
-    background-color:       var(--section_background_color, #fffdf8);
+    background-color:       var(--pwa_background, var(--section_background_color, #fff));
   }
 
   h3 {

@@ -96,7 +96,7 @@ export class UserSettings extends connect(store)(LitElement) {
         max-width:        100%;
         /* Required - this component's clock. It is not the drawer or the page login. */
         --pwa_slide:      2s;
-        background-color: var(--pwa_settings_background_color, #fffdf8);
+        background-color: var(--pwa_background, var(--pwa_settings_background_color, #fff));
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -115,6 +115,7 @@ export class UserSettings extends connect(store)(LitElement) {
         height:           auto;
         width:            100%;
         box-sizing:       border-box;
+        background-color: var(--pwa_background, var(--pwa_settings_background_color, #fff));
       }
 
       form {

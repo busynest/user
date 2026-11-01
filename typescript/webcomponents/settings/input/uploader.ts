@@ -93,7 +93,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
         font-weight:              600;
         letter-spacing:           0.04em;
         color:                    var(--pwa_action_background_color, #2a6b45);
-        background:               var(--pwa_nav_on_background, #f3efe6);
+        background:               var(--pwa_nav_on_background, #f2f2f2);
       }
 
     `

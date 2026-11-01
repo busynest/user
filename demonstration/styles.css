@@ -183,7 +183,7 @@ user-settings {
   border-radius:              14px;
   overflow:                   hidden;
   border:                     1px solid var(--line);
-  background:                 #fff;
+  background:                 var(--pwa_background, #fff);
 }
 
 @media (max-width: 320px) {

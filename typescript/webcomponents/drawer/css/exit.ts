@@ -7,7 +7,7 @@ export const exitStyle: CSSResult = css`
     grid-template-columns:  minmax(var(--pwa_tap, 44px), 80px) minmax(0, 1fr) minmax(var(--pwa_tap, 44px), 80px); /* Required - fit 320px */
     padding:                12px 8px;
     z-index:                2;
-    background-color:       var(--pwa_drawer_background_color, #fffdf8);
+    background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
     border-bottom:          1px solid var(--pwa_line_color, #e3daca);
   }
 

@@ -115,7 +115,7 @@ let FormLogin = class FormLogin extends LitElement {
             css `
     
       :host {
-        background-color:           var(--section_background_color, #fffdf8);
+        background-color:           var(--pwa_background, var(--section_background_color, #fff));
       }
 
       .double {

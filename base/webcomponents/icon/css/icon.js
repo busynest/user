@@ -7,6 +7,7 @@ export const iconStyles = css `
     width:                    fit-content; /* Required - the button sizes to its label, not the page */
     max-width:                100%;
     min-width:                0;
+    background-color:         var(--pwa_background, #fff);
   }
 
   .icon, .login {

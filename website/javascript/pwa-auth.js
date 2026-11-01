@@ -128,6 +128,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     width:                  100%;
     min-width:              0; /* Required - shrink inside a flex or grid track */
     max-width:              100%;
+    background-color:       var(--pwa_background, var(--section_background_color, #fff));
   }
 
   .spec[on] {
@@ -142,7 +143,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     display:                grid;
     overflow:               hidden;
     color:                  var(--pwa_drawer_text_color, #1c2430);
-    background-color:       var(--section_background_color, #fffdf8);
+    background-color:       var(--pwa_background, var(--section_background_color, #fff));
   }
 
   h3 {
@@ -351,13 +352,22 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     text-align:               left;
     padding:                  8px 14px;
     color:                    var(--pwa_drawer_text_color, #1c2430);
-    background-color:         var(--pwa_input_background_color, #f3efe6);
+    background-color:         var(--pwa_input_background_color, var(--pwa_background, #fff));
     border:                   1px solid var(--pwa_line_color, #e3daca);
     border-radius:            10px;
     font-size:                1rem;
   }
 
   input.invalid { background-color: #ffdddd; }
+
+  /* Required - Chrome paints a yellow autofill. Keep the field on the component background. */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color:  var(--pwa_drawer_text_color, #1c2430);
+    caret-color:              var(--pwa_drawer_text_color, #1c2430);
+    box-shadow:               0 0 0 1000px var(--pwa_input_background_color, var(--pwa_background, #fff)) inset;
+  }
 
 `,XE=i`
   
@@ -494,7 +504,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
   `}let iD="";const oD=new Set;function aD(t){const e=t.trim();e!==iD&&(iD=e,e&&oD.forEach(t=>t()))}function BD(){return iD}var cD=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},lD=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let uD=class extends it{constructor(){super(),this.source="",this.hideGoogle=!1,this.email="",this.password="",this.status="",this.tone="",this.busy=!1,this.resetBusy=!1,this.showPassword=!1,this.signIn=async(t,e)=>{this.busy=!0,this.tone="",this.status="";try{const n=CE((await Mo(sE,t,e)).user);n&&gE(TE,{user:n})}catch(t){this.show(mE(t))}finally{this.busy=!1}},this.forgot=async()=>{if(this.busy||this.resetBusy)return;this.readFields();const t=this.email.trim();if(t.length<4)this.show({code:"pwa/missing-email",message:"Enter an email address."});else if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t)){this.resetBusy=!0,this.tone="",this.status="";try{await Po(sE,t),this.sent(t)}catch(e){"auth/user-not-found"===mE(e).code?this.sent(t):this.show(mE(e))}finally{this.resetBusy=!1}}else this.show({code:"pwa/invalid-email",message:"Enter a valid email address."})}}connectedCallback(){super.connectedCallback(),this.adoptRedirect()}updated(){this.adoptRedirect()}adoptRedirect(){if(!this.classList.contains("opened"))return;const t=DE();t&&this.show(t)}static get styles(){return[Sn,WE,YE,QE,XE,ZE,eD,i`
     
       :host {
-        background-color:           var(--section_background_color, #fffdf8);
+        background-color:           var(--pwa_background, var(--section_background_color, #fff));
       }
 
       .double {
@@ -600,7 +610,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     margin:               4px 0 8px;
     padding:              14px 0 16px;
     color:                var(--pwa_label_text_color, #1c2430);
-    background:           var(--pwa_nav_on_background, #f3efe6);
+    background:           var(--pwa_nav_on_background, #f2f2f2);
     border:               1px solid var(--pwa_line_color, #e3daca);
     border-radius:        10px;
   }
@@ -614,7 +624,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 `;let Q_="";const W_=new Set;function Y_(){return Q_}function X_(t){return W_.add(t),()=>{W_.delete(t)}}var Z_=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},tb=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let eb=class extends it{constructor(){super(),this.source="",this.hideGoogle=!1,this.email="",this.password="",this.status="",this.tone="",this.busy=!1,this.showPassword=!1,this.notice="",this.newAccount=async(t,e)=>{this.busy=!0,this.tone="",this.status="";try{const n=await async function(t,e,n){if(yr(t.app))return Promise.reject(qr(t));const s=Yi(t),r=ao(s,{returnSecureToken:!0,email:e,password:n,clientType:"CLIENT_TYPE_WEB"},"signUpPassword",Oo),i=await r.catch(e=>{throw"auth/password-does-not-meet-requirements"===e.code&&Fo(t),e}),o=await Ao._fromIdTokenResponse(s,"signIn",i);return await s._updateCurrentUser(o.user),o}(sE,t,e);await k_();const s=CE(n.user);s&&gE(AE,{user:s});try{await q_(),this.notice="Check your inbox for the verification email. You can still sign in.",function(t){Q_=t,W_.forEach(t=>t())}(t)}catch(t){this.tone="error",this.status=KE(t)}}catch(t){this.show(mE(t))}finally{this.busy=!1}}}connectedCallback(){super.connectedCallback(),this.adoptRedirect()}updated(){this.adoptRedirect()}adoptRedirect(){if(!this.classList.contains("opened"))return;const t=DE();t&&this.show(t)}static get styles(){return[Sn,WE,YE,QE,XE,ZE,K_,eD,i`
 
       :host {
-        background-color:           var(--section_background_color, #fffdf8);
+        background-color:           var(--pwa_background, var(--section_background_color, #fff));
       }
     
       .double {
@@ -803,6 +813,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     /* padding-top lives on .userDrawer so the clip height matches the translating sheet */
     max-width:              100%; /* Required - fit 320px */
     min-width:              0;
+    background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
   }
 
   :host([drawer]),
@@ -811,7 +822,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     left:                   0;
     right:                  0;
     z-index:                5;
-    background-color:       var(--pwa_drawer_background_color, #fffdf8);
+    background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
     border-radius:          var(--pwa_drawer_border-radius, 0 0 18px 18px);
     box-shadow:             0 18px 40px rgba(28, 36, 48, 0.16);
   }
@@ -839,7 +850,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     height:                 auto;
     border-bottom:          var(--pwa_drawer_border, 0);
     z-index:                var(--pwa_drawer_z-index, 3);
-    background-color:       var(--pwa_drawer_background_color, #fffdf8);
+    background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
     color:                  var(--pwa_drawer_text_color, #1c2430);
     border-radius:          var(--pwa_drawer_border-radius, 0 0 18px 18px);
     padding-top:            env(safe-area-inset-top);
@@ -852,7 +863,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     grid-template-columns:  minmax(var(--pwa_tap, 44px), 80px) minmax(0, 1fr) minmax(var(--pwa_tap, 44px), 80px); /* Required - fit 320px */
     padding:                12px 8px;
     z-index:                2;
-    background-color:       var(--pwa_drawer_background_color, #fffdf8);
+    background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
     border-bottom:          1px solid var(--pwa_line_color, #e3daca);
   }
 
@@ -1013,7 +1024,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
           margin:               4px 0 8px;
           padding:              14px 0 16px;
           color:                var(--pwa_label_text_color, #1c2430);
-          background:           var(--pwa_nav_on_background, #f3efe6);
+          background:           var(--pwa_nav_on_background, #f2f2f2);
           border:               1px solid var(--pwa_line_color, #e3daca);
           border-radius:        10px;
         }
@@ -1191,7 +1202,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     ::slotted(a[aria-current]),
     ::slotted(button[aria-current]) {
       color:                    var(--pwa_nav_highlight_color, #1c2430);
-      background:               var(--pwa_nav_on_background, #f3efe6);
+      background:               var(--pwa_nav_on_background, #f2f2f2);
     }
     `]}render(){return U`
 
@@ -1316,7 +1327,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
   nav > ul > li > button[on] {
 
     color: var(--pwa_nav_highlight_color, #1c2430);
-    background-color: var(--pwa_nav_on_background, #f3efe6);
+    background-color: var(--pwa_nav_on_background, #f2f2f2);
 
   }
 
@@ -1343,7 +1354,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
   section {
     align-content:          start; /* Required - tabs keep each button under its fields */
-    background-color:       var(--section_background_color, #fffdf8);
+    background-color:       var(--pwa_background, var(--section_background_color, #fff));
   }
 
 
@@ -1401,7 +1412,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
         font-weight:              600;
         letter-spacing:           0.04em;
         color:                    var(--pwa_action_background_color, #2a6b45);
-        background:               var(--pwa_nav_on_background, #f3efe6);
+        background:               var(--pwa_nav_on_background, #f2f2f2);
       }
 
     `]}letters(){return sb(this.person,this.mail)}render(){const t=this.letters(),e="string"==typeof this.photo?this.photo:"";return U`
@@ -1718,7 +1729,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
         max-width:        100%;
         /* Required - this component's clock. It is not the drawer or the page login. */
         --pwa_slide:      2s;
-        background-color: var(--pwa_settings_background_color, #fffdf8);
+        background-color: var(--pwa_background, var(--pwa_settings_background_color, #fff));
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -1737,6 +1748,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
         height:           auto;
         width:            100%;
         box-sizing:       border-box;
+        background-color: var(--pwa_background, var(--pwa_settings_background_color, #fff));
       }
 
       form {
@@ -1913,6 +1925,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     width:                    fit-content; /* Required - the button sizes to its label, not the page */
     max-width:                100%;
     min-width:                0;
+    background-color:         var(--pwa_background, #fff);
   }
 
   .icon, .login {
@@ -1990,7 +2003,10 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
       </button>
 
     `}face(){if(this._photoURL)return U`<img class="userImage" part="photo" alt="" src="${this._photoURL}">`;const t=sb(this._name,this._email);return t?U`<span class="initials" part="initials" aria-hidden="true">${t}</span>`:this.empty?U`<img class="userImage" part="photo" alt="" src="${this.empty}">`:U`<span class="initials" part="initials" aria-hidden="true">?</span>`}};Jb([lt({type:Boolean,reflect:!0}),qb("design:type",Object)],zb.prototype,"subscribe",void 0),Jb([lt({type:String,reflect:!0}),qb("design:type",Object)],zb.prototype,"empty",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_user",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_photoURL",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_name",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_email",void 0),zb=Jb([at("user-icon"),qb("design:paramtypes",[])],zb);var Kb=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},Qb=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};class Wb extends it{constructor(){super(),this.active=!1}shouldUpdate(){return this.active}}function Yb(){bn.dispatch(un())}function Xb(){bn.dispatch(hn())}function Zb(){bn.dispatch(ln())}Kb([lt({type:Boolean}),Qb("design:type",Boolean)],Wb.prototype,"active",void 0);var tv=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},ev=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let nv=class extends Wb{constructor(){super(),this.userEmail="",this.status="",this.tone="",this.invalid=!1,this.busy=!1,this.cooldown=0,this.touched=!1,this.timer=0,this.stopDraft=null,this.resetPassword=async t=>{if(t.preventDefault(),this.busy||this.cooldown>0)return;const e=this.renderRoot.querySelector(".email");this.userEmail=(e?e.value:this.userEmail).trim(),e&&e.value!==this.userEmail&&(e.value=this.userEmail);const n=(s=this.userEmail).length<4?{code:"pwa/missing-email",message:"Enter an email address."}:/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)?null:{code:"pwa/invalid-email",message:"Enter a valid email address."};var s;if(n)this.showError(n,"email");else{this.busy=!0,this.tone="",this.status="";try{await Po(sE,this.userEmail),this.showSent()}catch(t){!function(t){return"auth/user-not-found"===mE(t).code}(t)?this.showFirebase(t):this.showSent()}finally{this.busy=!1}}},this.backToSignIn=()=>{const t=document.querySelector("user-drawer");if(t){const e=t.hasAttribute("subscribe");return Boolean(bn.getState().frontend?.registerOne)!==e&&bn.dispatch(rn("drawer")),void Yb()}const e=document.querySelector("user-login");if(!e)return;const n=e.hasAttribute("subscribe");Boolean(bn.getState().frontend?.registerTwo)!==n&&bn.dispatch(rn("page")),e.scrollIntoView({block:"nearest"})}}static{this.styles=[WE,YE,QE,XE,i`
-      :host { display: block; }
+      :host {
+        display:          block;
+        background-color: var(--pwa_background, #fff);
+      }
 
       /* Required - live region stays in the tree. Idle layout stays put. */
       .status {

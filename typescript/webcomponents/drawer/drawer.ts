@@ -454,7 +454,7 @@ export class UserDrawer extends connect(store)(LitElement) {
     ::slotted(a[aria-current]),
     ::slotted(button[aria-current]) {
       color:                    var(--pwa_nav_highlight_color, #1c2430);
-      background:               var(--pwa_nav_on_background, #f3efe6);
+      background:               var(--pwa_nav_on_background, #f2f2f2);
     }
     `
   ] };

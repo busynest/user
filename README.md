@@ -66,6 +66,8 @@ The fields work in any layout, phone to desktop.
 
 `--pwa_slide` is the animation length. Default `2s`, and `0s` when the visitor prefers reduced motion.
 
+`--pwa_background` is the element's background. Default white.
+
 ```css
 user-drawer, user-login, user-settings, email-reset {
   --pwa_inset: 16px;
