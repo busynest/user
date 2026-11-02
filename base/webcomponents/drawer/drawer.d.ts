@@ -32,6 +32,12 @@ export declare class UserDrawer extends UserDrawer_base {
     private verified;
     private notice;
     private user;
+    private sheetSigned;
+    private holdSheet;
+    private openSheetPx;
+    private liveName;
+    private liveEmail;
+    private liveVerified;
     private signup;
     private sliding;
     private motion;
@@ -50,6 +56,8 @@ export declare class UserDrawer extends UserDrawer_base {
     connectedCallback(): void;
     disconnectedCallback(): void;
     stateChanged(state: AppState): void;
+    private paintAccount;
+    private releaseSheet;
     protected willUpdate(changed: PropertyValues): void;
     protected updated(changed: PropertyValues): void;
     private clip;

@@ -27,11 +27,13 @@ body {
   /* grid-gap:                   16px;*/
   grid-template-areas:
     "head"
+    "drawer"
     "main";
-  grid-template-rows:         auto 1fr;
+  grid-template-rows:         auto auto 1fr;
 }
 
 header  { grid-area:          head; }
+user-drawer { grid-area:      drawer; }
 main    { grid-area:          main; overflow: hidden; }
 footer  { grid-area:          foot; }
 

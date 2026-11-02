@@ -163,13 +163,13 @@ user-drawer, user-login, user-settings, email-reset {
 }
 ```
 
-The drawer unrolls downward and its buttons ride the bottom edge. Nothing animates on page load. Less motion makes that instant. [The roll](docs/drawer-slide.md).
+The drawer unrolls downward and its buttons ride the bottom edge. Nothing animates on page load. Less motion makes that instant. Signing out keeps the open menu until that roll finishes. Focus returns to the account button without scrolling the page. Put the tag between the header and the content. If that parent is a grid, give `user-drawer` that row. [The roll](docs/drawer-slide.md).
 
 ## Accessibility
 
 | What | How |
 | --- | --- |
-| Open and close | The icon is a button. `aria-expanded` says if the drawer is open. `aria-controls` points at it. Focus moves to Close. Escape closes and focus returns to the button |
+| Open and close | The icon is a button. `aria-expanded` says if the drawer is open. `aria-controls` points at it. Focus moves to Close. Escape closes and focus returns to the button without scrolling the page |
 | Closed pieces | A shut drawer, a hidden form, and a hidden settings tab are inert. They are not in the tab order |
 | Fields | Each field has a label, autocomplete, and `aria-invalid`. The error is a live region the field names with `aria-describedby` |
 | Settings tabs | Arrow keys move across the four tabs |
