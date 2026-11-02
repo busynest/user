@@ -27,6 +27,8 @@ const known: Record<string, string> = {
   'pwa/weak-password':            passwordShort,
   'pwa/signed-out':               'Sign in first.',
   'pwa/missing-file':             'Choose a photo first.',
+  'pwa/not-image':                'Choose an image file.',
+  'pwa/photo-too-large':          'Choose an image under 5 MB.',
   'pwa/not-ready':                'Sign-in is not ready yet.',
   'pwa/unknown':                  'Something went wrong. Try again.'
 };

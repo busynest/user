@@ -35,7 +35,7 @@ declare const ContactPhoto_base: (new (...args: any[]) => {
 export declare class ContactPhoto extends ContactPhoto_base {
     photo: string | void | any;
     emptyArtwork: string;
-    private login;
+    private signed;
     private person;
     private mail;
     private progress;
@@ -43,13 +43,18 @@ export declare class ContactPhoto extends ContactPhoto_base {
     private status;
     private tone;
     private busy;
+    private stopAuth;
     constructor();
+    connectedCallback(): void;
+    disconnectedCallback(): void;
     stateChanged(state: AppState): void;
     static get styles(): CSSResultArray;
     private letters;
+    private resetPicker;
     protected render(): import("lit-html").TemplateResult<1>;
     private fail;
     private saveImage;
+    private clearPhoto;
 }
 declare global {
     interface HTMLElementTagNameMap {
