@@ -55,6 +55,13 @@ export class UserDrawer extends connect(store)(LitElement) {
   @state() private verified     = false;
   @state() private notice       = "";
   @state() private user         = false;  // True user is logged-in, false, user is logged-out, state
+  /** What the sheet paints. Stays on the account menu until a logout close reaches 0. */
+  @state() private sheetSigned  = false;
+  private holdSheet = false;
+  private openSheetPx = 0;
+  private liveName = '';
+  private liveEmail = '';
+  private liveVerified = false;
   @state() private signup       = false;  // True sign-up, false log-in, State
 
   /** True while the panel is open or still rolling shut. Drops on transitionend. */
@@ -105,14 +112,17 @@ export class UserDrawer extends connect(store)(LitElement) {
 
   stateChanged(state: AppState) {
     const open        = state.session.drawer;         // Drawer State
-    this.name         = state.session.name;            // User Name
-    this.email        = state.session.email;
-    this.verified     = Boolean(state.session.verified);
+    const wasOpen     = this.drawer;
+    const wasSigned   = this.user === true;
+    this.liveName     = state.session.name;
+    this.liveEmail    = state.session.email;
+    this.liveVerified = Boolean(state.session.verified);
     if (open) this.sliding = true;
     else if (this.reduced()) this.sliding = false;
     this.drawer       = open;
     this.user         = state.session.login;          // Logged in-out State
     this.signup       = state.session.registerOne;    // Sign-up State
+    this.paintAccount(wasSigned, wasOpen);
 
     // Required - UI event from this element. Skip the closed state on first read.
     const changed = this.sawOpen ? open !== this.wasOpen : open;
@@ -121,6 +131,40 @@ export class UserDrawer extends connect(store)(LitElement) {
     }
     this.wasOpen = open;
     this.sawOpen = true;
+  }
+
+  // Required - a logout close keeps the account menu until the clip is shut, so the roll measures that sheet.
+  private paintAccount(wasSigned: boolean, wasOpen: boolean): void {
+    if (this.user === true) {
+      this.holdSheet = false;
+      this.name = this.liveName;
+      this.email = this.liveEmail;
+      this.verified = this.liveVerified;
+      this.sheetSigned = true;
+      return;
+    }
+    if (wasSigned && wasOpen) {
+      const sheet = this.sheet();
+      const measured = sheet ? Math.ceil(sheet.getBoundingClientRect().height) : 0;
+      if (measured > 1) this.openSheetPx = measured;
+      this.holdSheet = true;
+      this.sheetSigned = true;
+      return;
+    }
+    if (this.holdSheet) return;
+    this.name = this.liveName;
+    this.email = this.liveEmail;
+    this.verified = this.liveVerified;
+    this.sheetSigned = false;
+  }
+
+  private releaseSheet(): void {
+    if (!this.holdSheet) return;
+    this.holdSheet = false;
+    this.name = this.liveName;
+    this.email = this.liveEmail;
+    this.verified = this.liveVerified;
+    this.sheetSigned = this.user === true;
   }
 
   protected willUpdate(changed: PropertyValues): void {
@@ -166,7 +210,7 @@ export class UserDrawer extends connect(store)(LitElement) {
       return;
     }
     const back = this.returnFocus ?? this.toggleButton();
-    back?.focus();
+    back?.focus({ preventScroll: true });
     this.returnFocus = null;
   }
 
@@ -194,6 +238,8 @@ export class UserDrawer extends connect(store)(LitElement) {
     this.rollMotion = false;
     this.clipHeight = '0px';
     this.sheetShift = 'translate3d(0, -100%, 0)';
+    const sheet = this.sheet();
+    if (sheet) sheet.style.minHeight = '';
   }
 
   // Required - open at content size. No transition, so it does not ease.
@@ -238,8 +284,14 @@ export class UserDrawer extends connect(store)(LitElement) {
     const clip = this.clip();
     const sheet = this.sheet();
     if (!clip || !sheet) return;
-    const current = Math.ceil(sheet.getBoundingClientRect().height);
-    const from = Math.ceil(clip.getBoundingClientRect().height);
+    this.placeAnchor();
+    let current = Math.ceil(sheet.getBoundingClientRect().height);
+    let from = Math.ceil(clip.getBoundingClientRect().height);
+    if (this.holdSheet && this.openSheetPx > 1) {
+      from = this.openSheetPx;
+      current = this.openSheetPx;
+      sheet.style.minHeight = `${this.openSheetPx}px`;
+    }
     this.rollBetween(clip, sheet, from, 0, current);
     if (this.reduced()) this.sliding = false;
   }
@@ -265,8 +317,10 @@ export class UserDrawer extends connect(store)(LitElement) {
     const end = to - sheetHeight;
     const shift = (px: number) => `translate3d(0, ${px}px, 0)`;
     if (this.reduced() || Math.abs(to - from) <= 1) {
-      if (to === 0) this.restShut();
-      else this.restOpen();
+      if (to === 0) {
+        this.restShut();
+        this.releaseSheet();
+      } else this.restOpen();
       return;
     }
     const travel = 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out';
@@ -302,6 +356,7 @@ export class UserDrawer extends connect(store)(LitElement) {
     if (clip.getBoundingClientRect().height > 1) return;
     this.sliding = false;
     this.restShut();
+    this.releaseSheet();
   };
 
   // Required - Escape closes. Tab stays inside the open drawer.
@@ -369,6 +424,7 @@ export class UserDrawer extends connect(store)(LitElement) {
   }
 
   // Required - a parent grid can park this tag after named areas. Shift it back under the previous element.
+  // A row of its own between the header and the page leaves top empty.
   private placeAnchor(): void {
     const pos = getComputedStyle(this).position;
     if (pos === 'fixed' || pos === 'absolute') {
@@ -528,8 +584,8 @@ export class UserDrawer extends connect(store)(LitElement) {
       <div class="exit" part="header">
         <div></div>
         <h2 id="pwa-drawer-title" part="title">
-          <span class="who">${ this.user === false ? this.signup === this.subscribe ? `Login` : `Subscribe` : accountTitle(this.name, this.email) }</span>
-          ${this.user ? this.verified ? verifiedMark : html`<span class="unverified" part="unverified">Not verified</span>` : ''}
+          <span class="who">${ this.sheetSigned === false ? this.signup === this.subscribe ? `Login` : `Subscribe` : accountTitle(this.name, this.email) }</span>
+          ${this.sheetSigned ? this.verified ? verifiedMark : html`<span class="unverified" part="unverified">Not verified</span>` : ''}
         </h2>
         <button class="close" part="close" type="button" aria-label="Close">${close}</button>
       </div>
@@ -537,7 +593,7 @@ export class UserDrawer extends connect(store)(LitElement) {
       <!-- Logged-out State -->
       <div
         class="spec"
-        ?on="${ this.user === false }">
+        ?on="${ this.sheetSigned === false }">
 
         <div class=     "wrapper">
           <div class=${classMap({ inner: true, motion: this.motion })}>
@@ -578,7 +634,7 @@ export class UserDrawer extends connect(store)(LitElement) {
       <!-- Logged-in State -->
       <div
         class="spec setLog"
-        ?on="${ this.user === true }">
+        ?on="${ this.sheetSigned === true }">
 
           <!-- Required - Jack's markers. A host link replaces the fallback. -->
           <slot name="before"><a href="/settings">slotted - before</a></slot>
@@ -587,11 +643,11 @@ export class UserDrawer extends connect(store)(LitElement) {
 
           <slot><a href="/settings">slotted - default</a></slot>
 
-          ${this.user && this.notice && !this.verified ? html`
+          ${this.sheetSigned && this.notice && !this.verified ? html`
             <p class="notice" part="notice" role="status" aria-live="polite">Check your inbox for the verification email. You can still sign in.</p>
           ` : ''}
 
-          ${this.user ? html`<email-verify exportparts="notice: verify-notice, status: verify-status, submit: verify-submit, verified: email-verified, unverified"></email-verify>` : ''}
+          ${this.sheetSigned ? html`<email-verify exportparts="notice: verify-notice, status: verify-status, submit: verify-submit, verified: email-verified, unverified"></email-verify>` : ''}
 
           <button class="leave" part="logout" type="button" aria-label="Log out">Log out</button>
           

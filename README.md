@@ -140,7 +140,14 @@ Set these on the element. `--pwa_background` replaces the older background names
 | `--pwa_action_text_color` | Button text | white |
 | `--pwa_action_background_color` | Green buttons and links | `#2a6b45` |
 | `--pwa_action_border_color` | Button border | `#214f34` |
-| `--pwa_close_color` | Close mark and errors | `#9a3b32` |
+| `--pwa_close_color` | Errors | `#9a3b32` |
+| `--pwa_close_mark` | Drawer close icon | the drawer text, `#1c2430` |
+| `--pwa_close_background` | Drawer close button | white |
+| `--pwa_close_hover` | Drawer close, pointer over it | `#f2f2f2` |
+| `--pwa_close_active` | Drawer close, pressed | `#e7e2d6` |
+| `--pwa_close_border` | Drawer close border | `1px solid` the line color |
+| `--pwa_close_radius` | Drawer close corners | `10px` |
+| `--pwa_close_size` | Drawer close tap target | `44px` |
 | `--pwa_verified_color` | Verified check | the button green |
 | `--pwa_tap` | Shortest a control can be | `44px` |
 | `--pwa_icon_background_color` | Icon button | `#2a6b45` |
@@ -163,13 +170,13 @@ user-drawer, user-login, user-settings, email-reset {
 }
 ```
 
-The drawer unrolls downward and its buttons ride the bottom edge. Nothing animates on page load. Less motion makes that instant. [The roll](docs/drawer-slide.md).
+The drawer unrolls downward and its buttons ride the bottom edge. Nothing animates on page load. Less motion makes that instant. Signing out keeps the open menu until that roll finishes. Focus returns to the account button without scrolling the page. Put the tag between the header and the content. If that parent is a grid, give `user-drawer` that row. [The roll](docs/drawer-slide.md).
 
 ## Accessibility
 
 | What | How |
 | --- | --- |
-| Open and close | The icon is a button. `aria-expanded` says if the drawer is open. `aria-controls` points at it. Focus moves to Close. Escape closes and focus returns to the button |
+| Open and close | The icon is a button. `aria-expanded` says if the drawer is open. `aria-controls` points at it. Focus moves to Close. Escape closes and focus returns to the button without scrolling the page |
 | Closed pieces | A shut drawer, a hidden form, and a hidden settings tab are inert. They are not in the tab order |
 | Fields | Each field has a label, autocomplete, and `aria-invalid`. The error is a live region the field names with `aria-describedby` |
 | Settings tabs | Arrow keys move across the four tabs |

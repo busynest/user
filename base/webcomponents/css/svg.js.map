@@ -1,1 +1,1 @@
-{"version":3,"file":"svg.js","sourceRoot":"","sources":["../../../typescript/webcomponents/css/svg.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,IAAI,EAAE,MAAM,KAAK,CAAC;AAE3B,MAAM,CAAC,MAAM,KAAK,GAAG,IAAI,CAAA,2KAA2K,CAAC"}
+{"version":3,"file":"svg.js","sourceRoot":"","sources":["../../../typescript/webcomponents/css/svg.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,IAAI,EAAE,MAAM,KAAK,CAAC;AAE3B,MAAM,CAAC,MAAM,KAAK,GAAG,IAAI,CAAA;;;OAGlB,CAAC"}

@@ -113,6 +113,8 @@ When the new sheet is the thing on screen, `S = B`, so it finishes at `translate
 
 `sliding` turns on in the same turn as the open. `visibility` and `pointer-events` come on with it, and `inert` comes off. It turns off only when this drawer's clip fires `max-height` `transitionend` and the box is shorter than 2px. A bubbled transform from a form does not qualify (`event.target` must be the clip). That is the close, not a second timer. `prefers-reduced-motion: reduce` sets `--pwa_slide` to `0s` on that host, and `rollBetween` snaps to the end state with `transition: none`.
 
+Signing out while the drawer is open does not swap in the login form until that clip has reached 0. The close measures the account menu, so `translateY` starts at 0 and the menu rolls up. The login form is what the next open shows. The same end step runs when reduced motion snaps the clip shut. Returning focus uses `preventScroll`, so the page does not jump. `placeAnchor()` runs again before the close. The host is `position: relative` and the clip is `absolute` at the top of the host. A page grid should give `user-drawer` the row between the header and the content, so that anchor does not have to pull the tag up with a large `top`.
+
 ### Where it is used
 
 | Place | Clip | Sheet | When it rolls |
