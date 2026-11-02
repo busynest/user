@@ -2,6 +2,16 @@ Change Log
 ==========
 All notable changes to pwa-auth.js will be documented in this file.
 
+# [3.7.5] - 2026-11-02
+
+## Added
+- A noscript list of similar sign-in products at the end of the site: FirebaseUI, Clerk, Auth0, Supabase Auth UI, Amplify Authenticator, and the archived PWABuilder pwa-auth.
+
+## Changed
+- The README and the site open with “Turnkey Firebase sign-in UI. Drop in the tags.” Each HTML page has a title, description, and Open Graph tags.
+- UI flags and the account fields the elements read live in one Redux slice, `session`. The unused `development/` folder is gone.
+- `intro.md` and `firebase.md` are in `docs/`.
+
 # [3.7.4] - 2026-11-02
 
 ## Added
