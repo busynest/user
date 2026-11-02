@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title>Drawer — pwa-auth</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1">
+    <link rel="stylesheet" href="pwa-styles.css">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+      window.process = { env: {
+        NODE_ENV: 'production',
+        FIREBASE_CONFIG: JSON.stringify({
+          apiKey:             "AIzaSyC1ZNYC9RAjSAE3syUBNi47AiqbAqkx99w",
+          authDomain:         "pwa-authentic.firebaseapp.com",
+          projectId:          "pwa-authentic",
+          storageBucket:      "pwa-authentic.firebasestorage.app",
+          messagingSenderId:  "749233996232",
+          appId:              "1:749233996232:web:bbc410d53b7d39bdfb80fd",
+          measurementId:      "G-G1GYM1HBJ4"
+        })
+      } };
+    </script>
+  </head>
+  <body>
+
+    <header class="top">
+      <div class="head">
+        <h1>Drawer</h1>
+        <user-icon></user-icon>
+      </div>
+    </header>
+
+    <user-drawer subscribe></user-drawer>
+
+    <main class="wrap">
+      <p class="links"><a href="index.html">All elements</a></p>
+    </main>
+
+    <script type="module" src="../base/export/pwa-auth.js"></script>
+
+  </body>
+
+</html>
