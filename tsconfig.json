@@ -36,7 +36,6 @@
   "exclude": [
     "typescript/**/*.test.ts",
     "typescript/emulator/**",
-    "development/**",
     "demonstration/**",
     "node_modules",
     "base",
