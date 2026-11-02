@@ -58,6 +58,8 @@ export class UserLogin extends connect(store)(LitElement) {
 
   override connectedCallback(): void {
     applyFirebaseConfig(this);
+    if (!this.hasAttribute('role')) this.setAttribute('role', 'region');
+    if (!this.hasAttribute('aria-label')) this.setAttribute('aria-label', 'Account');
     super.connectedCallback();
     this._notice = verificationNotice();
     this.stopNotice = onVerificationNotice(() => { this._notice = verificationNotice(); });
@@ -232,9 +234,9 @@ export class UserLogin extends connect(store)(LitElement) {
       @transitionend=${this.onClipEnd}>
     <section class="service" part="panel" style=${styleMap(this.sheetStyle())}>
 
-      <header part="header">
-        <h3 part="title">${this._log ? accountTitle(this._name, this._email) : this._sign === this.subscribe ? 'Login' : 'Subscribe'}</h3>
-      </header>
+      <div part="header">
+        <h2 part="title">${this._log ? accountTitle(this._name, this._email) : this._sign === this.subscribe ? 'Login' : 'Subscribe'}</h2>
+      </div>
 
       <!-- Logged-out State -->
       <div
@@ -250,6 +252,7 @@ export class UserLogin extends connect(store)(LitElement) {
               ?hide-google= "${this.hideGoogle}"
               exportparts=  "email: login-email, password: login-password, submit: login-submit, switch: login-switch, forgot: login-forgot, status: login-status, reveal: login-reveal, google: login-google"
               ?inert=       "${this._sign !== this.subscribe}"
+              aria-hidden=  "${this._sign !== this.subscribe ? 'true' : 'false'}"
               class=        ${classMap({
                 content: true,
                 opened: this._sign === this.subscribe,
@@ -262,6 +265,7 @@ export class UserLogin extends connect(store)(LitElement) {
               ?hide-google= "${this.hideGoogle}"
               exportparts=  "email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch, status: signup-status, reveal: signup-reveal, notice: signup-notice, google: signup-google"
               ?inert=       "${this._sign === this.subscribe}"
+              aria-hidden=  "${this._sign === this.subscribe ? 'true' : 'false'}"
               class=        ${classMap({
                 content: true,
                 opened: !this._sign === this.subscribe,

@@ -19,6 +19,11 @@ export const labelStyle = css `
     padding-inline:       var(--pwa_inset, 0px);
   }
 
+  /* Required - the show button sits beside the field, not inside the label. */
+  label:has(+ .pair) {
+    padding-bottom:      6px;
+  }
+
   label {
     display:              grid;
     gap:                  6px;

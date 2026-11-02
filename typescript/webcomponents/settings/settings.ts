@@ -46,6 +46,8 @@ export class UserSettings extends connect(store)(LitElement) {
 
   override connectedCallback(): void {
     applyFirebaseConfig(this);
+    if (!this.hasAttribute('role')) this.setAttribute('role', 'region');
+    if (!this.hasAttribute('aria-label')) this.setAttribute('aria-label', 'Account settings');
     super.connectedCallback();
     /* Required - cancel native form submit */
     this.addEventListener('submit', this.onSubmit);
@@ -65,6 +67,7 @@ export class UserSettings extends connect(store)(LitElement) {
   // Required - move across the four tabs from the keyboard
   private onTabKey(event: KeyboardEvent) {
     if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+    event.preventDefault();
     const order = ['profile', 'verification', 'password', 'delete'];
     const index = order.indexOf(this.profileTopic);
     const step = event.key === 'ArrowRight' ? 1 : -1;
@@ -147,6 +150,10 @@ export class UserSettings extends connect(store)(LitElement) {
 
   private openTab(name: string) {
     store.dispatch(navigateAuth(name));
+  }
+
+  private tabOn(name: string): boolean {
+    return (this.profileTopic || 'profile') === name;
   }
 
   protected willUpdate(changed: PropertyValues): void {
@@ -284,10 +291,13 @@ export class UserSettings extends connect(store)(LitElement) {
             <button
               type="button"
               role="tab"
+              id="pwa-tab-profile"
               part="tab"
               value="profile"
-              aria-selected="${this.profileTopic === 'profile'}"
-              ?on="${ this.profileTopic === 'profile'}"
+              aria-selected="${this.tabOn('profile')}"
+              aria-controls="pwa-panel-profile"
+              tabindex="${this.tabOn('profile') ? '0' : '-1'}"
+              ?on="${this.tabOn('profile')}"
               @click="${() => this.openTab('profile')}">Icon
             </button>
           </li>
@@ -296,10 +306,13 @@ export class UserSettings extends connect(store)(LitElement) {
             <button
               type="button"
               role="tab"
+              id="pwa-tab-verification"
               part="tab"
               value="verification"
-              aria-selected="${this.profileTopic === 'verification'}"
-              ?on="${ this.profileTopic === 'verification'}"
+              aria-selected="${this.tabOn('verification')}"
+              aria-controls="pwa-panel-verification"
+              tabindex="${this.tabOn('verification') ? '0' : '-1'}"
+              ?on="${this.tabOn('verification')}"
               @click="${() => this.openTab('verification')}">Profile
             </button>
           </li>
@@ -308,10 +321,13 @@ export class UserSettings extends connect(store)(LitElement) {
             <button
               type="button"
               role="tab"
+              id="pwa-tab-password"
               part="tab"
               value="password"
-              aria-selected="${this.profileTopic === 'password'}"
-              ?on="${ this.profileTopic === 'password'}"
+              aria-selected="${this.tabOn('password')}"
+              aria-controls="pwa-panel-password"
+              tabindex="${this.tabOn('password') ? '0' : '-1'}"
+              ?on="${this.tabOn('password')}"
               @click="${() => this.openTab('password')}">Password
             </button>
           </li>
@@ -320,10 +336,13 @@ export class UserSettings extends connect(store)(LitElement) {
             <button
               type="button"
               role="tab"
+              id="pwa-tab-delete"
               part="tab"
               value="delete"
-              aria-selected="${this.profileTopic === 'delete'}"
-              ?on="${ this.profileTopic === 'delete'}"
+              aria-selected="${this.tabOn('delete')}"
+              aria-controls="pwa-panel-delete"
+              tabindex="${this.tabOn('delete') ? '0' : '-1'}"
+              ?on="${this.tabOn('delete')}"
               @click="${() => this.openTab('delete')}">Delete
             </button>
           </li>
@@ -342,11 +361,13 @@ export class UserSettings extends connect(store)(LitElement) {
 
           <!-- Page 1: Profile -->
           <section
+            id="pwa-panel-profile"
             part="panel"
             role="tabpanel"
-            aria-hidden="${this.profileTopic === 'profile' ? 'false' : 'true'}"
-            ?inert="${this.profileTopic !== 'profile'}"
-            ?hidden="${this.profileTopic !== 'profile'}">
+            aria-labelledby="pwa-tab-profile"
+            aria-hidden="${this.tabOn('profile') ? 'false' : 'true'}"
+            ?inert="${!this.tabOn('profile')}"
+            ?hidden="${!this.tabOn('profile')}">
 
             <!-- Display Username -->
             <h2>${title}</h2>
@@ -358,11 +379,13 @@ export class UserSettings extends connect(store)(LitElement) {
           
           <!-- Page 2: Verification -->
           <section
+            id="pwa-panel-verification"
             part="panel"
             role="tabpanel"
-            aria-hidden="${this.profileTopic === 'verification' ? 'false' : 'true'}"
-            ?inert="${this.profileTopic !== 'verification'}"
-            ?hidden="${this.profileTopic !== 'verification'}">
+            aria-labelledby="pwa-tab-verification"
+            aria-hidden="${this.tabOn('verification') ? 'false' : 'true'}"
+            ?inert="${!this.tabOn('verification')}"
+            ?hidden="${!this.tabOn('verification')}">
 
             <!-- Page Title -->
             <h2>Contact Information</h2>
@@ -380,11 +403,13 @@ export class UserSettings extends connect(store)(LitElement) {
 
           <!-- Page 3: Password -->
           <section
+            id="pwa-panel-password"
             part="panel"
             role="tabpanel"
-            aria-hidden="${this.profileTopic === 'password' ? 'false' : 'true'}"
-            ?inert="${this.profileTopic !== 'password'}"
-            ?hidden="${this.profileTopic !== 'password'}">
+            aria-labelledby="pwa-tab-password"
+            aria-hidden="${this.tabOn('password') ? 'false' : 'true'}"
+            ?inert="${!this.tabOn('password')}"
+            ?hidden="${!this.tabOn('password')}">
 
             <!-- Page Title -->
             <h2>Password</h2>
@@ -396,11 +421,13 @@ export class UserSettings extends connect(store)(LitElement) {
 
           <!-- Page 4: Delete -->
           <section
+            id="pwa-panel-delete"
             part="panel"
             role="tabpanel"
-            aria-hidden="${this.profileTopic === 'delete' ? 'false' : 'true'}"
-            ?inert="${this.profileTopic !== 'delete'}"
-            ?hidden="${this.profileTopic !== 'delete'}">
+            aria-labelledby="pwa-tab-delete"
+            aria-hidden="${this.tabOn('delete') ? 'false' : 'true'}"
+            ?inert="${!this.tabOn('delete')}"
+            ?hidden="${!this.tabOn('delete')}">
 
             <!-- Page Title -->
             <h2>Delete Account</h2>

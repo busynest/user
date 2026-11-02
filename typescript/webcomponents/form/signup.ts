@@ -141,9 +141,9 @@ export class FormSignup extends LitElement {
 
           <li>
 
-            <label for="${passId}">Password
-              
-              <span class="pair">
+            <label for="${passId}">Password</label>
+
+            <span class="pair">
 
                 <input
                   id=           "${passId}"
@@ -162,9 +162,7 @@ export class FormSignup extends LitElement {
 
               </span>
 
-              <p id="${hintId}" class="hint" part="hint">${passwordHint}</p>
-
-            </label>
+            <p id="${hintId}" class="hint" part="hint">${passwordHint}</p>
 
           </li>
 

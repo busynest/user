@@ -11,7 +11,7 @@ export const exitStyle: CSSResult = css`
     border-bottom:          1px solid var(--pwa_line_color, #e3daca);
   }
 
-  .exit > h3 {
+  .exit > h2 {
     font-weight:            600;
     font-size:              1rem;
     margin:                 0 auto;

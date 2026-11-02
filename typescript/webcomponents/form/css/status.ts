@@ -28,6 +28,7 @@ export const statusStyle: CSSResult = css`
     display:                block;
     position:               relative;
     min-width:              0;
+    margin:                 0 0 14px;
   }
 
   /* Required - Show sits in the field so the input border matches the column. */

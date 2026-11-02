@@ -23,6 +23,11 @@ export const toggleStyle = css `
     min-height:         var(--pwa_tap, 44px); /* Required - minimum tap target */
   }
 
+  .new:focus-visible {
+    outline:            2px solid var(--pwa_focus, #1c2430);
+    outline-offset:     2px;
+  }
+
   .reveal {
     appearance:         none;
     border:             0;
@@ -40,7 +45,7 @@ export const toggleStyle = css `
   .reveal:focus { outline: 0; }
 
   .reveal:focus-visible {
-    outline:            2px solid var(--pwa_action_border_color, #214f34);
+    outline:            2px solid var(--pwa_focus, #1c2430);
     outline-offset:     2px;
   }
 

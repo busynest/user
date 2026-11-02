@@ -18,6 +18,7 @@ export class UserIcon extends connect(store)(LitElement) {
   @property({type: String, reflect: true}) public empty = '';
 
   @state() private _user = false;
+  @state() private _open = false;
   @state() private _photoURL = '';
   @state() private _name = '';
   @state() private _email = '';
@@ -38,10 +39,20 @@ export class UserIcon extends connect(store)(LitElement) {
   
   stateChanged(state: AppState) {
     this._user        = state.frontend!.login;
+    this._open        = state.frontend!.drawer;
     this._photoURL    = state.backend!.photoURL;
     this._name        = state.backend!.name;
     this._email       = state.backend!.email;
     // this._sign        = state.frontend!.register;
+  }
+
+  protected updated(): void {
+    const button = this.shadowRoot?.querySelector('button');
+    const drawer = document.querySelector('user-drawer');
+    if (!button || !(drawer instanceof HTMLElement) || !drawer.id) return;
+    button.setAttribute('aria-controls', drawer.id);
+    const control = button as HTMLButtonElement & { ariaControlsElements?: Element[] };
+    if ('ariaControlsElements' in control) control.ariaControlsElements = [drawer];
   }  
 
   static get styles():CSSResultArray { return [ iconStyles, css`:host { border-radius: 10px; }` ] }
@@ -54,6 +65,9 @@ export class UserIcon extends connect(store)(LitElement) {
         type="button"
         part="button"
         class="${this._user ? 'icon' : 'login'} toggles"
+        aria-haspopup="dialog"
+        aria-expanded="${this._open ? 'true' : 'false'}"
+        aria-controls="pwa-user-drawer"
         aria-label="${this._user ? 'Account' : this.subscribe ? 'Subscribe' : 'Login'}">
         
         ${ this._user ? this.face() : this.subscribe ? 'Subscribe' : 'Login' }

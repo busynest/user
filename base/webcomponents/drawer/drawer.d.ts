@@ -67,6 +67,7 @@ export declare class UserDrawer extends UserDrawer_base {
     protected updated(changed: PropertyValues): void;
     private clip;
     private sheet;
+    private toggleButton;
     private reduced;
     private restShut;
     private restOpen;

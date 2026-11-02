@@ -148,6 +148,8 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
     }
     connectedCallback() {
         applyFirebaseConfig(this);
+        if (!this.id)
+            this.id = 'pwa-user-drawer';
         super.connectedCallback();
         this.addEventListener('keydown', this.onKey);
         this.addEventListener('click', this.onLightClick);
@@ -234,7 +236,8 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             void refreshEmailVerified(false);
             return;
         }
-        this.returnFocus?.focus();
+        const back = this.returnFocus ?? this.toggleButton();
+        back?.focus();
         this.returnFocus = null;
     }
     clip() {
@@ -242,6 +245,11 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
     }
     sheet() {
         return this.shadowRoot?.querySelector('.userDrawer') ?? null;
+    }
+    toggleButton() {
+        const icon = document.querySelector('user-icon');
+        const button = icon?.shadowRoot?.querySelector('button');
+        return button instanceof HTMLElement ? button : null;
     }
     reduced() {
         return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -440,7 +448,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       align-self:             start;
     }
 
-    .exit > h3 {
+    .exit > h2 {
       display:                flex;
       align-items:            center;
       justify-content:        center;
@@ -450,8 +458,11 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
 
     .close:focus-visible,
     .leave:focus-visible,
-    .settings:focus-visible {
-      outline:                2px solid var(--pwa_action_border_color, #214f34);
+    .settings:focus-visible,
+    a:focus-visible,
+    ::slotted(a:focus-visible),
+    ::slotted(button:focus-visible) {
+      outline:                2px solid var(--pwa_focus, #1c2430);
       outline-offset:         2px;
     }
 
@@ -495,6 +506,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
     }
     ;
     render() {
+        this.toggleAttribute('sliding', this.sliding);
         return html `
 
     <!-- Clip. The first render binds shut, with no transition. -->
@@ -509,20 +521,20 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="pwa-drawer-title"
-      aria-hidden="${this.sliding ? 'false' : 'true'}"
-      ?inert="${!this.sliding}"
+      aria-hidden="${this.drawer ? 'false' : 'true'}"
+      ?inert="${!this.drawer}"
       class="userDrawer"
       style=${styleMap(this.sheetStyle())}>
 
       <!-- Exit Button -->
-      <header class="exit" part="header">
+      <div class="exit" part="header">
         <div></div>
-        <h3 id="pwa-drawer-title" part="title">
+        <h2 id="pwa-drawer-title" part="title">
           <span class="who">${this.user === false ? this.signup === this.subscribe ? `Login` : `Subscribe` : accountTitle(this.name, this.email)}</span>
           ${this.user ? this.verified ? verifiedMark : html `<span class="unverified" part="unverified">Not verified</span>` : ''}
-        </h3>
+        </h2>
         <button class="close" part="close" type="button" aria-label="Close">${close}</button>
-      </header>
+      </div>
 
       <!-- Logged-out State -->
       <div
@@ -538,6 +550,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
               ?hide-google="${this.hideGoogle}"
               exportparts="email: login-email, password: login-password, submit: login-submit, switch: login-switch, forgot: login-forgot, status: login-status, reveal: login-reveal, google: login-google"
               ?inert="${this.signup !== this.subscribe}"
+              aria-hidden="${this.signup !== this.subscribe ? 'true' : 'false'}"
               class=${classMap({
             content: true,
             opened: this.signup === this.subscribe,
@@ -551,6 +564,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
               ?hide-google="${this.hideGoogle}"
               exportparts="email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch, status: signup-status, reveal: signup-reveal, notice: signup-notice, google: signup-google"
               ?inert="${this.signup === this.subscribe}"
+              aria-hidden="${this.signup === this.subscribe ? 'true' : 'false'}"
               class=${classMap({
             content: true,
             opened: !this.signup === this.subscribe,
