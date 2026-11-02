@@ -16,4 +16,4 @@ They look after that sign-in themselves. Your site keeps the records it creates.
 
 ## How to get started
 
-The person who adds this to your site follows the [Quick start](README.md#quick-start). There is also a [live demo](https://pwa-authentic.firebaseapp.com).
+The person who adds this to your site follows the [Quick start](../README.md#quick-start). There is also a [live demo](https://pwa-authentic.firebaseapp.com).
