@@ -73,11 +73,11 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
         super.disconnectedCallback();
     }
     stateChanged(state) {
-        this._name = state.backend.name;
-        this._email = state.backend.email;
-        this._verified = Boolean(state.backend?.verified);
-        this._log = state.frontend.login;
-        this._sign = state.frontend.registerTwo;
+        this._name = state.session.name;
+        this._email = state.session.email;
+        this._verified = Boolean(state.session.verified);
+        this._log = state.session.login;
+        this._sign = state.session.registerTwo;
     }
     willUpdate(changed) {
         if (!this.booted)

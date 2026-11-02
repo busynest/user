@@ -29,7 +29,7 @@ The buttons are `part="switch"`.
 - `form-login` label: `create a new account`. File: `typescript/webcomponents/form/login.ts`.
 - `form-signup` label: `login with existing email`. File: `typescript/webcomponents/form/signup.ts`.
 
-Each `change()` dispatches `universalToggle(this.source)`. Inside the drawer, `source` is `"drawer"`. `universalToggle` in `typescript/redux/frontend.ts` flips `frontend.registerOne`.
+Each `change()` dispatches `universalToggle(this.source)`. Inside the drawer, `source` is `"drawer"`. `universalToggle` in `typescript/redux/session.ts` flips `session.registerOne`.
 
 `UserDrawer.stateChanged` copies `registerOne` onto `this.signup`. The render in `typescript/webcomponents/drawer/drawer.ts` then sets the classes:
 
@@ -140,7 +140,7 @@ Copy the roll into that component. Do not import a shared helper, and do not reu
 - `typescript/webcomponents/settings/settings.ts` — settings roll and tab panels.
 - `typescript/webcomponents/css/animation.ts` — `--pwa_slide` and the form-swap `.opened` / `.closed` rules. Class `motion` on `.inner` arms the form transition. The drawer shell has no height transition.
 - `typescript/webcomponents/form/login.ts` and `signup.ts` — the switch buttons.
-- `typescript/redux/frontend.ts` — `universalToggle`, `registerOne`, `registerTwo`, `navigateAuth`.
+- `typescript/redux/session.ts` — `universalToggle`, `registerOne`, `registerTwo`, `navigateAuth`.
 - Built copies: `base/webcomponents/css/animation.js`, `source/pwa-auth.js`, `website/javascript/pwa-auth.js`. There is no `roll.js`.
 
 `@keyframes slide-out` is still in the file. It is not applied. Do not put it on `.closed`.

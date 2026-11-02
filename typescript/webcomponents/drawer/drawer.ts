@@ -16,7 +16,7 @@ import { exitStyle }        from './css/exit.js';
 import { linkStyle }        from './css/link.js';
 import { lineStyle }        from './css/paragraph.js';
 
-import { closeSign }       from '../../redux/frontend.js'; 
+import { closeSign }       from '../../redux/session.js'; 
 import { logOut }           from '../../firebase/interface.js';
 import { refreshEmailVerified } from '../../api/verify.js';
 import { applyFirebaseConfig } from '../../firebase/attribute.js';
@@ -104,15 +104,15 @@ export class UserDrawer extends connect(store)(LitElement) {
   }
 
   stateChanged(state: AppState) {
-    const open        = state.frontend!.drawer;         // Drawer State
-    this.name         = state.backend!.name;            // User Name
-    this.email        = state.backend!.email;
-    this.verified     = Boolean(state.backend?.verified);
+    const open        = state.session.drawer;         // Drawer State
+    this.name         = state.session.name;            // User Name
+    this.email        = state.session.email;
+    this.verified     = Boolean(state.session.verified);
     if (open) this.sliding = true;
     else if (this.reduced()) this.sliding = false;
     this.drawer       = open;
-    this.user         = state.frontend!.login;          // Logged in-out State
-    this.signup       = state.frontend!.registerOne;    // Sign-up State
+    this.user         = state.session.login;          // Logged in-out State
+    this.signup       = state.session.registerOne;    // Sign-up State
 
     // Required - UI event from this element. Skip the closed state on first read.
     const changed = this.sawOpen ? open !== this.wasOpen : open;

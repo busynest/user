@@ -74,11 +74,11 @@ export class UserLogin extends connect(store)(LitElement) {
   }
 
   stateChanged(state: AppState) {
-    this._name        = state.backend!.name;        // User Name
-    this._email       = state.backend!.email;
-    this._verified    = Boolean(state.backend?.verified);
-    this._log         = state.frontend!.login;      // Logged in-out State
-    this._sign        = state.frontend!.registerTwo;   // Sign-up State - register
+    this._name        = state.session.name;        // User Name
+    this._email       = state.session.email;
+    this._verified    = Boolean(state.session.verified);
+    this._log         = state.session.login;      // Logged in-out State
+    this._sign        = state.session.registerTwo;   // Sign-up State - register
   }
 
   protected willUpdate(changed: PropertyValues): void {

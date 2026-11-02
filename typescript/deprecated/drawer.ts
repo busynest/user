@@ -1,4 +1,4 @@
-/* Optional - retired. The open flag is frontend.drawer. */
+/* Optional - retired. The open flag is session.drawer. */
 
 import { createSlice }    from "@reduxjs/toolkit";
 

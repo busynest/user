@@ -8,8 +8,7 @@
 
 // Redux
 import { store } from '../store.js';
-import { closeSign, iconAuth, nameAuth, userAuth } from '../redux/frontend.js';
-import { accID, accEmail, accImage, accName, accVerified } from '../redux/backend.js';
+import { accEmail, accImage, accName, accVerified, closeSign, userAuth } from '../redux/session.js';
 
 // Firebase Auth
 import { EmailAuthProvider, getAuth, onAuthStateChanged, reauthenticateWithCredential, signOut } from 'firebase/auth';
@@ -98,25 +97,10 @@ onReady(() => {
     // Close Drawer State
     store.dispatch( closeSign() );
 
-    // Backend Data Redux - Firebase User Information - account redux
-    store.dispatch( accID     ( user.uid ) );
     store.dispatch( accName   ( user.displayName ?? '' ) );
     store.dispatch( accEmail  ( user.email || '' ) );
     store.dispatch( accImage  ( user.photoURL || '' ) );
     store.dispatch( accVerified( user.emailVerified === true ) );
-
-    // store.dispatch( accPhone  ( user.phoneNumber || '(000) 000-0000' ) );
-    // store.dispatch( accAnon   ( user.isAnonymous ) );
-
-    // Frontend Data Redux - Firebase User Information - user redux
-    store.dispatch( nameAuth   ( user.displayName ?? '' ) );
-    store.dispatch( iconAuth   ( user.photoURL || '' ) );
-
-    // Existing Redux Profile Object
-    // const profile = store.getState().account;
-
-    // Redux - Firebase Database Information
-    // Dispatch Profile Object Information
 
   }
 
@@ -127,21 +111,10 @@ onReady(() => {
     // Login Indicator
     store.dispatch( userAuth  ( false ) );
 
-    // Backend Data Redux - Firebase User Information - account redux
-    store.dispatch( accID     ( '' ) );
     store.dispatch( accName   ( '' ) );
     store.dispatch( accEmail  ( '' ) );
     store.dispatch( accImage  ( '' ) );
     store.dispatch( accVerified( false ) );
-
-    //  store.dispatch( accAnon   ( false ) );
-    // store.dispatch( accPhone  ( '(000) 000-0000' ) );
-
-    // Frontend Data Redux - Firebase User Information - user redux
-    store.dispatch( nameAuth   ( '' ) );
-    store.dispatch( iconAuth   ( '' ) );
-
-    // Dispatch Information
 
   }
 

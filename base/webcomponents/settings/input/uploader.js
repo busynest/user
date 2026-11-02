@@ -13,7 +13,7 @@ import { store } from '../../../store.js';
 import { connect } from 'pwa-helpers';
 import { auth, onReady, storage } from '../../../firebase/authentication.js';
 import { onAuthStateChanged, updateProfile } from 'firebase/auth';
-import { accImage } from '../../../redux/backend.js';
+import { accImage } from '../../../redux/session.js';
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { labelStyle } from '../../form/css/label.js';
 import { statusStyle, liveStatus } from '../../form/css/status.js';
@@ -245,9 +245,9 @@ export class ContactPhoto extends connect(store)(LitElement) {
         super.disconnectedCallback();
     }
     stateChanged(state) {
-        this.photo = state.backend.photoURL;
-        this.person = state.backend.name;
-        this.mail = state.backend.email;
+        this.photo = state.session.photoURL;
+        this.person = state.session.name;
+        this.mail = state.session.email;
     }
     static get styles() {
         return [

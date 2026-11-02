@@ -95,8 +95,8 @@ export class ContactEmail extends connect(store)(LitElement) {
         };
     }
     stateChanged(state) {
-        this.login = state.frontend.login;
-        this.mail = state.backend.email;
+        this.login = state.session.login;
+        this.mail = state.session.email;
     }
     handleEmail(event) {
         const input = event.target;

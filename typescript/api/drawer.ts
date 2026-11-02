@@ -1,5 +1,5 @@
 import { store } from '../store.js';
-import { closeSign, openSign, toggleSign } from '../redux/frontend.js';
+import { closeSign, openSign, toggleSign } from '../redux/session.js';
 
 /** Required - open the drawer. */
 export function openDrawer(): void {

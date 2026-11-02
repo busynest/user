@@ -37,7 +37,7 @@ import { googleButton }   from './google-button.js';
 import { markVerificationNotice } from './notice.js';
 
 import store                  from '../../store.js';
-import { universalToggle }    from '../../redux/frontend.js';
+import { universalToggle }    from '../../redux/session.js';
 
 /** Required - same sentence as the resend control in settings. */
 const sentMessage = 'Check your inbox for the verification email. You can still sign in.';

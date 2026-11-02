@@ -42,7 +42,7 @@ vi.mock('firebase/analytics', () => ({
 }));
 
 import { initialize } from '../../base/firebase/authentication.js';
-import { userAuth } from '../../base/redux/frontend.js';
+import { userAuth } from '../../base/redux/session.js';
 import store from '../../base/store.js';
 import '../../base/webcomponents/icon/icon.js';
 import '../../base/webcomponents/drawer/drawer.js';

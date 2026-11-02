@@ -1,10 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { userSlice } from './redux/frontend.js';
-import { accountSlice } from './redux/backend.js';
+import { sessionSlice } from './redux/session.js';
 export const store = configureStore({
     reducer: {
-        frontend: userSlice.reducer,
-        backend: accountSlice.reducer,
+        session: sessionSlice.reducer,
     },
     devTools: true
 });

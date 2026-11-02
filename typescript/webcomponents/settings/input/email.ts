@@ -33,8 +33,8 @@ export class ContactEmail extends connect(store)(LitElement) {
   constructor() { super(); }
 
   stateChanged(state: AppState) {
-    this.login  = state.frontend!.login;
-    this.mail   = state.backend!.email ;
+    this.login  = state.session.login;
+    this.mail   = state.session.email ;
   }
 
   private handleEmail(event: Event) {

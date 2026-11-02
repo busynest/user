@@ -85,8 +85,8 @@ export class DeleteUser extends connect(store)(LitElement) {
         };
     }
     stateChanged(state) {
-        this.login = state.frontend.login;
-        this.email = state.backend.email;
+        this.login = state.session.login;
+        this.email = state.session.email;
     }
     static get styles() {
         return [

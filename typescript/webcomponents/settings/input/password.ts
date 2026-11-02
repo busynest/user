@@ -30,7 +30,7 @@ export class InputPassword extends connect(store)(LitElement) {
   constructor() { super(); }
 
    stateChanged(state: AppState) {
-      this.login = state.frontend!.login;
+      this.login = state.session.login;
     }
 
   private handleInputChange(event: Event) {

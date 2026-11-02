@@ -30,7 +30,7 @@ import { revealControl } from './reveal.js';
 import { googleButton } from './google-button.js';
 import { markVerificationNotice } from './notice.js';
 import store from '../../store.js';
-import { universalToggle } from '../../redux/frontend.js';
+import { universalToggle } from '../../redux/session.js';
 const sentMessage = 'Check your inbox for the verification email. You can still sign in.';
 let FormSignup = class FormSignup extends LitElement {
     constructor() {

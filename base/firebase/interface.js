@@ -1,6 +1,5 @@
 import { store } from '../store.js';
-import { closeSign, iconAuth, nameAuth, userAuth } from '../redux/frontend.js';
-import { accID, accEmail, accImage, accName, accVerified } from '../redux/backend.js';
+import { accEmail, accImage, accName, accVerified, closeSign, userAuth } from '../redux/session.js';
 import { EmailAuthProvider, getAuth, onAuthStateChanged, reauthenticateWithCredential, signOut } from 'firebase/auth';
 import { doc, deleteDoc } from "firebase/firestore";
 import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
@@ -37,23 +36,17 @@ onReady(() => {
         if (user) {
             store.dispatch(userAuth(true));
             store.dispatch(closeSign());
-            store.dispatch(accID(user.uid));
             store.dispatch(accName(user.displayName ?? ''));
             store.dispatch(accEmail(user.email || ''));
             store.dispatch(accImage(user.photoURL || ''));
             store.dispatch(accVerified(user.emailVerified === true));
-            store.dispatch(nameAuth(user.displayName ?? ''));
-            store.dispatch(iconAuth(user.photoURL || ''));
         }
         else {
             store.dispatch(userAuth(false));
-            store.dispatch(accID(''));
             store.dispatch(accName(''));
             store.dispatch(accEmail(''));
             store.dispatch(accImage(''));
             store.dispatch(accVerified(false));
-            store.dispatch(nameAuth(''));
-            store.dispatch(iconAuth(''));
         }
     });
 });
