@@ -2,6 +2,11 @@ Change Log
 ==========
 All notable changes to pwa-auth.js will be documented in this file.
 
+# [3.7.2] - 2026-11-02
+
+## Accessibility
+- Keyboard, focus, and ARIA on the sign-in elements. The account button names the drawer, focus moves to Close and returns on Escape, and closed pieces stay out of the tab order. axe-core is clean on the website and the demonstration with the drawer shut and open.
+
 # [3.6.0] - 2026-11-01
 
 ## Added
