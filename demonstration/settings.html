@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title>Settings — pwa-auth</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1">
+
+    <link rel="stylesheet" href="pwa-styles.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Required - configure Firebase before the module loads. This is not a signed-in session. -->
+    <script>
+      window.process = { env: {
+        NODE_ENV: 'production',
+        FIREBASE_CONFIG: JSON.stringify({
+          apiKey:             "AIzaSyC1ZNYC9RAjSAE3syUBNi47AiqbAqkx99w",
+          authDomain:         "pwa-authentic.firebaseapp.com",
+          projectId:          "pwa-authentic",
+          storageBucket:      "pwa-authentic.firebasestorage.app",
+          messagingSenderId:  "749233996232",
+          appId:              "1:749233996232:web:bbc410d53b7d39bdfb80fd",
+          measurementId:      "G-G1GYM1HBJ4"
+        })
+      } };
+    </script>
+
+  </head>
+  <body>
+
+    <header class="top">
+      <div class="bar">
+        <div>
+          <h1>Settings</h1>
+          <p class="lede">Signed-in state is faked on this page. Firebase has no session.</p>
+          <p class="links">
+            <a href="index.html">All elements</a>
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <user-settings></user-settings>
+    </main>
+
+    <!-- Fake signed-in state. userAuth(true) is local only, so the tabs open without an account. -->
+    <script type="module" src="settings-boot.js"></script>
+
+  </body>
+
+</html>
