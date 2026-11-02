@@ -140,7 +140,14 @@ Set these on the element. `--pwa_background` replaces the older background names
 | `--pwa_action_text_color` | Button text | white |
 | `--pwa_action_background_color` | Green buttons and links | `#2a6b45` |
 | `--pwa_action_border_color` | Button border | `#214f34` |
-| `--pwa_close_color` | Close mark and errors | `#9a3b32` |
+| `--pwa_close_color` | Errors | `#9a3b32` |
+| `--pwa_close_mark` | Drawer close icon | the drawer text, `#1c2430` |
+| `--pwa_close_background` | Drawer close button | white |
+| `--pwa_close_hover` | Drawer close, pointer over it | `#f2f2f2` |
+| `--pwa_close_active` | Drawer close, pressed | `#e7e2d6` |
+| `--pwa_close_border` | Drawer close border | `1px solid` the line color |
+| `--pwa_close_radius` | Drawer close corners | `10px` |
+| `--pwa_close_size` | Drawer close tap target | `44px` |
 | `--pwa_verified_color` | Verified check | the button green |
 | `--pwa_tap` | Shortest a control can be | `44px` |
 | `--pwa_icon_background_color` | Icon button | `#2a6b45` |

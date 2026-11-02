@@ -4,8 +4,9 @@ export const exitStyle: CSSResult = css`
 
   .exit {
     display:                grid;
-    grid-template-columns:  minmax(var(--pwa_tap, 44px), 80px) minmax(0, 1fr) minmax(var(--pwa_tap, 44px), 80px); /* Required - fit 320px */
-    padding:                12px 8px;
+    grid-template-columns:  var(--pwa_close_size, 44px) minmax(0, 1fr) var(--pwa_close_size, 44px);
+    align-items:            center;
+    padding:                8px 12px;
     z-index:                2;
     background-color:       var(--pwa_background, var(--pwa_drawer_background_color, #fff));
     border-bottom:          1px solid var(--pwa_line_color, #e3daca);
@@ -40,20 +41,37 @@ export const exitStyle: CSSResult = css`
   }
 */
   .close {
-    min-height:             var(--pwa_tap, 44px); /* Required - minimum tap target */
+    appearance:             none;
+    box-sizing:             border-box;
+    display:                grid;
+    place-items:            center;
+    justify-self:           end;
+    align-self:             center;
+    width:                  var(--pwa_close_size, 44px);
+    height:                 var(--pwa_close_size, 44px);
     min-width:              var(--pwa_tap, 44px);
-    height:                 auto;
-    width:                  auto;
-    margin:                 auto;
-    background-color:       transparent;
-    border:                 0px;
-    fill:                   var(--pwa_close_color, #9a3b32);
+    min-height:             var(--pwa_tap, 44px);
+    margin:                 0;
+    padding:                0;
+    border-radius:          var(--pwa_close_radius, 10px);
+    border:                 var(--pwa_close_border, 1px solid var(--pwa_line_color, #e3daca));
+    background:             var(--pwa_close_background, #fff);
+    color:                  var(--pwa_close_mark, var(--pwa_drawer_text_color, #1c2430));
+    cursor:                 pointer;
   }
 
   .close svg {
-    width:                  24px;
-    height:                 24px;
+    width:                  18px;
+    height:                 18px;
     display:                block;
+  }
+
+  .close:hover {
+    background:             var(--pwa_close_hover, var(--pwa_nav_on_background, #f2f2f2));
+  }
+
+  .close:active {
+    background:             var(--pwa_close_active, #e7e2d6);
   }
 
 
