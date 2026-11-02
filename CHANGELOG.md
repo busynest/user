@@ -2,6 +2,11 @@ Change Log
 ==========
 All notable changes to pwa-auth.js will be documented in this file.
 
+# [3.7.7] - 2026-11-02
+
+## Changed
+- `email-reset` starts empty. Typing an address on a sign-in form no longer fills it. Forgot password on the login form still uses the address in that form.
+
 # [3.7.5] - 2026-11-02
 
 ## Added
