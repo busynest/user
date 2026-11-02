@@ -56,6 +56,23 @@ body {
   padding-bottom:             28px;
 }
 
+/* Drawer page. Title and icon share the header row, as on the site. */
+.head {
+  display:                    grid;
+  grid-template-columns:      minmax(0, 1fr) auto;
+  align-items:                center;
+  gap:                        16px;
+  box-sizing:                 border-box;
+  width:                      min(40rem, 100%);
+  margin:                     0 auto;
+  padding:                    16px 24px;
+}
+
+.links a {
+  margin-right:               14px;
+  color:                      var(--green);
+}
+
 .mark {
   margin:                     0 0 10px;
   color:                      var(--green);
