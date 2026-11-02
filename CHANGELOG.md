@@ -2,6 +2,11 @@ Change Log
 ==========
 All notable changes to pwa-auth.js will be documented in this file.
 
+# [3.7.3] - 2026-11-02
+
+## Changed
+- Settings tabs roll from the fold. The leaving panel rolls up and the arriving panel rolls down, both on `--pwa_slide` (`2s` `ease-in-out`).
+
 # [3.7.2] - 2026-11-02
 
 ## Accessibility
