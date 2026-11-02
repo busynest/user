@@ -12,8 +12,7 @@ import { state } from "lit/decorators.js";
 import { connect } from "pwa-helpers";
 import { store } from "../../../store.js";
 import { updateProfile } from "firebase/auth";
-import { accName } from "../../../redux/backend.js";
-import { nameAuth } from "../../../redux/frontend.js";
+import { accName } from "../../../redux/session.js";
 import { auth } from "../../../firebase/authentication.js";
 import { labelStyle } from "../../form/css/label.js";
 import { inputStyle } from "../../form/css/input.js";
@@ -53,7 +52,6 @@ export class InputName extends connect(store)(LitElement) {
                 this.dirty = false;
                 this.draft = name;
                 store.dispatch(accName(name));
-                store.dispatch(nameAuth(name));
                 this.status = 'Name saved.';
                 emitWindow(pwaProfileUpdated, {
                     uid: current.uid,
@@ -70,12 +68,12 @@ export class InputName extends connect(store)(LitElement) {
         };
     }
     stateChanged(state) {
-        const signedIn = Boolean(state.frontend?.login);
+        const signedIn = Boolean(state.session.login);
         if (signedIn !== this.login)
             this.dirty = false;
         this.login = signedIn;
         if (!this.dirty)
-            this.draft = state.backend?.name ?? '';
+            this.draft = state.session.name ?? '';
     }
     static get styles() {
         return [

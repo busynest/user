@@ -11,29 +11,16 @@ declare const UserSettings_base: (new (...args: any[]) => {
     connectedCallback(): void;
     disconnectedCallback(): void;
     stateChanged(_state: {
-        frontend: {
-            settings: string;
+        session: {
             login: boolean;
             drawer: boolean;
             registerOne: boolean;
             registerTwo: boolean;
-            userId: string;
-            customer: string;
-            profileChoice: string;
-            name: string;
-            photoURL: string;
-            phone: string;
-            email: string;
-        };
-        backend: {
+            settings: string;
             verified: boolean;
-            anon: boolean;
-            userId: string;
             name: string;
             email: string;
             photoURL: string;
-            phone: string;
-            msgToken: string;
         };
     }): void;
     readonly isConnected: boolean;

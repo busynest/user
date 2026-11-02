@@ -25,7 +25,7 @@ import { tapStyle } from '../css/tap.js';
 import { revealControl } from './reveal.js';
 import { googleButton } from './google-button.js';
 import store from '../../store.js';
-import { universalToggle } from '../../redux/frontend.js';
+import { universalToggle } from '../../redux/session.js';
 import { rememberEmail } from './draft.js';
 const sentMessage = 'If an account uses that email, a reset link is on its way.';
 let FormLogin = class FormLogin extends LitElement {

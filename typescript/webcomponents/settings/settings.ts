@@ -3,7 +3,7 @@ import { state, customElement, property }           from 'lit/decorators.js';
 import { styleMap }                       from 'lit/directives/style-map.js';
 import { connect }                        from 'pwa-helpers/connect-mixin.js';
 import { store, AppState }                from '../../store.js';
-import { navigateAuth }                   from '../../redux/frontend.js';
+import { navigateAuth }                   from '../../redux/session.js';
 import { navigation }                     from './css/navigation.js';
 import './input/uploader.js';
 import './input/name.js';
@@ -92,10 +92,10 @@ export class UserSettings extends connect(store)(LitElement) {
   }
 
   stateChanged(state: AppState) {
-    this.profileTopic   = state.frontend!.settings;
-    this.login          = Boolean(state.frontend?.login);
-    this.name           = state.backend!.name;
-    this.email          = state.backend!.email;
+    this.profileTopic   = state.session.settings;
+    this.login          = Boolean(state.session.login);
+    this.name           = state.session.name;
+    this.email          = state.session.email;
   }
 
   static get styles():CSSResultArray { return [

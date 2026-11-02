@@ -133,10 +133,10 @@ describe('Continue with Google button', () => {
       emailVerified: true
     };
     firebase.listeners.forEach((callback) => callback(firebase.currentUser));
-    const state = store.getState() as { frontend: { login: boolean }; backend: { verified: boolean } };
+    const state = store.getState();
     expect(firebase.listeners.length).toBeGreaterThan(0);
-    expect(state.frontend.login).toBe(true);
-    expect(state.backend.verified).toBe(true);
+    expect(state.session.login).toBe(true);
+    expect(state.session.verified).toBe(true);
     const drawer = document.createElement('user-drawer') as HTMLElement & { updateComplete: Promise<unknown> };
     document.body.append(drawer);
     await drawer.updateComplete;

@@ -1,7 +1,6 @@
 import '../base/export/pwa-auth.js';
 import { store } from '../base/store.js';
-import { userAuth } from '../base/redux/frontend.js';
-import { accName, accEmail } from '../base/redux/backend.js';
+import { accEmail, accName, userAuth } from '../base/redux/session.js';
 import { pwaAuthChanged } from '../base/events/names.js';
 
 // Fake signed-in state. Local only. Firebase has no session, so the tabs open without an account.

@@ -17,7 +17,7 @@ import { emitWindow, toAuthError } from '../../events/emit.js';
 import { userMessage } from '../../firebase/message.js';
 import { openDrawer } from '../../api/drawer.js';
 import store from '../../store.js';
-import { universalToggle } from '../../redux/frontend.js';
+import { universalToggle } from '../../redux/session.js';
 import { draftedEmail, onDraftEmail } from './draft.js';
 import { labelStyle } from './css/label.js';
 import { inputStyle } from './css/input.js';
@@ -83,7 +83,7 @@ let EmailReset = class EmailReset extends LazyLoader {
             const drawer = document.querySelector('user-drawer');
             if (drawer) {
                 const subscribe = drawer.hasAttribute('subscribe');
-                const signup = Boolean(store.getState().frontend?.registerOne);
+                const signup = Boolean(store.getState().session?.registerOne);
                 if (signup !== subscribe)
                     store.dispatch(universalToggle('drawer'));
                 openDrawer();
@@ -93,7 +93,7 @@ let EmailReset = class EmailReset extends LazyLoader {
             if (!page)
                 return;
             const subscribe = page.hasAttribute('subscribe');
-            const signup = Boolean(store.getState().frontend?.registerTwo);
+            const signup = Boolean(store.getState().session?.registerTwo);
             if (signup !== subscribe)
                 store.dispatch(universalToggle('page'));
             page.scrollIntoView({ block: 'nearest' });

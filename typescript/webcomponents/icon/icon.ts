@@ -3,7 +3,7 @@ import { customElement, property, state }     from 'lit/decorators.js';
 import { connect }                            from 'pwa-helpers/connect-mixin.js';
 import { store, AppState }                    from '../../store.js';
 import { iconStyles }                         from './css/icon.js';
-import { toggleSign }                         from '../../redux/frontend.js';
+import { toggleSign }                         from '../../redux/session.js';
 import { applyFirebaseConfig }                from '../../firebase/attribute.js';
 import { lettersFor }                         from '../form/letters.js';
 // import { faceIcon }                           from '../../css/svg';
@@ -38,12 +38,11 @@ export class UserIcon extends connect(store)(LitElement) {
   }
   
   stateChanged(state: AppState) {
-    this._user        = state.frontend!.login;
-    this._open        = state.frontend!.drawer;
-    this._photoURL    = state.backend!.photoURL;
-    this._name        = state.backend!.name;
-    this._email       = state.backend!.email;
-    // this._sign        = state.frontend!.register;
+    this._user        = state.session.login;
+    this._open        = state.session.drawer;
+    this._photoURL    = state.session.photoURL;
+    this._name        = state.session.name;
+    this._email       = state.session.email;
   }
 
   protected updated(): void {

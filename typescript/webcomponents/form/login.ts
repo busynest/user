@@ -30,7 +30,7 @@ import { revealControl }  from './reveal.js';
 import { googleButton }   from './google-button.js';
 
 import store                  from '../../store.js';
-import { universalToggle }    from '../../redux/frontend.js';
+import { universalToggle }    from '../../redux/session.js';
 import { rememberEmail }      from './draft.js';
 
 /** Required - same sentence as email-reset, whether or not the account exists. */

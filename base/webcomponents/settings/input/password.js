@@ -74,7 +74,7 @@ export class InputPassword extends connect(store)(LitElement) {
         };
     }
     stateChanged(state) {
-        this.login = state.frontend.login;
+        this.login = state.session.login;
     }
     handleInputChange(event) {
         const input = event.target;

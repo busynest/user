@@ -56,7 +56,7 @@ vi.mock('firebase/analytics', () => ({
 import { initialize } from '../../../base/firebase/authentication.js';
 import { closeDrawer } from '../../../base/api/drawer.js';
 import store from '../../../base/store.js';
-import { universalToggle } from '../../../base/redux/frontend.js';
+import { universalToggle } from '../../../base/redux/session.js';
 import { clearDraftEmail } from '../../../base/webcomponents/form/draft.js';
 import { pwaAuthError, pwaResetSent } from '../../events/names.js';
 import '../../../base/webcomponents/form/login.js';
@@ -113,7 +113,7 @@ async function flush(el: { updateComplete: Promise<unknown> }) {
 }
 
 function quietForms() {
-  const state = store.getState().frontend;
+  const state = store.getState().session;
   if (state?.registerOne) store.dispatch(universalToggle('drawer'));
   if (state?.registerTwo) store.dispatch(universalToggle('page'));
   closeDrawer();

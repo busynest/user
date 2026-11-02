@@ -75,10 +75,9 @@ vi.mock('firebase/analytics', () => ({
 
 import { initialize } from '../../base/firebase/authentication.js';
 import store from '../../base/store.js';
-import { userAuth } from '../../base/redux/frontend.js';
+import { accEmail, accImage, accName, userAuth } from '../../base/redux/session.js';
 import { openDrawer } from '../../base/api/drawer.js';
 import { focusable } from './drawer/keys.js';
-import { accEmail, accImage, accName } from '../../base/redux/backend.js';
 import { lettersFor, accountTitle } from './form/letters.js';
 import { pwaAuthError, pwaResetSent, pwaSettings } from '../events/names.js';
 import { userMessage } from '../firebase/message.js';

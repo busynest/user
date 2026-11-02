@@ -20,7 +20,7 @@ import { drawerStyle } from './css/drawer.js';
 import { exitStyle } from './css/exit.js';
 import { linkStyle } from './css/link.js';
 import { lineStyle } from './css/paragraph.js';
-import { closeSign } from '../../redux/frontend.js';
+import { closeSign } from '../../redux/session.js';
 import { logOut } from '../../firebase/interface.js';
 import { refreshEmailVerified } from '../../api/verify.js';
 import { applyFirebaseConfig } from '../../firebase/attribute.js';
@@ -166,17 +166,17 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         super.disconnectedCallback();
     }
     stateChanged(state) {
-        const open = state.frontend.drawer;
-        this.name = state.backend.name;
-        this.email = state.backend.email;
-        this.verified = Boolean(state.backend?.verified);
+        const open = state.session.drawer;
+        this.name = state.session.name;
+        this.email = state.session.email;
+        this.verified = Boolean(state.session.verified);
         if (open)
             this.sliding = true;
         else if (this.reduced())
             this.sliding = false;
         this.drawer = open;
-        this.user = state.frontend.login;
-        this.signup = state.frontend.registerOne;
+        this.user = state.session.login;
+        this.signup = state.session.registerOne;
         const changed = this.sawOpen ? open !== this.wasOpen : open;
         if (changed) {
             emitElement(this, pwaDrawerToggleName, { open });

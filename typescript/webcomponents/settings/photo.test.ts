@@ -62,8 +62,7 @@ vi.mock('firebase/analytics', () => ({
 
 import { initialize } from '../../../base/firebase/authentication.js';
 import store from '../../../base/store.js';
-import { userAuth } from '../../../base/redux/frontend.js';
-import { accImage } from '../../../base/redux/backend.js';
+import { accImage, userAuth } from '../../../base/redux/session.js';
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import '../../../base/webcomponents/settings/input/uploader.js';
 
@@ -218,8 +217,7 @@ describe('profile photo', () => {
       expect.objectContaining({ contentType: 'image/jpeg' })
     );
     expect(firebase.updateProfile).toHaveBeenCalledWith(firebase.user, { photoURL: 'https://cdn.example/photo' });
-    expect(store.getState().backend!.photoURL).toBe('https://cdn.example/photo');
-    expect(store.getState().frontend!.photoURL).toBe('');
+    expect(store.getState().session.photoURL).toBe('https://cdn.example/photo');
     expect(el.shadowRoot!.querySelector('img')!.getAttribute('alt')).toBe('Profile photo');
     expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('Photo saved.');
     expect(input.value).toBe('');
@@ -241,7 +239,7 @@ describe('profile photo', () => {
     await settle(el);
 
     expect(deleteObject).toHaveBeenCalled();
-    expect(store.getState().backend!.photoURL).toBe('');
+    expect(store.getState().session.photoURL).toBe('');
     expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('Network problem. Try again.');
   });
 
@@ -300,7 +298,7 @@ describe('profile photo', () => {
     await el.updateComplete;
 
     expect(firebase.updateProfile).toHaveBeenCalledWith(firebase.user, { photoURL: null });
-    expect(store.getState().backend!.photoURL).toBe('');
+    expect(store.getState().session.photoURL).toBe('');
     expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('Photo removed.');
   });
 

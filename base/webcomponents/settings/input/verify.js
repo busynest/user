@@ -54,9 +54,9 @@ export class EmailVerify extends connect(store)(LitElement) {
         super.disconnectedCallback();
     }
     stateChanged(state) {
-        this.login = Boolean(state.frontend?.login);
-        this.verified = Boolean(state.backend?.verified);
-        this.email = state.backend?.email ?? '';
+        this.login = Boolean(state.session.login);
+        this.verified = Boolean(state.session.verified);
+        this.email = state.session.email ?? '';
         this.hidden = !this.login;
         if (this.verified)
             this.clearWait();
