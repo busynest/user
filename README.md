@@ -178,7 +178,7 @@ The drawer unrolls downward and its buttons ride the bottom edge. Nothing animat
 
 ## Firebase
 
-Turn on Email/Password. Turn on Google if that button stays. Photos go to Storage at `pwa-auth/{uid}/`. Let the signed-in person read and write that folder. The elements do not write Firestore.
+Turn on Email/Password. Turn on Google if that button stays. A profile photo is one Storage object, `pwa-auth/{uid}/photo`, replaced on each upload. Only an image file, up to 5 MB, is accepted. The element then keeps the EXIF orientation, scales the long side to at most 1024px, and uploads a JPEG at 0.8 quality. Remove photo clears it. Let the signed-in person read and write that folder. The elements do not write Firestore. The upload control stays disabled until Firebase has a signed-in user.
 
 1. `initialize()` is the one to use.
 
