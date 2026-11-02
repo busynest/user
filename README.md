@@ -1,6 +1,6 @@
 # pwa-auth
 
-Sign-in elements for a site that keeps its own pages. [Demo](https://pwa-authentic.firebaseapp.com).
+Turnkey Firebase sign-in UI. Drop in the tags. [Demo](https://pwa-authentic.firebaseapp.com).
 
 Five tags. They share one sign-in. MIT.
 
