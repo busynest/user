@@ -27,6 +27,7 @@ const known = {
     'pwa/missing-file': 'Choose a photo first.',
     'pwa/not-image': 'Choose an image file.',
     'pwa/photo-too-large': 'Choose an image under 5 MB.',
+    'pwa/photo-unreadable': 'That image could not be prepared. Try another.',
     'pwa/not-ready': 'Sign-in is not ready yet.',
     'pwa/unknown': 'Something went wrong. Try again.'
 };

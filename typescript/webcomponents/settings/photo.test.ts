@@ -73,6 +73,54 @@ function fileOf(bytes: number, type: string, name = 'pic.png') {
   return new File([new Uint8Array(bytes)], name, { type });
 }
 
+const encoded = {
+  width: 0,
+  height: 0,
+  type: '',
+  quality: 0
+};
+
+function installEncoder(width: number, height: number) {
+  vi.unstubAllGlobals();
+  const proto = HTMLCanvasElement.prototype as HTMLCanvasElement & {
+    getContext: { mockRestore?: () => void };
+    toBlob?: { mockRestore?: () => void };
+  };
+  proto.getContext.mockRestore?.();
+  proto.toBlob?.mockRestore?.();
+  vi.stubGlobal('createImageBitmap', vi.fn(async () => ({
+    width,
+    height,
+    close: vi.fn()
+  })));
+  if (typeof HTMLCanvasElement.prototype.toBlob !== 'function') {
+    HTMLCanvasElement.prototype.toBlob = () => undefined;
+  }
+  vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockImplementation(function (this: HTMLCanvasElement) {
+    encoded.width = this.width;
+    encoded.height = this.height;
+    return { drawImage: vi.fn() } as unknown as CanvasRenderingContext2D;
+  });
+  vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(((
+    callback: BlobCallback,
+    type?: string,
+    quality?: number
+  ) => {
+    encoded.type = type || '';
+    encoded.quality = quality ?? 0;
+    callback(new Blob([new Uint8Array([9])], { type: type || 'image/jpeg' }));
+  }) as HTMLCanvasElement['toBlob']);
+}
+
+async function settle(el: LitEl) {
+  await vi.waitFor(async () => {
+    await el.updateComplete;
+    await Promise.resolve();
+    const text = el.shadowRoot!.querySelector('[role="status"]')!.textContent || '';
+    expect(text === '' || text === 'Preparing…' || text.startsWith('Uploading')).toBe(false);
+  });
+}
+
 async function mount(signedIn: boolean) {
   firebase.currentUser = signedIn ? firebase.user : null;
   store.dispatch(userAuth(true));
@@ -101,6 +149,7 @@ describe('profile photo', () => {
     vi.mocked(ref).mockClear();
     document.body.replaceChildren();
     store.dispatch(accImage(''));
+    installEncoder(800, 600);
     initialize({
       config: {
         apiKey: 'test',
@@ -127,12 +176,14 @@ describe('profile photo', () => {
     const text = pick(el, fileOf(4, 'text/plain', 'notes.txt'));
     await el.updateComplete;
     expect(uploadBytesResumable).not.toHaveBeenCalled();
+    expect(createImageBitmap).not.toHaveBeenCalled();
     expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('Choose an image file.');
     expect(text.value).toBe('');
 
     pick(el, fileOf(5 * 1024 * 1024 + 1, 'image/png', 'big.png'));
     await el.updateComplete;
     expect(uploadBytesResumable).not.toHaveBeenCalled();
+    expect(createImageBitmap).not.toHaveBeenCalled();
     expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('Choose an image under 5 MB.');
   });
 
@@ -150,16 +201,21 @@ describe('profile photo', () => {
     vi.mocked(getDownloadURL).mockResolvedValue('https://cdn.example/photo');
 
     const el = await mount(true);
-    const input = pick(el, fileOf(32, 'image/png', 'holiday.png'));
-    await el.updateComplete;
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    await el.updateComplete;
+    const original = fileOf(32, 'image/png', 'holiday.png');
+    const input = pick(el, original);
+    await settle(el);
 
+    expect(createImageBitmap).toHaveBeenCalledWith(original, { imageOrientation: 'from-image' });
+    expect(encoded).toMatchObject({ width: 800, height: 600, type: 'image/jpeg', quality: 0.8 });
+    const uploaded = vi.mocked(uploadBytesResumable).mock.calls[0][1] as Blob;
+    expect(uploaded).toBeInstanceOf(Blob);
+    expect(uploaded).not.toBeInstanceOf(File);
+    expect(uploaded.type).toBe('image/jpeg');
     expect(ref).toHaveBeenCalledWith(expect.anything(), 'pwa-auth/1/photo');
     expect(uploadBytesResumable).toHaveBeenCalledWith(
       expect.anything(),
-      expect.any(File),
-      expect.objectContaining({ contentType: 'image/png' })
+      uploaded,
+      expect.objectContaining({ contentType: 'image/jpeg' })
     );
     expect(firebase.updateProfile).toHaveBeenCalledWith(firebase.user, { photoURL: 'https://cdn.example/photo' });
     expect(store.getState().backend!.photoURL).toBe('https://cdn.example/photo');
@@ -182,13 +238,51 @@ describe('profile photo', () => {
 
     const el = await mount(true);
     pick(el, fileOf(8, 'image/jpeg', 'me.jpg'));
-    await el.updateComplete;
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    await el.updateComplete;
+    await settle(el);
 
     expect(deleteObject).toHaveBeenCalled();
     expect(store.getState().backend!.photoURL).toBe('');
     expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('Network problem. Try again.');
+  });
+
+  it('scales the long side to 1024 and keeps the aspect ratio', async () => {
+    installEncoder(4000, 2000);
+    vi.mocked(uploadBytesResumable).mockImplementation((location, file) => {
+      const task = {
+        snapshot: { ref: location },
+        on(_event: string, next: (snap: unknown) => void, _error: unknown, done: () => void) {
+          next({ bytesTransferred: file.size, totalBytes: file.size, state: 'running' });
+          queueMicrotask(() => { void done(); });
+        }
+      };
+      return task as never;
+    });
+    vi.mocked(getDownloadURL).mockResolvedValue('https://cdn.example/photo');
+
+    const el = await mount(true);
+    pick(el, fileOf(16, 'image/png', 'wide.png'));
+    await settle(el);
+
+    expect(encoded).toMatchObject({ width: 1024, height: 512, type: 'image/jpeg', quality: 0.8 });
+    expect(uploadBytesResumable).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.any(Blob),
+      expect.objectContaining({ contentType: 'image/jpeg' })
+    );
+  });
+
+  it('reports an image that cannot be decoded and does not upload it', async () => {
+    vi.stubGlobal('createImageBitmap', vi.fn(async () => {
+      throw new Error('decode');
+    }));
+    const el = await mount(true);
+    const input = pick(el, fileOf(16, 'image/png', 'broken.png'));
+    await settle(el);
+
+    expect(uploadBytesResumable).not.toHaveBeenCalled();
+    expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('That image could not be prepared. Try another.');
+    expect(input.value).toBe('');
+    expect(el.shadowRoot!.querySelector('progress')!.hasAttribute('hidden')).toBe(true);
   });
 
   it('clears the profile photo', async () => {

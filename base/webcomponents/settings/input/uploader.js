@@ -22,6 +22,8 @@ import { pwaAuthError, pwaProfileUpdated } from '../../../events/names.js';
 import { emitWindow, toAuthError } from '../../../events/emit.js';
 import { userMessage } from '../../../firebase/message.js';
 const maxPhotoBytes = 5 * 1024 * 1024;
+const maxPhotoEdge = 1024;
+const photoQuality = 0.8;
 function photoPath(uid) {
     return 'pwa-auth/' + uid + '/photo';
 }
@@ -33,6 +35,52 @@ function photoProblem(file) {
         return { code: 'pwa/photo-too-large', message: 'Choose an image under 5 MB.' };
     }
     return null;
+}
+function fittedSize(width, height) {
+    const longest = Math.max(width, height);
+    if (!(longest > maxPhotoEdge)) {
+        return {
+            width: Math.max(1, Math.round(width)),
+            height: Math.max(1, Math.round(height))
+        };
+    }
+    const scale = maxPhotoEdge / longest;
+    return {
+        width: Math.max(1, Math.round(width * scale)),
+        height: Math.max(1, Math.round(height * scale))
+    };
+}
+async function openBitmap(file) {
+    try {
+        return await createImageBitmap(file, { imageOrientation: 'from-image' });
+    }
+    catch {
+        return await createImageBitmap(file);
+    }
+}
+async function shrinkPhoto(file) {
+    const bitmap = await openBitmap(file);
+    try {
+        if (bitmap.width < 1 || bitmap.height < 1)
+            throw new Error('empty image');
+        const size = fittedSize(bitmap.width, bitmap.height);
+        const canvas = document.createElement('canvas');
+        canvas.width = size.width;
+        canvas.height = size.height;
+        const context = canvas.getContext('2d');
+        if (!context)
+            throw new Error('no canvas');
+        context.drawImage(bitmap, 0, 0, size.width, size.height);
+        const blob = await new Promise((resolve) => {
+            canvas.toBlob((result) => resolve(result), 'image/jpeg', photoQuality);
+        });
+        if (!blob)
+            throw new Error('no jpeg');
+        return blob;
+    }
+    finally {
+        bitmap.close();
+    }
 }
 export class ContactPhoto extends connect(store)(LitElement) {
     constructor() {
@@ -48,7 +96,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
         this.tone = '';
         this.busy = false;
         this.stopAuth = null;
-        this.saveImage = (event) => {
+        this.saveImage = async (event) => {
             const picked = event.target;
             const file = picked?.files?.[0];
             const current = auth.currentUser;
@@ -72,13 +120,33 @@ export class ContactPhoto extends connect(store)(LitElement) {
             }
             this.busy = true;
             this.progress = 0;
+            this.status = 'Preparing…';
+            let prepared;
+            try {
+                prepared = await shrinkPhoto(file);
+            }
+            catch {
+                this.busy = false;
+                this.progress = 0;
+                this.resetPicker();
+                this.fail({ code: 'pwa/photo-unreadable', message: 'That image could not be prepared. Try another.' });
+                return;
+            }
+            const signed = auth.currentUser;
+            if (!signed) {
+                this.busy = false;
+                this.progress = 0;
+                this.resetPicker();
+                this.fail({ code: 'pwa/signed-out', message: 'Sign in first.' });
+                return;
+            }
             this.status = 'Uploading…';
-            const location = ref(storage, photoPath(current.uid));
+            const location = ref(storage, photoPath(signed.uid));
             const metadata = {
                 cacheControl: 'public,max-age=300',
-                contentType: file.type
+                contentType: prepared.type || 'image/jpeg'
             };
-            const uploadTask = uploadBytesResumable(location, file, metadata);
+            const uploadTask = uploadBytesResumable(location, prepared, metadata);
             uploadTask.on('state_changed', (snapshot) => {
                 const ratio = snapshot.totalBytes > 0 ? (snapshot.bytesTransferred / snapshot.totalBytes) * 100 : 0;
                 this.progress = isFinite(ratio) ? ratio : 0;
