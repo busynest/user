@@ -66,6 +66,7 @@ export declare class UserSettings extends UserSettings_base {
     private clip;
     private sheet;
     private reduced;
+    private sheetPx;
     private rest;
     private clipStyle;
     private sheetStyle;

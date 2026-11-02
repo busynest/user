@@ -123,6 +123,11 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         background-color: var(--pwa_background, var(--pwa_settings_background_color, #fff));
       }
 
+      /* Required - an inactive tab stays fully behind the fold. */
+      .settings-sheet > section[hidden] {
+        display:          none !important;
+      }
+
       form {
         box-sizing:       border-box;
         display:          grid;
@@ -161,13 +166,12 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             return;
         if (!changed.has('profileTopic'))
             return;
-        const clip = this.clip();
-        if (!clip)
+        if (this.reduced())
             return;
-        this.heldHeight = Math.ceil(clip.getBoundingClientRect().height);
         this.rollMotion = false;
-        this.clipHeight = `${this.heldHeight}px`;
-        this.sheetShift = 'translate3d(0, 0, 0)';
+        this.clipHeight = '0px';
+        this.sheetShift = 'translate3d(0, -100%, 0)';
+        this.heldHeight = 0;
     }
     updated(changed) {
         const boot = !this.booted;
@@ -182,7 +186,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             return;
         const from = this.heldHeight;
         this.heldHeight = null;
-        const to = Math.ceil(sheet.getBoundingClientRect().height);
+        const to = this.sheetPx(clip, sheet);
         if (Math.abs(to - from) > 1)
             this.rollBetween(clip, sheet, from, to, to);
         else
@@ -203,7 +207,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             if (!clip || !sheet)
                 return;
             const from = Math.ceil(clip.getBoundingClientRect().height);
-            const sheetH = Math.ceil(sheet.getBoundingClientRect().height);
+            const sheetH = this.sheetPx(clip, sheet);
             this.rollBetween(clip, sheet, from, sheetH, sheetH);
         });
         this.columnObserver.observe(this);
@@ -216,6 +220,19 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
     }
     reduced() {
         return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+    sheetPx(clip, sheet) {
+        const transition = clip.style.transition;
+        const maxHeight = clip.style.maxHeight;
+        const height = clip.style.height;
+        clip.style.transition = 'none';
+        clip.style.maxHeight = 'none';
+        clip.style.height = 'auto';
+        const px = Math.ceil(sheet.offsetHeight);
+        clip.style.height = height;
+        clip.style.maxHeight = maxHeight;
+        clip.style.transition = transition;
+        return px;
     }
     rest() {
         this.rollMotion = false;

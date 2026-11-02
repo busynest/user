@@ -121,6 +121,11 @@ export class UserSettings extends connect(store)(LitElement) {
         background-color: var(--pwa_background, var(--pwa_settings_background_color, #fff));
       }
 
+      /* Required - an inactive tab stays fully behind the fold. */
+      .settings-sheet > section[hidden] {
+        display:          none !important;
+      }
+
       form {
         box-sizing:       border-box;
         display:          grid;
@@ -159,12 +164,12 @@ export class UserSettings extends connect(store)(LitElement) {
   protected willUpdate(changed: PropertyValues): void {
     if (!this.booted || !this.login || changed.has('login')) return;
     if (!changed.has('profileTopic')) return;
-    const clip = this.clip();
-    if (!clip) return;
-    this.heldHeight = Math.ceil(clip.getBoundingClientRect().height);
+    if (this.reduced()) return;
+    /* Required - park the incoming panel behind the fold before it paints. */
     this.rollMotion = false;
-    this.clipHeight = `${this.heldHeight}px`;
-    this.sheetShift = 'translate3d(0, 0, 0)';
+    this.clipHeight = '0px';
+    this.sheetShift = 'translate3d(0, -100%, 0)';
+    this.heldHeight = 0;
   }
 
   protected updated(changed: PropertyValues): void {
@@ -177,7 +182,7 @@ export class UserSettings extends connect(store)(LitElement) {
     if (!clip || !sheet || this.heldHeight == null) return;
     const from = this.heldHeight;
     this.heldHeight = null;
-    const to = Math.ceil(sheet.getBoundingClientRect().height);
+    const to = this.sheetPx(clip, sheet);
     if (Math.abs(to - from) > 1) this.rollBetween(clip, sheet, from, to, to);
     else this.rest();
   }
@@ -193,7 +198,7 @@ export class UserSettings extends connect(store)(LitElement) {
       const sheet = this.sheet();
       if (!clip || !sheet) return;
       const from = Math.ceil(clip.getBoundingClientRect().height);
-      const sheetH = Math.ceil(sheet.getBoundingClientRect().height);
+      const sheetH = this.sheetPx(clip, sheet);
       this.rollBetween(clip, sheet, from, sheetH, sheetH);
     });
     this.columnObserver.observe(this);
@@ -209,6 +214,21 @@ export class UserSettings extends connect(store)(LitElement) {
 
   private reduced(): boolean {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  // Sheet height in px. The clip cap is released for the read and put back. No paint.
+  private sheetPx(clip: HTMLElement, sheet: HTMLElement): number {
+    const transition = clip.style.transition;
+    const maxHeight = clip.style.maxHeight;
+    const height = clip.style.height;
+    clip.style.transition = 'none';
+    clip.style.maxHeight = 'none';
+    clip.style.height = 'auto';
+    const px = Math.ceil(sheet.offsetHeight);
+    clip.style.height = height;
+    clip.style.maxHeight = maxHeight;
+    clip.style.transition = transition;
+    return px;
   }
 
   // Required - resting panel. The first paint binds this, with no transition.
