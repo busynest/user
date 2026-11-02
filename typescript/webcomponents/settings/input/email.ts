@@ -63,22 +63,21 @@ export class ContactEmail extends connect(store)(LitElement) {
       aria-busy="${this.busy ? 'true' : 'false'}"
       @submit="${this.saveEmail}">
 
-      <label for="pwa-current-email-password">Current password
+      <label for="pwa-current-email-password">Current password</label>
 
-        <span class="pair">
+      <span class="pair">
 
           <input
             id            = "pwa-current-email-password"
             name          = "current_password"
             type          = "${this.showPassword ? 'text' : 'password'}"
             autocomplete  = "current-password"
+            aria-invalid  = "${this.tone === 'error' ? 'true' : 'false'}"
             aria-describedby = "pwa-email-status"/>
 
           ${revealControl(this.showPassword, () => { this.showPassword = !this.showPassword; })}
 
-        </span>
-
-      </label>
+      </span>
 
       <label for="pwa-email" >E-mail
 
@@ -92,6 +91,7 @@ export class ContactEmail extends connect(store)(LitElement) {
           autocapitalize= "off"
           spellcheck    = "false"
           class         = "email"
+          aria-invalid  = "${this.tone === 'error' ? 'true' : 'false'}"
           aria-describedby = "pwa-email-status"
           @input        = "${this.handleEmail}"
           .value        = "${this.mail}"/>

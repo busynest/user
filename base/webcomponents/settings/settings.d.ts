@@ -59,6 +59,7 @@ export declare class UserSettings extends UserSettings_base {
     stateChanged(state: AppState): void;
     static get styles(): CSSResultArray;
     private openTab;
+    private tabOn;
     protected willUpdate(changed: PropertyValues): void;
     protected updated(changed: PropertyValues): void;
     private watchColumn;

@@ -146,7 +146,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     background-color:       var(--pwa_background, var(--section_background_color, #fff));
   }
 
-  h3 {
+  h2 {
     margin:                 0;
     padding:                18px var(--pwa_inset, 0px) 14px;
     font-size:              1.15rem;
@@ -196,7 +196,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
   .action-button:focus { outline: 0; }
 
   .action-button:focus-visible {
-    outline:              2px solid var(--pwa_action_border_color, #214f34);
+    outline:              2px solid var(--pwa_focus, #1c2430);
     outline-offset:       2px;
   }
 
@@ -267,7 +267,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
   .google:focus { outline: 0; }
 
   .google:focus-visible {
-    outline:              2px solid #1f1f1f;
+    outline:              2px solid var(--pwa_focus, #1c2430);
     outline-offset:       2px;
   }
 
@@ -318,6 +318,11 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     padding-inline:       var(--pwa_inset, 0px);
   }
 
+  /* Required - the show button sits beside the field, not inside the label. */
+  label:has(+ .pair) {
+    padding-bottom:      6px;
+  }
+
   label {
     display:              grid;
     gap:                  6px;
@@ -353,9 +358,17 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     padding:                  8px 14px;
     color:                    var(--pwa_drawer_text_color, #1c2430);
     background-color:         var(--pwa_input_background_color, var(--pwa_background, #fff));
-    border:                   1px solid var(--pwa_line_color, #e3daca);
+    border:                   1px solid var(--pwa_input_border_color, #8d8870);
     border-radius:            10px;
     font-size:                1rem;
+  }
+
+  input[type=text]:focus-visible,
+  input[type=email]:focus-visible,
+  input[type=password]:focus-visible,
+  select:focus-visible {
+    outline:                  2px solid var(--pwa_focus, #1c2430);
+    outline-offset:           1px;
   }
 
   input.invalid { background-color: #ffdddd; }
@@ -393,6 +406,11 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     min-height:         var(--pwa_tap, 44px); /* Required - minimum tap target */
   }
 
+  .new:focus-visible {
+    outline:            2px solid var(--pwa_focus, #1c2430);
+    outline-offset:     2px;
+  }
+
   .reveal {
     appearance:         none;
     border:             0;
@@ -410,7 +428,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
   .reveal:focus { outline: 0; }
 
   .reveal:focus-visible {
-    outline:            2px solid var(--pwa_action_border_color, #214f34);
+    outline:            2px solid var(--pwa_focus, #1c2430);
     outline-offset:     2px;
   }
 
@@ -446,6 +464,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     display:                block;
     position:               relative;
     min-width:              0;
+    margin:                 0 0 14px;
   }
 
   /* Required - Show sits in the field so the input border matches the column. */
@@ -549,26 +568,24 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
           <li>
 
-            <label for="${e}">Password
+            <label for="${e}">Password</label>
 
-              <span class="pair">
+            <span class="pair">
 
-                <input
-                  id=             "${e}"
-                  name=           "password"
-                  part=           "password"
-                  type=           "${this.showPassword?"text":"password"}"
-                  autocomplete=   "current-password"
-                  aria-invalid=   "${"error"===this.tone?"true":"false"}"
-                  aria-describedby="${n}"
-                  @input=         "${this.handlePassword}"
-                  @change=        "${this.handlePassword}">
+              <input
+                id=             "${e}"
+                name=           "password"
+                part=           "password"
+                type=           "${this.showPassword?"text":"password"}"
+                autocomplete=   "current-password"
+                aria-invalid=   "${"error"===this.tone?"true":"false"}"
+                aria-describedby="${n}"
+                @input=         "${this.handlePassword}"
+                @change=        "${this.handlePassword}">
 
-                ${nD(this.showPassword,()=>{this.showPassword=!this.showPassword})}
+              ${nD(this.showPassword,()=>{this.showPassword=!this.showPassword})}
 
-              </span>
-
-            </label>
+            </span>
 
           </li>
 
@@ -669,9 +686,9 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
           <li>
 
-            <label for="${e}">Password
-              
-              <span class="pair">
+            <label for="${e}">Password</label>
+
+            <span class="pair">
 
                 <input
                   id=           "${e}"
@@ -690,9 +707,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
               </span>
 
-              <p id="${n}" class="hint" part="hint">${VE}</p>
-
-            </label>
+            <p id="${n}" class="hint" part="hint">${VE}</p>
 
           </li>
 
@@ -725,7 +740,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
       </form>
 
-    `}change(){bn.dispatch(rn(this.source))}async google(){if(!this.busy){this.busy=!0,this.tone="",this.status="";try{await bE()}catch(t){this.show(mE(t))}finally{this.busy=!1}}}show(t){this.tone="error",this.status=KE(t),gE(PE,t)}readFields(){const t=this.renderRoot.querySelector('input[type="email"]'),e=this.renderRoot.querySelector('input[name="new-password"]');this.email=t?.value??"",this.password=e?.value??""}_handleSubmit(t){t.preventDefault(),this.signUp()}handleEmail(t){const e=t.target;this.email=e.value}handlePassword(t){const e=t.target;this.password=e.value}async signUp(){if(this.busy)return;if(this.readFields(),this.email.length<4)return void this.show({code:"pwa/missing-email",message:"Enter an email address."});const t=qE(this.password);t?this.show(t):await this.newAccount(this.email,this.password)}};function nb(t){if(lE())return;const e=t.getAttribute("firebase-config");if(e)try{dE({config:JSON.parse(e)})}catch(t){gE(PE,mE(t))}}function sb(t,e){const n=t.trim();if(n){return n.split(/\s+/).slice(0,2).map(t=>t.charAt(0)).join("").toUpperCase()}const s=e.trim();return s?s.charAt(0).toUpperCase():""}function rb(t,e){const n=t.trim();if(n)return n;const s=e.trim();return s||"Account"}Z_([lt({type:String}),tb("design:type",Object)],eb.prototype,"source",void 0),Z_([lt({type:Boolean,attribute:"hide-google",reflect:!0}),tb("design:type",Object)],eb.prototype,"hideGoogle",void 0),Z_([ut(),tb("design:type",Object)],eb.prototype,"email",void 0),Z_([ut(),tb("design:type",Object)],eb.prototype,"password",void 0),Z_([ut(),tb("design:type",Object)],eb.prototype,"status",void 0),Z_([ut(),tb("design:type",Object)],eb.prototype,"tone",void 0),Z_([ut(),tb("design:type",Object)],eb.prototype,"busy",void 0),Z_([ut(),tb("design:type",Object)],eb.prototype,"showPassword",void 0),Z_([ut(),tb("design:type",Object)],eb.prototype,"notice",void 0),eb=Z_([at("form-signup"),tb("design:paramtypes",[])],eb);var ib=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},ob=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let ab=class extends(wt(bn)(it)){constructor(){super(),this.subscribe=!1,this.hideGoogle=!1,this._name="",this._email="",this._verified=!1,this._notice="",this._log=!1,this._sign=!1,this.motion=!1,this.clipHeight="auto",this.sheetShift="none",this.rollMotion=!1,this.booted=!1,this.stopNotice=null,this.heldHeight=null,this.columnWidth=0,this.columnObserver=null,this.onClipEnd=t=>{t instanceof TransitionEvent&&t.target===t.currentTarget&&"max-height"===t.propertyName&&this.rest()}}connectedCallback(){nb(this),super.connectedCallback(),this._notice=Y_(),this.stopNotice=X_(()=>{this._notice=Y_()})}disconnectedCallback(){this.stopNotice?.(),this.stopNotice=null,this.columnObserver?.disconnect(),this.columnObserver=null,super.disconnectedCallback()}stateChanged(t){this._name=t.backend.name,this._email=t.backend.email,this._verified=Boolean(t.backend?.verified),this._log=t.frontend.login,this._sign=t.frontend.registerTwo}willUpdate(t){if(!this.booted)return;if(!t.has("_sign")&&!t.has("_log"))return;t.has("_sign")&&(this.motion=!0);const e=this.clip();e&&(this.heldHeight=Math.ceil(e.getBoundingClientRect().height),this.rollMotion=!1,this.clipHeight=`${this.heldHeight}px`,this.sheetShift="translate3d(0, 0, 0)")}updated(t){const e=!this.booted;if(this.booted=!0,e)return this.watchColumn(),void requestAnimationFrame(()=>{this.motion=!0});if(!t.has("_sign")&&!t.has("_log"))return;const n=this.clip(),s=this.sheet();if(!n||!s||null==this.heldHeight)return;const r=this.heldHeight;this.heldHeight=null;const i=Math.ceil(s.getBoundingClientRect().height);Math.abs(i-r)>1?this.rollBetween(n,s,r,i,i):this.rest()}watchColumn(){"undefined"!=typeof ResizeObserver&&(this.columnObserver=new ResizeObserver(()=>{const t=Math.round(this.getBoundingClientRect().width);if(!t||t===this.columnWidth)return;if(this.columnWidth=t,!this.rollMotion)return;const e=this.clip(),n=this.sheet();if(!e||!n)return;const s=Math.ceil(e.getBoundingClientRect().height),r=Math.ceil(n.getBoundingClientRect().height);this.rollBetween(e,n,s,r,r)}),this.columnObserver.observe(this))}clip(){return this.shadowRoot?.querySelector(".login-clip")??null}sheet(){return this.shadowRoot?.querySelector(".service")??null}reduced(){return window.matchMedia("(prefers-reduced-motion: reduce)").matches}rest(){this.rollMotion=!1,this.clipHeight="auto",this.sheetShift="none"}clipStyle(){const t=this.rollMotion&&!this.reduced();return{height:this.clipHeight,maxHeight:"auto"===this.clipHeight?"none":this.clipHeight,transition:t?"height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out":"none"}}sheetStyle(){const t=this.rollMotion&&!this.reduced();return{transform:this.sheetShift,transition:t?"transform var(--pwa_slide, 2s) ease-in-out":"none"}}rollBetween(t,e,n,s,r){const i=n-r,o=s-r,a=t=>`translate3d(0, ${t}px, 0)`;if(this.reduced()||Math.abs(s-n)<=1)return void this.rest();t.style.transition="none",e.style.transition="none",t.style.height=`${Math.max(0,n)}px`,t.style.maxHeight=`${Math.max(0,n)}px`,e.style.transform=a(i),t.offsetHeight,t.style.transition="height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out",e.style.transition="transform var(--pwa_slide, 2s) ease-in-out",t.style.height=`${Math.max(0,s)}px`,t.style.maxHeight=`${Math.max(0,s)}px`,e.style.transform=a(o),this.rollMotion=!0,this.clipHeight=`${Math.max(0,s)}px`,this.sheetShift=a(o)}static get styles(){return[Tn,On,An,Sn,vn,eD,K_,i`
+    `}change(){bn.dispatch(rn(this.source))}async google(){if(!this.busy){this.busy=!0,this.tone="",this.status="";try{await bE()}catch(t){this.show(mE(t))}finally{this.busy=!1}}}show(t){this.tone="error",this.status=KE(t),gE(PE,t)}readFields(){const t=this.renderRoot.querySelector('input[type="email"]'),e=this.renderRoot.querySelector('input[name="new-password"]');this.email=t?.value??"",this.password=e?.value??""}_handleSubmit(t){t.preventDefault(),this.signUp()}handleEmail(t){const e=t.target;this.email=e.value}handlePassword(t){const e=t.target;this.password=e.value}async signUp(){if(this.busy)return;if(this.readFields(),this.email.length<4)return void this.show({code:"pwa/missing-email",message:"Enter an email address."});const t=qE(this.password);t?this.show(t):await this.newAccount(this.email,this.password)}};function nb(t){if(lE())return;const e=t.getAttribute("firebase-config");if(e)try{dE({config:JSON.parse(e)})}catch(t){gE(PE,mE(t))}}function sb(t,e){const n=t.trim();if(n){return n.split(/\s+/).slice(0,2).map(t=>t.charAt(0)).join("").toUpperCase()}const s=e.trim();return s?s.charAt(0).toUpperCase():""}function rb(t,e){const n=t.trim();if(n)return n;const s=e.trim();return s||"Account"}Z_([lt({type:String}),tb("design:type",Object)],eb.prototype,"source",void 0),Z_([lt({type:Boolean,attribute:"hide-google",reflect:!0}),tb("design:type",Object)],eb.prototype,"hideGoogle",void 0),Z_([ut(),tb("design:type",Object)],eb.prototype,"email",void 0),Z_([ut(),tb("design:type",Object)],eb.prototype,"password",void 0),Z_([ut(),tb("design:type",Object)],eb.prototype,"status",void 0),Z_([ut(),tb("design:type",Object)],eb.prototype,"tone",void 0),Z_([ut(),tb("design:type",Object)],eb.prototype,"busy",void 0),Z_([ut(),tb("design:type",Object)],eb.prototype,"showPassword",void 0),Z_([ut(),tb("design:type",Object)],eb.prototype,"notice",void 0),eb=Z_([at("form-signup"),tb("design:paramtypes",[])],eb);var ib=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},ob=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let ab=class extends(wt(bn)(it)){constructor(){super(),this.subscribe=!1,this.hideGoogle=!1,this._name="",this._email="",this._verified=!1,this._notice="",this._log=!1,this._sign=!1,this.motion=!1,this.clipHeight="auto",this.sheetShift="none",this.rollMotion=!1,this.booted=!1,this.stopNotice=null,this.heldHeight=null,this.columnWidth=0,this.columnObserver=null,this.onClipEnd=t=>{t instanceof TransitionEvent&&t.target===t.currentTarget&&"max-height"===t.propertyName&&this.rest()}}connectedCallback(){nb(this),this.hasAttribute("role")||this.setAttribute("role","region"),this.hasAttribute("aria-label")||this.setAttribute("aria-label","Account"),super.connectedCallback(),this._notice=Y_(),this.stopNotice=X_(()=>{this._notice=Y_()})}disconnectedCallback(){this.stopNotice?.(),this.stopNotice=null,this.columnObserver?.disconnect(),this.columnObserver=null,super.disconnectedCallback()}stateChanged(t){this._name=t.backend.name,this._email=t.backend.email,this._verified=Boolean(t.backend?.verified),this._log=t.frontend.login,this._sign=t.frontend.registerTwo}willUpdate(t){if(!this.booted)return;if(!t.has("_sign")&&!t.has("_log"))return;t.has("_sign")&&(this.motion=!0);const e=this.clip();e&&(this.heldHeight=Math.ceil(e.getBoundingClientRect().height),this.rollMotion=!1,this.clipHeight=`${this.heldHeight}px`,this.sheetShift="translate3d(0, 0, 0)")}updated(t){const e=!this.booted;if(this.booted=!0,e)return this.watchColumn(),void requestAnimationFrame(()=>{this.motion=!0});if(!t.has("_sign")&&!t.has("_log"))return;const n=this.clip(),s=this.sheet();if(!n||!s||null==this.heldHeight)return;const r=this.heldHeight;this.heldHeight=null;const i=Math.ceil(s.getBoundingClientRect().height);Math.abs(i-r)>1?this.rollBetween(n,s,r,i,i):this.rest()}watchColumn(){"undefined"!=typeof ResizeObserver&&(this.columnObserver=new ResizeObserver(()=>{const t=Math.round(this.getBoundingClientRect().width);if(!t||t===this.columnWidth)return;if(this.columnWidth=t,!this.rollMotion)return;const e=this.clip(),n=this.sheet();if(!e||!n)return;const s=Math.ceil(e.getBoundingClientRect().height),r=Math.ceil(n.getBoundingClientRect().height);this.rollBetween(e,n,s,r,r)}),this.columnObserver.observe(this))}clip(){return this.shadowRoot?.querySelector(".login-clip")??null}sheet(){return this.shadowRoot?.querySelector(".service")??null}reduced(){return window.matchMedia("(prefers-reduced-motion: reduce)").matches}rest(){this.rollMotion=!1,this.clipHeight="auto",this.sheetShift="none"}clipStyle(){const t=this.rollMotion&&!this.reduced();return{height:this.clipHeight,maxHeight:"auto"===this.clipHeight?"none":this.clipHeight,transition:t?"height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out":"none"}}sheetStyle(){const t=this.rollMotion&&!this.reduced();return{transform:this.sheetShift,transition:t?"transform var(--pwa_slide, 2s) ease-in-out":"none"}}rollBetween(t,e,n,s,r){const i=n-r,o=s-r,a=t=>`translate3d(0, ${t}px, 0)`;if(this.reduced()||Math.abs(s-n)<=1)return void this.rest();t.style.transition="none",e.style.transition="none",t.style.height=`${Math.max(0,n)}px`,t.style.maxHeight=`${Math.max(0,n)}px`,e.style.transform=a(i),t.offsetHeight,t.style.transition="height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out",e.style.transition="transform var(--pwa_slide, 2s) ease-in-out",t.style.height=`${Math.max(0,s)}px`,t.style.maxHeight=`${Math.max(0,s)}px`,e.style.transform=a(o),this.rollMotion=!0,this.clipHeight=`${Math.max(0,s)}px`,this.sheetShift=a(o)}static get styles(){return[Tn,On,An,Sn,vn,eD,K_,i`
       /* Required - this card's roll only. Block, so the sheet is not stretched to the clip. */
       .login-clip {
         display:            block;
@@ -745,9 +760,9 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
       @transitionend=${this.onClipEnd}>
     <section class="service" part="panel" style=${mt(this.sheetStyle())}>
 
-      <header part="header">
-        <h3 part="title">${this._log?rb(this._name,this._email):this._sign===this.subscribe?"Login":"Subscribe"}</h3>
-      </header>
+      <div part="header">
+        <h2 part="title">${this._log?rb(this._name,this._email):this._sign===this.subscribe?"Login":"Subscribe"}</h2>
+      </div>
 
       <!-- Logged-out State -->
       <div
@@ -763,6 +778,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
               ?hide-google= "${this.hideGoogle}"
               exportparts=  "email: login-email, password: login-password, submit: login-submit, switch: login-switch, forgot: login-forgot, status: login-status, reveal: login-reveal, google: login-google"
               ?inert=       "${this._sign!==this.subscribe}"
+              aria-hidden=  "${this._sign!==this.subscribe?"true":"false"}"
               class=        ${ft({content:!0,opened:this._sign===this.subscribe,closed:this._sign!==this.subscribe})}></form-login>
 
             <!-- Sign-up State -->
@@ -771,6 +787,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
               ?hide-google= "${this.hideGoogle}"
               exportparts=  "email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch, status: signup-status, reveal: signup-reveal, notice: signup-notice, google: signup-google"
               ?inert=       "${this._sign===this.subscribe}"
+              aria-hidden=  "${this._sign===this.subscribe?"true":"false"}"
               class=        ${ft({content:!0,opened:!this._sign===this.subscribe,closed:!this._sign!==this.subscribe})}></form-signup>
 
           </div>
@@ -861,7 +878,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     border-bottom:          1px solid var(--pwa_line_color, #e3daca);
   }
 
-  .exit > h3 {
+  .exit > h2 {
     font-weight:            600;
     font-size:              1rem;
     margin:                 0 auto;
@@ -1078,7 +1095,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
         .status:focus { outline: 0; }
 
         .status:focus-visible {
-          outline:              2px solid var(--pwa_action_border_color, #214f34);
+          outline:              2px solid var(--pwa_focus, #1c2430);
           outline-offset:       2px;
         }
 
@@ -1135,7 +1152,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
         </form>
 
       </div>
-    `}showSent(){this.tone="",this.status="Check your inbox for the verification email.",this.cooldown=45,this.armCooldown(),this.updateComplete.then(()=>{this.focusStatus()})}showFirebase(t){this.tone="error",this.status=KE(t),this.updateComplete.then(()=>{this.focusStatus()})}focusStatus(){const t=this.renderRoot.querySelector("#pwa-verify-status");t?.focus()}clearWait(){window.clearInterval(this.timer),this.timer=0,this.cooldown=0}armCooldown(){window.clearInterval(this.timer),this.timer=window.setInterval(()=>{if(this.cooldown<=1)return this.cooldown=0,window.clearInterval(this.timer),void(this.timer=0);this.cooldown-=1},1e3)}}mb([ut(),wb("design:type",Object)],yb.prototype,"login",void 0),mb([ut(),wb("design:type",Object)],yb.prototype,"verified",void 0),mb([ut(),wb("design:type",Object)],yb.prototype,"email",void 0),mb([ut(),wb("design:type",Object)],yb.prototype,"status",void 0),mb([ut(),wb("design:type",Object)],yb.prototype,"tone",void 0),mb([ut(),wb("design:type",Object)],yb.prototype,"busy",void 0),mb([ut(),wb("design:type",Object)],yb.prototype,"cooldown",void 0),customElements.define("email-verify",yb);var Eb=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},Db=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let _b=class extends(wt(bn)(it)){constructor(){super(),this.url="",this.drawer=!1,this.subscribe=!1,this.hideGoogle=!1,this.name="",this.email="",this.verified=!1,this.notice="",this.user=!1,this.signup=!1,this.sliding=!1,this.motion=!1,this.clipHeight="0px",this.sheetShift="translate3d(0, -100%, 0)",this.rollMotion=!1,this.booted=!1,this.wasOpen=!1,this.sawOpen=!1,this.returnFocus=null,this.stopNotice=null,this.heldHeight=null,this.columnWidth=0,this.columnObserver=null,this.onClipEnd=t=>{if(!(t instanceof TransitionEvent))return;if(t.target!==t.currentTarget)return;if("max-height"!==t.propertyName)return;const e=t.currentTarget;e instanceof HTMLElement&&(this.drawer?this.restOpen():e.getBoundingClientRect().height>1||(this.sliding=!1,this.restShut()))},this.onKey=t=>{if(!this.drawer)return;if("Escape"===t.key)return t.preventDefault(),void bn.dispatch(hn());if("Tab"!==t.key)return;const e=pb(this);if(!e.length)return;const n=e[0],s=e[e.length-1],r=fb(),i=!!r&&e.includes(r);t.shiftKey?i&&r!==n||(t.preventDefault(),s.focus({preventScroll:!0})):i&&r!==s||(t.preventDefault(),n.focus({preventScroll:!0}))},this.onLightClick=t=>{if(t.defaultPrevented)return;const e=t.target;if(!(e instanceof Element))return;const n=e.closest("a, button");n instanceof HTMLElement&&this.contains(n)&&(this.shadowRoot?.contains(n)||bn.dispatch(hn()))},this.onSettings=t=>{const e=this.destination();if(!this.dispatchEvent(new CustomEvent(FE,{bubbles:!0,composed:!0,cancelable:!0,detail:{url:e}})))return void t.preventDefault();if(bn.dispatch(hn()),e)return;t.preventDefault();const n=document.querySelector("user-settings");n instanceof HTMLElement&&n.scrollIntoView({block:"nearest"})}}connectedCallback(){nb(this),super.connectedCallback(),this.addEventListener("keydown",this.onKey),this.addEventListener("click",this.onLightClick),this.notice=Y_(),this.stopNotice=X_(()=>{this.notice=Y_()})}disconnectedCallback(){this.removeEventListener("keydown",this.onKey),this.removeEventListener("click",this.onLightClick),this.stopNotice?.(),this.stopNotice=null,this.columnObserver?.disconnect(),this.columnObserver=null,super.disconnectedCallback()}stateChanged(t){const e=t.frontend.drawer;this.name=t.backend.name,this.email=t.backend.email,this.verified=Boolean(t.backend?.verified),e?this.sliding=!0:this.reduced()&&(this.sliding=!1),this.drawer=e,this.user=t.frontend.login,this.signup=t.frontend.registerOne;(this.sawOpen?e!==this.wasOpen:e)&&function(t,e,n){t.dispatchEvent(new CustomEvent(e,{...fE,detail:n}))}(this,LE,{open:e}),this.wasOpen=e,this.sawOpen=!0}willUpdate(t){if(!this.booted)return void(this.drawer&&this.restOpen());if(t.has("signup")&&(this.motion=!0),t.has("drawer")||!t.has("signup")||!this.drawer)return;const e=this.clip();e&&(this.heldHeight=Math.ceil(e.getBoundingClientRect().height),this.rollMotion=!1,this.clipHeight=`${this.heldHeight}px`,this.sheetShift="translate3d(0, 0, 0)")}updated(t){const e=!this.booted;if(this.booted=!0,!e&&t.has("drawer"))this.heldHeight=null,this.drawer?this.unroll():this.rollUp();else if(!e&&null!=this.heldHeight&&this.drawer){const t=this.heldHeight;this.heldHeight=null;const e=this.clip(),n=this.sheet();if(e&&n){const s=Math.ceil(n.getBoundingClientRect().height);Math.abs(s-t)>1?this.rollBetween(e,n,t,s,s):this.restOpen()}}if(e&&requestAnimationFrame(()=>{this.motion=!0}),t.has("drawer")){if(this.drawer){const t=fb();return this.returnFocus=t&&!this.contains(t)?t:this.returnFocus,this.shadowRoot?.querySelector(".close")?.focus({preventScroll:!0}),void V_(!1)}this.returnFocus?.focus(),this.returnFocus=null}}clip(){return this.shadowRoot?.querySelector(".drawer-clip")??null}sheet(){return this.shadowRoot?.querySelector(".userDrawer")??null}reduced(){return window.matchMedia("(prefers-reduced-motion: reduce)").matches}restShut(){this.rollMotion=!1,this.clipHeight="0px",this.sheetShift="translate3d(0, -100%, 0)"}restOpen(){this.rollMotion=!1,this.clipHeight="auto",this.sheetShift="none"}clipStyle(){const t=this.rollMotion&&!this.reduced();return{height:this.clipHeight,maxHeight:"auto"===this.clipHeight?"none":this.clipHeight,transition:t?"height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out":"none"}}sheetStyle(){const t=this.rollMotion&&!this.reduced();return{transform:this.sheetShift,transition:t?"transform var(--pwa_slide, 2s) ease-in-out":"none"}}unroll(){const t=this.clip(),e=this.sheet();if(!t||!e)return;this.scrollTop=0,this.placeAnchor();const n=this.sheetPx(t,e),s=Math.ceil(t.getBoundingClientRect().height);this.rollBetween(t,e,s,n,n)}rollUp(){const t=this.clip(),e=this.sheet();if(!t||!e)return;const n=Math.ceil(e.getBoundingClientRect().height),s=Math.ceil(t.getBoundingClientRect().height);this.rollBetween(t,e,s,0,n),this.reduced()&&(this.sliding=!1)}sheetPx(t,e){const n=t.style.transition,s=t.style.maxHeight,r=t.style.height;t.style.transition="none",t.style.maxHeight="none",t.style.height="auto";const i=Math.ceil(e.getBoundingClientRect().height);return t.style.height=r,t.style.maxHeight=s,t.style.transition=n,i}rollBetween(t,e,n,s,r){const i=n-r,o=s-r,a=t=>`translate3d(0, ${t}px, 0)`;if(this.reduced()||Math.abs(s-n)<=1)return void(0===s?this.restShut():this.restOpen());t.style.transition="none",e.style.transition="none",t.style.height=`${Math.max(0,n)}px`,t.style.maxHeight=`${Math.max(0,n)}px`,e.style.transform=a(i),t.offsetHeight,t.style.transition="height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out",e.style.transition="transform var(--pwa_slide, 2s) ease-in-out",t.style.height=`${Math.max(0,s)}px`,t.style.maxHeight=`${Math.max(0,s)}px`,e.style.transform=a(o),this.rollMotion=!0,this.clipHeight=`${Math.max(0,s)}px`,this.sheetShift=a(o)}firstUpdated(){this.shadowRoot.querySelector(".close").addEventListener("click",()=>{bn.dispatch(hn())}),this.shadowRoot.querySelector(".leave").addEventListener("click",async()=>{if(this.user)try{await x_()}catch{return}bn.dispatch(hn())});this.shadowRoot.querySelectorAll("a").forEach(t=>{t.addEventListener("click",()=>{bn.dispatch(hn())})}),this.watchColumn()}placeAnchor(){const t=getComputedStyle(this).position;if("fixed"===t||"absolute"===t)return void(this.style.top&&(this.style.top=""));const e=this.parentElement;if(!e)return;const n=this.previousElementSibling,s=n?n.getBoundingClientRect().bottom:e.getBoundingClientRect().top+(parseFloat(getComputedStyle(e).paddingTop)||0),r=parseFloat(this.style.top)||0,i=s-(this.getBoundingClientRect().top-r);Math.abs(i-r)<=.5||(this.style.top=Math.abs(i)<=.5?"":`${i}px`)}watchColumn(){if("undefined"==typeof ResizeObserver)return;this.columnObserver=new ResizeObserver(()=>{this.placeAnchor();const t=Math.round(this.getBoundingClientRect().width);t&&t!==this.columnWidth&&(this.columnWidth=t,this.onColumnResize())}),this.columnObserver.observe(this);const t=this.previousElementSibling;t&&this.columnObserver.observe(t),this.placeAnchor()}onColumnResize(){if(!this.rollMotion)return;const t=this.clip(),e=this.sheet();if(!t||!e)return;const n=Math.ceil(t.getBoundingClientRect().height),s=this.sheetPx(t,e);this.rollBetween(t,e,n,this.drawer?s:0,s)}static get styles(){return[cb,vn,In,lb,ub,hb,db,Sn,eD,K_,gb,i`
+    `}showSent(){this.tone="",this.status="Check your inbox for the verification email.",this.cooldown=45,this.armCooldown(),this.updateComplete.then(()=>{this.focusStatus()})}showFirebase(t){this.tone="error",this.status=KE(t),this.updateComplete.then(()=>{this.focusStatus()})}focusStatus(){const t=this.renderRoot.querySelector("#pwa-verify-status");t?.focus()}clearWait(){window.clearInterval(this.timer),this.timer=0,this.cooldown=0}armCooldown(){window.clearInterval(this.timer),this.timer=window.setInterval(()=>{if(this.cooldown<=1)return this.cooldown=0,window.clearInterval(this.timer),void(this.timer=0);this.cooldown-=1},1e3)}}mb([ut(),wb("design:type",Object)],yb.prototype,"login",void 0),mb([ut(),wb("design:type",Object)],yb.prototype,"verified",void 0),mb([ut(),wb("design:type",Object)],yb.prototype,"email",void 0),mb([ut(),wb("design:type",Object)],yb.prototype,"status",void 0),mb([ut(),wb("design:type",Object)],yb.prototype,"tone",void 0),mb([ut(),wb("design:type",Object)],yb.prototype,"busy",void 0),mb([ut(),wb("design:type",Object)],yb.prototype,"cooldown",void 0),customElements.define("email-verify",yb);var Eb=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},Db=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let _b=class extends(wt(bn)(it)){constructor(){super(),this.url="",this.drawer=!1,this.subscribe=!1,this.hideGoogle=!1,this.name="",this.email="",this.verified=!1,this.notice="",this.user=!1,this.signup=!1,this.sliding=!1,this.motion=!1,this.clipHeight="0px",this.sheetShift="translate3d(0, -100%, 0)",this.rollMotion=!1,this.booted=!1,this.wasOpen=!1,this.sawOpen=!1,this.returnFocus=null,this.stopNotice=null,this.heldHeight=null,this.columnWidth=0,this.columnObserver=null,this.onClipEnd=t=>{if(!(t instanceof TransitionEvent))return;if(t.target!==t.currentTarget)return;if("max-height"!==t.propertyName)return;const e=t.currentTarget;e instanceof HTMLElement&&(this.drawer?this.restOpen():e.getBoundingClientRect().height>1||(this.sliding=!1,this.restShut()))},this.onKey=t=>{if(!this.drawer)return;if("Escape"===t.key)return t.preventDefault(),void bn.dispatch(hn());if("Tab"!==t.key)return;const e=pb(this);if(!e.length)return;const n=e[0],s=e[e.length-1],r=fb(),i=!!r&&e.includes(r);t.shiftKey?i&&r!==n||(t.preventDefault(),s.focus({preventScroll:!0})):i&&r!==s||(t.preventDefault(),n.focus({preventScroll:!0}))},this.onLightClick=t=>{if(t.defaultPrevented)return;const e=t.target;if(!(e instanceof Element))return;const n=e.closest("a, button");n instanceof HTMLElement&&this.contains(n)&&(this.shadowRoot?.contains(n)||bn.dispatch(hn()))},this.onSettings=t=>{const e=this.destination();if(!this.dispatchEvent(new CustomEvent(FE,{bubbles:!0,composed:!0,cancelable:!0,detail:{url:e}})))return void t.preventDefault();if(bn.dispatch(hn()),e)return;t.preventDefault();const n=document.querySelector("user-settings");n instanceof HTMLElement&&n.scrollIntoView({block:"nearest"})}}connectedCallback(){nb(this),this.id||(this.id="pwa-user-drawer"),super.connectedCallback(),this.addEventListener("keydown",this.onKey),this.addEventListener("click",this.onLightClick),this.notice=Y_(),this.stopNotice=X_(()=>{this.notice=Y_()})}disconnectedCallback(){this.removeEventListener("keydown",this.onKey),this.removeEventListener("click",this.onLightClick),this.stopNotice?.(),this.stopNotice=null,this.columnObserver?.disconnect(),this.columnObserver=null,super.disconnectedCallback()}stateChanged(t){const e=t.frontend.drawer;this.name=t.backend.name,this.email=t.backend.email,this.verified=Boolean(t.backend?.verified),e?this.sliding=!0:this.reduced()&&(this.sliding=!1),this.drawer=e,this.user=t.frontend.login,this.signup=t.frontend.registerOne;(this.sawOpen?e!==this.wasOpen:e)&&function(t,e,n){t.dispatchEvent(new CustomEvent(e,{...fE,detail:n}))}(this,LE,{open:e}),this.wasOpen=e,this.sawOpen=!0}willUpdate(t){if(!this.booted)return void(this.drawer&&this.restOpen());if(t.has("signup")&&(this.motion=!0),t.has("drawer")||!t.has("signup")||!this.drawer)return;const e=this.clip();e&&(this.heldHeight=Math.ceil(e.getBoundingClientRect().height),this.rollMotion=!1,this.clipHeight=`${this.heldHeight}px`,this.sheetShift="translate3d(0, 0, 0)")}updated(t){const e=!this.booted;if(this.booted=!0,!e&&t.has("drawer"))this.heldHeight=null,this.drawer?this.unroll():this.rollUp();else if(!e&&null!=this.heldHeight&&this.drawer){const t=this.heldHeight;this.heldHeight=null;const e=this.clip(),n=this.sheet();if(e&&n){const s=Math.ceil(n.getBoundingClientRect().height);Math.abs(s-t)>1?this.rollBetween(e,n,t,s,s):this.restOpen()}}if(e&&requestAnimationFrame(()=>{this.motion=!0}),!t.has("drawer"))return;if(this.drawer){const t=fb();return this.returnFocus=t&&!this.contains(t)?t:this.returnFocus,this.shadowRoot?.querySelector(".close")?.focus({preventScroll:!0}),void V_(!1)}const n=this.returnFocus??this.toggleButton();n?.focus(),this.returnFocus=null}clip(){return this.shadowRoot?.querySelector(".drawer-clip")??null}sheet(){return this.shadowRoot?.querySelector(".userDrawer")??null}toggleButton(){const t=document.querySelector("user-icon"),e=t?.shadowRoot?.querySelector("button");return e instanceof HTMLElement?e:null}reduced(){return window.matchMedia("(prefers-reduced-motion: reduce)").matches}restShut(){this.rollMotion=!1,this.clipHeight="0px",this.sheetShift="translate3d(0, -100%, 0)"}restOpen(){this.rollMotion=!1,this.clipHeight="auto",this.sheetShift="none"}clipStyle(){const t=this.rollMotion&&!this.reduced();return{height:this.clipHeight,maxHeight:"auto"===this.clipHeight?"none":this.clipHeight,transition:t?"height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out":"none"}}sheetStyle(){const t=this.rollMotion&&!this.reduced();return{transform:this.sheetShift,transition:t?"transform var(--pwa_slide, 2s) ease-in-out":"none"}}unroll(){const t=this.clip(),e=this.sheet();if(!t||!e)return;this.scrollTop=0,this.placeAnchor();const n=this.sheetPx(t,e),s=Math.ceil(t.getBoundingClientRect().height);this.rollBetween(t,e,s,n,n)}rollUp(){const t=this.clip(),e=this.sheet();if(!t||!e)return;const n=Math.ceil(e.getBoundingClientRect().height),s=Math.ceil(t.getBoundingClientRect().height);this.rollBetween(t,e,s,0,n),this.reduced()&&(this.sliding=!1)}sheetPx(t,e){const n=t.style.transition,s=t.style.maxHeight,r=t.style.height;t.style.transition="none",t.style.maxHeight="none",t.style.height="auto";const i=Math.ceil(e.getBoundingClientRect().height);return t.style.height=r,t.style.maxHeight=s,t.style.transition=n,i}rollBetween(t,e,n,s,r){const i=n-r,o=s-r,a=t=>`translate3d(0, ${t}px, 0)`;if(this.reduced()||Math.abs(s-n)<=1)return void(0===s?this.restShut():this.restOpen());t.style.transition="none",e.style.transition="none",t.style.height=`${Math.max(0,n)}px`,t.style.maxHeight=`${Math.max(0,n)}px`,e.style.transform=a(i),t.offsetHeight,t.style.transition="height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out",e.style.transition="transform var(--pwa_slide, 2s) ease-in-out",t.style.height=`${Math.max(0,s)}px`,t.style.maxHeight=`${Math.max(0,s)}px`,e.style.transform=a(o),this.rollMotion=!0,this.clipHeight=`${Math.max(0,s)}px`,this.sheetShift=a(o)}firstUpdated(){this.shadowRoot.querySelector(".close").addEventListener("click",()=>{bn.dispatch(hn())}),this.shadowRoot.querySelector(".leave").addEventListener("click",async()=>{if(this.user)try{await x_()}catch{return}bn.dispatch(hn())});this.shadowRoot.querySelectorAll("a").forEach(t=>{t.addEventListener("click",()=>{bn.dispatch(hn())})}),this.watchColumn()}placeAnchor(){const t=getComputedStyle(this).position;if("fixed"===t||"absolute"===t)return void(this.style.top&&(this.style.top=""));const e=this.parentElement;if(!e)return;const n=this.previousElementSibling,s=n?n.getBoundingClientRect().bottom:e.getBoundingClientRect().top+(parseFloat(getComputedStyle(e).paddingTop)||0),r=parseFloat(this.style.top)||0,i=s-(this.getBoundingClientRect().top-r);Math.abs(i-r)<=.5||(this.style.top=Math.abs(i)<=.5?"":`${i}px`)}watchColumn(){if("undefined"==typeof ResizeObserver)return;this.columnObserver=new ResizeObserver(()=>{this.placeAnchor();const t=Math.round(this.getBoundingClientRect().width);t&&t!==this.columnWidth&&(this.columnWidth=t,this.onColumnResize())}),this.columnObserver.observe(this);const t=this.previousElementSibling;t&&this.columnObserver.observe(t),this.placeAnchor()}onColumnResize(){if(!this.rollMotion)return;const t=this.clip(),e=this.sheet();if(!t||!e)return;const n=Math.ceil(t.getBoundingClientRect().height),s=this.sheetPx(t,e);this.rollBetween(t,e,n,this.drawer?s:0,s)}static get styles(){return[cb,vn,In,lb,ub,hb,db,Sn,eD,K_,gb,i`
     /* Required - this drawer's roll only. The clip hangs from the tag and grows down. */
     .drawer-clip {
       display:                block;
@@ -1155,7 +1172,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
       align-self:             start;
     }
 
-    .exit > h3 {
+    .exit > h2 {
       display:                flex;
       align-items:            center;
       justify-content:        center;
@@ -1165,8 +1182,11 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
     .close:focus-visible,
     .leave:focus-visible,
-    .settings:focus-visible {
-      outline:                2px solid var(--pwa_action_border_color, #214f34);
+    .settings:focus-visible,
+    a:focus-visible,
+    ::slotted(a:focus-visible),
+    ::slotted(button:focus-visible) {
+      outline:                2px solid var(--pwa_focus, #1c2430);
       outline-offset:         2px;
     }
 
@@ -1205,7 +1225,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
       color:                    var(--pwa_nav_highlight_color, #1c2430);
       background:               var(--pwa_nav_on_background, #f2f2f2);
     }
-    `]}render(){return U`
+    `]}render(){return this.toggleAttribute("sliding",this.sliding),U`
 
     <!-- Clip. The first render binds shut, with no transition. -->
     <div
@@ -1219,20 +1239,20 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
       role="dialog"
       aria-modal="true"
       aria-labelledby="pwa-drawer-title"
-      aria-hidden="${this.sliding?"false":"true"}"
-      ?inert="${!this.sliding}"
+      aria-hidden="${this.drawer?"false":"true"}"
+      ?inert="${!this.drawer}"
       class="userDrawer"
       style=${mt(this.sheetStyle())}>
 
       <!-- Exit Button -->
-      <header class="exit" part="header">
+      <div class="exit" part="header">
         <div></div>
-        <h3 id="pwa-drawer-title" part="title">
+        <h2 id="pwa-drawer-title" part="title">
           <span class="who">${!1===this.user?this.signup===this.subscribe?"Login":"Subscribe":rb(this.name,this.email)}</span>
           ${this.user?this.verified?Cb:U`<span class="unverified" part="unverified">Not verified</span>`:""}
-        </h3>
+        </h2>
         <button class="close" part="close" type="button" aria-label="Close">${Bb}</button>
-      </header>
+      </div>
 
       <!-- Logged-out State -->
       <div
@@ -1248,6 +1268,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
               ?hide-google="${this.hideGoogle}"
               exportparts="email: login-email, password: login-password, submit: login-submit, switch: login-switch, forgot: login-forgot, status: login-status, reveal: login-reveal, google: login-google"
               ?inert="${this.signup!==this.subscribe}"
+              aria-hidden="${this.signup!==this.subscribe?"true":"false"}"
               class=${ft({content:!0,opened:this.signup===this.subscribe,closed:this.signup!==this.subscribe})}>
             </form-login>
 
@@ -1257,6 +1278,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
               ?hide-google="${this.hideGoogle}"
               exportparts="email: signup-email, password: signup-password, submit: signup-submit, switch: signup-switch, status: signup-status, reveal: signup-reveal, notice: signup-notice, google: signup-google"
               ?inert="${this.signup===this.subscribe}"
+              aria-hidden="${this.signup===this.subscribe?"true":"false"}"
               class=${ft({content:!0,opened:!this.signup===this.subscribe,closed:!this.signup!==this.subscribe})}>
             </form-signup>
 
@@ -1336,6 +1358,13 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
   nav > ul > li > button:hover {
 
     cursor:           pointer;
+
+  }
+
+  nav > ul > li > button:focus-visible {
+
+    outline:          2px solid var(--pwa_focus, #1c2430);
+    outline-offset:   2px;
 
   }
 
@@ -1452,7 +1481,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
     <label
       style="
-        border: 1px dashed var(--pwa_line_color, #e3daca);
+        border: 1px dashed var(--pwa_input_border_color, #8d8870);
         border-radius: 12px;
         overflow: hidden;
         margin: 0;
@@ -1494,6 +1523,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
             part          = "name"
             type          = "text"
             autocomplete  = "name"
+            aria-invalid  = "${"error"===this.tone?"true":"false"}"
             aria-describedby = "pwa-name-status"
             @input        = "${this.handleInput}"
             .value        = "${this.draft}" />
@@ -1522,22 +1552,21 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
       aria-busy="${this.busy?"true":"false"}"
       @submit="${this.saveEmail}">
 
-      <label for="pwa-current-email-password">Current password
+      <label for="pwa-current-email-password">Current password</label>
 
-        <span class="pair">
+      <span class="pair">
 
           <input
             id            = "pwa-current-email-password"
             name          = "current_password"
             type          = "${this.showPassword?"text":"password"}"
             autocomplete  = "current-password"
+            aria-invalid  = "${"error"===this.tone?"true":"false"}"
             aria-describedby = "pwa-email-status"/>
 
           ${nD(this.showPassword,()=>{this.showPassword=!this.showPassword})}
 
-        </span>
-
-      </label>
+      </span>
 
       <label for="pwa-email" >E-mail
 
@@ -1551,6 +1580,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
           autocapitalize= "off"
           spellcheck    = "false"
           class         = "email"
+          aria-invalid  = "${"error"===this.tone?"true":"false"}"
           aria-describedby = "pwa-email-status"
           @input        = "${this.handleEmail}"
           .value        = "${this.mail}"/>
@@ -1586,30 +1616,29 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
         <div>
 
-          <label for="pwa-current-password">Current Password
+          <label for="pwa-current-password">Current Password</label>
 
-            <span class="pair">
+          <span class="pair">
 
               <input
                 id      = "pwa-current-password"
                 name    = "current_password"
                 type    = "${this.showCurrent?"text":"password"}"
                 autocomplete = "current-password"
+                aria-invalid = "${"error"===this.tone?"true":"false"}"
                 aria-describedby = "pwa-password-status">
 
               ${nD(this.showCurrent,()=>{this.showCurrent=!this.showCurrent})}
 
-            </span>
-
-          </label>
+          </span>
 
         </div>
 
         <div>
           
-          <label for="pwa-new-password">New Password
+          <label for="pwa-new-password">New Password</label>
 
-            <span class="pair">
+          <span class="pair">
 
               <input
                 id      = "pwa-new-password"
@@ -1621,23 +1650,22 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
                 maxlength    = "${UE}"
                 .value  = "${this.password}"
                 @input  = "${this.handleInputChange}"
+                aria-invalid = "${"error"===this.tone?"true":"false"}"
                 aria-describedby = "pwa-new-password-hint pwa-password-status">
 
               ${nD(this.showNext,()=>{this.showNext=!this.showNext})}
 
             </span>
 
-            <p id="pwa-new-password-hint" class="hint" part="hint">${VE}</p>
-
-          </label>
+          <p id="pwa-new-password-hint" class="hint" part="hint">${VE}</p>
 
         </div>
 
         <div>
 
-          <label for="pwa-verify-password">Verify Password
+          <label for="pwa-verify-password">Verify Password</label>
 
-            <span class="pair">
+          <span class="pair">
 
               <input
                 id      = "pwa-verify-password"
@@ -1647,13 +1675,12 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
                 autocomplete = "new-password"
                 minlength    = "${8}"
                 maxlength    = "${UE}"
+                aria-invalid = "${"error"===this.tone?"true":"false"}"
                 aria-describedby = "pwa-password-status">
 
               ${nD(this.showVerify,()=>{this.showVerify=!this.showVerify})}
 
-            </span>
-
-          </label>
+          </span>
 
         </div>
 
@@ -1693,22 +1720,21 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
       <p class="lead">Permanently delete the user account and data related to: ${this.email}</p>
 
-      <label for="pwa-delete-password">Current password
+      <label for="pwa-delete-password">Current password</label>
 
-        <span class="pair">
+      <span class="pair">
 
           <input
             id="pwa-delete-password"
             name="current_password"
             type="${this.showPassword?"text":"password"}"
             autocomplete="current-password"
+            aria-invalid="${"error"===this.tone?"true":"false"}"
             aria-describedby="pwa-delete-status"/>
 
           ${nD(this.showPassword,()=>{this.showPassword=!this.showPassword})}
 
-        </span>
-
-      </label>
+      </span>
 
       ${tD("pwa-delete-status",this.status,this.tone)}
 
@@ -1720,7 +1746,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
         ?disabled="${!1===this.login||this.busy}"
         @click="${this.alertDelete}">${this.busy?"Deleting…":"Delete"}</button>
 
-    `}show(t){this.tone="error",this.status=KE(t),gE(PE,t)}}Mb([ut(),Gb("design:type",Boolean)],Hb.prototype,"login",void 0),Mb([ut(),Gb("design:type",String)],Hb.prototype,"email",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"busy",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"status",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"tone",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"showPassword",void 0),customElements.define("delete-user",Hb);var Ub=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},Vb=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let jb=class extends(wt(bn)(it)){constructor(){super(),this.empty="",this.profileTopic="",this.name="",this.email="",this.login=!1,this.clipHeight="auto",this.sheetShift="none",this.rollMotion=!1,this.booted=!1,this.heldHeight=null,this.columnWidth=0,this.columnObserver=null,this.onSubmit=t=>{t.preventDefault()},this.onClipEnd=t=>{t instanceof TransitionEvent&&t.target===t.currentTarget&&"max-height"===t.propertyName&&this.rest()}}connectedCallback(){nb(this),super.connectedCallback(),this.addEventListener("submit",this.onSubmit)}disconnectedCallback(){this.removeEventListener("submit",this.onSubmit),this.columnObserver?.disconnect(),this.columnObserver=null,super.disconnectedCallback()}onTabKey(t){if("ArrowRight"!==t.key&&"ArrowLeft"!==t.key)return;const e=["profile","verification","password","delete"],n=e.indexOf(this.profileTopic),s=e[(n+("ArrowRight"===t.key?1:-1)+e.length)%e.length];bn.dispatch(on(s)),this.updateComplete.then(()=>{this.shadowRoot?.querySelector(`button[value="${s}"]`)?.focus()})}stateChanged(t){this.profileTopic=t.frontend.settings,this.login=Boolean(t.frontend?.login),this.name=t.backend.name,this.email=t.backend.email}static get styles(){return[bb,Sn,eD,i`
+    `}show(t){this.tone="error",this.status=KE(t),gE(PE,t)}}Mb([ut(),Gb("design:type",Boolean)],Hb.prototype,"login",void 0),Mb([ut(),Gb("design:type",String)],Hb.prototype,"email",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"busy",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"status",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"tone",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"showPassword",void 0),customElements.define("delete-user",Hb);var Ub=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},Vb=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let jb=class extends(wt(bn)(it)){constructor(){super(),this.empty="",this.profileTopic="",this.name="",this.email="",this.login=!1,this.clipHeight="auto",this.sheetShift="none",this.rollMotion=!1,this.booted=!1,this.heldHeight=null,this.columnWidth=0,this.columnObserver=null,this.onSubmit=t=>{t.preventDefault()},this.onClipEnd=t=>{t instanceof TransitionEvent&&t.target===t.currentTarget&&"max-height"===t.propertyName&&this.rest()}}connectedCallback(){nb(this),this.hasAttribute("role")||this.setAttribute("role","region"),this.hasAttribute("aria-label")||this.setAttribute("aria-label","Account settings"),super.connectedCallback(),this.addEventListener("submit",this.onSubmit)}disconnectedCallback(){this.removeEventListener("submit",this.onSubmit),this.columnObserver?.disconnect(),this.columnObserver=null,super.disconnectedCallback()}onTabKey(t){if("ArrowRight"!==t.key&&"ArrowLeft"!==t.key)return;t.preventDefault();const e=["profile","verification","password","delete"],n=e.indexOf(this.profileTopic),s=e[(n+("ArrowRight"===t.key?1:-1)+e.length)%e.length];bn.dispatch(on(s)),this.updateComplete.then(()=>{this.shadowRoot?.querySelector(`button[value="${s}"]`)?.focus()})}stateChanged(t){this.profileTopic=t.frontend.settings,this.login=Boolean(t.frontend?.login),this.name=t.backend.name,this.email=t.backend.email}static get styles(){return[bb,Sn,eD,i`
 
       :host {
         display:          block;
@@ -1776,7 +1802,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
         }
       }
 
-    `]}openTab(t){bn.dispatch(on(t))}willUpdate(t){if(!this.booted||!this.login||t.has("login"))return;if(!t.has("profileTopic"))return;const e=this.clip();e&&(this.heldHeight=Math.ceil(e.getBoundingClientRect().height),this.rollMotion=!1,this.clipHeight=`${this.heldHeight}px`,this.sheetShift="translate3d(0, 0, 0)")}updated(t){const e=!this.booted;if(this.booted=!0,e&&this.watchColumn(),e||!t.has("profileTopic")||!this.login||t.has("login"))return;const n=this.clip(),s=this.sheet();if(!n||!s||null==this.heldHeight)return;const r=this.heldHeight;this.heldHeight=null;const i=Math.ceil(s.getBoundingClientRect().height);Math.abs(i-r)>1?this.rollBetween(n,s,r,i,i):this.rest()}watchColumn(){"undefined"!=typeof ResizeObserver&&(this.columnObserver=new ResizeObserver(()=>{const t=Math.round(this.getBoundingClientRect().width);if(!t||t===this.columnWidth)return;if(this.columnWidth=t,!this.rollMotion)return;const e=this.clip(),n=this.sheet();if(!e||!n)return;const s=Math.ceil(e.getBoundingClientRect().height),r=Math.ceil(n.getBoundingClientRect().height);this.rollBetween(e,n,s,r,r)}),this.columnObserver.observe(this))}clip(){return this.shadowRoot?.querySelector(".settings-clip")??null}sheet(){return this.shadowRoot?.querySelector(".settings-sheet")??null}reduced(){return window.matchMedia("(prefers-reduced-motion: reduce)").matches}rest(){this.rollMotion=!1,this.clipHeight="auto",this.sheetShift="none"}clipStyle(){const t=this.rollMotion&&!this.reduced();return{height:this.clipHeight,maxHeight:"auto"===this.clipHeight?"none":this.clipHeight,transition:t?"height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out":"none"}}sheetStyle(){const t=this.rollMotion&&!this.reduced();return{transform:this.sheetShift,transition:t?"transform var(--pwa_slide, 2s) ease-in-out":"none"}}rollBetween(t,e,n,s,r){const i=n-r,o=s-r,a=t=>`translate3d(0, ${t}px, 0)`;if(this.reduced()||Math.abs(s-n)<=1)return void this.rest();t.style.transition="none",e.style.transition="none",t.style.height=`${Math.max(0,n)}px`,t.style.maxHeight=`${Math.max(0,n)}px`,e.style.transform=a(i),t.offsetHeight,t.style.transition="height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out",e.style.transition="transform var(--pwa_slide, 2s) ease-in-out",t.style.height=`${Math.max(0,s)}px`,t.style.maxHeight=`${Math.max(0,s)}px`,e.style.transform=a(o),this.rollMotion=!0,this.clipHeight=`${Math.max(0,s)}px`,this.sheetShift=a(o)}render(){if(!this.login)return U`
+    `]}openTab(t){bn.dispatch(on(t))}tabOn(t){return(this.profileTopic||"profile")===t}willUpdate(t){if(!this.booted||!this.login||t.has("login"))return;if(!t.has("profileTopic"))return;const e=this.clip();e&&(this.heldHeight=Math.ceil(e.getBoundingClientRect().height),this.rollMotion=!1,this.clipHeight=`${this.heldHeight}px`,this.sheetShift="translate3d(0, 0, 0)")}updated(t){const e=!this.booted;if(this.booted=!0,e&&this.watchColumn(),e||!t.has("profileTopic")||!this.login||t.has("login"))return;const n=this.clip(),s=this.sheet();if(!n||!s||null==this.heldHeight)return;const r=this.heldHeight;this.heldHeight=null;const i=Math.ceil(s.getBoundingClientRect().height);Math.abs(i-r)>1?this.rollBetween(n,s,r,i,i):this.rest()}watchColumn(){"undefined"!=typeof ResizeObserver&&(this.columnObserver=new ResizeObserver(()=>{const t=Math.round(this.getBoundingClientRect().width);if(!t||t===this.columnWidth)return;if(this.columnWidth=t,!this.rollMotion)return;const e=this.clip(),n=this.sheet();if(!e||!n)return;const s=Math.ceil(e.getBoundingClientRect().height),r=Math.ceil(n.getBoundingClientRect().height);this.rollBetween(e,n,s,r,r)}),this.columnObserver.observe(this))}clip(){return this.shadowRoot?.querySelector(".settings-clip")??null}sheet(){return this.shadowRoot?.querySelector(".settings-sheet")??null}reduced(){return window.matchMedia("(prefers-reduced-motion: reduce)").matches}rest(){this.rollMotion=!1,this.clipHeight="auto",this.sheetShift="none"}clipStyle(){const t=this.rollMotion&&!this.reduced();return{height:this.clipHeight,maxHeight:"auto"===this.clipHeight?"none":this.clipHeight,transition:t?"height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out":"none"}}sheetStyle(){const t=this.rollMotion&&!this.reduced();return{transform:this.sheetShift,transition:t?"transform var(--pwa_slide, 2s) ease-in-out":"none"}}rollBetween(t,e,n,s,r){const i=n-r,o=s-r,a=t=>`translate3d(0, ${t}px, 0)`;if(this.reduced()||Math.abs(s-n)<=1)return void this.rest();t.style.transition="none",e.style.transition="none",t.style.height=`${Math.max(0,n)}px`,t.style.maxHeight=`${Math.max(0,n)}px`,e.style.transform=a(i),t.offsetHeight,t.style.transition="height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out",e.style.transition="transform var(--pwa_slide, 2s) ease-in-out",t.style.height=`${Math.max(0,s)}px`,t.style.maxHeight=`${Math.max(0,s)}px`,e.style.transform=a(o),this.rollMotion=!0,this.clipHeight=`${Math.max(0,s)}px`,this.sheetShift=a(o)}render(){if(!this.login)return U`
         <p class="signed-out" part="signed-out" role="status">Sign in to change the photo, name, email, or password.</p>
       `;const t=rb(this.name,this.email);return U`
     
@@ -1789,10 +1815,13 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
             <button
               type="button"
               role="tab"
+              id="pwa-tab-profile"
               part="tab"
               value="profile"
-              aria-selected="${"profile"===this.profileTopic}"
-              ?on="${"profile"===this.profileTopic}"
+              aria-selected="${this.tabOn("profile")}"
+              aria-controls="pwa-panel-profile"
+              tabindex="${this.tabOn("profile")?"0":"-1"}"
+              ?on="${this.tabOn("profile")}"
               @click="${()=>this.openTab("profile")}">Icon
             </button>
           </li>
@@ -1801,10 +1830,13 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
             <button
               type="button"
               role="tab"
+              id="pwa-tab-verification"
               part="tab"
               value="verification"
-              aria-selected="${"verification"===this.profileTopic}"
-              ?on="${"verification"===this.profileTopic}"
+              aria-selected="${this.tabOn("verification")}"
+              aria-controls="pwa-panel-verification"
+              tabindex="${this.tabOn("verification")?"0":"-1"}"
+              ?on="${this.tabOn("verification")}"
               @click="${()=>this.openTab("verification")}">Profile
             </button>
           </li>
@@ -1813,10 +1845,13 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
             <button
               type="button"
               role="tab"
+              id="pwa-tab-password"
               part="tab"
               value="password"
-              aria-selected="${"password"===this.profileTopic}"
-              ?on="${"password"===this.profileTopic}"
+              aria-selected="${this.tabOn("password")}"
+              aria-controls="pwa-panel-password"
+              tabindex="${this.tabOn("password")?"0":"-1"}"
+              ?on="${this.tabOn("password")}"
               @click="${()=>this.openTab("password")}">Password
             </button>
           </li>
@@ -1825,10 +1860,13 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
             <button
               type="button"
               role="tab"
+              id="pwa-tab-delete"
               part="tab"
               value="delete"
-              aria-selected="${"delete"===this.profileTopic}"
-              ?on="${"delete"===this.profileTopic}"
+              aria-selected="${this.tabOn("delete")}"
+              aria-controls="pwa-panel-delete"
+              tabindex="${this.tabOn("delete")?"0":"-1"}"
+              ?on="${this.tabOn("delete")}"
               @click="${()=>this.openTab("delete")}">Delete
             </button>
           </li>
@@ -1847,11 +1885,13 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
           <!-- Page 1: Profile -->
           <section
+            id="pwa-panel-profile"
             part="panel"
             role="tabpanel"
-            aria-hidden="${"profile"===this.profileTopic?"false":"true"}"
-            ?inert="${"profile"!==this.profileTopic}"
-            ?hidden="${"profile"!==this.profileTopic}">
+            aria-labelledby="pwa-tab-profile"
+            aria-hidden="${this.tabOn("profile")?"false":"true"}"
+            ?inert="${!this.tabOn("profile")}"
+            ?hidden="${!this.tabOn("profile")}">
 
             <!-- Display Username -->
             <h2>${t}</h2>
@@ -1863,11 +1903,13 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
           
           <!-- Page 2: Verification -->
           <section
+            id="pwa-panel-verification"
             part="panel"
             role="tabpanel"
-            aria-hidden="${"verification"===this.profileTopic?"false":"true"}"
-            ?inert="${"verification"!==this.profileTopic}"
-            ?hidden="${"verification"!==this.profileTopic}">
+            aria-labelledby="pwa-tab-verification"
+            aria-hidden="${this.tabOn("verification")?"false":"true"}"
+            ?inert="${!this.tabOn("verification")}"
+            ?hidden="${!this.tabOn("verification")}">
 
             <!-- Page Title -->
             <h2>Contact Information</h2>
@@ -1885,11 +1927,13 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
           <!-- Page 3: Password -->
           <section
+            id="pwa-panel-password"
             part="panel"
             role="tabpanel"
-            aria-hidden="${"password"===this.profileTopic?"false":"true"}"
-            ?inert="${"password"!==this.profileTopic}"
-            ?hidden="${"password"!==this.profileTopic}">
+            aria-labelledby="pwa-tab-password"
+            aria-hidden="${this.tabOn("password")?"false":"true"}"
+            ?inert="${!this.tabOn("password")}"
+            ?hidden="${!this.tabOn("password")}">
 
             <!-- Page Title -->
             <h2>Password</h2>
@@ -1901,11 +1945,13 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
           <!-- Page 4: Delete -->
           <section
+            id="pwa-panel-delete"
             part="panel"
             role="tabpanel"
-            aria-hidden="${"delete"===this.profileTopic?"false":"true"}"
-            ?inert="${"delete"!==this.profileTopic}"
-            ?hidden="${"delete"!==this.profileTopic}">
+            aria-labelledby="pwa-tab-delete"
+            aria-hidden="${this.tabOn("delete")?"false":"true"}"
+            ?inert="${!this.tabOn("delete")}"
+            ?hidden="${!this.tabOn("delete")}">
 
             <!-- Page Title -->
             <h2>Delete Account</h2>
@@ -1948,7 +1994,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
   .icon:focus-visible,
   .login:focus-visible {
-    outline:                  2px solid var(--pwa_action_border_color, #214f34);
+    outline:                  2px solid var(--pwa_focus, #1c2430);
     outline-offset:           2px;
   }
 
@@ -1990,20 +2036,23 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
     letter-spacing:           0.04em;
   }
   
-`;var Jb=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},qb=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let zb=class extends(wt(bn)(it)){constructor(){super(),this.subscribe=!1,this.empty="",this._user=!1,this._photoURL="",this._name="",this._email=""}connectedCallback(){nb(this),super.connectedCallback()}firstUpdated(){this.shadowRoot.querySelector(".toggles").addEventListener("click",()=>{bn.dispatch(ln())})}stateChanged(t){this._user=t.frontend.login,this._photoURL=t.backend.photoURL,this._name=t.backend.name,this._email=t.backend.email}static get styles(){return[$b,i`:host { border-radius: 10px; }`]}render(){return U`
+`;var Jb=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},qb=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let zb=class extends(wt(bn)(it)){constructor(){super(),this.subscribe=!1,this.empty="",this._user=!1,this._open=!1,this._photoURL="",this._name="",this._email=""}connectedCallback(){nb(this),super.connectedCallback()}firstUpdated(){this.shadowRoot.querySelector(".toggles").addEventListener("click",()=>{bn.dispatch(ln())})}stateChanged(t){this._user=t.frontend.login,this._open=t.frontend.drawer,this._photoURL=t.backend.photoURL,this._name=t.backend.name,this._email=t.backend.email}updated(){const t=this.shadowRoot?.querySelector("button"),e=document.querySelector("user-drawer");if(!(t&&e instanceof HTMLElement&&e.id))return;t.setAttribute("aria-controls",e.id);"ariaControlsElements"in t&&(t.ariaControlsElements=[e])}static get styles(){return[$b,i`:host { border-radius: 10px; }`]}render(){return U`
 
       <!-- two classes: icon / login -->
       <button
         type="button"
         part="button"
         class="${this._user?"icon":"login"} toggles"
+        aria-haspopup="dialog"
+        aria-expanded="${this._open?"true":"false"}"
+        aria-controls="pwa-user-drawer"
         aria-label="${this._user?"Account":this.subscribe?"Subscribe":"Login"}">
         
         ${this._user?this.face():this.subscribe?"Subscribe":"Login"}
 
       </button>
 
-    `}face(){if(this._photoURL)return U`<img class="userImage" part="photo" alt="" src="${this._photoURL}">`;const t=sb(this._name,this._email);return t?U`<span class="initials" part="initials" aria-hidden="true">${t}</span>`:this.empty?U`<img class="userImage" part="photo" alt="" src="${this.empty}">`:U`<span class="initials" part="initials" aria-hidden="true">?</span>`}};Jb([lt({type:Boolean,reflect:!0}),qb("design:type",Object)],zb.prototype,"subscribe",void 0),Jb([lt({type:String,reflect:!0}),qb("design:type",Object)],zb.prototype,"empty",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_user",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_photoURL",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_name",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_email",void 0),zb=Jb([at("user-icon"),qb("design:paramtypes",[])],zb);var Kb=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},Qb=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};class Wb extends it{constructor(){super(),this.active=!1}shouldUpdate(){return this.active}}function Yb(){bn.dispatch(un())}function Xb(){bn.dispatch(hn())}function Zb(){bn.dispatch(ln())}Kb([lt({type:Boolean}),Qb("design:type",Boolean)],Wb.prototype,"active",void 0);var tv=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},ev=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let nv=class extends Wb{constructor(){super(),this.userEmail="",this.status="",this.tone="",this.invalid=!1,this.busy=!1,this.cooldown=0,this.touched=!1,this.timer=0,this.stopDraft=null,this.resetPassword=async t=>{if(t.preventDefault(),this.busy||this.cooldown>0)return;const e=this.renderRoot.querySelector(".email");this.userEmail=(e?e.value:this.userEmail).trim(),e&&e.value!==this.userEmail&&(e.value=this.userEmail);const n=(s=this.userEmail).length<4?{code:"pwa/missing-email",message:"Enter an email address."}:/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)?null:{code:"pwa/invalid-email",message:"Enter a valid email address."};var s;if(n)this.showError(n,"email");else{this.busy=!0,this.tone="",this.status="";try{await Po(sE,this.userEmail),this.showSent()}catch(t){!function(t){return"auth/user-not-found"===mE(t).code}(t)?this.showFirebase(t):this.showSent()}finally{this.busy=!1}}},this.backToSignIn=()=>{const t=document.querySelector("user-drawer");if(t){const e=t.hasAttribute("subscribe");return Boolean(bn.getState().frontend?.registerOne)!==e&&bn.dispatch(rn("drawer")),void Yb()}const e=document.querySelector("user-login");if(!e)return;const n=e.hasAttribute("subscribe");Boolean(bn.getState().frontend?.registerTwo)!==n&&bn.dispatch(rn("page")),e.scrollIntoView({block:"nearest"})}}static{this.styles=[WE,YE,QE,XE,i`
+    `}face(){if(this._photoURL)return U`<img class="userImage" part="photo" alt="" src="${this._photoURL}">`;const t=sb(this._name,this._email);return t?U`<span class="initials" part="initials" aria-hidden="true">${t}</span>`:this.empty?U`<img class="userImage" part="photo" alt="" src="${this.empty}">`:U`<span class="initials" part="initials" aria-hidden="true">?</span>`}};Jb([lt({type:Boolean,reflect:!0}),qb("design:type",Object)],zb.prototype,"subscribe",void 0),Jb([lt({type:String,reflect:!0}),qb("design:type",Object)],zb.prototype,"empty",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_user",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_open",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_photoURL",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_name",void 0),Jb([ut(),qb("design:type",Object)],zb.prototype,"_email",void 0),zb=Jb([at("user-icon"),qb("design:paramtypes",[])],zb);var Kb=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},Qb=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};class Wb extends it{constructor(){super(),this.active=!1}shouldUpdate(){return this.active}}function Yb(){bn.dispatch(un())}function Xb(){bn.dispatch(hn())}function Zb(){bn.dispatch(ln())}Kb([lt({type:Boolean}),Qb("design:type",Boolean)],Wb.prototype,"active",void 0);var tv=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},ev=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let nv=class extends Wb{constructor(){super(),this.userEmail="",this.status="",this.tone="",this.invalid=!1,this.busy=!1,this.cooldown=0,this.touched=!1,this.timer=0,this.stopDraft=null,this.resetPassword=async t=>{if(t.preventDefault(),this.busy||this.cooldown>0)return;const e=this.renderRoot.querySelector(".email");this.userEmail=(e?e.value:this.userEmail).trim(),e&&e.value!==this.userEmail&&(e.value=this.userEmail);const n=(s=this.userEmail).length<4?{code:"pwa/missing-email",message:"Enter an email address."}:/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)?null:{code:"pwa/invalid-email",message:"Enter a valid email address."};var s;if(n)this.showError(n,"email");else{this.busy=!0,this.tone="",this.status="";try{await Po(sE,this.userEmail),this.showSent()}catch(t){!function(t){return"auth/user-not-found"===mE(t).code}(t)?this.showFirebase(t):this.showSent()}finally{this.busy=!1}}},this.backToSignIn=()=>{const t=document.querySelector("user-drawer");if(t){const e=t.hasAttribute("subscribe");return Boolean(bn.getState().frontend?.registerOne)!==e&&bn.dispatch(rn("drawer")),void Yb()}const e=document.querySelector("user-login");if(!e)return;const n=e.hasAttribute("subscribe");Boolean(bn.getState().frontend?.registerTwo)!==n&&bn.dispatch(rn("page")),e.scrollIntoView({block:"nearest"})}}static{this.styles=[WE,YE,QE,XE,i`
       :host {
         display:          block;
         background-color: var(--pwa_background, #fff);
@@ -2034,7 +2083,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
       .status:focus { outline: 0; }
 
       .status:focus-visible {
-        outline:                2px solid var(--pwa_action_border_color, #214f34);
+        outline:                2px solid var(--pwa_focus, #1c2430);
         outline-offset:         2px;
       }
 
@@ -2046,7 +2095,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
       button.new {
         display:                block;
       }
-    `]}connectedCallback(){var t;super.connectedCallback(),this.stopDraft=(t=()=>{this.prefill()},oD.add(t),()=>{oD.delete(t)}),this.prefill()}disconnectedCallback(){window.clearInterval(this.timer),this.timer=0,this.stopDraft?.(),this.stopDraft=null,super.disconnectedCallback()}updated(){this.paintEmail()}prefill(){if(this.touched)return;const t=BD();t&&t!==this.userEmail&&(this.userEmail=t,this.paintEmail())}paintEmail(){if(this.touched)return;const t=this.renderRoot.querySelector(".email");t&&!t.value&&this.userEmail&&(t.value=this.userEmail)}handleEmail(t){const e=t.target;this.touched=!0,this.userEmail=e.value,this.invalid&&(this.invalid=!1)}buttonLabel(){return this.busy?"Sending…":this.cooldown>0?`Send again in ${this.cooldown}s`:"Send reset email"}render(){const t="pwa-reset-status";return U`
+    `]}connectedCallback(){var t;this.hasAttribute("role")||this.setAttribute("role","region"),this.hasAttribute("aria-label")||this.setAttribute("aria-label","Reset password"),super.connectedCallback(),this.stopDraft=(t=()=>{this.prefill()},oD.add(t),()=>{oD.delete(t)}),this.prefill()}disconnectedCallback(){window.clearInterval(this.timer),this.timer=0,this.stopDraft?.(),this.stopDraft=null,super.disconnectedCallback()}updated(){this.paintEmail()}prefill(){if(this.touched)return;const t=BD();t&&t!==this.userEmail&&(this.userEmail=t,this.paintEmail())}paintEmail(){if(this.touched)return;const t=this.renderRoot.querySelector(".email");t&&!t.value&&this.userEmail&&(t.value=this.userEmail)}handleEmail(t){const e=t.target;this.touched=!0,this.userEmail=e.value,this.invalid&&(this.invalid=!1)}buttonLabel(){return this.busy?"Sending…":this.cooldown>0?`Send again in ${this.cooldown}s`:"Send reset email"}render(){const t="pwa-reset-status";return U`
 
       <form
         class="resetPass"

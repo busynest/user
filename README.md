@@ -132,6 +132,8 @@ Set these on the element. `--pwa_background` replaces the older background names
 | `--pwa_label_text_color` | Labels | `#1c2430` |
 | `--pwa_header_color` | Settings title | `#1c2430` |
 | `--pwa_line_color` | Borders | `#e3daca` |
+| `--pwa_input_border_color` | Field border. Dark enough to see on white | `#8d8870` |
+| `--pwa_focus` | Focus outline | `#1c2430` |
 | `--pwa_nav_button_color` | Quiet text | `#4e5b6a` |
 | `--pwa_nav_highlight_color` | Selected tab text | `#1c2430` |
 | `--pwa_nav_on_background` | Selected tab and notice | `#f2f2f2` |
@@ -162,6 +164,17 @@ user-drawer, user-login, user-settings, email-reset {
 ```
 
 The drawer unrolls downward and its buttons ride the bottom edge. Nothing animates on page load. Less motion makes that instant. [The roll](docs/drawer-slide.md).
+
+## Accessibility
+
+| What | How |
+| --- | --- |
+| Open and close | The icon is a button. `aria-expanded` says if the drawer is open. `aria-controls` points at it. Focus moves to Close. Escape closes and focus returns to the button |
+| Closed pieces | A shut drawer, a hidden form, and a hidden settings tab are inert. They are not in the tab order |
+| Fields | Each field has a label, autocomplete, and `aria-invalid`. The error is a live region the field names with `aria-describedby` |
+| Settings tabs | Arrow keys move across the four tabs |
+| Focus | `--pwa_focus` draws the outline. Default text, the green buttons, and the field border meet WCAG AA |
+| Motion | `prefers-reduced-motion` sets `--pwa_slide` to `0s` |
 
 ## Firebase
 

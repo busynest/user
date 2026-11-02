@@ -49,6 +49,13 @@ export const navigation = css`
 
   }
 
+  nav > ul > li > button:focus-visible {
+
+    outline:          2px solid var(--pwa_focus, #1c2430);
+    outline-offset:   2px;
+
+  }
+
   /* Required - fit 320px */
   @media (max-width: 320px) {
 

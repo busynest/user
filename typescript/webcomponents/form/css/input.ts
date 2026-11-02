@@ -15,9 +15,17 @@ export const inputStyle : CSSResult = css`
     padding:                  8px 14px;
     color:                    var(--pwa_drawer_text_color, #1c2430);
     background-color:         var(--pwa_input_background_color, var(--pwa_background, #fff));
-    border:                   1px solid var(--pwa_line_color, #e3daca);
+    border:                   1px solid var(--pwa_input_border_color, #8d8870);
     border-radius:            10px;
     font-size:                1rem;
+  }
+
+  input[type=text]:focus-visible,
+  input[type=email]:focus-visible,
+  input[type=password]:focus-visible,
+  select:focus-visible {
+    outline:                  2px solid var(--pwa_focus, #1c2430);
+    outline-offset:           1px;
   }
 
   input.invalid { background-color: #ffdddd; }

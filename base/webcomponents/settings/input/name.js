@@ -107,6 +107,7 @@ export class InputName extends connect(store)(LitElement) {
             part          = "name"
             type          = "text"
             autocomplete  = "name"
+            aria-invalid  = "${this.tone === 'error' ? 'true' : 'false'}"
             aria-describedby = "pwa-name-status"
             @input        = "${this.handleInput}"
             .value        = "${this.draft}" />

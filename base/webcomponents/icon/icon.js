@@ -21,6 +21,7 @@ let UserIcon = class UserIcon extends connect(store)(LitElement) {
         this.subscribe = false;
         this.empty = '';
         this._user = false;
+        this._open = false;
         this._photoURL = '';
         this._name = '';
         this._email = '';
@@ -36,9 +37,20 @@ let UserIcon = class UserIcon extends connect(store)(LitElement) {
     }
     stateChanged(state) {
         this._user = state.frontend.login;
+        this._open = state.frontend.drawer;
         this._photoURL = state.backend.photoURL;
         this._name = state.backend.name;
         this._email = state.backend.email;
+    }
+    updated() {
+        const button = this.shadowRoot?.querySelector('button');
+        const drawer = document.querySelector('user-drawer');
+        if (!button || !(drawer instanceof HTMLElement) || !drawer.id)
+            return;
+        button.setAttribute('aria-controls', drawer.id);
+        const control = button;
+        if ('ariaControlsElements' in control)
+            control.ariaControlsElements = [drawer];
     }
     static get styles() { return [iconStyles, css `:host { border-radius: 10px; }`]; }
     render() {
@@ -49,6 +61,9 @@ let UserIcon = class UserIcon extends connect(store)(LitElement) {
         type="button"
         part="button"
         class="${this._user ? 'icon' : 'login'} toggles"
+        aria-haspopup="dialog"
+        aria-expanded="${this._open ? 'true' : 'false'}"
+        aria-controls="pwa-user-drawer"
         aria-label="${this._user ? 'Account' : this.subscribe ? 'Subscribe' : 'Login'}">
         
         ${this._user ? this.face() : this.subscribe ? 'Subscribe' : 'Login'}
@@ -83,6 +98,10 @@ __decorate([
     state(),
     __metadata("design:type", Object)
 ], UserIcon.prototype, "_user", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserIcon.prototype, "_open", void 0);
 __decorate([
     state(),
     __metadata("design:type", Object)

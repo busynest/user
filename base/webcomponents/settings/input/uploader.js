@@ -203,7 +203,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
 
     <label
       style="
-        border: 1px dashed var(--pwa_line_color, #e3daca);
+        border: 1px dashed var(--pwa_input_border_color, #8d8870);
         border-radius: 12px;
         overflow: hidden;
         margin: 0;

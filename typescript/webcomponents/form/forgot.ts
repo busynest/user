@@ -93,7 +93,7 @@ export class EmailReset extends LazyLoader {
       .status:focus { outline: 0; }
 
       .status:focus-visible {
-        outline:                2px solid var(--pwa_action_border_color, #214f34);
+        outline:                2px solid var(--pwa_focus, #1c2430);
         outline-offset:         2px;
       }
 
@@ -109,6 +109,8 @@ export class EmailReset extends LazyLoader {
   ];
 
   override connectedCallback(): void {
+    if (!this.hasAttribute('role')) this.setAttribute('role', 'region');
+    if (!this.hasAttribute('aria-label')) this.setAttribute('aria-label', 'Reset password');
     super.connectedCallback();
     this.stopDraft = onDraftEmail(() => { this.prefill(); });
     this.prefill();

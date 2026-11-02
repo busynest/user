@@ -27,7 +27,7 @@ export const authStyles = [hostCollapse, css `
     background-color:       var(--pwa_background, var(--section_background_color, #fff));
   }
 
-  h3 {
+  h2 {
     margin:                 0;
     padding:                18px var(--pwa_inset, 0px) 14px;
     font-size:              1.15rem;

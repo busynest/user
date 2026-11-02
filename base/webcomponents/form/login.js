@@ -168,26 +168,24 @@ let FormLogin = class FormLogin extends LitElement {
 
           <li>
 
-            <label for="${passId}">Password
+            <label for="${passId}">Password</label>
 
-              <span class="pair">
+            <span class="pair">
 
-                <input
-                  id=             "${passId}"
-                  name=           "password"
-                  part=           "password"
-                  type=           "${this.showPassword ? 'text' : 'password'}"
-                  autocomplete=   "current-password"
-                  aria-invalid=   "${this.tone === 'error' ? 'true' : 'false'}"
-                  aria-describedby="${statusId}"
-                  @input=         "${this.handlePassword}"
-                  @change=        "${this.handlePassword}">
+              <input
+                id=             "${passId}"
+                name=           "password"
+                part=           "password"
+                type=           "${this.showPassword ? 'text' : 'password'}"
+                autocomplete=   "current-password"
+                aria-invalid=   "${this.tone === 'error' ? 'true' : 'false'}"
+                aria-describedby="${statusId}"
+                @input=         "${this.handlePassword}"
+                @change=        "${this.handlePassword}">
 
-                ${revealControl(this.showPassword, () => { this.showPassword = !this.showPassword; })}
+              ${revealControl(this.showPassword, () => { this.showPassword = !this.showPassword; })}
 
-              </span>
-
-            </label>
+            </span>
 
           </li>
 

@@ -64,22 +64,21 @@ export class DeleteUser extends connect(store)(LitElement) {
 
       <p class="lead">Permanently delete the user account and data related to: ${this.email}</p>
 
-      <label for="pwa-delete-password">Current password
+      <label for="pwa-delete-password">Current password</label>
 
-        <span class="pair">
+      <span class="pair">
 
           <input
             id="pwa-delete-password"
             name="current_password"
             type="${this.showPassword ? 'text' : 'password'}"
             autocomplete="current-password"
+            aria-invalid="${this.tone === 'error' ? 'true' : 'false'}"
             aria-describedby="pwa-delete-status"/>
 
           ${revealControl(this.showPassword, () => { this.showPassword = !this.showPassword; })}
 
-        </span>
-
-      </label>
+      </span>
 
       ${liveStatus('pwa-delete-status', this.status, this.tone)}
 

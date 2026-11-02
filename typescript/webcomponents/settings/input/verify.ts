@@ -123,7 +123,7 @@ export class EmailVerify extends connect(store)(LitElement) {
         .status:focus { outline: 0; }
 
         .status:focus-visible {
-          outline:              2px solid var(--pwa_action_border_color, #214f34);
+          outline:              2px solid var(--pwa_focus, #1c2430);
           outline-offset:       2px;
         }
 

@@ -4,7 +4,7 @@ export const buttonStyle = css `
   .action-button:focus { outline: 0; }
 
   .action-button:focus-visible {
-    outline:              2px solid var(--pwa_action_border_color, #214f34);
+    outline:              2px solid var(--pwa_focus, #1c2430);
     outline-offset:       2px;
   }
 
@@ -75,7 +75,7 @@ export const buttonStyle = css `
   .google:focus { outline: 0; }
 
   .google:focus-visible {
-    outline:              2px solid #1f1f1f;
+    outline:              2px solid var(--pwa_focus, #1c2430);
     outline-offset:       2px;
   }
 

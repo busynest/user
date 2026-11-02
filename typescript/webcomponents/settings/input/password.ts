@@ -65,30 +65,29 @@ export class InputPassword extends connect(store)(LitElement) {
 
         <div>
 
-          <label for="pwa-current-password">Current Password
+          <label for="pwa-current-password">Current Password</label>
 
-            <span class="pair">
+          <span class="pair">
 
               <input
                 id      = "pwa-current-password"
                 name    = "current_password"
                 type    = "${this.showCurrent ? 'text' : 'password'}"
                 autocomplete = "current-password"
+                aria-invalid = "${this.tone === 'error' ? 'true' : 'false'}"
                 aria-describedby = "pwa-password-status">
 
               ${revealControl(this.showCurrent, () => { this.showCurrent = !this.showCurrent; })}
 
-            </span>
-
-          </label>
+          </span>
 
         </div>
 
         <div>
           
-          <label for="pwa-new-password">New Password
+          <label for="pwa-new-password">New Password</label>
 
-            <span class="pair">
+          <span class="pair">
 
               <input
                 id      = "pwa-new-password"
@@ -100,23 +99,22 @@ export class InputPassword extends connect(store)(LitElement) {
                 maxlength    = "${passwordMax}"
                 .value  = "${this.password}"
                 @input  = "${this.handleInputChange}"
+                aria-invalid = "${this.tone === 'error' ? 'true' : 'false'}"
                 aria-describedby = "pwa-new-password-hint pwa-password-status">
 
               ${revealControl(this.showNext, () => { this.showNext = !this.showNext; })}
 
             </span>
 
-            <p id="pwa-new-password-hint" class="hint" part="hint">${passwordHint}</p>
-
-          </label>
+          <p id="pwa-new-password-hint" class="hint" part="hint">${passwordHint}</p>
 
         </div>
 
         <div>
 
-          <label for="pwa-verify-password">Verify Password
+          <label for="pwa-verify-password">Verify Password</label>
 
-            <span class="pair">
+          <span class="pair">
 
               <input
                 id      = "pwa-verify-password"
@@ -126,13 +124,12 @@ export class InputPassword extends connect(store)(LitElement) {
                 autocomplete = "new-password"
                 minlength    = "${passwordMin}"
                 maxlength    = "${passwordMax}"
+                aria-invalid = "${this.tone === 'error' ? 'true' : 'false'}"
                 aria-describedby = "pwa-password-status">
 
               ${revealControl(this.showVerify, () => { this.showVerify = !this.showVerify; })}
 
-            </span>
-
-          </label>
+          </span>
 
         </div>
 
