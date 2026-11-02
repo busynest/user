@@ -35,14 +35,19 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         this.clipHeight = 'auto';
         this.sheetShift = 'none';
         this.rollMotion = false;
+        this.leaving = '';
+        this.leaveClipHeight = '0px';
+        this.leaveSheetShift = 'translate3d(0, 0, 0)';
+        this.leaveMotion = false;
         this.booted = false;
         this.heldHeight = null;
+        this.leaveFrom = 0;
         this.columnWidth = 0;
         this.columnObserver = null;
         this.onSubmit = (event) => {
             event.preventDefault();
         };
-        this.onClipEnd = (event) => {
+        this.onFrontEnd = (event) => {
             if (!(event instanceof TransitionEvent))
                 return;
             if (event.target !== event.currentTarget)
@@ -50,6 +55,16 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             if (event.propertyName !== 'max-height')
                 return;
             this.rest();
+        };
+        this.onBackEnd = (event) => {
+            if (!(event instanceof TransitionEvent))
+                return;
+            if (event.target !== event.currentTarget)
+                return;
+            if (event.propertyName !== 'max-height')
+                return;
+            this.leaving = '';
+            this.leaveMotion = false;
         };
     }
     connectedCallback() {
@@ -108,12 +123,24 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         :host { --pwa_slide: 0s; }
       }
 
-      /* Required - this settings roll only. Block, so the sheet is not stretched. */
+      /* Required - this settings roll only. The two clips share one cell so the
+         stage is as tall as the lower edge, and the incoming clip paints in front. */
+      .settings-stage {
+        display:          grid;
+      }
+
       .settings-clip {
+        grid-area:        1 / 1;
+        align-self:       start;
+        justify-self:     stretch;
         display:          block;
         overflow:         hidden;
         min-height:       0;
+        width:            100%;
       }
+
+      .settings-clip.is-front { z-index: 2; }
+      .settings-clip.is-back { z-index: 1; }
 
       .settings-sheet {
         display:          block;
@@ -168,6 +195,15 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             return;
         if (this.reduced())
             return;
+        const previous = String(changed.get('profileTopic') || '');
+        if (!previous || previous === this.profileTopic)
+            return;
+        const clip = this.clipFor(previous);
+        this.leaveFrom = clip ? Math.ceil(clip.getBoundingClientRect().height) : 0;
+        this.leaving = previous;
+        this.leaveMotion = false;
+        this.leaveClipHeight = `${this.leaveFrom}px`;
+        this.leaveSheetShift = 'translate3d(0, 0, 0)';
         this.rollMotion = false;
         this.clipHeight = '0px';
         this.sheetShift = 'translate3d(0, -100%, 0)';
@@ -180,17 +216,24 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             this.watchColumn();
         if (boot || !changed.has('profileTopic') || !this.login || changed.has('login'))
             return;
-        const clip = this.clip();
-        const sheet = this.sheet();
-        if (!clip || !sheet || this.heldHeight == null)
-            return;
-        const from = this.heldHeight;
-        this.heldHeight = null;
-        const to = this.sheetPx(clip, sheet);
-        if (Math.abs(to - from) > 1)
-            this.rollBetween(clip, sheet, from, to, to);
-        else
-            this.rest();
+        const clip = this.frontClip();
+        const sheet = this.sheetOf(clip);
+        if (clip && sheet && this.heldHeight != null) {
+            const from = this.heldHeight;
+            this.heldHeight = null;
+            const to = this.sheetPx(clip, sheet);
+            if (Math.abs(to - from) > 1)
+                this.rollLayer('front', clip, sheet, from, to, to);
+            else
+                this.rest();
+        }
+        const back = this.backClip();
+        const backSheet = this.sheetOf(back);
+        if (back && backSheet && this.leaving) {
+            const sheetH = this.sheetPx(back, backSheet);
+            const from = this.leaveFrom || sheetH;
+            this.rollLayer('back', back, backSheet, from, 0, sheetH);
+        }
     }
     watchColumn() {
         if (typeof ResizeObserver === 'undefined')
@@ -200,23 +243,38 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             if (!width || width === this.columnWidth)
                 return;
             this.columnWidth = width;
-            if (!this.rollMotion)
-                return;
-            const clip = this.clip();
-            const sheet = this.sheet();
-            if (!clip || !sheet)
-                return;
-            const from = Math.ceil(clip.getBoundingClientRect().height);
-            const sheetH = this.sheetPx(clip, sheet);
-            this.rollBetween(clip, sheet, from, sheetH, sheetH);
+            if (this.rollMotion) {
+                const clip = this.frontClip();
+                const sheet = this.sheetOf(clip);
+                if (clip && sheet) {
+                    const from = Math.ceil(clip.getBoundingClientRect().height);
+                    const sheetH = this.sheetPx(clip, sheet);
+                    this.rollLayer('front', clip, sheet, from, sheetH, sheetH);
+                }
+            }
+            if (this.leaveMotion) {
+                const clip = this.backClip();
+                const sheet = this.sheetOf(clip);
+                if (clip && sheet) {
+                    const from = Math.ceil(clip.getBoundingClientRect().height);
+                    const sheetH = this.sheetPx(clip, sheet);
+                    this.rollLayer('back', clip, sheet, from, 0, sheetH);
+                }
+            }
         });
         this.columnObserver.observe(this);
     }
-    clip() {
-        return this.shadowRoot?.querySelector('.settings-clip') ?? null;
+    clipFor(name) {
+        return this.shadowRoot?.querySelector(`.settings-clip[data-panel="${name}"]`) ?? null;
     }
-    sheet() {
-        return this.shadowRoot?.querySelector('.settings-sheet') ?? null;
+    frontClip() {
+        return this.clipFor(this.profileTopic || 'profile');
+    }
+    backClip() {
+        return this.leaving ? this.clipFor(this.leaving) : null;
+    }
+    sheetOf(clip) {
+        return clip?.querySelector('.settings-sheet') ?? null;
     }
     reduced() {
         return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -239,29 +297,44 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         this.clipHeight = 'auto';
         this.sheetShift = 'none';
     }
-    clipStyle() {
-        const travel = this.rollMotion && !this.reduced();
+    layerStyle(motion, height) {
+        const travel = motion && !this.reduced();
         return {
-            height: this.clipHeight,
-            maxHeight: this.clipHeight === 'auto' ? 'none' : this.clipHeight,
+            height,
+            maxHeight: height === 'auto' ? 'none' : height,
             transition: travel
                 ? 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out'
                 : 'none',
         };
     }
-    sheetStyle() {
-        const travel = this.rollMotion && !this.reduced();
+    shiftStyle(motion, shift) {
+        const travel = motion && !this.reduced();
         return {
-            transform: this.sheetShift,
+            transform: shift,
             transition: travel ? 'transform var(--pwa_slide, 2s) ease-in-out' : 'none',
         };
     }
-    rollBetween(clip, sheet, from, to, sheetHeight) {
+    clipStyle() {
+        return this.layerStyle(this.rollMotion, this.clipHeight);
+    }
+    sheetStyle() {
+        return this.shiftStyle(this.rollMotion, this.sheetShift);
+    }
+    leaveClipStyle() {
+        return this.layerStyle(this.leaveMotion, this.leaveClipHeight);
+    }
+    leaveSheetStyle() {
+        return this.shiftStyle(this.leaveMotion, this.leaveSheetShift);
+    }
+    rollLayer(layer, clip, sheet, from, to, sheetHeight) {
         const start = from - sheetHeight;
         const end = to - sheetHeight;
         const shift = (px) => `translate3d(0, ${px}px, 0)`;
         if (this.reduced() || Math.abs(to - from) <= 1) {
-            this.rest();
+            if (layer === 'front')
+                this.rest();
+            else
+                this.leaving = '';
             return;
         }
         const travel = 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out';
@@ -277,9 +350,57 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         clip.style.height = `${Math.max(0, to)}px`;
         clip.style.maxHeight = `${Math.max(0, to)}px`;
         sheet.style.transform = shift(end);
-        this.rollMotion = true;
-        this.clipHeight = `${Math.max(0, to)}px`;
-        this.sheetShift = shift(end);
+        if (layer === 'front') {
+            this.rollMotion = true;
+            this.clipHeight = `${Math.max(0, to)}px`;
+            this.sheetShift = shift(end);
+        }
+        else {
+            this.leaveMotion = true;
+            this.leaveClipHeight = `${Math.max(0, to)}px`;
+            this.leaveSheetShift = shift(end);
+        }
+    }
+    layerOf(name) {
+        if (name === this.leaving)
+            return 'back';
+        if (this.tabOn(name))
+            return 'front';
+        return 'idle';
+    }
+    panel(name, title) {
+        const layer = this.layerOf(name);
+        const on = layer === 'front';
+        const concealed = layer === 'idle';
+        const id = `pwa-panel-${name}`;
+        const labelledby = `pwa-tab-${name}`;
+        const body = name === 'profile' ? html `
+            <h2>${title}</h2>
+            <contact-photo emptyArtwork="${this.empty}" exportparts="progress, file, preview"></contact-photo>
+          ` : name === 'verification' ? html `
+            <h2>Contact Information</h2>
+            <email-verify exportparts="notice, status: verify-status, submit: verify-submit, verified, unverified"></email-verify>
+            <input-name exportparts="name, submit: name-submit"></input-name>
+            <contact-email exportparts="email, submit: email-submit"></contact-email>
+          ` : name === 'password' ? html `
+            <h2>Password</h2>
+            <input-password exportparts="password, verify, submit: password-submit"></input-password>
+          ` : html `
+            <h2>Delete Account</h2>
+            <delete-user exportparts="submit: delete"></delete-user>
+          `;
+        return html `
+          <section
+            id="${id}"
+            part="panel"
+            role="tabpanel"
+            aria-labelledby="${labelledby}"
+            aria-hidden="${on ? 'false' : 'true'}"
+            ?inert="${!on}"
+            ?hidden="${concealed}">
+            ${body}
+          </section>
+        `;
     }
     render() {
         if (!this.login) {
@@ -360,92 +481,21 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
       </nav>
 
       
-      <div
-        class="settings-clip"
-        style=${styleMap(this.clipStyle())}
-        @transitionend=${this.onClipEnd}>
-          <div class="settings-sheet" style=${styleMap(this.sheetStyle())}>
-
-
-          <!-- Page 1: Profile -->
-          <section
-            id="pwa-panel-profile"
-            part="panel"
-            role="tabpanel"
-            aria-labelledby="pwa-tab-profile"
-            aria-hidden="${this.tabOn('profile') ? 'false' : 'true'}"
-            ?inert="${!this.tabOn('profile')}"
-            ?hidden="${!this.tabOn('profile')}">
-
-            <!-- Display Username -->
-            <h2>${title}</h2>
-
-            <!-- Custom Image Element - Display / Upload -->
-            <contact-photo emptyArtwork="${this.empty}" exportparts="progress, file, preview"></contact-photo>
-
-          </section>
-          
-          <!-- Page 2: Verification -->
-          <section
-            id="pwa-panel-verification"
-            part="panel"
-            role="tabpanel"
-            aria-labelledby="pwa-tab-verification"
-            aria-hidden="${this.tabOn('verification') ? 'false' : 'true'}"
-            ?inert="${!this.tabOn('verification')}"
-            ?hidden="${!this.tabOn('verification')}">
-
-            <!-- Page Title -->
-            <h2>Contact Information</h2>
-
-            <!-- Required - unverified notice. Sign-in stays open. -->
-            <email-verify exportparts="notice, status: verify-status, submit: verify-submit, verified, unverified"></email-verify>
-
-            <!-- Custom - Username -->
-            <input-name exportparts="name, submit: name-submit"></input-name>
-
-            <!-- Custom - Email -->
-            <contact-email exportparts="email, submit: email-submit"></contact-email>
-
-          </section>
-
-          <!-- Page 3: Password -->
-          <section
-            id="pwa-panel-password"
-            part="panel"
-            role="tabpanel"
-            aria-labelledby="pwa-tab-password"
-            aria-hidden="${this.tabOn('password') ? 'false' : 'true'}"
-            ?inert="${!this.tabOn('password')}"
-            ?hidden="${!this.tabOn('password')}">
-
-            <!-- Page Title -->
-            <h2>Password</h2>
-
-            <!-- Custom - Password -->
-            <input-password exportparts="password, verify, submit: password-submit"></input-password>
-
-          </section>
-
-          <!-- Page 4: Delete -->
-          <section
-            id="pwa-panel-delete"
-            part="panel"
-            role="tabpanel"
-            aria-labelledby="pwa-tab-delete"
-            aria-hidden="${this.tabOn('delete') ? 'false' : 'true'}"
-            ?inert="${!this.tabOn('delete')}"
-            ?hidden="${!this.tabOn('delete')}">
-
-            <!-- Page Title -->
-            <h2>Delete Account</h2>
-
-            <!-- Custom - Delete -->
-            <delete-user exportparts="submit: delete"></delete-user>
-
-          </section>
-
-          </div>
+      <div class="settings-stage">
+        ${['profile', 'verification', 'password', 'delete'].map((name) => {
+            const layer = this.layerOf(name);
+            return html `
+            <div
+              class="settings-clip ${layer === 'front' ? 'is-front' : layer === 'back' ? 'is-back' : ''}"
+              data-panel="${name}"
+              style=${styleMap(layer === 'back' ? this.leaveClipStyle() : layer === 'front' ? this.clipStyle() : { height: '0px', maxHeight: '0px', transition: 'none' })}
+              @transitionend=${layer === 'back' ? this.onBackEnd : this.onFrontEnd}>
+              <div class="settings-sheet" style=${styleMap(layer === 'back' ? this.leaveSheetStyle() : layer === 'front' ? this.sheetStyle() : { transform: 'translate3d(0, -100%, 0)', transition: 'none' })}>
+                ${this.panel(name, title)}
+              </div>
+            </div>
+          `;
+        })}
       </div>
 
     `;
@@ -483,6 +533,22 @@ __decorate([
     state(),
     __metadata("design:type", Object)
 ], UserSettings.prototype, "rollMotion", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserSettings.prototype, "leaving", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserSettings.prototype, "leaveClipHeight", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserSettings.prototype, "leaveSheetShift", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserSettings.prototype, "leaveMotion", void 0);
 UserSettings = __decorate([
     customElement('user-settings'),
     __metadata("design:paramtypes", [])

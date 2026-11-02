@@ -1746,7 +1746,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
         ?disabled="${!1===this.login||this.busy}"
         @click="${this.alertDelete}">${this.busy?"Deleting…":"Delete"}</button>
 
-    `}show(t){this.tone="error",this.status=KE(t),gE(PE,t)}}Mb([ut(),Gb("design:type",Boolean)],Hb.prototype,"login",void 0),Mb([ut(),Gb("design:type",String)],Hb.prototype,"email",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"busy",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"status",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"tone",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"showPassword",void 0),customElements.define("delete-user",Hb);var Ub=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},Vb=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let jb=class extends(wt(bn)(it)){constructor(){super(),this.empty="",this.profileTopic="",this.name="",this.email="",this.login=!1,this.clipHeight="auto",this.sheetShift="none",this.rollMotion=!1,this.booted=!1,this.heldHeight=null,this.columnWidth=0,this.columnObserver=null,this.onSubmit=t=>{t.preventDefault()},this.onClipEnd=t=>{t instanceof TransitionEvent&&t.target===t.currentTarget&&"max-height"===t.propertyName&&this.rest()}}connectedCallback(){nb(this),this.hasAttribute("role")||this.setAttribute("role","region"),this.hasAttribute("aria-label")||this.setAttribute("aria-label","Account settings"),super.connectedCallback(),this.addEventListener("submit",this.onSubmit)}disconnectedCallback(){this.removeEventListener("submit",this.onSubmit),this.columnObserver?.disconnect(),this.columnObserver=null,super.disconnectedCallback()}onTabKey(t){if("ArrowRight"!==t.key&&"ArrowLeft"!==t.key)return;t.preventDefault();const e=["profile","verification","password","delete"],n=e.indexOf(this.profileTopic),s=e[(n+("ArrowRight"===t.key?1:-1)+e.length)%e.length];bn.dispatch(on(s)),this.updateComplete.then(()=>{this.shadowRoot?.querySelector(`button[value="${s}"]`)?.focus()})}stateChanged(t){this.profileTopic=t.frontend.settings,this.login=Boolean(t.frontend?.login),this.name=t.backend.name,this.email=t.backend.email}static get styles(){return[bb,Sn,eD,i`
+    `}show(t){this.tone="error",this.status=KE(t),gE(PE,t)}}Mb([ut(),Gb("design:type",Boolean)],Hb.prototype,"login",void 0),Mb([ut(),Gb("design:type",String)],Hb.prototype,"email",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"busy",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"status",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"tone",void 0),Mb([ut(),Gb("design:type",Object)],Hb.prototype,"showPassword",void 0),customElements.define("delete-user",Hb);var Ub=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},Vb=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};let jb=class extends(wt(bn)(it)){constructor(){super(),this.empty="",this.profileTopic="",this.name="",this.email="",this.login=!1,this.clipHeight="auto",this.sheetShift="none",this.rollMotion=!1,this.leaving="",this.leaveClipHeight="0px",this.leaveSheetShift="translate3d(0, 0, 0)",this.leaveMotion=!1,this.booted=!1,this.heldHeight=null,this.leaveFrom=0,this.columnWidth=0,this.columnObserver=null,this.onSubmit=t=>{t.preventDefault()},this.onFrontEnd=t=>{t instanceof TransitionEvent&&t.target===t.currentTarget&&"max-height"===t.propertyName&&this.rest()},this.onBackEnd=t=>{t instanceof TransitionEvent&&t.target===t.currentTarget&&"max-height"===t.propertyName&&(this.leaving="",this.leaveMotion=!1)}}connectedCallback(){nb(this),this.hasAttribute("role")||this.setAttribute("role","region"),this.hasAttribute("aria-label")||this.setAttribute("aria-label","Account settings"),super.connectedCallback(),this.addEventListener("submit",this.onSubmit)}disconnectedCallback(){this.removeEventListener("submit",this.onSubmit),this.columnObserver?.disconnect(),this.columnObserver=null,super.disconnectedCallback()}onTabKey(t){if("ArrowRight"!==t.key&&"ArrowLeft"!==t.key)return;t.preventDefault();const e=["profile","verification","password","delete"],n=e.indexOf(this.profileTopic),s=e[(n+("ArrowRight"===t.key?1:-1)+e.length)%e.length];bn.dispatch(on(s)),this.updateComplete.then(()=>{this.shadowRoot?.querySelector(`button[value="${s}"]`)?.focus()})}stateChanged(t){this.profileTopic=t.frontend.settings,this.login=Boolean(t.frontend?.login),this.name=t.backend.name,this.email=t.backend.email}static get styles(){return[bb,Sn,eD,i`
 
       :host {
         display:          block;
@@ -1763,12 +1763,24 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
         :host { --pwa_slide: 0s; }
       }
 
-      /* Required - this settings roll only. Block, so the sheet is not stretched. */
+      /* Required - this settings roll only. The two clips share one cell so the
+         stage is as tall as the lower edge, and the incoming clip paints in front. */
+      .settings-stage {
+        display:          grid;
+      }
+
       .settings-clip {
+        grid-area:        1 / 1;
+        align-self:       start;
+        justify-self:     stretch;
         display:          block;
         overflow:         hidden;
         min-height:       0;
+        width:            100%;
       }
+
+      .settings-clip.is-front { z-index: 2; }
+      .settings-clip.is-back { z-index: 1; }
 
       .settings-sheet {
         display:          block;
@@ -1807,7 +1819,32 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
         }
       }
 
-    `]}openTab(t){bn.dispatch(on(t))}tabOn(t){return(this.profileTopic||"profile")===t}willUpdate(t){this.booted&&this.login&&!t.has("login")&&t.has("profileTopic")&&(this.reduced()||(this.rollMotion=!1,this.clipHeight="0px",this.sheetShift="translate3d(0, -100%, 0)",this.heldHeight=0))}updated(t){const e=!this.booted;if(this.booted=!0,e&&this.watchColumn(),e||!t.has("profileTopic")||!this.login||t.has("login"))return;const n=this.clip(),s=this.sheet();if(!n||!s||null==this.heldHeight)return;const r=this.heldHeight;this.heldHeight=null;const i=this.sheetPx(n,s);Math.abs(i-r)>1?this.rollBetween(n,s,r,i,i):this.rest()}watchColumn(){"undefined"!=typeof ResizeObserver&&(this.columnObserver=new ResizeObserver(()=>{const t=Math.round(this.getBoundingClientRect().width);if(!t||t===this.columnWidth)return;if(this.columnWidth=t,!this.rollMotion)return;const e=this.clip(),n=this.sheet();if(!e||!n)return;const s=Math.ceil(e.getBoundingClientRect().height),r=this.sheetPx(e,n);this.rollBetween(e,n,s,r,r)}),this.columnObserver.observe(this))}clip(){return this.shadowRoot?.querySelector(".settings-clip")??null}sheet(){return this.shadowRoot?.querySelector(".settings-sheet")??null}reduced(){return window.matchMedia("(prefers-reduced-motion: reduce)").matches}sheetPx(t,e){const n=t.style.transition,s=t.style.maxHeight,r=t.style.height;t.style.transition="none",t.style.maxHeight="none",t.style.height="auto";const i=Math.ceil(e.offsetHeight);return t.style.height=r,t.style.maxHeight=s,t.style.transition=n,i}rest(){this.rollMotion=!1,this.clipHeight="auto",this.sheetShift="none"}clipStyle(){const t=this.rollMotion&&!this.reduced();return{height:this.clipHeight,maxHeight:"auto"===this.clipHeight?"none":this.clipHeight,transition:t?"height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out":"none"}}sheetStyle(){const t=this.rollMotion&&!this.reduced();return{transform:this.sheetShift,transition:t?"transform var(--pwa_slide, 2s) ease-in-out":"none"}}rollBetween(t,e,n,s,r){const i=n-r,o=s-r,a=t=>`translate3d(0, ${t}px, 0)`;if(this.reduced()||Math.abs(s-n)<=1)return void this.rest();t.style.transition="none",e.style.transition="none",t.style.height=`${Math.max(0,n)}px`,t.style.maxHeight=`${Math.max(0,n)}px`,e.style.transform=a(i),t.offsetHeight,t.style.transition="height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out",e.style.transition="transform var(--pwa_slide, 2s) ease-in-out",t.style.height=`${Math.max(0,s)}px`,t.style.maxHeight=`${Math.max(0,s)}px`,e.style.transform=a(o),this.rollMotion=!0,this.clipHeight=`${Math.max(0,s)}px`,this.sheetShift=a(o)}render(){if(!this.login)return U`
+    `]}openTab(t){bn.dispatch(on(t))}tabOn(t){return(this.profileTopic||"profile")===t}willUpdate(t){if(!this.booted||!this.login||t.has("login"))return;if(!t.has("profileTopic"))return;if(this.reduced())return;const e=String(t.get("profileTopic")||"");if(!e||e===this.profileTopic)return;const n=this.clipFor(e);this.leaveFrom=n?Math.ceil(n.getBoundingClientRect().height):0,this.leaving=e,this.leaveMotion=!1,this.leaveClipHeight=`${this.leaveFrom}px`,this.leaveSheetShift="translate3d(0, 0, 0)",this.rollMotion=!1,this.clipHeight="0px",this.sheetShift="translate3d(0, -100%, 0)",this.heldHeight=0}updated(t){const e=!this.booted;if(this.booted=!0,e&&this.watchColumn(),e||!t.has("profileTopic")||!this.login||t.has("login"))return;const n=this.frontClip(),s=this.sheetOf(n);if(n&&s&&null!=this.heldHeight){const t=this.heldHeight;this.heldHeight=null;const e=this.sheetPx(n,s);Math.abs(e-t)>1?this.rollLayer("front",n,s,t,e,e):this.rest()}const r=this.backClip(),i=this.sheetOf(r);if(r&&i&&this.leaving){const t=this.sheetPx(r,i),e=this.leaveFrom||t;this.rollLayer("back",r,i,e,0,t)}}watchColumn(){"undefined"!=typeof ResizeObserver&&(this.columnObserver=new ResizeObserver(()=>{const t=Math.round(this.getBoundingClientRect().width);if(t&&t!==this.columnWidth){if(this.columnWidth=t,this.rollMotion){const t=this.frontClip(),e=this.sheetOf(t);if(t&&e){const n=Math.ceil(t.getBoundingClientRect().height),s=this.sheetPx(t,e);this.rollLayer("front",t,e,n,s,s)}}if(this.leaveMotion){const t=this.backClip(),e=this.sheetOf(t);if(t&&e){const n=Math.ceil(t.getBoundingClientRect().height),s=this.sheetPx(t,e);this.rollLayer("back",t,e,n,0,s)}}}}),this.columnObserver.observe(this))}clipFor(t){return this.shadowRoot?.querySelector(`.settings-clip[data-panel="${t}"]`)??null}frontClip(){return this.clipFor(this.profileTopic||"profile")}backClip(){return this.leaving?this.clipFor(this.leaving):null}sheetOf(t){return t?.querySelector(".settings-sheet")??null}reduced(){return window.matchMedia("(prefers-reduced-motion: reduce)").matches}sheetPx(t,e){const n=t.style.transition,s=t.style.maxHeight,r=t.style.height;t.style.transition="none",t.style.maxHeight="none",t.style.height="auto";const i=Math.ceil(e.offsetHeight);return t.style.height=r,t.style.maxHeight=s,t.style.transition=n,i}rest(){this.rollMotion=!1,this.clipHeight="auto",this.sheetShift="none"}layerStyle(t,e){return{height:e,maxHeight:"auto"===e?"none":e,transition:t&&!this.reduced()?"height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out":"none"}}shiftStyle(t,e){return{transform:e,transition:t&&!this.reduced()?"transform var(--pwa_slide, 2s) ease-in-out":"none"}}clipStyle(){return this.layerStyle(this.rollMotion,this.clipHeight)}sheetStyle(){return this.shiftStyle(this.rollMotion,this.sheetShift)}leaveClipStyle(){return this.layerStyle(this.leaveMotion,this.leaveClipHeight)}leaveSheetStyle(){return this.shiftStyle(this.leaveMotion,this.leaveSheetShift)}rollLayer(t,e,n,s,r,i){const o=s-i,a=r-i,B=t=>`translate3d(0, ${t}px, 0)`;if(this.reduced()||Math.abs(r-s)<=1)return void("front"===t?this.rest():this.leaving="");e.style.transition="none",n.style.transition="none",e.style.height=`${Math.max(0,s)}px`,e.style.maxHeight=`${Math.max(0,s)}px`,n.style.transform=B(o),e.offsetHeight,e.style.transition="height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out",n.style.transition="transform var(--pwa_slide, 2s) ease-in-out",e.style.height=`${Math.max(0,r)}px`,e.style.maxHeight=`${Math.max(0,r)}px`,n.style.transform=B(a),"front"===t?(this.rollMotion=!0,this.clipHeight=`${Math.max(0,r)}px`,this.sheetShift=B(a)):(this.leaveMotion=!0,this.leaveClipHeight=`${Math.max(0,r)}px`,this.leaveSheetShift=B(a))}layerOf(t){return t===this.leaving?"back":this.tabOn(t)?"front":"idle"}panel(t,e){const n=this.layerOf(t),s="front"===n,r="idle"===n,i=`pwa-panel-${t}`,o=`pwa-tab-${t}`,a="profile"===t?U`
+            <h2>${e}</h2>
+            <contact-photo emptyArtwork="${this.empty}" exportparts="progress, file, preview"></contact-photo>
+          `:"verification"===t?U`
+            <h2>Contact Information</h2>
+            <email-verify exportparts="notice, status: verify-status, submit: verify-submit, verified, unverified"></email-verify>
+            <input-name exportparts="name, submit: name-submit"></input-name>
+            <contact-email exportparts="email, submit: email-submit"></contact-email>
+          `:"password"===t?U`
+            <h2>Password</h2>
+            <input-password exportparts="password, verify, submit: password-submit"></input-password>
+          `:U`
+            <h2>Delete Account</h2>
+            <delete-user exportparts="submit: delete"></delete-user>
+          `;return U`
+          <section
+            id="${i}"
+            part="panel"
+            role="tabpanel"
+            aria-labelledby="${o}"
+            aria-hidden="${s?"false":"true"}"
+            ?inert="${!s}"
+            ?hidden="${r}">
+            ${a}
+          </section>
+        `}render(){if(!this.login)return U`
         <p class="signed-out" part="signed-out" role="status">Sign in to change the photo, name, email, or password.</p>
       `;const t=rb(this.name,this.email);return U`
     
@@ -1881,95 +1918,21 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
       </nav>
 
       
-      <div
-        class="settings-clip"
-        style=${mt(this.clipStyle())}
-        @transitionend=${this.onClipEnd}>
-          <div class="settings-sheet" style=${mt(this.sheetStyle())}>
-
-
-          <!-- Page 1: Profile -->
-          <section
-            id="pwa-panel-profile"
-            part="panel"
-            role="tabpanel"
-            aria-labelledby="pwa-tab-profile"
-            aria-hidden="${this.tabOn("profile")?"false":"true"}"
-            ?inert="${!this.tabOn("profile")}"
-            ?hidden="${!this.tabOn("profile")}">
-
-            <!-- Display Username -->
-            <h2>${t}</h2>
-
-            <!-- Custom Image Element - Display / Upload -->
-            <contact-photo emptyArtwork="${this.empty}" exportparts="progress, file, preview"></contact-photo>
-
-          </section>
-          
-          <!-- Page 2: Verification -->
-          <section
-            id="pwa-panel-verification"
-            part="panel"
-            role="tabpanel"
-            aria-labelledby="pwa-tab-verification"
-            aria-hidden="${this.tabOn("verification")?"false":"true"}"
-            ?inert="${!this.tabOn("verification")}"
-            ?hidden="${!this.tabOn("verification")}">
-
-            <!-- Page Title -->
-            <h2>Contact Information</h2>
-
-            <!-- Required - unverified notice. Sign-in stays open. -->
-            <email-verify exportparts="notice, status: verify-status, submit: verify-submit, verified, unverified"></email-verify>
-
-            <!-- Custom - Username -->
-            <input-name exportparts="name, submit: name-submit"></input-name>
-
-            <!-- Custom - Email -->
-            <contact-email exportparts="email, submit: email-submit"></contact-email>
-
-          </section>
-
-          <!-- Page 3: Password -->
-          <section
-            id="pwa-panel-password"
-            part="panel"
-            role="tabpanel"
-            aria-labelledby="pwa-tab-password"
-            aria-hidden="${this.tabOn("password")?"false":"true"}"
-            ?inert="${!this.tabOn("password")}"
-            ?hidden="${!this.tabOn("password")}">
-
-            <!-- Page Title -->
-            <h2>Password</h2>
-
-            <!-- Custom - Password -->
-            <input-password exportparts="password, verify, submit: password-submit"></input-password>
-
-          </section>
-
-          <!-- Page 4: Delete -->
-          <section
-            id="pwa-panel-delete"
-            part="panel"
-            role="tabpanel"
-            aria-labelledby="pwa-tab-delete"
-            aria-hidden="${this.tabOn("delete")?"false":"true"}"
-            ?inert="${!this.tabOn("delete")}"
-            ?hidden="${!this.tabOn("delete")}">
-
-            <!-- Page Title -->
-            <h2>Delete Account</h2>
-
-            <!-- Custom - Delete -->
-            <delete-user exportparts="submit: delete"></delete-user>
-
-          </section>
-
-          </div>
+      <div class="settings-stage">
+        ${["profile","verification","password","delete"].map(e=>{const n=this.layerOf(e);return U`
+            <div
+              class="settings-clip ${"front"===n?"is-front":"back"===n?"is-back":""}"
+              data-panel="${e}"
+              style=${mt("back"===n?this.leaveClipStyle():"front"===n?this.clipStyle():{height:"0px",maxHeight:"0px",transition:"none"})}
+              @transitionend=${"back"===n?this.onBackEnd:this.onFrontEnd}>
+              <div class="settings-sheet" style=${mt("back"===n?this.leaveSheetStyle():"front"===n?this.sheetStyle():{transform:"translate3d(0, -100%, 0)",transition:"none"})}>
+                ${this.panel(e,t)}
+              </div>
+            </div>
+          `})}
       </div>
 
-    `}};Ub([lt({type:String,reflect:!0}),Vb("design:type",Object)],jb.prototype,"empty",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"profileTopic",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"name",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"email",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"login",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"clipHeight",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"sheetShift",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"rollMotion",void 0),jb=Ub([at("user-settings"),Vb("design:paramtypes",[])],jb);const $b=i`
+    `}};Ub([lt({type:String,reflect:!0}),Vb("design:type",Object)],jb.prototype,"empty",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"profileTopic",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"name",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"email",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"login",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"clipHeight",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"sheetShift",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"rollMotion",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"leaving",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"leaveClipHeight",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"leaveSheetShift",void 0),Ub([ut(),Vb("design:type",Object)],jb.prototype,"leaveMotion",void 0),jb=Ub([at("user-settings"),Vb("design:paramtypes",[])],jb);const $b=i`
 
   :host {
     display:                  block;

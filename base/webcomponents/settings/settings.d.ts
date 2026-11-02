@@ -47,8 +47,13 @@ export declare class UserSettings extends UserSettings_base {
     private clipHeight;
     private sheetShift;
     private rollMotion;
+    private leaving;
+    private leaveClipHeight;
+    private leaveSheetShift;
+    private leaveMotion;
     private booted;
     private heldHeight;
+    private leaveFrom;
     private columnWidth;
     private columnObserver;
     constructor();
@@ -63,15 +68,24 @@ export declare class UserSettings extends UserSettings_base {
     protected willUpdate(changed: PropertyValues): void;
     protected updated(changed: PropertyValues): void;
     private watchColumn;
-    private clip;
-    private sheet;
+    private clipFor;
+    private frontClip;
+    private backClip;
+    private sheetOf;
     private reduced;
     private sheetPx;
     private rest;
+    private layerStyle;
+    private shiftStyle;
     private clipStyle;
     private sheetStyle;
-    private rollBetween;
-    private onClipEnd;
+    private leaveClipStyle;
+    private leaveSheetStyle;
+    private rollLayer;
+    private onFrontEnd;
+    private onBackEnd;
+    private layerOf;
+    private panel;
     protected render(): import("lit-html").TemplateResult<1>;
 }
 declare global {
