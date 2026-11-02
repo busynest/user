@@ -36,8 +36,21 @@ export class UserSettings extends connect(store)(LitElement) {
   /** True only while this settings clip and sheet are easing. */
   @state() private rollMotion = false;
 
+  /** Tab rolling up behind the fold. Empty when the panel is at rest. */
+  @state() private leaving = '';
+
+  /** Outgoing clip size. A px value while it rolls up to the fold. */
+  @state() private leaveClipHeight = '0px';
+
+  /** Outgoing sheet translate. Starts at 0 and rides the rising bottom edge. */
+  @state() private leaveSheetShift = 'translate3d(0, 0, 0)';
+
+  /** True only while the outgoing clip and sheet are easing. */
+  @state() private leaveMotion = false;
+
   private booted = false;
   private heldHeight: number | null = null;
+  private leaveFrom = 0;
   private columnWidth = 0;
   private columnObserver: ResizeObserver | null = null;
 
@@ -106,12 +119,24 @@ export class UserSettings extends connect(store)(LitElement) {
         :host { --pwa_slide: 0s; }
       }
 
-      /* Required - this settings roll only. Block, so the sheet is not stretched. */
+      /* Required - this settings roll only. The two clips share one cell so the
+         stage is as tall as the lower edge, and the incoming clip paints in front. */
+      .settings-stage {
+        display:          grid;
+      }
+
       .settings-clip {
+        grid-area:        1 / 1;
+        align-self:       start;
+        justify-self:     stretch;
         display:          block;
         overflow:         hidden;
         min-height:       0;
+        width:            100%;
       }
+
+      .settings-clip.is-front { z-index: 2; }
+      .settings-clip.is-back { z-index: 1; }
 
       .settings-sheet {
         display:          block;
@@ -119,6 +144,11 @@ export class UserSettings extends connect(store)(LitElement) {
         width:            100%;
         box-sizing:       border-box;
         background-color: var(--pwa_background, var(--pwa_settings_background_color, #fff));
+      }
+
+      /* Required - an inactive tab stays fully behind the fold. */
+      .settings-sheet > section[hidden] {
+        display:          none !important;
       }
 
       form {
@@ -159,12 +189,20 @@ export class UserSettings extends connect(store)(LitElement) {
   protected willUpdate(changed: PropertyValues): void {
     if (!this.booted || !this.login || changed.has('login')) return;
     if (!changed.has('profileTopic')) return;
-    const clip = this.clip();
-    if (!clip) return;
-    this.heldHeight = Math.ceil(clip.getBoundingClientRect().height);
+    if (this.reduced()) return;
+    const previous = String(changed.get('profileTopic') || '');
+    if (!previous || previous === this.profileTopic) return;
+    const clip = this.clipFor(previous);
+    this.leaveFrom = clip ? Math.ceil(clip.getBoundingClientRect().height) : 0;
+    this.leaving = previous;
+    this.leaveMotion = false;
+    this.leaveClipHeight = `${this.leaveFrom}px`;
+    this.leaveSheetShift = 'translate3d(0, 0, 0)';
+    /* Required - park the incoming panel behind the fold before it paints. */
     this.rollMotion = false;
-    this.clipHeight = `${this.heldHeight}px`;
-    this.sheetShift = 'translate3d(0, 0, 0)';
+    this.clipHeight = '0px';
+    this.sheetShift = 'translate3d(0, -100%, 0)';
+    this.heldHeight = 0;
   }
 
   protected updated(changed: PropertyValues): void {
@@ -172,14 +210,22 @@ export class UserSettings extends connect(store)(LitElement) {
     this.booted = true;
     if (boot) this.watchColumn();
     if (boot || !changed.has('profileTopic') || !this.login || changed.has('login')) return;
-    const clip = this.clip();
-    const sheet = this.sheet();
-    if (!clip || !sheet || this.heldHeight == null) return;
-    const from = this.heldHeight;
-    this.heldHeight = null;
-    const to = Math.ceil(sheet.getBoundingClientRect().height);
-    if (Math.abs(to - from) > 1) this.rollBetween(clip, sheet, from, to, to);
-    else this.rest();
+    const clip = this.frontClip();
+    const sheet = this.sheetOf(clip);
+    if (clip && sheet && this.heldHeight != null) {
+      const from = this.heldHeight;
+      this.heldHeight = null;
+      const to = this.sheetPx(clip, sheet);
+      if (Math.abs(to - from) > 1) this.rollLayer('front', clip, sheet, from, to, to);
+      else this.rest();
+    }
+    const back = this.backClip();
+    const backSheet = this.sheetOf(back);
+    if (back && backSheet && this.leaving) {
+      const sheetH = this.sheetPx(back, backSheet);
+      const from = this.leaveFrom || sheetH;
+      this.rollLayer('back', back, backSheet, from, 0, sheetH);
+    }
   }
 
   private watchColumn(): void {
@@ -188,27 +234,61 @@ export class UserSettings extends connect(store)(LitElement) {
       const width = Math.round(this.getBoundingClientRect().width);
       if (!width || width === this.columnWidth) return;
       this.columnWidth = width;
-      if (!this.rollMotion) return;
-      const clip = this.clip();
-      const sheet = this.sheet();
-      if (!clip || !sheet) return;
-      const from = Math.ceil(clip.getBoundingClientRect().height);
-      const sheetH = Math.ceil(sheet.getBoundingClientRect().height);
-      this.rollBetween(clip, sheet, from, sheetH, sheetH);
+      if (this.rollMotion) {
+        const clip = this.frontClip();
+        const sheet = this.sheetOf(clip);
+        if (clip && sheet) {
+          const from = Math.ceil(clip.getBoundingClientRect().height);
+          const sheetH = this.sheetPx(clip, sheet);
+          this.rollLayer('front', clip, sheet, from, sheetH, sheetH);
+        }
+      }
+      if (this.leaveMotion) {
+        const clip = this.backClip();
+        const sheet = this.sheetOf(clip);
+        if (clip && sheet) {
+          const from = Math.ceil(clip.getBoundingClientRect().height);
+          const sheetH = this.sheetPx(clip, sheet);
+          this.rollLayer('back', clip, sheet, from, 0, sheetH);
+        }
+      }
     });
     this.columnObserver.observe(this);
   }
 
-  private clip(): HTMLElement | null {
-    return this.shadowRoot?.querySelector('.settings-clip') ?? null;
+  private clipFor(name: string): HTMLElement | null {
+    return this.shadowRoot?.querySelector(`.settings-clip[data-panel="${name}"]`) ?? null;
   }
 
-  private sheet(): HTMLElement | null {
-    return this.shadowRoot?.querySelector('.settings-sheet') ?? null;
+  private frontClip(): HTMLElement | null {
+    return this.clipFor(this.profileTopic || 'profile');
+  }
+
+  private backClip(): HTMLElement | null {
+    return this.leaving ? this.clipFor(this.leaving) : null;
+  }
+
+  private sheetOf(clip: HTMLElement | null): HTMLElement | null {
+    return clip?.querySelector('.settings-sheet') ?? null;
   }
 
   private reduced(): boolean {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  // Sheet height in px. The clip cap is released for the read and put back. No paint.
+  private sheetPx(clip: HTMLElement, sheet: HTMLElement): number {
+    const transition = clip.style.transition;
+    const maxHeight = clip.style.maxHeight;
+    const height = clip.style.height;
+    clip.style.transition = 'none';
+    clip.style.maxHeight = 'none';
+    clip.style.height = 'auto';
+    const px = Math.ceil(sheet.offsetHeight);
+    clip.style.height = height;
+    clip.style.maxHeight = maxHeight;
+    clip.style.transition = transition;
+    return px;
   }
 
   // Required - resting panel. The first paint binds this, with no transition.
@@ -218,32 +298,49 @@ export class UserSettings extends connect(store)(LitElement) {
     this.sheetShift = 'none';
   }
 
-  private clipStyle() {
-    const travel = this.rollMotion && !this.reduced();
+  private layerStyle(motion: boolean, height: string) {
+    const travel = motion && !this.reduced();
     return {
-      height: this.clipHeight,
-      maxHeight: this.clipHeight === 'auto' ? 'none' : this.clipHeight,
+      height,
+      maxHeight: height === 'auto' ? 'none' : height,
       transition: travel
         ? 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out'
         : 'none',
     };
   }
 
-  private sheetStyle() {
-    const travel = this.rollMotion && !this.reduced();
+  private shiftStyle(motion: boolean, shift: string) {
+    const travel = motion && !this.reduced();
     return {
-      transform: this.sheetShift,
+      transform: shift,
       transition: travel ? 'transform var(--pwa_slide, 2s) ease-in-out' : 'none',
     };
   }
 
-  // Ease the clip from → to. translateY = clip − sheetHeight, so the bottom stays glued.
-  private rollBetween(clip: HTMLElement, sheet: HTMLElement, from: number, to: number, sheetHeight: number): void {
+  private clipStyle() {
+    return this.layerStyle(this.rollMotion, this.clipHeight);
+  }
+
+  private sheetStyle() {
+    return this.shiftStyle(this.rollMotion, this.sheetShift);
+  }
+
+  private leaveClipStyle() {
+    return this.layerStyle(this.leaveMotion, this.leaveClipHeight);
+  }
+
+  private leaveSheetStyle() {
+    return this.shiftStyle(this.leaveMotion, this.leaveSheetShift);
+  }
+
+  // Ease one clip from → to. translateY = clip − sheetHeight, so the bottom stays glued.
+  private rollLayer(layer: 'front' | 'back', clip: HTMLElement, sheet: HTMLElement, from: number, to: number, sheetHeight: number): void {
     const start = from - sheetHeight;
     const end = to - sheetHeight;
     const shift = (px: number) => `translate3d(0, ${px}px, 0)`;
     if (this.reduced() || Math.abs(to - from) <= 1) {
-      this.rest();
+      if (layer === 'front') this.rest();
+      else this.leaving = '';
       return;
     }
     const travel = 'height var(--pwa_slide, 2s) ease-in-out, max-height var(--pwa_slide, 2s) ease-in-out';
@@ -259,18 +356,74 @@ export class UserSettings extends connect(store)(LitElement) {
     clip.style.height = `${Math.max(0, to)}px`;
     clip.style.maxHeight = `${Math.max(0, to)}px`;
     sheet.style.transform = shift(end);
-    this.rollMotion = true;
-    this.clipHeight = `${Math.max(0, to)}px`;
-    this.sheetShift = shift(end);
+    if (layer === 'front') {
+      this.rollMotion = true;
+      this.clipHeight = `${Math.max(0, to)}px`;
+      this.sheetShift = shift(end);
+    } else {
+      this.leaveMotion = true;
+      this.leaveClipHeight = `${Math.max(0, to)}px`;
+      this.leaveSheetShift = shift(end);
+    }
   }
 
   // Only this clip. Nothing in another component, and no child form, ends the roll.
-  private onClipEnd = (event: Event) => {
+  private onFrontEnd = (event: Event) => {
     if (!(event instanceof TransitionEvent)) return;
     if (event.target !== event.currentTarget) return;
     if (event.propertyName !== 'max-height') return;
     this.rest();
   };
+
+  private onBackEnd = (event: Event) => {
+    if (!(event instanceof TransitionEvent)) return;
+    if (event.target !== event.currentTarget) return;
+    if (event.propertyName !== 'max-height') return;
+    this.leaving = '';
+    this.leaveMotion = false;
+  };
+
+  private layerOf(name: string): 'front' | 'back' | 'idle' {
+    if (name === this.leaving) return 'back';
+    if (this.tabOn(name)) return 'front';
+    return 'idle';
+  }
+
+  // One tab panel. It stays in its own clip, so a tab change does not remount it.
+  private panel(name: string, title: string) {
+    const layer = this.layerOf(name);
+    const on = layer === 'front';
+    const concealed = layer === 'idle';
+    const id = `pwa-panel-${name}`;
+    const labelledby = `pwa-tab-${name}`;
+    const body = name === 'profile' ? html`
+            <h2>${title}</h2>
+            <contact-photo emptyArtwork="${this.empty}" exportparts="progress, file, preview"></contact-photo>
+          ` : name === 'verification' ? html`
+            <h2>Contact Information</h2>
+            <email-verify exportparts="notice, status: verify-status, submit: verify-submit, verified, unverified"></email-verify>
+            <input-name exportparts="name, submit: name-submit"></input-name>
+            <contact-email exportparts="email, submit: email-submit"></contact-email>
+          ` : name === 'password' ? html`
+            <h2>Password</h2>
+            <input-password exportparts="password, verify, submit: password-submit"></input-password>
+          ` : html`
+            <h2>Delete Account</h2>
+            <delete-user exportparts="submit: delete"></delete-user>
+          `;
+    return html`
+          <section
+            id="${id}"
+            part="panel"
+            role="tabpanel"
+            aria-labelledby="${labelledby}"
+            aria-hidden="${on ? 'false' : 'true'}"
+            ?inert="${!on}"
+            ?hidden="${concealed}">
+            ${body}
+          </section>
+        `;
+  }
 
   protected render() {
     if (!this.login) {
@@ -352,92 +505,21 @@ export class UserSettings extends connect(store)(LitElement) {
       </nav>
 
       
-      <div
-        class="settings-clip"
-        style=${styleMap(this.clipStyle())}
-        @transitionend=${this.onClipEnd}>
-          <div class="settings-sheet" style=${styleMap(this.sheetStyle())}>
-
-
-          <!-- Page 1: Profile -->
-          <section
-            id="pwa-panel-profile"
-            part="panel"
-            role="tabpanel"
-            aria-labelledby="pwa-tab-profile"
-            aria-hidden="${this.tabOn('profile') ? 'false' : 'true'}"
-            ?inert="${!this.tabOn('profile')}"
-            ?hidden="${!this.tabOn('profile')}">
-
-            <!-- Display Username -->
-            <h2>${title}</h2>
-
-            <!-- Custom Image Element - Display / Upload -->
-            <contact-photo emptyArtwork="${this.empty}" exportparts="progress, file, preview"></contact-photo>
-
-          </section>
-          
-          <!-- Page 2: Verification -->
-          <section
-            id="pwa-panel-verification"
-            part="panel"
-            role="tabpanel"
-            aria-labelledby="pwa-tab-verification"
-            aria-hidden="${this.tabOn('verification') ? 'false' : 'true'}"
-            ?inert="${!this.tabOn('verification')}"
-            ?hidden="${!this.tabOn('verification')}">
-
-            <!-- Page Title -->
-            <h2>Contact Information</h2>
-
-            <!-- Required - unverified notice. Sign-in stays open. -->
-            <email-verify exportparts="notice, status: verify-status, submit: verify-submit, verified, unverified"></email-verify>
-
-            <!-- Custom - Username -->
-            <input-name exportparts="name, submit: name-submit"></input-name>
-
-            <!-- Custom - Email -->
-            <contact-email exportparts="email, submit: email-submit"></contact-email>
-
-          </section>
-
-          <!-- Page 3: Password -->
-          <section
-            id="pwa-panel-password"
-            part="panel"
-            role="tabpanel"
-            aria-labelledby="pwa-tab-password"
-            aria-hidden="${this.tabOn('password') ? 'false' : 'true'}"
-            ?inert="${!this.tabOn('password')}"
-            ?hidden="${!this.tabOn('password')}">
-
-            <!-- Page Title -->
-            <h2>Password</h2>
-
-            <!-- Custom - Password -->
-            <input-password exportparts="password, verify, submit: password-submit"></input-password>
-
-          </section>
-
-          <!-- Page 4: Delete -->
-          <section
-            id="pwa-panel-delete"
-            part="panel"
-            role="tabpanel"
-            aria-labelledby="pwa-tab-delete"
-            aria-hidden="${this.tabOn('delete') ? 'false' : 'true'}"
-            ?inert="${!this.tabOn('delete')}"
-            ?hidden="${!this.tabOn('delete')}">
-
-            <!-- Page Title -->
-            <h2>Delete Account</h2>
-
-            <!-- Custom - Delete -->
-            <delete-user exportparts="submit: delete"></delete-user>
-
-          </section>
-
-          </div>
+      <div class="settings-stage">
+        ${['profile', 'verification', 'password', 'delete'].map((name) => {
+          const layer = this.layerOf(name);
+          return html`
+            <div
+              class="settings-clip ${layer === 'front' ? 'is-front' : layer === 'back' ? 'is-back' : ''}"
+              data-panel="${name}"
+              style=${styleMap(layer === 'back' ? this.leaveClipStyle() : layer === 'front' ? this.clipStyle() : { height: '0px', maxHeight: '0px', transition: 'none' })}
+              @transitionend=${layer === 'back' ? this.onBackEnd : this.onFrontEnd}>
+              <div class="settings-sheet" style=${styleMap(layer === 'back' ? this.leaveSheetStyle() : layer === 'front' ? this.sheetStyle() : { transform: 'translate3d(0, -100%, 0)', transition: 'none' })}>
+                ${this.panel(name, title)}
+              </div>
+            </div>
+          `;
+        })}
       </div>
 
     `
