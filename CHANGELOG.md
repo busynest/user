@@ -2,6 +2,14 @@ Change Log
 ==========
 All notable changes to pwa-auth.js will be documented in this file.
 
+# [3.7.4] - 2026-11-02
+
+## Added
+- A demonstration page for each element: drawer, icon, login, reset, and settings.
+
+## Changed
+- Profile photo upload on the Icon tab. The preview is a circle. A non-image, or a file over 5 MB, is rejected. The element compresses the photo to a JPEG whose long side is at most 1024px and stores it at `pwa-auth/{uid}/photo`. On iPhone the file chooser opens on the control.
+
 # [3.7.3] - 2026-11-02
 
 ## Changed
