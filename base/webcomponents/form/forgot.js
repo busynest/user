@@ -18,7 +18,6 @@ import { userMessage } from '../../firebase/message.js';
 import { openDrawer } from '../../api/drawer.js';
 import store from '../../store.js';
 import { universalToggle } from '../../redux/session.js';
-import { draftedEmail, onDraftEmail } from './draft.js';
 import { labelStyle } from './css/label.js';
 import { inputStyle } from './css/input.js';
 import { buttonStyle } from './css/button.js';
@@ -46,9 +45,7 @@ let EmailReset = class EmailReset extends LazyLoader {
         this.invalid = false;
         this.busy = false;
         this.cooldown = 0;
-        this.touched = false;
         this.timer = 0;
-        this.stopDraft = null;
         this.resetPassword = async (event) => {
             event.preventDefault();
             if (this.busy || this.cooldown > 0)
@@ -155,39 +152,14 @@ let EmailReset = class EmailReset extends LazyLoader {
         if (!this.hasAttribute('aria-label'))
             this.setAttribute('aria-label', 'Reset password');
         super.connectedCallback();
-        this.stopDraft = onDraftEmail(() => { this.prefill(); });
-        this.prefill();
     }
     disconnectedCallback() {
         window.clearInterval(this.timer);
         this.timer = 0;
-        this.stopDraft?.();
-        this.stopDraft = null;
         super.disconnectedCallback();
-    }
-    updated() {
-        this.paintEmail();
-    }
-    prefill() {
-        if (this.touched)
-            return;
-        const draft = draftedEmail();
-        if (!draft || draft === this.userEmail)
-            return;
-        this.userEmail = draft;
-        this.paintEmail();
-    }
-    paintEmail() {
-        if (this.touched)
-            return;
-        const input = this.renderRoot.querySelector('.email');
-        if (!input || input.value || !this.userEmail)
-            return;
-        input.value = this.userEmail;
     }
     handleEmail(event) {
         const input = event.target;
-        this.touched = true;
         this.userEmail = input.value;
         if (this.invalid)
             this.invalid = false;
