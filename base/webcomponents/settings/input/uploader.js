@@ -188,6 +188,7 @@ export class ContactPhoto extends connect(store)(LitElement) {
             css `
 
       :host {
+        position:                 relative;
         box-sizing:               border-box;
         -webkit-box-sizing:       border-box;
         display:                  grid;
@@ -201,17 +202,28 @@ export class ContactPhoto extends connect(store)(LitElement) {
         align-content:            start;
       }
 
-      /* Required - in the tab order, off screen, until it is focused. */
+      /* Required - the file box matches this control. iOS anchors the picker menu to the input, so a clipped input against the page opens in the upper-left. */
+      .chooser {
+        position:                 relative;
+        display:                  grid;
+        justify-items:            center;
+      }
+
       .file {
         position:                 absolute;
-        width:                    1px;
-        height:                   1px;
+        top:                      0;
+        right:                    0;
+        bottom:                   0;
+        left:                     0;
+        z-index:                  1;
+        width:                    auto;
+        height:                   auto;
+        margin:                   0;
         padding:                  0;
-        margin:                   -1px;
+        opacity:                  0;
         overflow:                 hidden;
-        clip:                     rect(0, 0, 0, 0);
-        white-space:              nowrap;
         border:                   0;
+        cursor:                   pointer;
       }
 
       .file:focus-visible + .pick {
@@ -229,6 +241,10 @@ export class ContactPhoto extends connect(store)(LitElement) {
         color:                    var(--pwa_label_text_color, #1c2430);
         font-size:                0.85rem;
         font-weight:              600;
+      }
+
+      .file:disabled {
+        cursor:                   default;
       }
 
       .file:disabled + .pick {
@@ -313,31 +329,33 @@ export class ContactPhoto extends connect(store)(LitElement) {
         const locked = !this.signed || this.busy;
         return html `
 
-    <input
-      id="pwa-photo-file"
-      type="file"
-      name="photo"
-      part="file"
-      class="file"
-      accept="image/*"
-      aria-describedby="pwa-photo-status"
-      @change="${this.saveImage}"
-      ?disabled="${locked}">
+    <div class="chooser">
+      <input
+        id="pwa-photo-file"
+        type="file"
+        name="photo"
+        part="file"
+        class="file"
+        accept="image/*"
+        aria-describedby="pwa-photo-status"
+        @change="${this.saveImage}"
+        ?disabled="${locked}">
 
-    <label class="pick" for="pwa-photo-file" part="preview">
-      <span class="frame">
-        ${photo ? html `
-          <img alt="Profile photo" src="${photo}">
-        ` : letters ? html `
-          <span class="mark" part="initials" aria-hidden="true">${letters}</span>
-        ` : this.emptyArtwork ? html `
-          <img alt="" src="${this.emptyArtwork}">
-        ` : html `
-          <span class="mark" part="initials" aria-hidden="true">?</span>
-        `}
-      </span>
-      <span>Choose a photo</span>
-    </label>
+      <label class="pick" for="pwa-photo-file" part="preview">
+        <span class="frame">
+          ${photo ? html `
+            <img alt="Profile photo" src="${photo}">
+          ` : letters ? html `
+            <span class="mark" part="initials" aria-hidden="true">${letters}</span>
+          ` : this.emptyArtwork ? html `
+            <img alt="" src="${this.emptyArtwork}">
+          ` : html `
+            <span class="mark" part="initials" aria-hidden="true">?</span>
+          `}
+        </span>
+        <span>Choose a photo</span>
+      </label>
+    </div>
 
     <progress
       class="meter"

@@ -1400,6 +1400,7 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 `;var vb=function(t,e,n,s){var r,i=arguments.length,o=i<3?e:null===s?s=Object.getOwnPropertyDescriptor(e,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(t,e,n,s);else for(var a=t.length-1;a>=0;a--)(r=t[a])&&(o=(i<3?r(o):i>3?r(e,n,o):r(e,n))||o);return i>3&&o&&Object.defineProperty(e,n,o),o},Ib=function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)};function Tb(t){return"pwa-auth/"+t+"/photo"}class Ob extends(wt(bn)(it)){constructor(){super(),this.photo="",this.emptyArtwork="",this.signed=!1,this.person="",this.mail="",this.progress=0,this.error="",this.status="",this.tone="",this.busy=!1,this.stopAuth=null,this.saveImage=t=>{const e=t.target,n=e?.files?.[0],s=sE.currentUser;if(this.error="",this.tone="",!s)return this.resetPicker(),void this.fail({code:"pwa/signed-out",message:"Sign in first."});if(!n)return this.resetPicker(),void this.fail({code:"pwa/missing-file",message:"Choose a photo first."});const r=function(t){return t.type.startsWith("image/")?t.size>5242880?{code:"pwa/photo-too-large",message:"Choose an image under 5 MB."}:null:{code:"pwa/not-image",message:"Choose an image file."}}(n);if(r)return this.resetPicker(),void this.fail(r);this.busy=!0,this.progress=0,this.status="Uploading…";const i=Yy(nE,Tb(s.uid)),o={cacheControl:"public,max-age=300",contentType:n.type},a=Ky(i,n,o);a.on("state_changed",t=>{const e=t.totalBytes>0?t.bytesTransferred/t.totalBytes*100:0;this.progress=isFinite(e)?e:0,this.status=`Uploading… ${Math.round(this.progress)}%`},t=>{this.busy=!1,this.progress=0,this.resetPicker(),this.fail(t)},async()=>{try{const t=await function(t){return Gy(t=os(t))}(a.snapshot.ref),e=sE.currentUser;if(!e)return await Wy(i).catch(()=>{}),void this.fail({code:"pwa/signed-out",message:"Sign in first."});try{await Uo(e,{photoURL:t})}catch(t){throw await Wy(i).catch(()=>{}),t}bn.dispatch(En(t)),this.photo=t,this.progress=100,this.tone="",this.error="",this.status="Photo saved.",gE(RE,{uid:e.uid,displayName:e.displayName,photoURL:t})}catch(t){this.fail(t)}finally{this.busy=!1,this.resetPicker()}})},this.clearPhoto=async()=>{const t=sE.currentUser;if(t&&!this.busy){this.busy=!0,this.error="",this.tone="",this.status="";try{await Uo(t,{photoURL:null}),bn.dispatch(En("")),this.photo="",await Wy(Yy(nE,Tb(t.uid))).catch(()=>{}),this.status="Photo removed.",gE(RE,{uid:t.uid,displayName:t.displayName,photoURL:null})}catch(t){this.fail(t)}finally{this.busy=!1,this.resetPicker()}}}}connectedCallback(){super.connectedCallback(),uE(()=>{this.stopAuth?.(),this.stopAuth=jo(sE,t=>{if(this.signed=!!t,!t)return this.tone="",this.error="",void(this.status="Sign in to upload a photo.");"Sign in to upload a photo."===this.status&&(this.status="")})})}disconnectedCallback(){this.stopAuth?.(),this.stopAuth=null,super.disconnectedCallback()}stateChanged(t){this.photo=t.backend.photoURL,this.person=t.backend.name,this.mail=t.backend.email}static get styles(){return[WE,ZE,i`
 
       :host {
+        position:                 relative;
         box-sizing:               border-box;
         -webkit-box-sizing:       border-box;
         display:                  grid;
@@ -1413,17 +1414,28 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
         align-content:            start;
       }
 
-      /* Required - in the tab order, off screen, until it is focused. */
+      /* Required - the file box matches this control. iOS anchors the picker menu to the input, so a clipped input against the page opens in the upper-left. */
+      .chooser {
+        position:                 relative;
+        display:                  grid;
+        justify-items:            center;
+      }
+
       .file {
         position:                 absolute;
-        width:                    1px;
-        height:                   1px;
+        top:                      0;
+        right:                    0;
+        bottom:                   0;
+        left:                     0;
+        z-index:                  1;
+        width:                    auto;
+        height:                   auto;
+        margin:                   0;
         padding:                  0;
-        margin:                   -1px;
+        opacity:                  0;
         overflow:                 hidden;
-        clip:                     rect(0, 0, 0, 0);
-        white-space:              nowrap;
         border:                   0;
+        cursor:                   pointer;
       }
 
       .file:focus-visible + .pick {
@@ -1441,6 +1453,10 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
         color:                    var(--pwa_label_text_color, #1c2430);
         font-size:                0.85rem;
         font-weight:              600;
+      }
+
+      .file:disabled {
+        cursor:                   default;
       }
 
       .file:disabled + .pick {
@@ -1510,31 +1526,33 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
 
     `]}letters(){return sb(this.person,this.mail)}resetPicker(){const t=this.renderRoot.querySelector("input[type=file]");t&&(t.value="")}render(){const t=this.letters(),e="string"==typeof this.photo?this.photo:"",n=!this.signed||this.busy;return U`
 
-    <input
-      id="pwa-photo-file"
-      type="file"
-      name="photo"
-      part="file"
-      class="file"
-      accept="image/*"
-      aria-describedby="pwa-photo-status"
-      @change="${this.saveImage}"
-      ?disabled="${n}">
+    <div class="chooser">
+      <input
+        id="pwa-photo-file"
+        type="file"
+        name="photo"
+        part="file"
+        class="file"
+        accept="image/*"
+        aria-describedby="pwa-photo-status"
+        @change="${this.saveImage}"
+        ?disabled="${n}">
 
-    <label class="pick" for="pwa-photo-file" part="preview">
-      <span class="frame">
-        ${e?U`
-          <img alt="Profile photo" src="${e}">
-        `:t?U`
-          <span class="mark" part="initials" aria-hidden="true">${t}</span>
-        `:this.emptyArtwork?U`
-          <img alt="" src="${this.emptyArtwork}">
-        `:U`
-          <span class="mark" part="initials" aria-hidden="true">?</span>
-        `}
-      </span>
-      <span>Choose a photo</span>
-    </label>
+      <label class="pick" for="pwa-photo-file" part="preview">
+        <span class="frame">
+          ${e?U`
+            <img alt="Profile photo" src="${e}">
+          `:t?U`
+            <span class="mark" part="initials" aria-hidden="true">${t}</span>
+          `:this.emptyArtwork?U`
+            <img alt="" src="${this.emptyArtwork}">
+          `:U`
+            <span class="mark" part="initials" aria-hidden="true">?</span>
+          `}
+        </span>
+        <span>Choose a photo</span>
+      </label>
+    </div>
 
     <progress
       class="meter"
