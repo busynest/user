@@ -57,7 +57,6 @@ import { initialize } from '../../../base/firebase/authentication.js';
 import { closeDrawer } from '../../../base/api/drawer.js';
 import store from '../../../base/store.js';
 import { universalToggle } from '../../../base/redux/session.js';
-import { clearDraftEmail } from '../../../base/webcomponents/form/draft.js';
 import { pwaAuthError, pwaResetSent } from '../../events/names.js';
 import '../../../base/webcomponents/form/login.js';
 import '../../../base/webcomponents/form/forgot.js';
@@ -126,7 +125,6 @@ describe('email-reset', () => {
     firebase.sendPasswordResetEmail.mockResolvedValue(undefined);
     window.alert = vi.fn();
     document.body.replaceChildren();
-    clearDraftEmail();
     initialize({
       config: {
         apiKey: 'test',
@@ -356,30 +354,23 @@ describe('email-reset', () => {
     expect(firebase.sendPasswordResetEmail).toHaveBeenCalledTimes(2);
   });
 
-  it('prefills from the sign-in form until the reset field is typed in', async () => {
-    const login = document.createElement('form-login') as HTMLElement & { updateComplete: Promise<unknown> };
-    document.body.append(login);
-    await login.updateComplete;
+  it('stays empty while the drawer login email is typed', async () => {
+    const drawer = document.createElement('user-drawer') as HTMLElement & { updateComplete: Promise<unknown> };
+    document.body.append(drawer);
+    await drawer.updateComplete;
 
     const el = resetEl();
     await el.updateComplete;
     expect(emailField(el).value).toBe('');
 
-    const typed = login.shadowRoot!.querySelector('input[type="email"]') as HTMLInputElement;
+    const typed = drawer.shadowRoot!.querySelector('form-login')!.shadowRoot!.querySelector('input[type="email"]') as HTMLInputElement;
     typed.value = 'ada@example.com';
+    typed.dispatchEvent(new Event('input', { bubbles: true }));
     typed.dispatchEvent(new Event('change', { bubbles: true }));
     await el.updateComplete;
 
-    expect(emailField(el).value).toBe('ada@example.com');
-
-    const reset = emailField(el);
-    reset.value = 'other@example.com';
-    reset.dispatchEvent(new Event('input', { bubbles: true }));
-    typed.value = 'later@example.com';
-    typed.dispatchEvent(new Event('change', { bubbles: true }));
-    await el.updateComplete;
-
-    expect(emailField(el).value).toBe('other@example.com');
+    expect(typed.value).toBe('ada@example.com');
+    expect(emailField(el).value).toBe('');
   });
 
   it('opens the drawer on the sign-in form', async () => {

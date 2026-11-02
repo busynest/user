@@ -31,7 +31,6 @@ import { googleButton }   from './google-button.js';
 
 import store                  from '../../store.js';
 import { universalToggle }    from '../../redux/session.js';
-import { rememberEmail }      from './draft.js';
 
 /** Required - same sentence as email-reset, whether or not the account exists. */
 const sentMessage = 'If an account uses that email, a reset link is on its way.';
@@ -216,7 +215,6 @@ export class FormLogin extends LitElement {
   private handleEmail(event: Event) {
     const input     = event.target as HTMLInputElement;
     this.email      = input.value;
-    rememberEmail(this.email);
   }
 
   // Sync Password
@@ -231,7 +229,6 @@ export class FormLogin extends LitElement {
     const password  = this.renderRoot.querySelector('input[name="password"]') as HTMLInputElement | null;
     this.email      = email?.value ?? '';
     this.password   = password?.value ?? '';
-    rememberEmail(this.email);
   }
 
   // Form Default

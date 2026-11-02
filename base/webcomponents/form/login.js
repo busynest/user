@@ -26,7 +26,6 @@ import { revealControl } from './reveal.js';
 import { googleButton } from './google-button.js';
 import store from '../../store.js';
 import { universalToggle } from '../../redux/session.js';
-import { rememberEmail } from './draft.js';
 const sentMessage = 'If an account uses that email, a reset link is on its way.';
 let FormLogin = class FormLogin extends LitElement {
     constructor() {
@@ -251,7 +250,6 @@ let FormLogin = class FormLogin extends LitElement {
     handleEmail(event) {
         const input = event.target;
         this.email = input.value;
-        rememberEmail(this.email);
     }
     handlePassword(event) {
         const input = event.target;
@@ -262,7 +260,6 @@ let FormLogin = class FormLogin extends LitElement {
         const password = this.renderRoot.querySelector('input[name="password"]');
         this.email = email?.value ?? '';
         this.password = password?.value ?? '';
-        rememberEmail(this.email);
     }
     _handleSubmit(event) {
         event.preventDefault();

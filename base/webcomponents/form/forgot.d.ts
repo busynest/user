@@ -7,16 +7,11 @@ export declare class EmailReset extends LazyLoader {
     private invalid;
     private busy;
     private cooldown;
-    private touched;
     private timer;
-    private stopDraft;
     constructor();
     static styles: import("lit").CSSResult[];
     connectedCallback(): void;
     disconnectedCallback(): void;
-    protected updated(): void;
-    private prefill;
-    private paintEmail;
     private handleEmail;
     private buttonLabel;
     protected render(): TemplateResult;

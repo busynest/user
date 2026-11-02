@@ -9,7 +9,6 @@ import { userMessage }                from '../../firebase/message.js';
 import { openDrawer }                 from '../../api/drawer.js';
 import store                          from '../../store.js';
 import { universalToggle }            from '../../redux/session.js';
-import { draftedEmail, onDraftEmail } from './draft.js';
 import { labelStyle }                 from './css/label.js';
 import { inputStyle }                 from './css/input.js';
 import { buttonStyle }                from './css/button.js';
@@ -51,9 +50,7 @@ export class EmailReset extends LazyLoader {
   @state() private busy      :boolean = false;
   @state() private cooldown  :number = 0;
 
-  private touched = false;
   private timer = 0;
-  private stopDraft: (() => void) | null = null;
 
   constructor() { super(); }
 
@@ -112,52 +109,16 @@ export class EmailReset extends LazyLoader {
     if (!this.hasAttribute('role')) this.setAttribute('role', 'region');
     if (!this.hasAttribute('aria-label')) this.setAttribute('aria-label', 'Reset password');
     super.connectedCallback();
-    this.stopDraft = onDraftEmail(() => { this.prefill(); });
-    this.prefill();
   }
 
   override disconnectedCallback(): void {
     window.clearInterval(this.timer);
     this.timer = 0;
-    this.stopDraft?.();
-    this.stopDraft = null;
     super.disconnectedCallback();
-  }
-
-  protected updated(): void {
-    this.paintEmail();
-  }
-
-  // Optional - copy a sign-in address until the person types here
-  private prefill() {
-
-    if (this.touched) return;
-
-    const draft = draftedEmail();
-
-    if (!draft || draft === this.userEmail) return;
-
-    this.userEmail = draft;
-    this.paintEmail();
-
-  }
-
-  // Optional - uncontrolled field. Write the draft once, then leave the caret alone.
-  private paintEmail() {
-
-    if (this.touched) return;
-
-    const input = this.renderRoot.querySelector('.email') as HTMLInputElement | null;
-
-    if (!input || input.value || !this.userEmail) return;
-
-    input.value = this.userEmail;
-
   }
 
   private handleEmail(event: Event) {
     const input = event.target as HTMLInputElement;
-    this.touched = true;
     this.userEmail = input.value;
     if (this.invalid) this.invalid = false;
   }
