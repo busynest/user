@@ -147,10 +147,15 @@ const t=globalThis,e=t.ShadowRoot&&(void 0===t.ShadyCSS||t.ShadyCSS.nativeShadow
   }
 
   h2 {
+    box-sizing:             border-box;
+    width:                  100%;
+    justify-self:           stretch;
     margin:                 0;
+    margin-inline:          0;
     padding:                18px var(--pwa_inset, 0px) 14px;
     font-size:              1.15rem;
     font-weight:            600;
+    text-align:             center;
     border-bottom:          1px solid var(--pwa_line_color, #e3daca);
   }
 
