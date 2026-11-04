@@ -30,6 +30,7 @@ export class InputName extends connect(store)(LitElement) {
         this.status = '';
         this.tone = '';
         this.dirty = false;
+        /* Form Default */
         this.default = (event) => {
             event.preventDefault();
             void this.alertProfile();

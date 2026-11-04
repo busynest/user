@@ -26,17 +26,25 @@ declare const UserSettings_base: (new (...args: any[]) => {
     readonly isConnected: boolean;
 }) & typeof LitElement;
 export declare class UserSettings extends UserSettings_base {
+    /** @attr emptyArtwork */
     empty: string;
     private profileTopic;
     private name;
     private email;
     private login;
+    /** Clip size. auto is the resting panel. A px value is mid-roll. */
     private clipHeight;
+    /** Sheet translate. none keeps the panel's bottom on the clip. */
     private sheetShift;
+    /** True only while this settings clip and sheet are easing. */
     private rollMotion;
+    /** Tab rolling up behind the fold. Empty when the panel is at rest. */
     private leaving;
+    /** Outgoing clip size. A px value while it rolls up to the fold. */
     private leaveClipHeight;
+    /** Outgoing sheet translate. Starts at 0 and rides the rising bottom edge. */
     private leaveSheetShift;
+    /** True only while the outgoing clip and sheet are easing. */
     private leaveMotion;
     private booted;
     private heldHeight;

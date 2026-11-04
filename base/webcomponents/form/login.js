@@ -26,11 +26,13 @@ import { revealControl } from './reveal.js';
 import { googleButton } from './google-button.js';
 import store from '../../store.js';
 import { universalToggle } from '../../redux/session.js';
+/** Required - same sentence as email-reset, whether or not the account exists. */
 const sentMessage = 'If an account uses that email, a reset link is on its way.';
 let FormLogin = class FormLogin extends LitElement {
     constructor() {
         super();
         this.source = '';
+        /** @attr hide-google */
         this.hideGoogle = false;
         this.email = '';
         this.password = '';
@@ -39,6 +41,7 @@ let FormLogin = class FormLogin extends LitElement {
         this.busy = false;
         this.resetBusy = false;
         this.showPassword = false;
+        // Firebase Authentication Function: Sign in using Email and Password
         this.signIn = async (email, password) => {
             this.busy = true;
             this.tone = '';
@@ -56,6 +59,7 @@ let FormLogin = class FormLogin extends LitElement {
                 this.busy = false;
             }
         };
+        // Required - reset for the address already in the form
         this.forgot = async () => {
             if (this.busy || this.resetBusy)
                 return;
@@ -247,24 +251,29 @@ let FormLogin = class FormLogin extends LitElement {
         if (error)
             emitWindow(pwaAuthError, detail);
     }
+    // Sync Email
     handleEmail(event) {
         const input = event.target;
         this.email = input.value;
     }
+    // Sync Password
     handlePassword(event) {
         const input = event.target;
         this.password = input.value;
     }
+    // Required - read the fields on submit. Type toggles when the password is shown.
     readFields() {
         const email = this.renderRoot.querySelector('input[type="email"]');
         const password = this.renderRoot.querySelector('input[name="password"]');
         this.email = email?.value ?? '';
         this.password = password?.value ?? '';
     }
+    // Form Default
     _handleSubmit(event) {
         event.preventDefault();
         void this.login();
     }
+    // Login Action
     async login() {
         if (this.busy)
             return;
@@ -273,6 +282,7 @@ let FormLogin = class FormLogin extends LitElement {
             this.show({ code: 'pwa/missing-email', message: 'Enter an email address.' });
             return;
         }
+        // Required - sign-in sends the stored password. The 8-character rule is for a new one.
         if (!this.password) {
             this.show({ code: 'pwa/missing-password', message: 'Enter a password.' });
             return;

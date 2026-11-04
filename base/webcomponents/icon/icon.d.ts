@@ -20,7 +20,9 @@ declare const UserIcon_base: (new (...args: any[]) => {
     readonly isConnected: boolean;
 }) & typeof LitElement;
 export declare class UserIcon extends UserIcon_base {
+    /** @attr subscribe */
     subscribe: boolean;
+    /** @attr empty */
     empty: string;
     private _user;
     private _open;

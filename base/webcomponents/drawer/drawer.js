@@ -39,26 +39,36 @@ import { tapStyle } from '../css/tap.js';
 let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
     constructor() {
         super();
+        /** @attr url */
         this.url = '';
-        this.drawer = false;
-        this.subscribe = false;
+        /** @attr drawer */
+        this.drawer = false; // Drawer State
+        /** @attr subscribe */
+        this.subscribe = false; // Drawer State
+        /** @attr hide-google */
         this.hideGoogle = false;
-        this.name = "";
+        this.name = ""; // String Username
         this.email = "";
         this.verified = false;
         this.notice = "";
-        this.user = false;
+        this.user = false; // True user is logged-in, false, user is logged-out, state
+        /** What the sheet paints. Stays on the account menu until a logout close reaches 0. */
         this.sheetSigned = false;
         this.holdSheet = false;
         this.openSheetPx = 0;
         this.liveName = '';
         this.liveEmail = '';
         this.liveVerified = false;
-        this.signup = false;
+        this.signup = false; // True sign-up, false log-in, State
+        /** True while the panel is open or still rolling shut. Drops on transitionend. */
         this.sliding = false;
+        /** Arms the form-swap transition. False on the first paint. */
         this.motion = false;
+        /** Clip height. 0px is shut. auto is the resting open size. */
         this.clipHeight = '0px';
+        /** Sheet translate. -100% parks the sheet above the clip. */
         this.sheetShift = 'translate3d(0, -100%, 0)';
+        /** True only while this drawer's clip and sheet are easing. */
         this.rollMotion = false;
         this.booted = false;
         this.wasOpen = false;
@@ -68,6 +78,8 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.heldHeight = null;
         this.columnWidth = 0;
         this.columnObserver = null;
+        // Required - visibility, pointer-events, and inert drop when the close reaches 0.
+        // Only this clip. A form transition inside the sheet does not count.
         this.onClipEnd = (event) => {
             if (!(event instanceof TransitionEvent))
                 return;
@@ -88,6 +100,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             this.restShut();
             this.releaseSheet();
         };
+        // Required - Escape closes. Tab stays inside the open drawer.
         this.onKey = (event) => {
             if (!this.drawer)
                 return;
@@ -117,6 +130,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
                 first.focus({ preventScroll: true });
             }
         };
+        // Required - a host link or button in a slot closes the drawer. preventDefault keeps it open.
         this.onLightClick = (event) => {
             if (event.defaultPrevented)
                 return;
@@ -173,7 +187,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         super.disconnectedCallback();
     }
     stateChanged(state) {
-        const open = state.session.drawer;
+        const open = state.session.drawer; // Drawer State
         const wasOpen = this.drawer;
         const wasSigned = this.user === true;
         this.liveName = state.session.name;
@@ -184,9 +198,10 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         else if (this.reduced())
             this.sliding = false;
         this.drawer = open;
-        this.user = state.session.login;
-        this.signup = state.session.registerOne;
+        this.user = state.session.login; // Logged in-out State
+        this.signup = state.session.registerOne; // Sign-up State
         this.paintAccount(wasSigned, wasOpen);
+        // Required - UI event from this element. Skip the closed state on first read.
         const changed = this.sawOpen ? open !== this.wasOpen : open;
         if (changed) {
             emitElement(this, pwaDrawerToggleName, { open });
@@ -194,6 +209,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.wasOpen = open;
         this.sawOpen = true;
     }
+    // Required - a logout close keeps the account menu until the clip is shut, so the roll measures that sheet.
     paintAccount(wasSigned, wasOpen) {
         if (this.user === true) {
             this.holdSheet = false;
@@ -290,6 +306,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
     sheet() {
         return this.shadowRoot?.querySelector('.userDrawer') ?? null;
     }
+    // Required - the account button, when nothing else had focus at open.
     toggleButton() {
         const icon = document.querySelector('user-icon');
         const button = icon?.shadowRoot?.querySelector('button');
@@ -298,6 +315,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
     reduced() {
         return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
+    // Required - closed, no transition. The first render binds this.
     restShut() {
         this.rollMotion = false;
         this.clipHeight = '0px';
@@ -306,6 +324,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         if (sheet)
             sheet.style.minHeight = '';
     }
+    // Required - open at content size. No transition, so it does not ease.
     restOpen() {
         this.rollMotion = false;
         this.clipHeight = 'auto';
@@ -328,6 +347,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             transition: travel ? 'transform var(--pwa_slide, 2s) ease-in-out' : 'none',
         };
     }
+    // Required - clip and sheet start together. Open from 0 is translate -100% → 0.
     unroll() {
         const clip = this.clip();
         const sheet = this.sheet();
@@ -356,6 +376,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         if (this.reduced())
             this.sliding = false;
     }
+    // Sheet height in px. The clip cap is released for the read and put back. No paint.
     sheetPx(clip, sheet) {
         const transition = clip.style.transition;
         const maxHeight = clip.style.maxHeight;
@@ -369,6 +390,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         clip.style.transition = transition;
         return px;
     }
+    // Ease the clip from → to. translateY = clip − sheetHeight, so the bottom stays glued.
     rollBetween(clip, sheet, from, to, sheetHeight) {
         const start = from - sheetHeight;
         const end = to - sheetHeight;
@@ -422,6 +444,8 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         });
         this.watchColumn();
     }
+    // Required - a parent grid can park this tag after named areas. Shift it back under the previous element.
+    // A row of its own between the header and the page leaves top empty.
     placeAnchor() {
         const pos = getComputedStyle(this).position;
         if (pos === 'fixed' || pos === 'absolute') {
@@ -442,6 +466,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             return;
         this.style.top = Math.abs(delta) <= 0.5 ? '' : `${delta}px`;
     }
+    // Required - a resize while the sheet is rolling retargets the measured height.
     watchColumn() {
         if (typeof ResizeObserver === 'undefined')
             return;
@@ -459,6 +484,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             this.columnObserver.observe(prev);
         this.placeAnchor();
     }
+    // Required - keep the sheet bottom on the clip while the column reflows.
     onColumnResize() {
         if (!this.rollMotion)
             return;
@@ -561,6 +587,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
     }
     ;
     render() {
+        // Required - reflected attribute. The shell keeps the clip visible while it rolls.
         this.toggleAttribute('sliding', this.sliding);
         return html `
 
@@ -659,6 +686,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
 
     `;
     }
+    // Required - url is the href. Empty url stays on this page and tells the host.
     destination() {
         return (this.url || '').trim();
     }
@@ -739,4 +767,21 @@ UserDrawer = __decorate([
     __metadata("design:paramtypes", [])
 ], UserDrawer);
 export { UserDrawer };
+/*
+
+\?on="\${ true === this._sign \? !this.subscribe \: this.subscribe }"
+\?on="${ false === this._sign \? !this.subscribe \: this.subscribe }"
+
+
+     <h3>\${
+          this._log       \?     /* If logged-in state is true
+          this._name      \:     /* Show username
+          true            \===    /* else logged-out, Show if true equals
+          /* this._sign      \===    /*true sign-up state equals
+          this.subscribe  \?     /* If subscribe state is true
+          'Login'         \:     /* Show login txt, else
+          'Subscribe'           /* Show subscribe txt
+          }</h3>
+
+*/ 
 //# sourceMappingURL=drawer.js.map

@@ -2,6 +2,11 @@ Change Log
 ==========
 All notable changes to pwa-auth.js will be documented in this file.
 
+# [3.7.8] - 2026-11-04
+
+## Changed
+- The build is `tsc` only. `removeComments` is false, so the compiler emits the `@deprecated` notes on `user` and `userEmailChanged`. `typescript/keep-deprecated.js` is gone.
+
 # [3.7.7] - 2026-11-02
 
 ## Changed

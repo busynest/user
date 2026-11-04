@@ -41,4 +41,7 @@ export const authStyles = [hostCollapse, css `
   }
 
 `];
+/*
+padding-top:            env(safe-area-inset-top);
+*/ 
 //# sourceMappingURL=auth.js.map

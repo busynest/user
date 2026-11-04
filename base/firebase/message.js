@@ -1,5 +1,6 @@
 import { toAuthError } from '../events/emit.js';
 import { passwordLong, passwordMismatch, passwordShort } from './password.js';
+/** Required - plain sentences for the codes the forms actually hit. */
 const known = {
     'auth/invalid-email': 'Enter a valid email address.',
     'auth/user-not-found': 'No account uses that email.',
@@ -31,6 +32,7 @@ const known = {
     'pwa/not-ready': 'Sign-in is not ready yet.',
     'pwa/unknown': 'Something went wrong. Try again.'
 };
+/** Required - sentence for the form. The event still carries the raw code. */
 export function userMessage(error) {
     const detail = toAuthError(error);
     return known[detail.code] ?? 'Something went wrong. Try again.';

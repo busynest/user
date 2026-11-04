@@ -1,4 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit';
+/** Required - one tree. UI flags and the account fields the elements read. */
 export declare const initialState: {
     login: boolean;
     drawer: boolean;

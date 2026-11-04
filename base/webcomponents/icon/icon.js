@@ -15,10 +15,14 @@ import { iconStyles } from './css/icon.js';
 import { toggleSign } from '../../redux/session.js';
 import { applyFirebaseConfig } from '../../firebase/attribute.js';
 import { lettersFor } from '../form/letters.js';
+// import { faceIcon }                           from '../../css/svg';
 let UserIcon = class UserIcon extends connect(store)(LitElement) {
+    // @state() private _sign = false;
     constructor() {
         super();
+        /** @attr subscribe */
         this.subscribe = false;
+        /** @attr empty */
         this.empty = '';
         this._user = false;
         this._open = false;
@@ -72,6 +76,7 @@ let UserIcon = class UserIcon extends connect(store)(LitElement) {
 
     `;
     }
+    // Required - photo, else initials. empty is only for an account with neither.
     face() {
         if (this._photoURL) {
             return html `<img class="userImage" part="photo" alt="" src="${this._photoURL}">`;

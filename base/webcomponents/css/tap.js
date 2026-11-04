@@ -1,4 +1,5 @@
 import { css } from 'lit';
+/* Optional - override on :root */
 export const tapStyle = css `
 
   :host {

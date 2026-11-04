@@ -4,9 +4,12 @@ import { pwaAuthError, pwaEmailVerified, pwaVerificationSent } from '../events/n
 import { emitWindow, toAuthError, toPwaUser } from '../events/emit.js';
 import store from '../store.js';
 import { accVerified } from '../redux/session.js';
+/** Required - last uid we have already announced, so a reload does not repeat the event. */
 let trackedUid = '';
+/** Required - emailVerified for that uid the last time we looked. */
 let trackedVerified = false;
 let watching = false;
+/** Required - true only when this same account moves from unverified to verified. */
 function remember(user) {
     if (!user) {
         trackedUid = '';
@@ -32,6 +35,7 @@ function announce(user) {
     if (person)
         emitWindow(pwaEmailVerified, { user: person });
 }
+/** Required - reload, then report. Network errors stay quiet unless the host asked. */
 export async function refreshEmailVerified(reportError) {
     if (!isReady())
         return false;
@@ -60,6 +64,7 @@ function onVisible() {
     if (document.visibilityState === 'visible')
         void refreshEmailVerified(false);
 }
+/** Required - focus and visibility, for a link opened in another tab. */
 function watchEmailVerified() {
     if (watching)
         return;
@@ -83,6 +88,7 @@ function fail(code, message) {
     emitWindow(pwaAuthError, detail);
     throw Object.assign(new Error(message), detail);
 }
+/** Required - sendEmailVerification for the signed-in user. Fires pwa-verification-sent. */
 export async function sendVerification() {
     if (!isReady())
         fail('pwa/not-ready', 'Sign-in is not ready yet.');
@@ -107,6 +113,7 @@ export async function sendVerification() {
     emitWindow(pwaVerificationSent, { email: current.email });
     return true;
 }
+/** Required - reload the signed-in user. Fires pwa-email-verified when it becomes true. */
 export async function isEmailVerified() {
     return refreshEmailVerified(true);
 }

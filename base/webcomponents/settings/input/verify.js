@@ -16,7 +16,9 @@ import { userMessage } from '../../../firebase/message.js';
 import { buttonStyle } from '../../form/css/button.js';
 import { tapStyle } from '../../css/tap.js';
 import { verifiedMark, verifiedStyle } from '../../form/verified.js';
+/** Required - seconds before another verification email. Matches email-reset. */
 const verifyWait = 45;
+/** Required - sentence after Firebase accepts the message. */
 const sentMessage = 'Check your inbox for the verification email.';
 export class EmailVerify extends connect(store)(LitElement) {
     constructor() {
@@ -29,6 +31,7 @@ export class EmailVerify extends connect(store)(LitElement) {
         this.busy = false;
         this.cooldown = 0;
         this.timer = 0;
+        // Required - cancel native submit, then send the verification email
         this.resend = async (event) => {
             event.preventDefault();
             if (this.busy || this.cooldown > 0 || this.verified)
@@ -223,6 +226,7 @@ export class EmailVerify extends connect(store)(LitElement) {
       </div>
     `;
     }
+    // Required - one sentence, then the same 45s wait as email-reset
     showSent() {
         this.tone = '';
         this.status = sentMessage;
@@ -230,6 +234,7 @@ export class EmailVerify extends connect(store)(LitElement) {
         this.armCooldown();
         void this.updateComplete.then(() => { this.focusStatus(); });
     }
+    // Required - Firebase codes stay on the event. The sentence is the friendly one.
     showFirebase(error) {
         this.tone = 'error';
         this.status = userMessage(error);

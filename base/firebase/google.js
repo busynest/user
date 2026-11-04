@@ -8,11 +8,13 @@ const quiet = new Set([
 ]);
 let notice = null;
 let watching = false;
+/** Required - the opened form reads this once after a redirect. */
 export function takeGoogleNotice() {
     const found = notice;
     notice = null;
     return found;
 }
+/** Required - phones use a full-page redirect. Popups are blocked there. */
 export function prefersGoogleRedirect(ua) {
     return /Android|iPhone|iPad|iPod/i.test(ua);
 }
@@ -22,6 +24,7 @@ function provider() {
 function remember(error) {
     notice = toAuthError(error);
 }
+/** Required - popup first. Redirect when the browser blocks it, or on a phone. */
 export async function signInWithGoogle(ua) {
     const agent = ua ?? (typeof navigator === 'undefined' ? '' : navigator.userAgent);
     if (prefersGoogleRedirect(agent)) {
@@ -43,6 +46,7 @@ export async function signInWithGoogle(ua) {
         throw error;
     }
 }
+/** Required - read the redirect once the app exists. Null means there was none. */
 export function watchGoogleRedirect() {
     if (watching)
         return;

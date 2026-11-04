@@ -1,1 +1,1 @@
-{"version":3,"file":"notice.d.ts","sourceRoot":"","sources":["../../../../typescript/webcomponents/form/css/notice.ts"],"names":[],"mappings":"AAAA,OAAO,EAAO,SAAS,EAAE,MAAM,KAAK,CAAC;AAGrC,eAAO,MAAM,WAAW,EAAE,SAiBzB,CAAC"}
+{"version":3,"file":"notice.d.ts","sourceRoot":"","sources":["../../../../typescript/webcomponents/form/css/notice.ts"],"names":[],"mappings":"AAAA,OAAO,EAAO,SAAS,EAAE,MAAM,KAAK,CAAC;AAErC,iEAAiE;AACjE,eAAO,MAAM,WAAW,EAAE,SAiBzB,CAAC"}

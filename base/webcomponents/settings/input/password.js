@@ -35,6 +35,7 @@ export class InputPassword extends connect(store)(LitElement) {
         this.showCurrent = false;
         this.showNext = false;
         this.showVerify = false;
+        /* Required - read both passwords on submit */
         this.default = (event) => {
             event.preventDefault();
             void this.alertPassword();
@@ -195,6 +196,7 @@ export class InputPassword extends connect(store)(LitElement) {
         this.message = userMessage(detail);
         emitWindow(pwaAuthError, detail);
     }
+    /* Update Password */
     async alertPassword() {
         if (this.busy)
             return;

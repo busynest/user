@@ -12,8 +12,10 @@ import { property } from 'lit/decorators.js';
 export class LazyLoader extends LitElement {
     constructor() {
         super();
+        /** @attr active */
         this.active = false;
     }
+    // Only render this page, if it is actually visible.
     shouldUpdate() { return this.active; }
 }
 __decorate([

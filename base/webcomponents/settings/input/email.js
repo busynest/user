@@ -29,6 +29,7 @@ import { userMessage } from "../../../firebase/message.js";
 export class ContactEmail extends connect(store)(LitElement) {
     constructor() {
         super();
+        /** @attr email */
         this.email = '';
         this.login = false;
         this.mail = "";
@@ -76,11 +77,12 @@ export class ContactEmail extends connect(store)(LitElement) {
                 emitLegacyEmailChanged(detail);
                 this.tone = '';
                 this.status = 'Check your inbox to confirm the new address.';
+                // Required - the address still on the account gets sendEmailVerification too.
                 if (!current.emailVerified) {
                     try {
                         await sendVerification();
                     }
-                    catch { }
+                    catch { /* the change mail already went out */ }
                 }
             }
             catch (error) {

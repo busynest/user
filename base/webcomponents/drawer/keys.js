@@ -1,3 +1,4 @@
+/** Required - walk open shadow roots. closest() stops at the boundary. */
 export function isHidden(el) {
     let current = el;
     while (current) {
@@ -7,6 +8,7 @@ export function isHidden(el) {
             if (current.classList.contains('spec') && !current.hasAttribute('on'))
                 return true;
         }
+        // Required - a slotted link lives in light DOM. Cross at the slot into the shadow tree.
         if (current instanceof Element && current.assignedSlot && current.assignedSlot !== current) {
             current = current.assignedSlot;
             continue;
@@ -24,6 +26,7 @@ export function isHidden(el) {
     }
     return false;
 }
+/** Required - buttons, links, and fields the drawer can tab through. */
 export function focusable(host) {
     const found = [];
     const selector = 'button, a[href], input, select, textarea';
@@ -47,6 +50,7 @@ export function focusable(host) {
     walk(host);
     return found.filter((el, index) => found.indexOf(el) === index);
 }
+/** Required - the real control, not the custom-element host. */
 export function deepActive() {
     let node = document.activeElement;
     while (node?.shadowRoot?.activeElement instanceof HTMLElement) {

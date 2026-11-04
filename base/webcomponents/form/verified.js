@@ -1,4 +1,5 @@
 import { css, html } from 'lit';
+/** Required - one mark. Colour comes from --pwa_verified_color. */
 export const verifiedMark = html `
   <span class="verified" part="verified" role="img" aria-label="Email verified">
     <svg viewBox="0 0 24 24" aria-hidden="true">

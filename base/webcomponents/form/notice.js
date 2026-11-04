@@ -1,3 +1,4 @@
+/** Required - sign-up told this address to check its inbox. */
 let sentEmail = '';
 const listeners = new Set();
 export function markVerificationNotice(email) {

@@ -1,3 +1,4 @@
+/** Required - two initials from the name, else the first letter of the email. */
 export function lettersFor(name, email) {
     const trimmed = name.trim();
     if (trimmed) {
@@ -9,6 +10,7 @@ export function lettersFor(name, email) {
         return '';
     return mail.charAt(0).toUpperCase();
 }
+/** Required - header text. Never a stand-in person. */
 export function accountTitle(name, email) {
     const trimmed = name.trim();
     if (trimmed)

@@ -7,22 +7,27 @@ export let application;
 export let db;
 export let storage;
 export let auth;
+/** @deprecated Optional - load-time snapshot. Required - read auth.currentUser at call time. */
 export let user = null;
 let started = false;
 const waiters = [];
 let actionCodeSettings;
+/** Required - continue URL and other email action settings. Undefined until set. */
 export function emailActionCodeSettings() {
     return actionCodeSettings;
 }
+/** Required - true after initialize() has an app. */
 export function isReady() {
     return started;
 }
+/** Required - run once the app exists. Runs now when it already does. */
 export function onReady(fn) {
     if (started)
         fn();
     else
         waiters.push(fn);
 }
+/** Optional - window.process.env.FIREBASE_CONFIG, the original boot path. */
 function legacyConfig() {
     const env = typeof process === 'undefined' ? undefined : process.env;
     const raw = env?.FIREBASE_CONFIG;
@@ -33,6 +38,7 @@ function legacyConfig() {
         return null;
     return parsed;
 }
+/** Required - host app, host config, or the legacy FIREBASE_CONFIG. First call wins. */
 export function initialize(options) {
     if (options && Object.prototype.hasOwnProperty.call(options, 'actionCodeSettings')) {
         actionCodeSettings = options.actionCodeSettings;
@@ -62,6 +68,7 @@ export function initialize(options) {
     waiters.splice(0).forEach((fn) => fn());
     return application;
 }
+// Required - window.process.env.FIREBASE_CONFIG still boots the app at import
 const legacy = legacyConfig();
 if (legacy)
     initialize({ config: legacy });

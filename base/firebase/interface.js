@@ -1,13 +1,22 @@
+// Representational State Transfer - Application Programming Interface
+// Module Imports ---------------- ---------------- ----------------
+// Redux
 import { store } from '../store.js';
 import { accEmail, accImage, accName, accVerified, closeSign, userAuth } from '../redux/session.js';
+// Firebase Auth
 import { EmailAuthProvider, getAuth, onAuthStateChanged, reauthenticateWithCredential, signOut } from 'firebase/auth';
+// Firebase Firestore
 import { doc, deleteDoc } from "firebase/firestore";
+// Firebase Analytics
 import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
+// Firebase Storage
 import { deleteObject, listAll, ref } from "firebase/storage";
+// Start Authentication
 import { application, auth, db, isReady, onReady, storage } from './authentication.js';
 import { pwaAuthChanged, pwaAuthError, pwaLogout } from '../events/names.js';
 import { watchGoogleRedirect } from './google.js';
 import { emitWindow, toAuthError, toPwaUser } from '../events/emit.js';
+/** Required - the form reads this after reauthenticate returns false. */
 let failed = null;
 export function takeAuthFailure() {
     const found = failed;
@@ -18,11 +27,17 @@ function noteFailure(detail) {
     failed = detail;
     emitWindow(pwaAuthError, detail);
 }
+// START ANALYTICS ----------------
+// Required - analytics, only when this browser supports it
 let analytics;
 let analyticsReady = Promise.resolve();
+// END ANALYTICS ----------------
+// Start Distribute Information ---------------- ----------------
 export const pwaDrawerToggle = () => {
+    // Close Drawer State
     store.dispatch(closeSign());
 };
+// Required - redux, analytics, and pwa-auth-changed once the app exists
 onReady(() => {
     watchGoogleRedirect();
     getAuth(application).useDeviceLanguage();
@@ -32,16 +47,23 @@ onReady(() => {
         }
     })();
     onAuthStateChanged(auth, (user) => {
+        // Required - every auth state, including the first
         emitWindow(pwaAuthChanged, { user: toPwaUser(user) });
+        // Account Login
         if (user) {
+            // Login Indicator
             store.dispatch(userAuth(true));
+            // Close Drawer State
             store.dispatch(closeSign());
             store.dispatch(accName(user.displayName ?? ''));
             store.dispatch(accEmail(user.email || ''));
             store.dispatch(accImage(user.photoURL || ''));
             store.dispatch(accVerified(user.emailVerified === true));
         }
+        // Account Log out
         else {
+            // console.log('logged out');
+            // Login Indicator
             store.dispatch(userAuth(false));
             store.dispatch(accName(''));
             store.dispatch(accEmail(''));
@@ -50,6 +72,9 @@ onReady(() => {
         }
     });
 });
+// End Distribute Informatiom ---------------- ----------------
+// Module Exports ---------------- Exact Name Reference ---------------- Firebase Action 
+// Required - recent login before email, password, or delete
 export const reauthenticate = async (password) => {
     const current = auth.currentUser;
     if (!current || !current.email) {
@@ -95,6 +120,7 @@ export const logAccountDelete = async () => {
     }
     logEvent(analytics, 'delete_account');
 };
+// Required - delete this user's files under pwa-auth/{uid}
 export const deleteUserFiles = async (uid) => {
     const folder = ref(storage, 'pwa-auth/' + uid);
     const listed = await listAll(folder);

@@ -1,4 +1,5 @@
 import { css } from 'lit';
+/** Required - same card as the unverified notice in settings. */
 export const noticeStyle = css `
 
   .notice {
