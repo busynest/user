@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+/** Required - one tree. UI flags and the account fields the elements read. */
 export const initialState = {
     login: false,
     drawer: false,

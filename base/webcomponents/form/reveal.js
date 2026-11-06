@@ -1,4 +1,5 @@
 import { html } from 'lit';
+/** Required - show or hide one password field. */
 export function revealControl(showing, onClick) {
     const label = showing ? 'Hide password' : 'Show password';
     return html `

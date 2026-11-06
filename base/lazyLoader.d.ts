@@ -1,5 +1,6 @@
 import { LitElement } from 'lit';
 export declare class LazyLoader extends LitElement {
+    /** @attr active */
     active: boolean;
     constructor();
     shouldUpdate(): boolean;

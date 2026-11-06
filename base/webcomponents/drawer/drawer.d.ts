@@ -23,15 +23,20 @@ declare const UserDrawer_base: (new (...args: any[]) => {
     readonly isConnected: boolean;
 }) & typeof LitElement;
 export declare class UserDrawer extends UserDrawer_base {
+    /** @attr url */
     url: string;
+    /** @attr drawer */
     drawer: boolean;
+    /** @attr subscribe */
     subscribe: boolean;
+    /** @attr hide-google */
     hideGoogle: boolean;
     private name;
     private email;
     private verified;
     private notice;
     private user;
+    /** What the sheet paints. Stays on the account menu until a logout close reaches 0. */
     private sheetSigned;
     private holdSheet;
     private openSheetPx;
@@ -39,10 +44,15 @@ export declare class UserDrawer extends UserDrawer_base {
     private liveEmail;
     private liveVerified;
     private signup;
+    /** True while the panel is open or still rolling shut. Drops on transitionend. */
     private sliding;
+    /** Arms the form-swap transition. False on the first paint. */
     private motion;
+    /** Clip height. 0px is shut. auto is the resting open size. */
     private clipHeight;
+    /** Sheet translate. -100% parks the sheet above the clip. */
     private sheetShift;
+    /** True only while this drawer's clip and sheet are easing. */
     private rollMotion;
     private booted;
     private wasOpen;

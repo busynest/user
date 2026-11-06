@@ -28,23 +28,30 @@ import { onVerificationNotice, verificationNotice } from '../form/notice.js';
 let UserLogin = class UserLogin extends connect(store)(LitElement) {
     constructor() {
         super();
-        this.subscribe = false;
+        /** @attr subscribe */
+        this.subscribe = false; // Drawer State
+        /** @attr hide-google */
         this.hideGoogle = false;
         this._name = "";
         this._email = "";
         this._verified = false;
         this._notice = "";
-        this._log = false;
-        this._sign = false;
+        this._log = false; // Login State
+        this._sign = false; // Sign-up State
+        /** Arms the form-swap transition. False on the first paint. */
         this.motion = false;
+        /** Clip size. auto is the resting card. A px value is mid-roll. */
         this.clipHeight = 'auto';
+        /** Sheet translate. none keeps the card's bottom on the clip. */
         this.sheetShift = 'none';
+        /** True only while this card's clip and sheet are easing. */
         this.rollMotion = false;
         this.booted = false;
         this.stopNotice = null;
         this.heldHeight = null;
         this.columnWidth = 0;
         this.columnObserver = null;
+        // Only this clip. The form swap's transform does not release the roll.
         this.onClipEnd = (event) => {
             if (!(event instanceof TransitionEvent))
                 return;
@@ -73,11 +80,11 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
         super.disconnectedCallback();
     }
     stateChanged(state) {
-        this._name = state.session.name;
+        this._name = state.session.name; // User Name
         this._email = state.session.email;
         this._verified = Boolean(state.session.verified);
-        this._log = state.session.login;
-        this._sign = state.session.registerTwo;
+        this._log = state.session.login; // Logged in-out State
+        this._sign = state.session.registerTwo; // Sign-up State - register
     }
     willUpdate(changed) {
         if (!this.booted)
@@ -145,6 +152,7 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
     reduced() {
         return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
+    // Required - resting card. auto, no translate, no transition.
     rest() {
         this.rollMotion = false;
         this.clipHeight = 'auto';
@@ -167,6 +175,7 @@ let UserLogin = class UserLogin extends connect(store)(LitElement) {
             transition: travel ? 'transform var(--pwa_slide, 2s) ease-in-out' : 'none',
         };
     }
+    // Ease the clip from → to. translateY = clip − sheetHeight, so the bottom stays glued.
     rollBetween(clip, sheet, from, to, sheetHeight) {
         const start = from - sheetHeight;
         const end = to - sheetHeight;
@@ -341,4 +350,10 @@ UserLogin = __decorate([
     __metadata("design:paramtypes", [])
 ], UserLogin);
 export { UserLogin };
+/*
+
+\?on="\${ true === this._sign \? !this.subscribe \: this.subscribe }"
+\?on="\${ false === this._sign \? !this.subscribe \: this.subscribe }"
+
+*/ 
 //# sourceMappingURL=page.js.map

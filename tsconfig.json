@@ -28,7 +28,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "useDefineForClassFields": false,
-    "removeComments": true,
+    "removeComments": false,
 
     "types": ["node"]
   },

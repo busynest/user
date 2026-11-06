@@ -20,7 +20,9 @@ declare const ContactPhoto_base: (new (...args: any[]) => {
     readonly isConnected: boolean;
 }) & typeof LitElement;
 export declare class ContactPhoto extends ContactPhoto_base {
+    /** @attr photo */
     photo: string | void | any;
+    /** @attr emptyArtwork */
     emptyArtwork: string;
     private signed;
     private person;

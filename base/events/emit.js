@@ -1,4 +1,6 @@
+/** Required - cross the shadow root and bubble. */
 const travel = { bubbles: true, composed: true };
+/** Required - copy the fields a host is allowed to read. */
 export function toPwaUser(user) {
     if (!user)
         return null;
@@ -10,12 +12,15 @@ export function toPwaUser(user) {
         emailVerified: user.emailVerified === true
     };
 }
+/** Required - global events go on window. */
 export function emitWindow(name, detail) {
     window.dispatchEvent(new CustomEvent(name, { ...travel, detail }));
 }
+/** Required - UI events go on the element. */
 export function emitElement(target, name, detail) {
     target.dispatchEvent(new CustomEvent(name, { ...travel, detail }));
 }
+/** Required - Firebase errors carry code. Other throws get pwa/unknown. */
 export function toAuthError(error) {
     if (typeof error === 'object' && error !== null && 'code' in error) {
         const code = String(error.code);

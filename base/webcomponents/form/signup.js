@@ -31,11 +31,13 @@ import { googleButton } from './google-button.js';
 import { markVerificationNotice } from './notice.js';
 import store from '../../store.js';
 import { universalToggle } from '../../redux/session.js';
+/** Required - same sentence as the resend control in settings. */
 const sentMessage = 'Check your inbox for the verification email. You can still sign in.';
 let FormSignup = class FormSignup extends LitElement {
     constructor() {
         super();
         this.source = '';
+        /** @attr hide-google */
         this.hideGoogle = false;
         this.email = '';
         this.password = '';
@@ -44,6 +46,7 @@ let FormSignup = class FormSignup extends LitElement {
         this.busy = false;
         this.showPassword = false;
         this.notice = '';
+        // Create New Account using Email and Password
         this.newAccount = async (email, password) => {
             this.busy = true;
             this.tone = '';
@@ -54,12 +57,14 @@ let FormSignup = class FormSignup extends LitElement {
                 const person = toPwaUser(userCredential.user);
                 if (person)
                     emitWindow(pwaSignup, { user: person });
+                // Required - the account exists even when the verification mail fails
                 try {
                     await sendVerification();
                     this.notice = sentMessage;
                     markVerificationNotice(email);
                 }
                 catch (error) {
+                    // Required - sendVerification already dispatched pwa-auth-error
                     this.tone = 'error';
                     this.status = userMessage(error);
                 }
@@ -234,24 +239,29 @@ let FormSignup = class FormSignup extends LitElement {
         this.status = userMessage(detail);
         emitWindow(pwaAuthError, detail);
     }
+    // Required - read the fields on submit. Type toggles when the password is shown.
     readFields() {
         const email = this.renderRoot.querySelector('input[type="email"]');
         const password = this.renderRoot.querySelector('input[name="new-password"]');
         this.email = email?.value ?? '';
         this.password = password?.value ?? '';
     }
+    // Form Default Behavior
     _handleSubmit(event) {
         event.preventDefault();
         void this.signUp();
     }
+    // Sync Email
     handleEmail(event) {
         const input = event.target;
         this.email = input.value;
     }
+    // Sync Password
     handlePassword(event) {
         const input = event.target;
         this.password = input.value;
     }
+    // Sign Up Action
     async signUp() {
         if (this.busy)
             return;

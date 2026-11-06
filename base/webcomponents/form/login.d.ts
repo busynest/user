@@ -1,6 +1,7 @@
 import { LitElement } from 'lit';
 export declare class FormLogin extends LitElement {
     source: string;
+    /** @attr hide-google */
     hideGoogle: boolean;
     private email;
     private password;

@@ -31,6 +31,7 @@ export class DeleteUser extends connect(store)(LitElement) {
         this.status = '';
         this.tone = '';
         this.showPassword = false;
+        /* Delete Account */
         this.alertDelete = () => {
             if (this.busy)
                 return;
@@ -48,6 +49,7 @@ export class DeleteUser extends connect(store)(LitElement) {
             if (d == true)
                 void this.officialDelete(password);
         };
+        // Required - storage files, then the analytics signal, then the auth user. The host owns users/{uid}.
         this.officialDelete = async (password) => {
             this.busy = true;
             this.tone = '';

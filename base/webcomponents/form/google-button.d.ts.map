@@ -1,1 +1,1 @@
-{"version":3,"file":"google-button.d.ts","sourceRoot":"","sources":["../../../typescript/webcomponents/form/google-button.ts"],"names":[],"mappings":"AAAA,OAAO,EAAQ,cAAc,EAAE,MAAM,KAAK,CAAC;AAa3C,wBAAgB,YAAY,CAAC,IAAI,EAAE,OAAO,EAAE,OAAO,EAAE,MAAM,IAAI,GAAG,cAAc,CAY/E"}
+{"version":3,"file":"google-button.d.ts","sourceRoot":"","sources":["../../../typescript/webcomponents/form/google-button.ts"],"names":[],"mappings":"AAAA,OAAO,EAAQ,cAAc,EAAE,MAAM,KAAK,CAAC;AAY3C,8EAA8E;AAC9E,wBAAgB,YAAY,CAAC,IAAI,EAAE,OAAO,EAAE,OAAO,EAAE,MAAM,IAAI,GAAG,cAAc,CAY/E"}

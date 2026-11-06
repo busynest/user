@@ -22,7 +22,9 @@ declare const UserLogin_base: (new (...args: any[]) => {
     readonly isConnected: boolean;
 }) & typeof LitElement;
 export declare class UserLogin extends UserLogin_base {
+    /** @attr subscribe */
     subscribe: boolean;
+    /** @attr hide-google */
     hideGoogle: boolean;
     private _name;
     private _email;
@@ -30,9 +32,13 @@ export declare class UserLogin extends UserLogin_base {
     private _notice;
     private _log;
     private _sign;
+    /** Arms the form-swap transition. False on the first paint. */
     private motion;
+    /** Clip size. auto is the resting card. A px value is mid-roll. */
     private clipHeight;
+    /** Sheet translate. none keeps the card's bottom on the clip. */
     private sheetShift;
+    /** True only while this card's clip and sheet are easing. */
     private rollMotion;
     private booted;
     private stopNotice;

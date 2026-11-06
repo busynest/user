@@ -1,4 +1,9 @@
 import { css } from "lit";
+/* --pwa_slide is the form-swap duration on this host only.
+   The drawer, page login, and settings each roll themselves.
+   Nothing here transitions :host height. slide-out is not used.
+   .content has no transition until .inner also has .motion,
+   so the first paint is the resting open/closed pair. */
 export const animation = css `
 
 :host {
@@ -94,6 +99,10 @@ export const animation = css `
 }
 
 `;
+/* Drawer shell. Imported by user-drawer only.
+   No height or transform transition here. The clip's style binding does that,
+   and only after a user change. max-height: 0 with no transition is the
+   closed backstop, so the first paint cannot ease shut. */
 export const drawerShell = css `
 
   :host {
@@ -110,6 +119,7 @@ export const drawerShell = css `
   }
 
 `;
+/* user-login host. The animation attribute is not set. No max-height ease. */
 export const hostCollapse = css `
 
   :host([animation]) {

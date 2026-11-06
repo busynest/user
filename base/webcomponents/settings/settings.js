@@ -27,17 +27,25 @@ import { accountTitle } from '../form/letters.js';
 let UserSettings = class UserSettings extends connect(store)(LitElement) {
     constructor() {
         super();
+        /** @attr emptyArtwork */
         this.empty = '';
         this.profileTopic = '';
         this.name = '';
         this.email = '';
         this.login = false;
+        /** Clip size. auto is the resting panel. A px value is mid-roll. */
         this.clipHeight = 'auto';
+        /** Sheet translate. none keeps the panel's bottom on the clip. */
         this.sheetShift = 'none';
+        /** True only while this settings clip and sheet are easing. */
         this.rollMotion = false;
+        /** Tab rolling up behind the fold. Empty when the panel is at rest. */
         this.leaving = '';
+        /** Outgoing clip size. A px value while it rolls up to the fold. */
         this.leaveClipHeight = '0px';
+        /** Outgoing sheet translate. Starts at 0 and rides the rising bottom edge. */
         this.leaveSheetShift = 'translate3d(0, 0, 0)';
+        /** True only while the outgoing clip and sheet are easing. */
         this.leaveMotion = false;
         this.booted = false;
         this.heldHeight = null;
@@ -47,6 +55,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         this.onSubmit = (event) => {
             event.preventDefault();
         };
+        // Only this clip. Nothing in another component, and no child form, ends the roll.
         this.onFrontEnd = (event) => {
             if (!(event instanceof TransitionEvent))
                 return;
@@ -74,6 +83,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         if (!this.hasAttribute('aria-label'))
             this.setAttribute('aria-label', 'Account settings');
         super.connectedCallback();
+        /* Required - cancel native form submit */
         this.addEventListener('submit', this.onSubmit);
     }
     disconnectedCallback() {
@@ -82,6 +92,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         this.columnObserver = null;
         super.disconnectedCallback();
     }
+    // Required - move across the four tabs from the keyboard
     onTabKey(event) {
         if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft')
             return;
@@ -204,6 +215,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         this.leaveMotion = false;
         this.leaveClipHeight = `${this.leaveFrom}px`;
         this.leaveSheetShift = 'translate3d(0, 0, 0)';
+        /* Required - park the incoming panel behind the fold before it paints. */
         this.rollMotion = false;
         this.clipHeight = '0px';
         this.sheetShift = 'translate3d(0, -100%, 0)';
@@ -279,6 +291,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
     reduced() {
         return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
+    // Sheet height in px. The clip cap is released for the read and put back. No paint.
     sheetPx(clip, sheet) {
         const transition = clip.style.transition;
         const maxHeight = clip.style.maxHeight;
@@ -292,6 +305,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
         clip.style.transition = transition;
         return px;
     }
+    // Required - resting panel. The first paint binds this, with no transition.
     rest() {
         this.rollMotion = false;
         this.clipHeight = 'auto';
@@ -326,6 +340,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
     leaveSheetStyle() {
         return this.shiftStyle(this.leaveMotion, this.leaveSheetShift);
     }
+    // Ease one clip from → to. translateY = clip − sheetHeight, so the bottom stays glued.
     rollLayer(layer, clip, sheet, from, to, sheetHeight) {
         const start = from - sheetHeight;
         const end = to - sheetHeight;
@@ -368,6 +383,7 @@ let UserSettings = class UserSettings extends connect(store)(LitElement) {
             return 'front';
         return 'idle';
     }
+    // One tab panel. It stays in its own clip, so a tab change does not remount it.
     panel(name, title) {
         const layer = this.layerOf(name);
         const on = layer === 'front';

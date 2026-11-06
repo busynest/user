@@ -1,4 +1,5 @@
 import { css, html } from 'lit';
+/** Required - same live region as email-reset. Idle text does not move the form. */
 export const statusStyle = css `
 
   .status {
@@ -44,6 +45,7 @@ export const statusStyle = css `
   }
 
 `;
+/** Required - polite live region. tone is "" or "error". */
 export function liveStatus(id, text, tone) {
     return html `
     <p

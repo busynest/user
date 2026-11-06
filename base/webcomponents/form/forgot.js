@@ -22,8 +22,11 @@ import { labelStyle } from './css/label.js';
 import { inputStyle } from './css/input.js';
 import { buttonStyle } from './css/button.js';
 import { toggleStyle } from './css/toggle.js';
+/** Required - seconds before another reset email. */
 const resetWait = 45;
+/** Required - same sentence whether or not the account exists. */
 const sentMessage = 'If an account uses that email, a reset link is on its way.';
+/** Required - client check before sendPasswordResetEmail. */
 function emailProblem(value) {
     if (value.length < 4) {
         return { code: 'pwa/missing-email', message: 'Enter an email address.' };
@@ -33,6 +36,7 @@ function emailProblem(value) {
     }
     return null;
 }
+/** Required - Firebase hides some missing accounts. This code does not. */
 function missingAccount(error) {
     return toAuthError(error).code === 'auth/user-not-found';
 }
@@ -46,6 +50,7 @@ let EmailReset = class EmailReset extends LazyLoader {
         this.busy = false;
         this.cooldown = 0;
         this.timer = 0;
+        // Required - cancel native submit, then send the reset
         this.resetPassword = async (event) => {
             event.preventDefault();
             if (this.busy || this.cooldown > 0)
@@ -76,6 +81,7 @@ let EmailReset = class EmailReset extends LazyLoader {
                 this.busy = false;
             }
         };
+        // Optional - drawer sign-in when a drawer is on the page. Otherwise the page form.
         this.backToSignIn = () => {
             const drawer = document.querySelector('user-drawer');
             if (drawer) {
@@ -225,6 +231,7 @@ let EmailReset = class EmailReset extends LazyLoader {
 
     `;
     }
+    // Required - one outcome for a sent link and for an unknown address
     showSent() {
         this.tone = '';
         this.status = sentMessage;
@@ -234,6 +241,7 @@ let EmailReset = class EmailReset extends LazyLoader {
         emitWindow(pwaResetSent, { email: this.userEmail });
         void this.updateComplete.then(() => { this.focusStatus(); });
     }
+    // Required - client checks. The event carries this code and sentence.
     showError(detail, focus) {
         this.tone = 'error';
         this.status = userMessage(detail);
@@ -241,6 +249,7 @@ let EmailReset = class EmailReset extends LazyLoader {
         emitWindow(pwaAuthError, detail);
         void this.updateComplete.then(() => { this.focusAfter(focus); });
     }
+    // Required - Firebase codes stay on the event. The sentence is the friendly one.
     showFirebase(error) {
         const detail = toAuthError(error);
         this.tone = 'error';

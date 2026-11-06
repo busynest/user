@@ -20,6 +20,7 @@ declare const ContactEmail_base: (new (...args: any[]) => {
     readonly isConnected: boolean;
 }) & typeof LitElement;
 export declare class ContactEmail extends ContactEmail_base {
+    /** @attr email */
     email: string;
     private login;
     private mail;

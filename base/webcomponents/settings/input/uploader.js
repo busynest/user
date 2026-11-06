@@ -21,9 +21,13 @@ import { lettersFor } from '../../form/letters.js';
 import { pwaAuthError, pwaProfileUpdated } from '../../../events/names.js';
 import { emitWindow, toAuthError } from '../../../events/emit.js';
 import { userMessage } from '../../../firebase/message.js';
+/** Required - one profile image. Larger files are rejected before upload. */
 const maxPhotoBytes = 5 * 1024 * 1024;
+/** Required - longest side stored. A smaller original is not enlarged. */
 const maxPhotoEdge = 1024;
+/** Required - JPEG quality of the bytes that are uploaded. */
 const photoQuality = 0.8;
+/** Required - stable object. A new upload replaces this file instead of keeping the old name. */
 function photoPath(uid) {
     return 'pwa-auth/' + uid + '/photo';
 }
@@ -50,6 +54,7 @@ function fittedSize(width, height) {
         height: Math.max(1, Math.round(height * scale))
     };
 }
+/** Required - EXIF orientation comes from the decoder. No orientation library. */
 async function openBitmap(file) {
     try {
         return await createImageBitmap(file, { imageOrientation: 'from-image' });
@@ -85,7 +90,9 @@ async function shrinkPhoto(file) {
 export class ContactPhoto extends connect(store)(LitElement) {
     constructor() {
         super();
+        /** @attr photo */
         this.photo = '';
+        /** @attr emptyArtwork */
         this.emptyArtwork = '';
         this.signed = false;
         this.person = '';
