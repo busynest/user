@@ -2,6 +2,11 @@ Change Log
 ==========
 All notable changes to pwa-auth.js will be documented in this file.
 
+# [3.8.0] - 2026-11-06
+
+## Changed
+- Settings tabs are Photo, Profile, Password, and Delete. Photo stays first. Profile shows the name, then the email, then verification.
+
 # [3.7.8] - 2026-11-04
 
 ## Changed
