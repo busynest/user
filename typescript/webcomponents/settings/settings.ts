@@ -401,9 +401,9 @@ export class UserSettings extends connect(store)(LitElement) {
             <contact-photo emptyArtwork="${this.empty}" exportparts="progress, file, preview"></contact-photo>
           ` : name === 'verification' ? html`
             <h2>Contact Information</h2>
-            <email-verify exportparts="notice, status: verify-status, submit: verify-submit, verified, unverified"></email-verify>
             <input-name exportparts="name, submit: name-submit"></input-name>
             <contact-email exportparts="email, submit: email-submit"></contact-email>
+            <email-verify exportparts="notice, status: verify-status, submit: verify-submit, verified, unverified"></email-verify>
           ` : name === 'password' ? html`
             <h2>Password</h2>
             <input-password exportparts="password, verify, submit: password-submit"></input-password>
@@ -451,7 +451,7 @@ export class UserSettings extends connect(store)(LitElement) {
               aria-controls="pwa-panel-profile"
               tabindex="${this.tabOn('profile') ? '0' : '-1'}"
               ?on="${this.tabOn('profile')}"
-              @click="${() => this.openTab('profile')}">Icon
+              @click="${() => this.openTab('profile')}">Photo
             </button>
           </li>
 

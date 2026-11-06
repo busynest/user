@@ -63,7 +63,7 @@ Works in current Chrome, Edge, Firefox, and Safari. The fields fit any layout, f
 | `user-icon` | `subscribe` starts the label on Subscribe. `empty` is the picture when there is no photo and no initials. `firebase-config` is the Firebase JSON | | |
 | `user-drawer` | `subscribe` starts on sign-up. `hide-google` removes Continue with Google. `url` is the Settings link; leave it off to stay on this page. `firebase-config` as above. Put the tag where it should open. It unrolls down from that spot and does not push the page | `drawer` while open. `sliding` while it moves | `before`, and the default slot, for your own links |
 | `user-login` | `subscribe` and `hide-google`, same as the drawer. `firebase-config` as above | | `content` replaces the form after sign-in |
-| `user-settings` | `empty` is the picture when the account has none. `firebase-config` as above. Signed out, one line and no fields | | |
+| `user-settings` | `empty` is the picture when the account has none. `firebase-config` as above. Signed out, one line and no fields. Tabs are Photo, Profile, Password, and Delete. Photo is first. Profile is the name, then the email, then verification | | |
 | `email-reset` | `active`, or the form stays blank. Then it emails a reset link for the address in the field | | |
 
 ## Events
