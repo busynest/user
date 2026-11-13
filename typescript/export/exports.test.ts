@@ -63,6 +63,7 @@ describe('package exports', () => {
       'source/empty.jpg',
       'README.md',
       'docs/drawer-slide.md',
+      'docs/google-sign-in-safari.md',
       'docs/sliders.md',
       'license',
       'LICENSES.txt'
