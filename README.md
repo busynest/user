@@ -210,6 +210,8 @@ initialize({
 
 Use one of these. Once Firebase is connected, another one leaves it as it is.
 
+On iPhone Safari, Google sign-in needs your own domain as `authDomain`. [Google sign-in on iPhone and Safari](docs/google-sign-in-safari.md).
+
 ## License
 
 MIT. See [license](license). Third-party notices are in [LICENSES.txt](LICENSES.txt).
