@@ -19,8 +19,12 @@ const maxPhotoBytes = 5 * 1024 * 1024;
 /** Required - longest side stored. A smaller original is not enlarged. */
 const maxPhotoEdge = 1024;
 
-/** Required - JPEG quality of the bytes that are uploaded. */
-const photoQuality = 0.8;
+/** Required - Storage refuses a file of 500 KB or larger. The first encode is 0.8. */
+const outputLimit = 500 * 1024;
+
+/** Required - try the first quality, then lower, then a shorter edge. */
+const qualitySteps = [0.8, 0.72, 0.64, 0.56];
+const edgeSteps = [1024, 800, 640];
 
 /** Required - stable object. A new upload replaces this file instead of keeping the old name. */
 function photoPath(uid: string): string {
@@ -41,19 +45,35 @@ function photoProblem(file: File): { code: string; message: string } | null {
 
 }
 
-function fittedSize(width: number, height: number): { width: number; height: number } {
+function fittedSize(width: number, height: number, edge: number = maxPhotoEdge): { width: number; height: number } {
   const longest = Math.max(width, height);
-  if (!(longest > maxPhotoEdge)) {
+  if (!(longest > edge)) {
     return {
       width:  Math.max(1, Math.round(width)),
       height: Math.max(1, Math.round(height))
     };
   }
-  const scale = maxPhotoEdge / longest;
+  const scale = edge / longest;
   return {
     width:  Math.max(1, Math.round(width * scale)),
     height: Math.max(1, Math.round(height * scale))
   };
+}
+
+class PhotoStillLarge extends Error {
+  constructor() {
+    super('photo-still-large');
+    this.name = 'PhotoStillLarge';
+  }
+}
+
+function jpegBlob(canvas: HTMLCanvasElement, quality: number): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((result) => {
+      if (result) resolve(result);
+      else reject(new Error('no jpeg'));
+    }, 'image/jpeg', quality);
+  });
 }
 
 /** Required - EXIF orientation comes from the decoder. No orientation library. */
@@ -69,18 +89,20 @@ async function shrinkPhoto(file: File): Promise<Blob> {
   const bitmap = await openBitmap(file);
   try {
     if (bitmap.width < 1 || bitmap.height < 1) throw new Error('empty image');
-    const size = fittedSize(bitmap.width, bitmap.height);
-    const canvas = document.createElement('canvas');
-    canvas.width = size.width;
-    canvas.height = size.height;
-    const context = canvas.getContext('2d');
-    if (!context) throw new Error('no canvas');
-    context.drawImage(bitmap, 0, 0, size.width, size.height);
-    const blob = await new Promise<Blob | null>((resolve) => {
-      canvas.toBlob((result) => resolve(result), 'image/jpeg', photoQuality);
-    });
-    if (!blob) throw new Error('no jpeg');
-    return blob;
+    for (const edge of edgeSteps) {
+      const size = fittedSize(bitmap.width, bitmap.height, edge);
+      const canvas = document.createElement('canvas');
+      canvas.width = size.width;
+      canvas.height = size.height;
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('no canvas');
+      context.drawImage(bitmap, 0, 0, size.width, size.height);
+      for (const quality of qualitySteps) {
+        const blob = await jpegBlob(canvas, quality);
+        if (blob.size < outputLimit) return blob;
+      }
+    }
+    throw new PhotoStillLarge();
   } finally {
     bitmap.close();
   }
@@ -381,10 +403,14 @@ export class ContactPhoto extends connect(store)(LitElement) {
     let prepared: Blob;
     try {
       prepared = await shrinkPhoto(file);
-    } catch {
+    } catch (error) {
       this.busy = false;
       this.progress = 0;
       this.resetPicker();
+      if (error instanceof PhotoStillLarge) {
+        this.fail({ code: 'pwa/photo-still-large', message: 'That photo is still over 500 KB. Try another.' });
+        return;
+      }
       this.fail({ code: 'pwa/photo-unreadable', message: 'That image could not be prepared. Try another.' });
       return;
     }
