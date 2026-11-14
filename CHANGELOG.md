@@ -2,6 +2,14 @@ Change Log
 ==========
 All notable changes to pwa-auth.js will be documented in this file.
 
+# [3.8.1] - 2026-11-14
+
+## Added
+- A guide for Google sign-in on iPhone Safari: `docs/google-sign-in-safari.md`.
+
+## Changed
+- A profile photo stays under 500 KB. The first try is still a 1024px JPEG at quality 0.8. Larger files try lower quality, then a shorter edge. A file that is still 500 KB or more is not uploaded.
+
 # [3.8.0] - 2026-11-06
 
 ## Changed
