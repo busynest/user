@@ -269,6 +269,96 @@ describe('profile photo', () => {
     );
   });
 
+  it('re-encodes at a lower quality when the first jpeg is 500 KB or more', async () => {
+    installEncoder(800, 600);
+    vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(function (
+      this: HTMLCanvasElement,
+      callback: BlobCallback,
+      type?: string,
+      quality?: number
+    ) {
+      encoded.width = this.width;
+      encoded.height = this.height;
+      encoded.type = type || '';
+      encoded.quality = quality ?? 0;
+      const bytes = quality === 0.8 ? 500 * 1024 : 120;
+      callback(new Blob([new Uint8Array(bytes)], { type: type || 'image/jpeg' }));
+    } as HTMLCanvasElement['toBlob']);
+    vi.mocked(uploadBytesResumable).mockImplementation((location, file) => ({
+      snapshot: { ref: location },
+      on(_event: string, next: (snap: unknown) => void, _error: unknown, done: () => void) {
+        next({ bytesTransferred: file.size, totalBytes: file.size, state: 'running' });
+        queueMicrotask(() => { void done(); });
+      }
+    }) as never);
+    vi.mocked(getDownloadURL).mockResolvedValue('https://cdn.example/photo');
+
+    const el = await mount(true);
+    pick(el, fileOf(16, 'image/png', 'busy.png'));
+    await settle(el);
+
+    expect(encoded).toMatchObject({ width: 800, height: 600, type: 'image/jpeg', quality: 0.72 });
+    const uploaded = vi.mocked(uploadBytesResumable).mock.calls[0][1] as Blob;
+    expect(uploaded.size).toBeLessThan(500 * 1024);
+    expect(ref).toHaveBeenCalledWith(expect.anything(), 'pwa-auth/1/photo');
+  });
+
+  it('shortens the long edge when every quality at 1024 stays too large', async () => {
+    installEncoder(4000, 2000);
+    vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(function (
+      this: HTMLCanvasElement,
+      callback: BlobCallback,
+      type?: string,
+      quality?: number
+    ) {
+      encoded.width = this.width;
+      encoded.height = this.height;
+      encoded.type = type || '';
+      encoded.quality = quality ?? 0;
+      const bytes = this.width === 1024 ? 500 * 1024 : 80;
+      callback(new Blob([new Uint8Array(bytes)], { type: type || 'image/jpeg' }));
+    } as HTMLCanvasElement['toBlob']);
+    vi.mocked(uploadBytesResumable).mockImplementation((location, file) => ({
+      snapshot: { ref: location },
+      on(_event: string, _next: unknown, _error: unknown, done: () => void) {
+        queueMicrotask(() => { void done(); });
+      }
+    }) as never);
+    vi.mocked(getDownloadURL).mockResolvedValue('https://cdn.example/photo');
+
+    const el = await mount(true);
+    pick(el, fileOf(16, 'image/png', 'wide.png'));
+    await settle(el);
+
+    expect(encoded).toMatchObject({ width: 800, height: 400, type: 'image/jpeg', quality: 0.8 });
+    expect(uploadBytesResumable).toHaveBeenCalled();
+  });
+
+  it('does not upload when the photo stays at 500 KB', async () => {
+    installEncoder(4000, 3000);
+    vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(function (
+      this: HTMLCanvasElement,
+      callback: BlobCallback,
+      type?: string,
+      quality?: number
+    ) {
+      encoded.width = this.width;
+      encoded.quality = quality ?? 0;
+      encoded.type = type || '';
+      callback(new Blob([new Uint8Array(500 * 1024)], { type: type || 'image/jpeg' }));
+    } as HTMLCanvasElement['toBlob']);
+
+    const el = await mount(true);
+    const input = pick(el, fileOf(16, 'image/png', 'huge.png'));
+    await settle(el);
+
+    expect(encoded).toMatchObject({ width: 640, quality: 0.56, type: 'image/jpeg' });
+    expect(uploadBytesResumable).not.toHaveBeenCalled();
+    expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('That photo is still over 500 KB. Try another.');
+    expect(input.value).toBe('');
+    expect(el.shadowRoot!.querySelector('progress')!.hasAttribute('hidden')).toBe(true);
+  });
+
   it('reports an image that cannot be decoded and does not upload it', async () => {
     vi.stubGlobal('createImageBitmap', vi.fn(async () => {
       throw new Error('decode');
