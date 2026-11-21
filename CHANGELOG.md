@@ -2,6 +2,11 @@ Change Log
 ==========
 All notable changes to pwa-auth.js will be documented in this file.
 
+# [3.8.2] - 2026-11-21
+
+## Changed
+- The drawer now slides as one sheet, so the inner page no longer drifts against the drawer edge on slower devices.
+
 # [3.8.1] - 2026-11-14
 
 ## Added
