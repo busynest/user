@@ -5,7 +5,10 @@ vi.mock('firebase/app', () => ({
 }));
 
 vi.mock('firebase/auth', () => ({
-  getAuth: vi.fn(() => ({ currentUser: null })),
+  getAuth: vi.fn(() => ({
+    currentUser: null,
+    useDeviceLanguage() { return undefined; }
+  })),
   onAuthStateChanged: vi.fn(() => () => undefined),
   signInWithEmailAndPassword: vi.fn(),
   sendPasswordResetEmail: vi.fn(),
@@ -24,6 +27,9 @@ vi.mock('firebase/analytics', () => ({
   logEvent: vi.fn()
 }));
 
+import { initialize } from '../../../base/firebase/authentication.js';
+import store from '../../../base/store.js';
+import { accEmail, accName, closeSign, openSign, userAuth } from '../../../base/redux/session.js';
 import '../../../base/webcomponents/drawer/drawer.js';
 
 type DrawerEl = HTMLElement & {
@@ -96,6 +102,44 @@ describe('drawer clip', () => {
     expect(faceY).not.toBe(0);
     expect(sheet.style.minHeight).toBe('497.9px');
     expect(title.closest('.drawer-face')).toBe(face);
+
+    drawer.remove();
+  });
+
+  it('hides the drawer after sign-in even when the menu grows', async () => {
+    initialize({
+      config: { apiKey: 'test', authDomain: 'test.firebaseapp.com', projectId: 'test' }
+    });
+    const drawer = document.createElement('user-drawer') as DrawerEl;
+    document.body.append(drawer);
+    store.dispatch(openSign());
+    await drawer.updateComplete;
+
+    store.dispatch(userAuth(true));
+    store.dispatch(closeSign());
+    store.dispatch(accName('Ada Lovelace'));
+    store.dispatch(accEmail('ada@example.com'));
+    await drawer.updateComplete;
+
+    const sheet = drawer.shadowRoot!.querySelector('.userDrawer') as HTMLElement;
+    const clip = drawer.shadowRoot!.querySelector('.drawer-clip') as HTMLElement;
+    const laid = sheet.getBoundingClientRect().height;
+    sheet.style.minHeight = `${laid + 180}px`;
+    await new Promise((resolve) => requestAnimationFrame(() => resolve(undefined)));
+    await drawer.updateComplete;
+
+    for (let i = 0; i < 3; i++) {
+      sheet.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'transform', bubbles: true }));
+      await drawer.updateComplete;
+      await new Promise((resolve) => requestAnimationFrame(() => resolve(undefined)));
+    }
+
+    expect(clip.style.height).toBe('0px');
+    expect(sheet.style.minHeight).toBe('');
+    const leave = drawer.shadowRoot!.querySelector('.leave') as HTMLElement;
+    const clipBox = clip.getBoundingClientRect();
+    const leaveBox = leave.getBoundingClientRect();
+    expect(leaveBox.bottom <= clipBox.top + 1 || clipBox.height <= 1).toBe(true);
 
     drawer.remove();
   });

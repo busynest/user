@@ -94,6 +94,16 @@ export class UserDrawer extends connect(store)(LitElement) {
   /** A form switch that started while open/close was already rolling. */
   private switchMidRoll = false;
 
+  /** Height the in-flight close was aimed at. A later layout can retarget it. */
+  private closeFor = 0;
+
+  /** Drops a close measurement that was queued for a drawer that opened again. */
+  private closeToken = 0;
+
+  private closingNow = false;
+
+  private closeObserver: ResizeObserver | null = null;
+
   private booted = false;
   private wasOpen = false;
   private sawOpen = false;
@@ -262,6 +272,9 @@ export class UserDrawer extends connect(store)(LitElement) {
   private restShut(): void {
     this.rollMotion = false;
     this.resizeMotion = false;
+    this.closeFor = 0;
+    this.closeObserver?.disconnect();
+    this.closeObserver = null;
     this.clipHeight = '0px';
     this.clipPad = '0px';
     this.sheetShift = 'translate3d(0, -100%, 0)';
@@ -349,20 +362,63 @@ export class UserDrawer extends connect(store)(LitElement) {
     this.rollBetween(clip, sheet, from, target, target);
   }
 
+  // Drop a resize pin so a close measures the menu that is actually on screen.
+  private releasePinForClose(): void {
+    this.resizeMotion = false;
+    this.faceShift = 'none';
+    const face = this.face();
+    if (face) {
+      face.style.transition = 'none';
+      face.style.transform = 'none';
+    }
+    if (this.holdSheet && this.openSheetPx > 1) return;
+    const sheet = this.sheet();
+    if (sheet) sheet.style.minHeight = '';
+  }
+
   private rollUp(): void {
+    this.releasePinForClose();
+    const token = ++this.closeToken;
+    // The signed-in menu's children lay out after this update. Measure then.
+    requestAnimationFrame(() => {
+      if (token !== this.closeToken || this.drawer) return;
+      this.finishRollUp();
+    });
+  }
+
+  private finishRollUp(): void {
+    if (this.closingNow || this.drawer) return;
     const clip = this.clip();
     const sheet = this.sheet();
     if (!clip || !sheet) return;
+    this.closingNow = true;
     this.placeAnchor();
-    let current = sheet.getBoundingClientRect().height;
+    let current = this.contentPx(sheet);
     let from = this.shownPx(sheet);
     if (this.holdSheet && this.openSheetPx > 1) {
       from = this.openSheetPx;
       current = this.openSheetPx;
       sheet.style.minHeight = `${this.openSheetPx}px`;
     }
-    this.rollBetween(clip, sheet, from, 0, current);
+    if (!(Math.abs(current - this.closeFor) <= 1 && this.rollMotion && this.shownPx(sheet) <= 1)) {
+      this.closeFor = current;
+      this.rollBetween(clip, sheet, from, 0, current);
+      if (this.rollMotion) this.watchCloseSize(sheet);
+    }
+    this.closingNow = false;
     if (this.reduced()) this.sliding = false;
+  }
+
+  // If the menu grows after the close has started, aim the roll at the new height.
+  private watchCloseSize(sheet: HTMLElement): void {
+    if (typeof ResizeObserver === 'undefined') return;
+    this.closeObserver?.disconnect();
+    this.closeObserver = new ResizeObserver(() => {
+      if (this.drawer || !this.rollMotion) return;
+      const h = this.contentPx(sheet);
+      if (Math.abs(h - this.closeFor) > 1) this.finishRollUp();
+    });
+    this.closeObserver.observe(sheet);
   }
 
   // Content height. A resize min-height would report the taller box, so it is lifted for the read.
@@ -479,7 +535,13 @@ export class UserDrawer extends connect(store)(LitElement) {
       this.restOpen();
       return;
     }
-    if (this.shownPx(sheet) > 1) return;
+    if (this.shownPx(sheet) > 1) {
+      const h = this.contentPx(sheet);
+      if (Math.abs(h - this.closeFor) > 1) {
+        this.finishRollUp();
+        return;
+      }
+    }
     this.sliding = false;
     this.restShut();
     this.releaseSheet();

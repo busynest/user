@@ -62,6 +62,12 @@ export declare class UserDrawer extends UserDrawer_base {
     private faceShift;
     /** A form switch that started while open/close was already rolling. */
     private switchMidRoll;
+    /** Height the in-flight close was aimed at. A later layout can retarget it. */
+    private closeFor;
+    /** Drops a close measurement that was queued for a drawer that opened again. */
+    private closeToken;
+    private closingNow;
+    private closeObserver;
     private booted;
     private wasOpen;
     private sawOpen;
@@ -91,7 +97,10 @@ export declare class UserDrawer extends UserDrawer_base {
     private liveShift;
     private shownPx;
     private unroll;
+    private releasePinForClose;
     private rollUp;
+    private finishRollUp;
+    private watchCloseSize;
     private contentPx;
     private sheetPx;
     private rollBetween;
