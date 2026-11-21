@@ -4,7 +4,7 @@ The drawer unrolls downward from wherever the tag sits, and its buttons ride the
 
 The controls sit on the host edge. `--pwa_inset` defaults to `0`. `--pwa_max_width` defaults to `400px`: the form column fills a narrow host, then centers at that cap. Signed-in drawer links use that same column. The drawer header stays full width. The host is `display: block`, `width: 100%`, `min-width: 0`, so it follows a flex or grid track. A page sets either variable on `user-drawer`, `user-login`, `user-settings`, and `email-reset`. Do not set `--pwa_max_width` on `:host` inside the component; that would beat the page.
 
-The form swap is a transform inside `.inner`. The drawer rolls open and closed on its own: `.drawer-clip` eases `height` and `max-height` between `0px` and the measured content height, and `section.userDrawer` translates so its bottom stays on the clip's bottom. Both use this component's `--pwa_slide` (`2s`, `ease-in-out`). The page login and the settings tabs roll the same way, each inside its own file. There is no shared roll module.
+The form swap is a transform inside `.inner`. The drawer rolls on one mover: `.drawer-clip` is set, with no transition, to the taller of the two window heights plus 60px for the shadow, and only `section.userDrawer` eases `transform` on `--pwa_slide` (`2s`, `ease-in-out`). The page login and the settings tabs still ease their own clip height and sheet transform, each inside its own file. There is no shared roll module.
 
 ## How the form swap works
 
@@ -48,12 +48,14 @@ These do not run the form swap:
 
 What you see: the drawer's bottom edge moves down on open and up on close. The last control stays on that edge, like the roller of a scroll. The title and the top of the form come into view from above the clip, and leave the same way. The page heading does not move.
 
-Two boxes, one clock, and they belong to one component.
+The drawer has one clock. The clip is a window. The sheet is what moves.
 
 ```
-clip  .drawer-clip         overflow hidden, height and max-height ease
-sheet section.userDrawer   translateY eases, holds header + forms
+clip  .drawer-clip         overflow hidden, height set with no transition
+sheet section.userDrawer   translateY eases, holds header, forms, shadow, and radius
 ```
+
+Easing `height` on the main thread and `transform` on the compositor with the same duration still drifts. On a slow CPU the gap under `.inner`'s border moves. The clip no longer transitions `height` or `max-height`. `rollBetween` writes the clip height immediately: `max(from, to) + 60px`. That 60px is room for `box-shadow: 0 18px 40px rgba(28, 36, 48, 0.16)`. The clip is `pointer-events: none`, and the sheet is `pointer-events: auto`, so the spare area does not catch clicks under the drawer. The shadow and the `18px` bottom radius sit on `section.userDrawer`, so the edge you see is the sheet. The sheet's height is the measured float. It is not rounded up.
 
 `.wrapper` starts under the header. Rolling only `.inner` would leave the title stuck while the form rode the edge. The sheet is the whole `section.userDrawer`.
 
@@ -69,7 +71,7 @@ The same picture, with different elements, lives in the other two components. No
 
 ### No shared roll
 
-`typescript/webcomponents/css/roll.ts` is gone. Each component keeps its own `rollBetween`, its own clip and sheet class names, and its own `transitionend` listener. The listener ignores any event whose target is not the clip itself, so a form transform inside the sheet cannot finish another component's roll, or even this one early.
+`typescript/webcomponents/css/roll.ts` is gone. Each component keeps its own `rollBetween`, its own clip and sheet class names, and its own `transitionend` listener. On the drawer the listener is on `section.userDrawer` and it waits for `transform`. It ignores any event whose target is not that sheet, so a form transform inside it cannot finish the roll early. Login and settings still listen on their own clips.
 
 A shared `.roll` class, a shared `:host { transition: height, max-height }`, or one helper that wrote those inline styles was enough to ease a component that had not been asked to move. The drawer shell no longer transitions `height`, `max-height`, or `transform`. `drawerShell` only holds the closed backstop: `max-height: 0`, `visibility: hidden`, `pointer-events: none`, with no transition. `sliding` lifts that backstop. The motion itself is the style binding below.
 
@@ -87,31 +89,33 @@ That paint is static. `motion` is reflected only after it, and the roll's `trans
 
 `rollBetween` then eases. It locks the start px with `transition: none`, reads `offsetHeight` so the next change has a from-value, and writes the end px with `transition` set to `var(--pwa_slide, 2s) ease-in-out`. `height` and `max-height` are the same px, because `max-height` only caps and cannot hold a shorter sheet open.
 
-### Lockstep at progress p
+### One mover at progress p
 
-`p` runs 0 → 1 with `ease-in-out`. `H` is the sheet's height in px. Open from a closed drawer:
+`p` runs 0 → 1 with `ease-in-out`. `H` is the sheet's exact height in px. The clip does not take `p`. For an open from 0 it is set to `H + 60` before the first animated frame. The sheet then eases:
 
-- clip height = `p * H`
 - sheet `translateY` = `(p - 1) * H`  (start `-H`, which is `-100%`, end `0`)
-- sheet bottom = clip top + translateY + H = clip top + `p * H` = clip bottom
+- the visible bottom is the sheet's bottom, shadow included
+- `.inner`'s border stays 12px above that edge, because both live on the sheet
 
-Close swaps the ends: translateY runs `0` → `-H` while the clip runs `H` → `0`. The same identity holds.
+Close swaps the ends: the clip stays at `H + 60` while translateY runs `0` → `-H`. When that transform ends, the clip drops to `0` and the padding drops to `0`, so the shut drawer takes no clicks and shows nothing.
 
-A height change that does not start at 0 (a taller form, a settings tab) uses the sheet's real height `S` and clip ends `A` → `B`:
+A height change that does not start at 0 (a taller or shorter form) uses the sheet's real height `S` and window ends `A` → `B`:
 
-- clip = `A + (B - A) * p`
-- translateY = clip − S
+- clip height = `max(A, B) + 60`, set at the start, no transition
+- translateY = window − S
 - start `A - S`, end `B - S`
 
-When the new sheet is the thing on screen, `S = B`, so it finishes at `translateY: 0` and starts at `A - B`. Each component's `rollBetween` writes those pixel values through the same `styleMap` the first paint used. Open from 0 is the `-100%` case of the same formula. The resting closed sheet can stay at `-100%` so boot does not have to measure.
+When the new sheet is the thing on screen, `S = B`, so it finishes at `translateY: 0` and starts at `A - B`. Open from 0 is the `-100%` case of the same formula. The resting closed sheet stays at `-100%` so boot does not have to measure. After the transform ends, an open drawer returns to `height: auto` and `padding-bottom: 60px` so a later reflow is not stuck and the shadow still has room.
+
+Login and settings still ease clip height and the sheet together. Their `p` still moves both. The drawer does not.
 
 ### Why the px value has to be measured
 
-`max-height` only eases between two lengths, and it only caps. It cannot hold a box open taller than its content, so a shrink would drop the bottom immediately. `rollBetween` sets `height` and `max-height` to the same px value. `none` and `auto` have no midpoint, so they snap. A cap of `100dvh` or `9999px` does ease, but the timing function is spread across that whole range. A 480px drawer inside a 1000px range is fully open at 48% of the time, and the named ease is not what you see. The open path reads the sheet once with the clip cap released (no paint), and that integer is the end of the animation. After the clip's own `max-height` `transitionend`, the binding goes back to `height: auto` and `max-height: none` so a later reflow is not stuck. The next close, or the next height change, measures again.
+`max-height` only eases between two lengths, and it only caps. It cannot hold a box open taller than its content, so a shrink would drop the bottom immediately. Login and settings still set `height` and `max-height` to the same px value. The drawer does not ease either one. `none` and `auto` have no midpoint, so they snap. A cap of `100dvh` or `9999px` does ease, but the timing function is spread across that whole range. A 480px drawer inside a 1000px range is fully open at 48% of the time, and the named ease is not what you see. The open path reads the sheet once with the clip cap released (no paint) and keeps that exact float. Rounding it up leaves a seam under the sheet. After the sheet's `transform` `transitionend`, the drawer binding goes back to `height: auto` and `max-height: none`, with padding for the shadow. The next close, or the next height change, measures again.
 
 ### Visibility, inert, reduced motion
 
-`sliding` turns on in the same turn as the open. `visibility` and `pointer-events` come on with it, and `inert` comes off. It turns off only when this drawer's clip fires `max-height` `transitionend` and the box is shorter than 2px. A bubbled transform from a form does not qualify (`event.target` must be the clip). That is the close, not a second timer. `prefers-reduced-motion: reduce` sets `--pwa_slide` to `0s` on that host, and `rollBetween` snaps to the end state with `transition: none`.
+`sliding` turns on in the same turn as the open. `visibility` and `pointer-events` come on with it, and `inert` comes off. It turns off only when `section.userDrawer` fires `transform` `transitionend` and the sheet is parked (`height + translateY` is under 2px). A bubbled transform from a form does not qualify (`event.target` must be the sheet). That is the close, not a second timer. `prefers-reduced-motion: reduce` sets `--pwa_slide` to `0s` on that host, and `rollBetween` snaps to the end state with `transition: none` and does not wait for `transitionend`.
 
 Signing out while the drawer is open does not swap in the login form until that clip has reached 0. The close measures the account menu, so `translateY` starts at 0 and the menu rolls up. The login form is what the next open shows. The same end step runs when reduced motion snaps the clip shut. Returning focus uses `preventScroll`, so the page does not jump. `placeAnchor()` runs again before the close. The host is `position: relative` and the clip is `absolute` at the top of the host. A page grid should give `user-drawer` the row between the header and the content, so that anchor does not have to pull the tag up with a large `top`.
 
@@ -131,8 +135,8 @@ Copy the roll into that component. Do not import a shared helper, and do not reu
 
 1. Put `--pwa_slide: 2s` on that component's `:host`, and `0s` inside `prefers-reduced-motion`. Give the clip a class that exists only in this file. `display: block`, `overflow: hidden`.
 2. Bind the clip and the sheet with `styleMap`. The first render is the resting state and `transition: none`.
-3. On a user change after that first update, remember the clip's height, render the new sheet, measure its height, and run this component's own from/to ease. `height` and `max-height` share the px value. `translateY` is clip minus sheet height.
-4. On that clip's `max-height` `transitionend`, and only when `event.target` is the clip, set the binding back to `auto` / `none`.
+3. On a user change after that first update, remember the window, render the new sheet, measure its height, and run this component's own from/to ease. `translateY` is window minus sheet height. The drawer sets the clip height up front and eases only the transform. Login and settings still ease `height` and `max-height` to that same px.
+4. On the drawer's sheet `transform` `transitionend`, and only when `event.target` is the sheet, set the open binding back to `auto` with shadow padding, or collapse a closed clip to `0`. Login and settings still do this from their clip's `max-height` `transitionend`.
 5. Do not put a height transition on `:host` in a stylesheet other components import. Do not translate a sheet that leaves out an element that should ride the edge.
 
 ### Files
@@ -177,7 +181,7 @@ On the way open, the panel appears to finish early, and the named ease is not th
 
 ### What the drawer open and close uses
 
-The drawer clip's bound `height` and `max-height`, and the sheet's bound `transform`, ease with `var(--pwa_slide, 2s) ease-in-out` only while that roll is running. At rest the transition is `none`. `drawerShell` does not ease `:host`. After the open (and after a form-swap glide) the binding becomes `height: auto` and `max-height: none`, which does not animate. The timings table in [Slides](sliders.md) lists the one duration.
+The drawer's clip binding always sets `transition: none`. It never eases `height` or `max-height`. The sheet's `transform` eases with `var(--pwa_slide, 2s) ease-in-out` only while that roll is running. At rest the sheet transition is `none`. `drawerShell` does not ease `:host`. After the open (and after a form-swap glide) the clip binding becomes `height: auto`, `max-height: none`, and `padding-bottom: 60px`. A closed rest is `height: 0` and `padding-bottom: 0`. The timings table in [Slides](sliders.md) lists the one duration. Login and settings still ease their clip height on that same duration.
 
 ## Pitfalls
 
@@ -187,11 +191,11 @@ The drawer clip's bound `height` and `max-height`, and the sheet's bound `transf
 - Do not fake the form swap with a large `max-height`. The visible motion will be shorter than the duration, and the ease will look wrong.
 - The visibility delay on `.content` must be `var(--pwa_slide)`, not a different literal. Shorter, and the leaving form vanishes mid-slide. Longer, and it stays painted after it is off screen. The visibility duration stays `0s`. It snaps. It does not fade.
 - `.opened` must set its own transition with a `0s` visibility delay. If it inherits the close delay, the arriving form is invisible for the whole slide.
-- Do not give `.spec`, `.inner`, or `.wrapper` their own height or transform duration. The drawer's clip is `.drawer-clip`. The roller is `.userDrawer`. A second clock drifts. The header is outside `.wrapper`, so rolling only `.inner` leaves the header behind.
-- Do not animate `max-height` to `none`, `auto`, or a viewport-sized cap. Measure px, ease between those two lengths, then set `none` only after the clip's own `transitionend`.
+- Do not give `.spec`, `.inner`, or `.wrapper` their own height or transform duration. The drawer's clip is `.drawer-clip`. The roller is `.userDrawer`. A second clock drifts. The header is outside `.wrapper`, so rolling only `.inner` leaves the header behind. Do not ease the clip's `height` next to the sheet's `transform`. That pair is the drift.
+- Do not animate the drawer's `max-height`. Measure the sheet in exact px, set the clip to the taller window plus the shadow room, and ease only the transform. Set `auto` only after the sheet's own `transform` `transitionend`.
 - Do not share the roll. A `:host` height transition, or a class name used by more than one component, eases something that should have stayed still. One component's `transitionend` must not call another component's release.
 - The first render binds the resting state with `transition: none`. Turning the transition on in that same first paint, or writing the closed px after an open first frame, is the open-then-shut flicker.
-- `sliding` has to stay up until the close `max-height` reaches 0. Clearing it when `drawer` flips hides the roll-up. The host backstop is `max-height: 0` with no transition, so it cannot play that flicker by itself.
+- `sliding` has to stay up until the close transform parks the sheet. Clearing it when `drawer` flips hides the roll-up. The host backstop is `max-height: 0` with no transition, so it cannot play that flicker by itself. The clip itself must still be set back to `0` at the end.
 - Focusing a control inside the unrolling box scrolls it. `.focus({ preventScroll: true })` keeps the header at the top edge. Reset `scrollTop` when the open starts.
 - Reduced motion has to set `--pwa_slide: 0s`. Zeroing only `transition-duration` leaves a delay that still uses the variable.
 - A more specific `.userDrawer .content.closed` rule is how `f607737` broke the drawer while the shared rule still looked right.
@@ -201,7 +205,7 @@ The drawer clip's bound `height` and `max-height`, and the sheet's bound `transf
 
 ## Changing the duration
 
-Change `--pwa_slide` on the component you are timing. The drawer's and the page login's variable is on `:host` in `animation.ts`. Settings sets its own on `:host` in `settings.ts`. That component's roll, its form-swap height glide, its form transform, and its form visibility delay read that variable. `sliding` ends on the clip's `transitionend`, so it follows whatever that time is. Leave the visibility duration at `0s`, and leave `.motion .opened` at `visibility 0s linear 0s`. Do not hardcode a second duration in `rollBetween`.
+Change `--pwa_slide` on the component you are timing. The drawer's and the page login's variable is on `:host` in `animation.ts`. Settings sets its own on `:host` in `settings.ts`. That component's roll, its form-swap height glide, its form transform, and its form visibility delay read that variable. On the drawer, `sliding` ends on the sheet's `transform` `transitionend`, so it follows whatever that time is. Leave the visibility duration at `0s`, and leave `.motion .opened` at `visibility 0s linear 0s`. Do not hardcode a second duration in `rollBetween`.
 
 Update the `2s` figures in `docs/sliders.md` and in this file. Rebuild so `base/webcomponents/` matches `typescript/`, then `source/pwa-auth.js` and `website/javascript/pwa-auth.js`.
 

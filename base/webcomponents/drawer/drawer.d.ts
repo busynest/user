@@ -48,8 +48,10 @@ export declare class UserDrawer extends UserDrawer_base {
     private sliding;
     /** Arms the form-swap transition. False on the first paint. */
     private motion;
-    /** Clip height. 0px is shut. auto is the resting open size. */
+    /** Clip height. 0px is shut. auto is the resting open size. It does not ease. */
     private clipHeight;
+    /** Spare padding under an open sheet at rest, for the shadow. 0 while shut or rolling. */
+    private clipPad;
     /** Sheet translate. -100% parks the sheet above the clip. */
     private sheetShift;
     /** True only while this drawer's clip and sheet are easing. */
@@ -78,6 +80,8 @@ export declare class UserDrawer extends UserDrawer_base {
     private restOpen;
     private clipStyle;
     private sheetStyle;
+    private liveShift;
+    private shownPx;
     private unroll;
     private rollUp;
     private sheetPx;
