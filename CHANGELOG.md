@@ -2,6 +2,11 @@ Change Log
 ==========
 All notable changes to pwa-auth.js will be documented in this file.
 
+# [3.8.4] - 2026-11-21
+
+## Changed
+- Firebase 13 is now an accepted peer. Firebase 12 is still supported.
+
 # [3.8.3] - 2026-11-21
 
 ## Changed
