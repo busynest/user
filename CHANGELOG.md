@@ -2,6 +2,11 @@ Change Log
 ==========
 All notable changes to pwa-auth.js will be documented in this file.
 
+# [3.8.5] - 2026-11-21
+
+## Fixed
+- Signing in while the drawer is open no longer leaves the log-out button on screen. The close measures the account menu after it lays out.
+
 # [3.8.4] - 2026-11-21
 
 ## Changed
