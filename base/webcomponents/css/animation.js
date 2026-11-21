@@ -100,9 +100,9 @@ export const animation = css `
 
 `;
 /* Drawer shell. Imported by user-drawer only.
-   No height or transform transition here. The clip's style binding does that,
-   and only after a user change. max-height: 0 with no transition is the
-   closed backstop, so the first paint cannot ease shut. */
+   No height or transform transition here. The sheet transform is the only
+   roll, and only after a user change. max-height: 0 with no transition is
+   the closed backstop, so the first paint cannot ease shut. */
 export const drawerShell = css `
 
   :host {
