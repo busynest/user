@@ -21,12 +21,12 @@ export const drawerStyle = css `
     z-index:                5;
   }
 
-  .userDrawer > .spec > .wrapper {
+  .drawer-face > .spec > .wrapper {
     margin: 20px 0 12px; /* Required - space under the header. Side gap is --pwa_inset on the form. */
   }
 
   .userDrawer,
-  .userDrawer > .spec,
+  .drawer-face > .spec,
   .wrapper,
   .inner {
     min-width:              0; /* Required - fit 320px */
@@ -41,6 +41,7 @@ export const drawerStyle = css `
     right:                  0; */
     overflow:               hidden;
     box-sizing:             border-box;
+    align-content:          start; /* Required - extra min-height stays below the face, not inside it */
     height:                 auto;
     border-bottom:          var(--pwa_drawer_border, 0);
     z-index:                var(--pwa_drawer_z-index, 3);

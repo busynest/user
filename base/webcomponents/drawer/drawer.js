@@ -72,8 +72,14 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         this.clipPad = '0px';
         /** Sheet translate. -100% parks the sheet above the clip. */
         this.sheetShift = 'translate3d(0, -100%, 0)';
-        /** True only while this drawer's clip and sheet are easing. */
+        /** True only while this drawer's clip and sheet are easing open or shut. */
         this.rollMotion = false;
+        /** True while an open sheet's bottom edge eases to a new height. The header stays put. */
+        this.resizeMotion = false;
+        /** Face translate. The opposite of the sheet translate during a resize, so the header stays pinned. */
+        this.faceShift = 'none';
+        /** A form switch that started while open/close was already rolling. */
+        this.switchMidRoll = false;
         this.booted = false;
         this.wasOpen = false;
         this.sawOpen = false;
@@ -261,7 +267,10 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         const sheet = this.sheet();
         if (!sheet)
             return;
+        this.switchMidRoll = this.rollMotion;
         this.heldHeight = this.shownPx(sheet);
+        if (!this.switchMidRoll)
+            return;
         this.rollMotion = false;
         this.clipPad = '0px';
         this.clipHeight = `${this.heldHeight + shadowRoom}px`;
@@ -279,15 +288,19 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         }
         else if (!boot && this.heldHeight != null && this.drawer) {
             const from = this.heldHeight;
+            const midRoll = this.switchMidRoll;
             this.heldHeight = null;
+            this.switchMidRoll = false;
             const clip = this.clip();
             const sheet = this.sheet();
             if (clip && sheet) {
-                const to = sheet.getBoundingClientRect().height;
-                if (Math.abs(to - from) > 1)
+                const to = this.contentPx(sheet);
+                if (Math.abs(to - from) <= 1)
+                    this.restOpen();
+                else if (midRoll)
                     this.rollBetween(clip, sheet, from, to, to);
                 else
-                    this.restOpen();
+                    this.resizeBetween(clip, sheet, from, to);
             }
         }
         if (boot)
@@ -311,6 +324,9 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
     sheet() {
         return this.shadowRoot?.querySelector('.userDrawer') ?? null;
     }
+    face() {
+        return this.shadowRoot?.querySelector('.drawer-face') ?? null;
+    }
     // Required - the account button, when nothing else had focus at open.
     toggleButton() {
         const icon = document.querySelector('user-icon');
@@ -323,22 +339,32 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
     // Required - closed, no transition. The clip collapses so nothing below can be hit.
     restShut() {
         this.rollMotion = false;
+        this.resizeMotion = false;
         this.clipHeight = '0px';
         this.clipPad = '0px';
         this.sheetShift = 'translate3d(0, -100%, 0)';
+        this.faceShift = 'none';
         const sheet = this.sheet();
         if (sheet)
             sheet.style.minHeight = '';
+        const face = this.face();
+        if (face)
+            face.style.transform = '';
     }
     // Required - open at content size. Padding keeps the shadow. No transition.
     restOpen() {
         this.rollMotion = false;
+        this.resizeMotion = false;
         this.clipHeight = 'auto';
         this.clipPad = `${shadowRoom}px`;
         this.sheetShift = 'none';
+        this.faceShift = 'none';
         const sheet = this.sheet();
         if (sheet)
             sheet.style.minHeight = '';
+        const face = this.face();
+        if (face)
+            face.style.transform = '';
     }
     // The clip jumps. It never eases height or max-height. Only the sheet transforms.
     clipStyle() {
@@ -351,9 +377,16 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         };
     }
     sheetStyle() {
-        const travel = this.rollMotion && !this.reduced();
+        const travel = (this.rollMotion || this.resizeMotion) && !this.reduced();
         return {
             transform: this.sheetShift,
+            transition: travel ? 'transform var(--pwa_slide, 2s) ease-in-out' : 'none',
+        };
+    }
+    faceStyle() {
+        const travel = this.resizeMotion && !this.reduced();
+        return {
+            transform: this.faceShift,
             transition: travel ? 'transform var(--pwa_slide, 2s) ease-in-out' : 'none',
         };
     }
@@ -414,6 +447,14 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         if (this.reduced())
             this.sliding = false;
     }
+    // Content height. A resize min-height would report the taller box, so it is lifted for the read.
+    contentPx(sheet) {
+        const minHeight = sheet.style.minHeight;
+        sheet.style.minHeight = '';
+        const px = sheet.getBoundingClientRect().height;
+        sheet.style.minHeight = minHeight;
+        return px;
+    }
     // Sheet height in px. The clip cap is released for the read and put back. No paint.
     sheetPx(clip, sheet) {
         const transition = clip.style.transition;
@@ -424,7 +465,7 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         clip.style.maxHeight = 'none';
         clip.style.height = 'auto';
         clip.style.paddingBottom = '0px';
-        const px = sheet.getBoundingClientRect().height;
+        const px = this.contentPx(sheet);
         clip.style.height = height;
         clip.style.maxHeight = maxHeight;
         clip.style.paddingBottom = pad;
@@ -458,9 +499,53 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
         sheet.style.transition = move;
         sheet.style.transform = shift(end);
         this.rollMotion = true;
+        this.resizeMotion = false;
         this.clipHeight = `${room}px`;
         this.clipPad = '0px';
         this.sheetShift = shift(end);
+        this.faceShift = 'none';
+        const face = this.face();
+        if (face) {
+            face.style.transition = 'none';
+            face.style.transform = 'none';
+        }
+    }
+    // Top stays pinned. The sheet's bottom edge travels old → new. The face moves
+    // the other way by the same amount, on the same clock, so the header does not jump.
+    resizeBetween(clip, sheet, from, to) {
+        const face = this.face();
+        if (!face) {
+            this.rollBetween(clip, sheet, from, to, to);
+            return;
+        }
+        const top = Math.max(from, to);
+        const shift = (px) => `translate3d(0, ${px}px, 0)`;
+        if (this.reduced() || Math.abs(to - from) <= 1) {
+            this.restOpen();
+            return;
+        }
+        const room = top + shadowRoom;
+        const move = 'transform var(--pwa_slide, 2s) ease-in-out';
+        clip.style.transition = 'none';
+        sheet.style.transition = 'none';
+        face.style.transition = 'none';
+        clip.style.height = `${room}px`;
+        clip.style.maxHeight = `${room}px`;
+        clip.style.paddingBottom = '0px';
+        sheet.style.minHeight = `${top}px`;
+        sheet.style.transform = shift(from - top);
+        face.style.transform = shift(top - from);
+        void sheet.offsetHeight;
+        sheet.style.transition = move;
+        face.style.transition = move;
+        sheet.style.transform = shift(to - top);
+        face.style.transform = shift(top - to);
+        this.rollMotion = false;
+        this.resizeMotion = true;
+        this.clipHeight = `${room}px`;
+        this.clipPad = '0px';
+        this.sheetShift = shift(to - top);
+        this.faceShift = shift(top - to);
     }
     firstUpdated() {
         this.shadowRoot.querySelector('.close').addEventListener('click', () => {
@@ -525,17 +610,21 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
             this.columnObserver.observe(prev);
         this.placeAnchor();
     }
-    // Required - keep the sheet bottom on the clip while the column reflows.
+    // Required - a reflow while open eases the bottom edge. A reflow mid open/close keeps that roll.
     onColumnResize() {
-        if (!this.rollMotion)
-            return;
         const clip = this.clip();
         const sheet = this.sheet();
         if (!clip || !sheet)
             return;
+        if (!this.drawer && !this.rollMotion)
+            return;
         const from = this.shownPx(sheet);
         const sheetH = this.sheetPx(clip, sheet);
-        this.rollBetween(clip, sheet, from, this.drawer ? sheetH : 0, sheetH);
+        const to = this.drawer ? sheetH : 0;
+        if (this.rollMotion || !this.drawer)
+            this.rollBetween(clip, sheet, from, to, sheetH);
+        else if (Math.abs(to - from) > 1)
+            this.resizeBetween(clip, sheet, from, to);
     }
     static get styles() {
         return [
@@ -571,6 +660,13 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       pointer-events:         auto;
       border-radius:          var(--pwa_drawer_border-radius, 0 0 18px 18px);
       box-shadow:             0 18px 40px rgba(28, 36, 48, 0.16);
+    }
+
+    .drawer-face {
+      display:                block;
+      width:                  100%;
+      min-width:              0;
+      max-width:              100%;
     }
 
     .exit > h2 {
@@ -652,6 +748,8 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
       style=${styleMap(this.sheetStyle())}
       @transitionend=${this.onClipEnd}>
 
+      <div class="drawer-face" style=${styleMap(this.faceStyle())}>
+
       <!-- Exit Button -->
       <div class="exit" part="header">
         <div></div>
@@ -723,6 +821,8 @@ let UserDrawer = class UserDrawer extends connect(store)(LitElement) {
 
           <button class="leave" part="logout" type="button" aria-label="Log out">Log out</button>
           
+      </div>
+
       </div>
 
     </section>
@@ -810,6 +910,14 @@ __decorate([
     state(),
     __metadata("design:type", Object)
 ], UserDrawer.prototype, "rollMotion", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserDrawer.prototype, "resizeMotion", void 0);
+__decorate([
+    state(),
+    __metadata("design:type", Object)
+], UserDrawer.prototype, "faceShift", void 0);
 UserDrawer = __decorate([
     customElement('user-drawer'),
     __metadata("design:paramtypes", [])

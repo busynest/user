@@ -54,8 +54,14 @@ export declare class UserDrawer extends UserDrawer_base {
     private clipPad;
     /** Sheet translate. -100% parks the sheet above the clip. */
     private sheetShift;
-    /** True only while this drawer's clip and sheet are easing. */
+    /** True only while this drawer's clip and sheet are easing open or shut. */
     private rollMotion;
+    /** True while an open sheet's bottom edge eases to a new height. The header stays put. */
+    private resizeMotion;
+    /** Face translate. The opposite of the sheet translate during a resize, so the header stays pinned. */
+    private faceShift;
+    /** A form switch that started while open/close was already rolling. */
+    private switchMidRoll;
     private booted;
     private wasOpen;
     private sawOpen;
@@ -74,18 +80,22 @@ export declare class UserDrawer extends UserDrawer_base {
     protected updated(changed: PropertyValues): void;
     private clip;
     private sheet;
+    private face;
     private toggleButton;
     private reduced;
     private restShut;
     private restOpen;
     private clipStyle;
     private sheetStyle;
+    private faceStyle;
     private liveShift;
     private shownPx;
     private unroll;
     private rollUp;
+    private contentPx;
     private sheetPx;
     private rollBetween;
+    private resizeBetween;
     private onClipEnd;
     private onKey;
     private onLightClick;
