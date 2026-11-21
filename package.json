@@ -6,7 +6,7 @@
     "url": "https://www.jackspublishing.com",
     "email": "jack.solutionbox@gmail.com"
   },
-  "version": "3.8.3",
+  "version": "3.8.4",
   "description": "Five elements: user-icon, user-drawer, user-login, user-settings, and email-reset. pwa- events, a small API, and --pwa_ theme variables.",
   "homepage": "https://pwa-authentic.firebaseapp.com",
   "repository": {
@@ -123,7 +123,7 @@
     "redux": "^5.0.1"
   },
   "peerDependencies": {
-    "firebase": "^12.0.0",
+    "firebase": "^12.0.0 || ^13.0.0",
     "lit": "^3.3.0"
   },
   "devDependencies": {
