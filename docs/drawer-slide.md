@@ -107,6 +107,8 @@ A height change that does not start at 0 (a taller or shorter form) uses the she
 
 When the new sheet is the thing on screen, `S = B`, so it finishes at `translateY: 0` and starts at `A - B`. Open from 0 is the `-100%` case of the same formula. The resting closed sheet stays at `-100%` so boot does not have to measure. After the transform ends, an open drawer returns to `height: auto` and `padding-bottom: 60px` so a later reflow is not stuck and the shadow still has room.
 
+A login ↔ sign-up switch while the drawer is already open does not use that bottom-anchored roll. `resizeBetween` holds the sheet's `min-height` at `max(old, new)` and translates the sheet from `old - max` to `new - max`, so the rounded shadowed edge travels and the sheet's top stays above the clip. `.drawer-face`, the one wrapper around the header and the forms, translates by the exact opposite (`max - old` to `max - new`) on the same `--pwa_slide` and the same frame. The two offsets cancel, so the header stays pinned under the page header and only the bottom edge moves. The clip is `max + 60px` for the shadow. When that sheet `transform` ends, both translates and the min-height clear. That resting state matches the end of the ease, so it does not jump. A switch during an open or close still uses `rollBetween`. A column reflow uses the same choice. `prefers-reduced-motion` snaps. The drawer's `.inner` has no bottom border; the paper edge is the border. The login card keeps its line.
+
 Login and settings still ease clip height and the sheet together. Their `p` still moves both. The drawer does not.
 
 ### Why the px value has to be measured

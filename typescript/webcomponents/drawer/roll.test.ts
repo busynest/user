@@ -73,4 +73,31 @@ describe('drawer clip', () => {
     drawer.remove();
   });
 
+  it('pins the header when an open sheet changes height', async () => {
+    const drawer = document.createElement('user-drawer') as DrawerEl & {
+      resizeBetween: (clip: HTMLElement, sheet: HTMLElement, from: number, to: number) => void;
+    };
+    document.body.append(drawer);
+    await drawer.updateComplete;
+    const clip = drawer.shadowRoot!.querySelector('.drawer-clip') as HTMLElement;
+    const sheet = drawer.shadowRoot!.querySelector('.userDrawer') as HTMLElement;
+    const face = drawer.shadowRoot!.querySelector('.drawer-face') as HTMLElement;
+    const title = drawer.shadowRoot!.querySelector('#pwa-drawer-title') as HTMLElement;
+
+    drawer.resizeBetween(clip, sheet, 497.9, 472.7);
+
+    const shiftY = (value: string) => {
+      const match = value.match(/,\s*(-?[\d.]+)px/);
+      return match ? parseFloat(match[1]) : 0;
+    };
+    const sheetY = shiftY(sheet.style.transform);
+    const faceY = shiftY(face.style.transform);
+    expect(sheetY + faceY).toBeCloseTo(0, 5);
+    expect(faceY).not.toBe(0);
+    expect(sheet.style.minHeight).toBe('497.9px');
+    expect(title.closest('.drawer-face')).toBe(face);
+
+    drawer.remove();
+  });
+
 });

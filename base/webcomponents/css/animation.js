@@ -29,6 +29,12 @@ export const animation = css `
     z-index:                                1;
 }
 
+/* The drawer's paper edge is the border. The login card keeps the line above. */
+:host(user-drawer) .inner {
+    border-bottom:                          0;
+    border-radius:                          0;
+}
+
 .content {
     display:                                grid;
     grid-gap:                               20px;
