@@ -2,6 +2,11 @@ Change Log
 ==========
 All notable changes to pwa-auth.js will be documented in this file.
 
+# [3.8.3] - 2026-11-21
+
+## Changed
+- Login and sign-up switches keep the drawer's top pinned, so only the bottom edge moves. The inner border inside the drawer is removed.
+
 # [3.8.2] - 2026-11-21
 
 ## Changed
